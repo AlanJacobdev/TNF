@@ -17,13 +17,19 @@ export class ConnexionComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.authService.estAuthentifie()){
-      this.router.navigate(['/accueil']);
+      this.router.navigate(['']);
     }
   }
 
 
-  public connect() {
-    this.NavBarService.setEstConnecte(true);
-    this.router.navigate(['/accueil']);
+  public async connect(id : string, pwd: string) {
+    const co = await this.authService.connexion(id,pwd);
+    if ( co != undefined) {
+      this.NavBarService.setEstConnecte(true);
+      this.router.navigate(['']);
+    } else {
+      this.cannotConnect = true;
+      this.errorMessage = "Identifiant ou mot de passe incorrect"
+    }
   }
 }
