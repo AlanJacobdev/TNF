@@ -1,1 +1,96 @@
-<p>visualisation works!</p>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-4 col-xs-12 mt-5">
+            <div class="input-group">
+            <label class="input-group-text" for="atelierSelect">Atelier</label>
+            <select (change)=selectAtelier($event) class="form-select" id="atelierSelect" aria-label="Default select example">
+                <option value =-1 selected>Selection de l'atelier</option>
+                <option *ngFor="let atelier of listeAtelier" [value]="atelier.idAtelier">
+                    {{atelier.idAtelier}} {{atelier.libelleAtelier}}
+                </option>
+            </select>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-sm-12 col-lg-4 col-xxl-4">
+            <div class="row">
+                <caption class="col-12 text-center">Objet repère</caption>
+            </div>
+                <div class="scrolltable">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th scope="col">Identifiant</th>
+                        <th scope="col">Nom</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngIf="this.listeObjetRepere.length === 0; else afficheOR">
+                            <td class="text-center" colspan="2">Aucun Objet Repère</td>
+                        </tr>
+                        <ng-template #afficheOR>
+                            <tr *ngFor="let objetRepere of listeObjetRepere" (click)="selectOR(objetRepere.idObjetRepere)" [ngClass]="{'table-active': objetRepere.idObjetRepere === this.selectedOr , 'actifNow' : objetRepere.idObjetRepere === this.selectedNow }">
+                                <td class="col-5">{{objetRepere.idObjetRepere}}</td>
+                                <td class="col-7">{{objetRepere.libelleObjetRepere}}</td>
+                            </tr>
+                        </ng-template>
+                    </tbody>
+                </table>
+                </div>
+        </div>
+
+        <div class="col-sm-12 col-lg-4 col-xxl-4">
+            <div class="row">
+                <caption class="col-12 text-center">Item</caption>
+            </div>
+            <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th scope="col">Identifiant</th>
+                    <th scope="col">Nom</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngIf="this.listeItem.length === 0; else afficheItem">
+                    <td class="text-center" colspan="2">Aucun Item</td>
+                  </tr>
+                  <ng-template #afficheItem>
+                    <tr *ngFor="let item of listeItem"  (click)="selectItem(item.idItem)" [ngClass]="{'table-active': item.idItem === this.selectedItem , 'actifNow' : item.idItem === this.selectedNow }" >
+                        <td class="col-5">{{item.idItem}}</td>
+                        <td class="col-7">{{item.libelleItem}}</td>
+                    </tr>
+                  </ng-template>
+                </tbody>
+              </table>
+        </div>
+
+
+        <div class="col-sm-12 col-lg-4 col-xxl-4">
+            <div class="row">
+                <caption class="col-12 text-center" >Sous Item</caption>
+            </div>
+            <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th scope="col">Identifiant</th>
+                    <th scope="col">Nom</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngIf="this.listeSousItem.length === 0; else afficheSousItem">
+                    <td class="text-center" colspan="2">Aucun Sous Item</td>
+                  </tr>
+                  <ng-template #afficheSousItem>
+                    <tr *ngFor="let sousItem of listeSousItem"  (click)="selectSO(sousItem.idSousItem)" [ngClass]="{'table-active': sousItem.idSousItem === this.selectedSousItem, 'actifNow' : sousItem.idSousItem === this.selectedNow }">
+                        <td>{{sousItem.idSousItem}}</td>
+                        <td>{{sousItem.libelleSousItem}}</td>
+                    </tr>
+                  </ng-template>
+                  
+                </tbody>
+              </table>
+        </div>
+
+    </div>
+</div>

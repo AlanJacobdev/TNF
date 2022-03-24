@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, lastValueFrom } from 'rxjs';
+import { lastValueFrom } from 'rxjs';
 import { connexion } from '../interface/connexion';
 import { CookieService } from 'ngx-cookie-service';
 import { Router } from '@angular/router';
@@ -37,6 +37,7 @@ export class AuthService {
       this.connection = true;
       this.cookieService.set('UserName', res[0].PRENOMUT.trim());
       this.cookieService.set('UserLastName', res[0].NOMUTILI.trim());
+      this.cookieService.set('Admin', "true");
     }
         
     return res;

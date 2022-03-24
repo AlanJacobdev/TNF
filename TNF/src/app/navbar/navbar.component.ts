@@ -22,7 +22,7 @@ export class NavbarComponent implements OnInit {
     this.estConnecte = this.navbarService.getEstConnecte();
     this.Prenom = this.cookieService.get('UserName');
     this.Nom = this.cookieService.get('UserLastName')
-
+    this.estAdmin = this.cookieService.get('Admin') === "true" ? true : false;
   }
 
   printMenu() {
