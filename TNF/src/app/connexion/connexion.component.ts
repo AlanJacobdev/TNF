@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
+import { NavbarComponent } from '../navbar/navbar.component';
 import { NavBarService } from '../navbar/service/nav-bar.service';
 
 @Component({
@@ -12,8 +13,9 @@ export class ConnexionComponent implements OnInit {
 
   errorMessage : string = "";
   cannotConnect : boolean = false;
+
   
-  constructor(private NavBarService :NavBarService, private router : Router, private authService : AuthService) { }
+  constructor( private NavBarService :NavBarService, private router : Router, private authService : AuthService) { }
 
   ngOnInit(): void {
     if (this.authService.estAuthentifie()){
@@ -26,6 +28,7 @@ export class ConnexionComponent implements OnInit {
     const co = await this.authService.connexion(id,pwd);
     if ( co != undefined) {
       this.NavBarService.setEstConnecte(true);
+      this.NavBarService.isUserLoggedIn.next(true);
       this.router.navigate(['']);
     } else {
       this.cannotConnect = true;

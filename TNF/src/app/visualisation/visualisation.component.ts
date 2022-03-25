@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AtelierInfo } from 'src/structureData/Atelier';
 import { ItemInfo } from 'src/structureData/Item';
-import { ObjetRepereInfo } from 'src/structureData/objetRepere';
+import { ObjetRepereAffichage, ObjetRepereInfo } from 'src/structureData/ObjetRepere';
 import { SousItemInfo } from 'src/structureData/SousItem';
 import { FetchVisuService } from './service/fetch-visu.service';
 
@@ -22,6 +22,17 @@ export class VisualisationComponent implements OnInit {
   public selectedSousItem: string = "";
   public selectedNow : string = "";
 
+  public Ornow : ObjetRepereAffichage = {
+    idObjetRepere: '',
+    libelleObjetRepere: '',
+    valide: "",
+    profilCreation: '',
+    dateCreation: '',
+    profilModification: '',
+    dateModification: '',
+    description: ''
+  };
+
   constructor(private fetchVisuService : FetchVisuService) { 
     this.fetchVisuService.getAllAteliers().then((list: AtelierInfo[]) => {
       this.listeAtelier = list
@@ -35,6 +46,7 @@ export class VisualisationComponent implements OnInit {
   }
 
   public selectAtelier(Atelier: any ) {
+    this.selectedNow = "";
     let value = Atelier.target.value; 
     this.fetchVisuService.getObjetRepereByAteliers(value).then((list: ObjetRepereInfo[]) => {
       if(list == undefined) {
@@ -53,6 +65,22 @@ export class VisualisationComponent implements OnInit {
 
   public selectOR(idOr : string) {
     this.selectedOr = idOr;
+    let res = this.listeObjetRepere.find(element => element.idObjetRepere === idOr);
+    console.log(res);
+    if ( res != undefined){
+      this.Ornow.idObjetRepere = res.idObjetRepere ;
+      this.Ornow.libelleObjetRepere = res.libelleObjetRepere ;
+      this.Ornow.profilCreation = res.profilCreation ;
+      const datec = new Date(res.dateCreation).toISOString().split('T')[0] + " " + new Date(res.dateCreation).toTimeString().split(' ')[0]
+      this.Ornow.dateCreation = datec ; 
+      this.Ornow.profilModification = (res.profilModification) ? res.profilModification : "Inconnu" ;
+      const datem = new Date(res.dateModification).toISOString().split('T')[0] + " " + new Date(res.dateModification).toTimeString().split(' ')[0]
+      this.Ornow.dateModification = (res.dateModification != null) ? datem : "Inconnue"; 
+      this.Ornow.description = res.description ;
+      this.Ornow.valide = (res.valide) ? "Oui" : "Non";
+
+    }
+
     this.selectedNow = idOr;
     this.selectedItem = "";
     this.selectedSousItem = "";

@@ -12,3 +12,14 @@ export interface ObjetRepereInfo {
     dateModification: Date,
     description: string
 }
+
+export interface ObjetRepereAffichage {
+    idObjetRepere: string,
+    libelleObjetRepere: string,
+    valide: string,
+    profilCreation: string,
+    dateCreation: string,
+    profilModification: string,
+    dateModification: string,
+    description: string
+}

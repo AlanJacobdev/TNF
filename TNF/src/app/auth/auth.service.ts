@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
-import { connexion } from '../interface/connexion';
+import { connexion } from '../../structureData/connexion';
 import { CookieService } from 'ngx-cookie-service';
 import { Router } from '@angular/router';
 
@@ -50,6 +50,7 @@ export class AuthService {
   async deconnexion() {
     this.cookieService.delete('UserName');
     this.cookieService.delete('UserLastName');
+    this.cookieService.set('Admin', "false");
     this.route.navigate(['/connexion']);
 
   }

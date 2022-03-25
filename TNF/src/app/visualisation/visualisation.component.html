@@ -1,6 +1,6 @@
 <div class="container">
     <div class="row">
-        <div class="col-lg-4 col-xs-12 mt-5">
+        <div class="col-lg-4 col-xs-12 mt-4">
             <div class="input-group">
             <label class="input-group-text" for="atelierSelect">Atelier</label>
             <select (change)=selectAtelier($event) class="form-select" id="atelierSelect" aria-label="Default select example">
@@ -12,15 +12,15 @@
             </div>
         </div>
     </div>
-    <div class="row mt-5">
-        <div class="col-sm-12 col-lg-4 col-xxl-4">
+    <div class="row mt-3 ">
+        <div class="col-sm-12 col-lg-4 col-xxl-4 order-2 order-lg-1">
             <div class="row">
                 <caption class="col-12 text-center">Objet repère</caption>
             </div>
                 <div class="scrolltable">
-                <table class="table table-hover">
+                <table class="table table-hover table-fixed">
                     <thead>
-                    <tr>
+                    <tr >
                         <th scope="col">Identifiant</th>
                         <th scope="col">Nom</th>
                     </tr>
@@ -40,7 +40,7 @@
                 </div>
         </div>
 
-        <div class="col-sm-12 col-lg-4 col-xxl-4">
+        <div class="col-sm-12 col-lg-4 col-xxl-4 order-3 order-lg-2">
             <div class="row">
                 <caption class="col-12 text-center">Item</caption>
             </div>
@@ -66,7 +66,7 @@
         </div>
 
 
-        <div class="col-sm-12 col-lg-4 col-xxl-4">
+        <div class="col-sm-12 col-lg-4 col-xxl-4 order-4 order-lg-3">
             <div class="row">
                 <caption class="col-12 text-center" >Sous Item</caption>
             </div>
@@ -91,6 +91,73 @@
                 </tbody>
               </table>
         </div>
+        <div class="col-xxl-10 offset-xxl-1 mt-5 order-1 order-lg-4 border rounded">
+          <div class="row my-1">
+            <ng-container *ngIf="selectedNow === ''; else displayInfo">
+              <div class="col-12 my-5 text-center">
+                Aucune information disponible
+              </div>
+            </ng-container>
+            <ng-template #displayInfo >
+              <div class="col-lg-6 col-xs-12 px-3 ">
+                <div class="row">
+                  <label for="staticEmail" class="col-4 col-form-label">Identifiant</label>
+                  <div class="col-8">
+                    <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="Ornow.idObjetRepere">
+                  </div>
+                </div>
+                <div class="row">
+                  <label for="staticEmail" class="col-4 col-form-label">Libelle</label>
+                  <div class="col-8">
+                    <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="Ornow.libelleObjetRepere">
+                  </div>
+                </div>
+                <div class="row">
+                  <label for="staticEmail" class="col-4 col-form-label">Valide</label>
+                  <div class="col-8">
+                    <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="Ornow.valide">
+                  </div>
+                </div>
+                <div class="row">
+                  <label for="staticEmail" class="col-4 col-form-label">Description</label>
+                  <div class="col-8">
+                    <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="Ornow.description">
+                  </div>
+                </div>
 
+              </div>
+              <div class="col-lg-6 col-12 px-3">
+                <div class="row">
+                  <label for="staticEmail" class="col-4 col-form-label">Profil Creation</label>
+                  <div class="col-8">
+                    <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="Ornow.profilCreation">
+                  </div>
+                </div>
+                <div class="row">
+                  <label for="staticEmail" class="col-4 col-form-label">Date Creation</label>
+                  <div class="col-8">
+                    <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="Ornow.dateCreation">
+                  </div>
+                </div>
+                <div class="row">
+                  <label for="staticEmail" class="col-4 col-form-label">Poste Modification</label>
+                  <div class="col-8">
+                    <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="Ornow.profilModification">
+                  </div>
+                </div>
+                <div class="row">
+                  <label for="staticEmail" class="col-4 col-form-label">Date Modification</label>
+                  <div class="col-8">
+                    <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="Ornow.dateModification">
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+
+          </div>
+        </div>
     </div>
+    
+      
+    
 </div>
