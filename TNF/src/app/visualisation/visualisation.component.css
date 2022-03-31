@@ -7,14 +7,12 @@ table {
     overflow: scroll;
     overflow-x: hidden;
     overflow-y: auto;
-
 }
 
 table th {
     position: sticky;
     top: 0;
-    background-color: rgb(250, 250, 250);
-    
+    background-color: rgb(250, 250, 250);  
 }
 
 .table > :not(:first-child) {

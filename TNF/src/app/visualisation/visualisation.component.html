@@ -44,25 +44,27 @@
             <div class="row">
                 <caption class="col-12 text-center">Item</caption>
             </div>
-            <table class="table table-hover">
-                <thead>
-                  <tr>
-                    <th scope="col">Identifiant</th>
-                    <th scope="col">Nom</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngIf="this.listeItem.length === 0; else afficheItem">
-                    <td class="text-center" colspan="2">Aucun Item</td>
-                  </tr>
-                  <ng-template #afficheItem>
-                    <tr *ngFor="let item of listeItem"  (click)="selectItem(item.idItem)" [ngClass]="{'table-active': item.idItem === this.selectedItem , 'actifNow' : item.idItem === this.selectedNow }" >
-                        <td class="col-5">{{item.idItem}}</td>
-                        <td class="col-7">{{item.libelleItem}}</td>
+            <div class="scrolltable"> 
+              <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th scope="col">Identifiant</th>
+                      <th scope="col">Nom</th>
                     </tr>
-                  </ng-template>
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    <tr *ngIf="this.listeItem.length === 0; else afficheItem">
+                      <td class="text-center" colspan="2">Aucun Item</td>
+                    </tr>
+                    <ng-template #afficheItem>
+                      <tr *ngFor="let item of listeItem"  (click)="selectItem(item.idItem)" [ngClass]="{'table-active': item.idItem === this.selectedItem , 'actifNow' : item.idItem === this.selectedNow }" >
+                          <td class="col-5">{{item.idItem}}</td>
+                          <td class="col-7">{{item.libelleItem}}</td>
+                      </tr>
+                    </ng-template>
+                  </tbody>
+                </table>
+            </div>
         </div>
 
 
@@ -70,26 +72,28 @@
             <div class="row">
                 <caption class="col-12 text-center" >Sous Item</caption>
             </div>
-            <table class="table table-hover">
-                <thead>
-                  <tr>
-                    <th scope="col">Identifiant</th>
-                    <th scope="col">Nom</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngIf="this.listeSousItem.length === 0; else afficheSousItem">
-                    <td class="text-center" colspan="2">Aucun Sous Item</td>
-                  </tr>
-                  <ng-template #afficheSousItem>
-                    <tr *ngFor="let sousItem of listeSousItem"  (click)="selectSO(sousItem.idSousItem)" [ngClass]="{'table-active': sousItem.idSousItem === this.selectedSousItem, 'actifNow' : sousItem.idSousItem === this.selectedNow }">
-                        <td>{{sousItem.idSousItem}}</td>
-                        <td>{{sousItem.libelleSousItem}}</td>
+            <div class="scrolltable"> 
+              <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th scope="col">Identifiant</th>
+                      <th scope="col">Nom</th>
                     </tr>
-                  </ng-template>
-                  
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    <tr *ngIf="this.listeSousItem.length === 0; else afficheSousItem">
+                      <td class="text-center" colspan="2">Aucun Sous Item</td>
+                    </tr>
+                    <ng-template #afficheSousItem>
+                      <tr *ngFor="let sousItem of listeSousItem"  (click)="selectSO(sousItem.idSousItem)" [ngClass]="{'table-active': sousItem.idSousItem === this.selectedSousItem, 'actifNow' : sousItem.idSousItem === this.selectedNow }">
+                          <td class="col-5">{{sousItem.idSousItem}}</td>
+                          <td class="col-7">{{sousItem.libelleSousItem}}</td>
+                      </tr>
+                    </ng-template>
+                    
+                  </tbody>
+                </table>
+            </div>
         </div>
         <div class="col-xxl-10 offset-xxl-1 mt-5 order-1 order-lg-4 border rounded">
           <div class="row my-1">
@@ -99,65 +103,179 @@
               </div>
             </ng-container>
             <ng-template #displayInfo >
-              <div class="col-lg-6 col-xs-12 px-3 ">
-                <div class="row">
-                  <label for="staticEmail" class="col-4 col-form-label">Identifiant</label>
-                  <div class="col-8">
-                    <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="Ornow.idObjetRepere">
-                  </div>
-                </div>
-                <div class="row">
-                  <label for="staticEmail" class="col-4 col-form-label">Libelle</label>
-                  <div class="col-8">
-                    <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="Ornow.libelleObjetRepere">
-                  </div>
-                </div>
-                <div class="row">
-                  <label for="staticEmail" class="col-4 col-form-label">Valide</label>
-                  <div class="col-8">
-                    <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="Ornow.valide">
-                  </div>
-                </div>
-                <div class="row">
-                  <label for="staticEmail" class="col-4 col-form-label">Description</label>
-                  <div class="col-8">
-                    <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="Ornow.description">
-                  </div>
-                </div>
 
-              </div>
-              <div class="col-lg-6 col-12 px-3">
-                <div class="row">
-                  <label for="staticEmail" class="col-4 col-form-label">Profil Creation</label>
-                  <div class="col-8">
-                    <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="Ornow.profilCreation">
+              <ng-container *ngIf="objectTypeNow == 'OR'; else displayItem">
+             
+                <div class="col-lg-6 col-xs-12 px-3 ">
+                  <div class="row">
+                    <label for="staticEmail" class="col-4 col-form-label">Identifiant</label>
+                    <div class="col-8">
+                      <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="Ornow.idObjetRepere">
+                    </div>
+                  </div>
+                  <div class="row">
+                    <label for="staticEmail" class="col-4 col-form-label">Libelle</label>
+                    <div class="col-8">
+                      <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="Ornow.libelleObjetRepere">
+                    </div>
+                  </div>
+                  <div class="row">
+                    <label for="staticEmail" class="col-4 col-form-label">Valide</label>
+                    <div class="col-8">
+                      <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="Ornow.valide">
+                    </div>
+                  </div>
+                  <div class="row">
+                    <label for="staticEmail" class="col-4 col-form-label">Description</label>
+                    <div class="col-8">
+                      <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="Ornow.description">
+                    </div>
                   </div>
                 </div>
-                <div class="row">
-                  <label for="staticEmail" class="col-4 col-form-label">Date Creation</label>
-                  <div class="col-8">
-                    <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="Ornow.dateCreation">
+                <div class="col-lg-6 col-12 px-3">
+                  <div class="row">
+                    <label for="staticEmail" class="col-4 col-form-label">Profil Creation</label>
+                    <div class="col-8">
+                      <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="Ornow.profilCreation">
+                    </div>
+                  </div>
+                  <div class="row">
+                    <label for="staticEmail" class="col-4 col-form-label">Date Creation</label>
+                    <div class="col-8">
+                      <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="Ornow.dateCreation">
+                    </div>
+                  </div>
+                  <div class="row">
+                    <label for="staticEmail" class="col-4 col-form-label">Poste Modification</label>
+                    <div class="col-8">
+                      <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="Ornow.profilModification">
+                    </div>
+                  </div>
+                  <div class="row">
+                    <label for="staticEmail" class="col-4 col-form-label">Date Modification</label>
+                    <div class="col-8">
+                      <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="Ornow.dateModification">
+                    </div>
                   </div>
                 </div>
-                <div class="row">
-                  <label for="staticEmail" class="col-4 col-form-label">Poste Modification</label>
-                  <div class="col-8">
-                    <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="Ornow.profilModification">
+              </ng-container>
+            </ng-template>
+
+            <ng-template #displayItem >
+
+              <ng-container *ngIf="objectTypeNow == 'Item'; else displaySI">
+             
+                <div class="col-lg-6 col-xs-12 px-3 ">
+                  <div class="row">
+                    <label for="staticEmail" class="col-4 col-form-label">Identifiant</label>
+                    <div class="col-8">
+                      <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="ItemNow.idItem">
+                    </div>
+                  </div>
+                  <div class="row">
+                    <label for="staticEmail" class="col-4 col-form-label">Libelle</label>
+                    <div class="col-8">
+                      <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="ItemNow.libelleItem">
+                    </div>
+                  </div>
+                  <div class="row">
+                    <label for="staticEmail" class="col-4 col-form-label">Actif</label>
+                    <div class="col-8">
+                      <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="ItemNow.actif">
+                    </div>
+                  </div>
+                  <div class="row">
+                    <label for="staticEmail" class="col-4 col-form-label">Description</label>
+                    <div class="col-8">
+                      <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="ItemNow.description">
+                    </div>
                   </div>
                 </div>
-                <div class="row">
-                  <label for="staticEmail" class="col-4 col-form-label">Date Modification</label>
-                  <div class="col-8">
-                    <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="Ornow.dateModification">
+                <div class="col-lg-6 col-12 px-3">
+                  <div class="row">
+                    <label for="staticEmail" class="col-4 col-form-label">Profil Creation</label>
+                    <div class="col-8">
+                      <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="ItemNow.profilCreation">
+                    </div>
+                  </div>
+                  <div class="row">
+                    <label for="staticEmail" class="col-4 col-form-label">Date Creation</label>
+                    <div class="col-8">
+                      <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="ItemNow.dateCreation">
+                    </div>
+                  </div>
+                  <div class="row">
+                    <label for="staticEmail" class="col-4 col-form-label">Poste Modification</label>
+                    <div class="col-8">
+                      <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="ItemNow.profilModification">
+                    </div>
+                  </div>
+                  <div class="row">
+                    <label for="staticEmail" class="col-4 col-form-label">Date Modification</label>
+                    <div class="col-8">
+                      <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="ItemNow.dateModification">
+                    </div>
                   </div>
                 </div>
-              </div>
+              </ng-container>
+            </ng-template>
+
+            <ng-template #displaySI >
+                <div class="col-lg-6 col-xs-12 px-3 ">
+                  <div class="row">
+                    <label for="staticEmail" class="col-4 col-form-label">Identifiant</label>
+                    <div class="col-8">
+                      <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="SousItemNow.idSousItem">
+                    </div>
+                  </div>
+                  <div class="row">
+                    <label for="staticEmail" class="col-4 col-form-label">Libelle</label>
+                    <div class="col-8">
+                      <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="SousItemNow.libelleSousItem">
+                    </div>
+                  </div>
+                  <div class="row">
+                    <label for="staticEmail" class="col-4 col-form-label">Actif</label>
+                    <div class="col-8">
+                      <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="SousItemNow.actif">
+                    </div>
+                  </div>
+                  <div class="row">
+                    <label for="staticEmail" class="col-4 col-form-label">Description</label>
+                    <div class="col-8">
+                      <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="SousItemNow.description">
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-6 col-12 px-3">
+                  <div class="row">
+                    <label for="staticEmail" class="col-4 col-form-label">Profil Creation</label>
+                    <div class="col-8">
+                      <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="SousItemNow.profilCreation">
+                    </div>
+                  </div>
+                  <div class="row">
+                    <label for="staticEmail" class="col-4 col-form-label">Date Creation</label>
+                    <div class="col-8">
+                      <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="SousItemNow.dateCreation">
+                    </div>
+                  </div>
+                  <div class="row">
+                    <label for="staticEmail" class="col-4 col-form-label">Poste Modification</label>
+                    <div class="col-8">
+                      <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="SousItemNow.profilModification">
+                    </div>
+                  </div>
+                  <div class="row">
+                    <label for="staticEmail" class="col-4 col-form-label">Date Modification</label>
+                    <div class="col-8">
+                      <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="SousItemNow.dateModification">
+                    </div>
+                  </div>
+                </div>
             </ng-template>
 
           </div>
         </div>
     </div>
-    
-      
-    
 </div>

@@ -1,0 +1,68 @@
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6 col-xs-12 mt-4">
+            <div class="input-group">
+            <label class="input-group-text" for="searchObject">Recherche</label>
+            <input class="form-control" type="text" placeholder="Identifiant" id="searchObject">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6 col-xs-12 mt-5">
+            <ul class="list-group list-group-horizontal cursor-pointer">
+                <li class="list-group-item col-6 text-center border rounded-top-left border-bottom-0" (click)="selectType(this.TypeObject.OR)" [ngClass]="{'bg-light': this.selectedType === this.TypeObject.OR}" >Type Objet Repere</li>
+                <li class="list-group-item col-6 text-center border rounded-top-right border-bottom-0" (click)="selectType(this.TypeObject.O)" [ngClass]="{'bg-light': this.selectedType === this.TypeObject.O}" >Type Objet</li>
+            </ul>
+            <div class="col-12 py-3 bg-light border border-top-0">
+                <div class="scrolltable cursor-pointer col-12 col-xl-10 offset-xl-1"> 
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th >Identifiant</th>
+                            <th>Nom</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <ng-container *ngIf="this.selectedType === this.TypeObject.OR; else afficheTypeObjet" >
+                                <tr *ngFor="let typeOR of listeTypeOR" (click)="selectObject(typeOR.idTypeOR)"> 
+                                    <td class="col-2"> {{typeOR.idTypeOR}} </td>
+                                    <td class="col-10"> {{typeOR.libelleTypeOR}} </td>
+                                </tr>
+                            </ng-container>
+                            <ng-template #afficheTypeObjet>
+                                <tr *ngFor="let typeO of listeTypeO" (click)="selectObject(typeO.idType)">
+                                    <td class="col-6"> {{typeO.idType}} </td>
+                                    <td class="col-6"> {{typeO.libelleType}} </td>
+                                </tr>
+                            </ng-template>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="!changesNow; else modification" class="col-lg-6 col-xs-12 mt-5 createDiv">
+            <div class="row my-5">
+                <button (click)="selectCreateType()" type="button" class="btn btn-lg btn-light col-12 col-lg-6 offset-lg-3 ">Créer un nouveau type</button>
+            </div>
+            <div (click)="selectModifyType()" *ngIf="this.idSelected !== ''" class="row my-5">
+                <button type="button" class="btn btn-lg btn-light col-12 col-lg-6 offset-lg-3">Modifier le type</button>
+            </div>
+        </div>
+        <ng-template #modification class="col-lg-6 col-xs-12 mt-5 createDiv">
+            <div class="col-lg-6 col-xs-12 mt-5  createDiv">
+                <div class="row border py-5 px-3">
+                    <label for="radioButton" class="form-label ">Type </label>
+                    <div class="form-check form-check-inline me-5">
+                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
+                        <label class="form-check-label" for="inlineRadio1">Type d'objet repère</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
+                        <label class="form-check-label" for="inlineRadio2">Type d'objet</label>
+                    </div>
+                </div>
+            </div>
+        </ng-template>
+    </div>
+</div>

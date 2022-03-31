@@ -15,3 +15,21 @@ export interface ItemInfo {
     dateModification:  Date,
     description: string
 }
+
+export interface ItemAffichage {
+    idItem: string,
+    libelleItem: string,
+    actif: string,
+    profilCreation: string,
+    dateCreation: string,
+    profilModification: string,
+    dateModification:  string,
+    description: string
+}
+
+export enum typeObjet {
+    OR = "OR",
+    Item = "Item",
+    SI = "SI",
+    Aucun = "Aucun"
+}

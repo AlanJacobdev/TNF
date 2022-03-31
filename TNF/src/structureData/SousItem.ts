@@ -14,3 +14,14 @@ export interface SousItemInfo {
     dateModification: Date,
     description: string
 }
+
+export interface SousItemAffichage {
+    idSousItem: string,
+    libelleSousItem: string,
+    actif: string,
+    profilCreation: string,
+    dateCreation: string,
+    profilModification: string,
+    dateModification: string,
+    description: string
+}

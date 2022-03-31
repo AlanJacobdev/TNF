@@ -7,6 +7,7 @@ import { AccueilComponent } from './accueil/accueil.component';
 import { ConnexionComponent } from './connexion/connexion.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { VisualisationComponent } from './visualisation/visualisation.component';
+import { CreateTypeObjectComponent } from './create-type-object/create-type-object.component';
 
 @NgModule({
   declarations: [
@@ -14,7 +15,8 @@ import { VisualisationComponent } from './visualisation/visualisation.component'
     AccueilComponent,
     ConnexionComponent,
     NavbarComponent,
-    VisualisationComponent
+    VisualisationComponent,
+    CreateTypeObjectComponent
   ],
   imports: [
     BrowserModule,
