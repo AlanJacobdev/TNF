@@ -24,3 +24,8 @@ export enum createTypeObject {
     OR = "OR",
     O = "O"
 }
+
+export interface modificationTypeObject{
+    idTypeObjet : string,
+    libelleTypeObjet : string,
+}

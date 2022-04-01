@@ -35,3 +35,7 @@ table {
 .createDiv{
     height: 600px;
 }
+
+.uppercase {
+    text-transform: uppercase;
+}

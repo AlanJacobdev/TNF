@@ -8,6 +8,7 @@ import { ConnexionComponent } from './connexion/connexion.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { VisualisationComponent } from './visualisation/visualisation.component';
 import { CreateTypeObjectComponent } from './create-type-object/create-type-object.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { CreateTypeObjectComponent } from './create-type-object/create-type-obje
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
