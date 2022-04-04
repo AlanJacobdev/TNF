@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
-import {  createTypeObject, modificationTypeObject, TypeObjetInfo, TypeObjetRepereInfo } from 'src/structureData/TypeObject';
+import {  createTypeObject, modificationTypeObject, TypeObjetInfo, TypeObjetRepereInfo, TypeObjetRepereTableau } from 'src/structureData/TypeObject';
 import { FetchcreateTypeObjectService } from './service/fetchcreate-type-object.service';
+import { faXmark } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-create-type-object',
@@ -8,20 +9,25 @@ import { FetchcreateTypeObjectService } from './service/fetchcreate-type-object.
   styleUrls: ['./create-type-object.component.css']
 })
 export class CreateTypeObjectComponent implements OnInit {
-
-  public listeTypeOR: TypeObjetRepereInfo[] = [];
+  @Input() public searchText: string = "";
+  public faXmark = faXmark;
+  public listeTypeOR: TypeObjetRepereTableau[] = [];
   public listeTypeO: TypeObjetInfo[] = [];
   public selectedType : createTypeObject = createTypeObject.OR;
   public TypeObject = createTypeObject;
   public changesNow : boolean = false;
+  public suppresion : boolean = false;
   public idSelected : string = "";
-  @Input() public radio : string = "ee";
+  @Input() public radio : string = "";
   public objectSelect : modificationTypeObject = {
     idTypeObjet: '',
     libelleTypeObjet: ''
   };
-
   public ToastAffiche : boolean = false; 
+  public messageToast : string = "";
+  public typeToast : string = ""
+  public colorToast : string = "";
+  public formValidate : boolean = false;
 
   constructor(private fetchCreateTypeObject : FetchcreateTypeObjectService) { 
     this.refreshListes();
@@ -32,8 +38,22 @@ export class CreateTypeObjectComponent implements OnInit {
   }
 
   refreshListes(){
+
+    this.listeTypeOR.splice(0);
     this.fetchCreateTypeObject.getTypeObjetRepere().then((list: TypeObjetRepereInfo[]) => {
-      this.listeTypeOR = list
+      list.forEach((e : TypeObjetRepereInfo) => {
+        let typeOr : TypeObjetRepereTableau = {
+          idType: e.idTypeOR ,
+          libelleTypeOR: e.libelleTypeOR ,
+          profilCreation: e.profilCreation ,
+          posteCreation: e.posteCreation ,
+          dateCreation: e.posteCreation ,
+          profilModification: e.profilCreation ,
+          posteModification: e.posteModification ,
+          dateModification: e.dateModification 
+        };
+        this.listeTypeOR.push(typeOr)
+      })
     }).catch((e) => {
     })
 
@@ -42,6 +62,18 @@ export class CreateTypeObjectComponent implements OnInit {
     }).catch((e) => {
     })
 
+  }
+
+  manageToast (title : string, text : string, color : string ){
+    this.typeToast = title;
+    this.colorToast = color;
+    this.messageToast = text;
+    this.ToastAffiche = true;
+    setTimeout(() => 
+    {
+      this.ToastAffiche = false;
+    },
+    10000);
   }
 
   selectType (type: createTypeObject) {
@@ -55,6 +87,19 @@ export class CreateTypeObjectComponent implements OnInit {
     this.changesNow = false;
   }
 
+  close(){
+    this.changesNow = false;
+    this.suppresion = false;
+    this.refreshValidationForm();
+  }
+
+  closeToast(){
+    this.ToastAffiche = false;
+  }
+
+  refreshValidationForm(){
+    this.formValidate = false;
+  }
 
   selectCreateType(){
     this.changesNow = true;
@@ -65,9 +110,9 @@ export class CreateTypeObjectComponent implements OnInit {
     this.changesNow = true;
     let res;
     if(this.selectedType === this.TypeObject.OR) {
-      res = this.listeTypeOR.find(element => element.idTypeOR === this.idSelected);  
+      res = this.listeTypeOR.find(element => element.idType === this.idSelected);  
       if (res != undefined){
-        this.objectSelect.idTypeObjet = res.idTypeOR;
+        this.objectSelect.idTypeObjet = res.idType;
         this.objectSelect.libelleTypeObjet = res.libelleTypeOR;
       }
     } else {
@@ -79,91 +124,77 @@ export class CreateTypeObjectComponent implements OnInit {
     }
   }
 
+  selectDeleteType(){
+    this.suppresion = true;
+    this.changesNow = true;
+    
+  }
+
 
   createTypeObjet(identifiant : string, libelle : string) {
-    if(this.radio === "OR") {
-      this.fetchCreateTypeObject.createTypeOR(identifiant,libelle).then((res: TypeObjetRepereInfo) => {
-        console.log(res);
-        
-        if(res === undefined) {
 
-        } else {
-         this.ToastAffiche = true;
-         this.refreshListes();
-         //TODO
-         setTimeout(() => 
-         {
-          this.ToastAffiche = false;
-         },
-         10000);
-         
-        }
-      }).catch((e) => {
-      })
-
-    } else if ( this.radio === "O" ){
-
-      this.fetchCreateTypeObject.createTypeO(identifiant,libelle).then((res: TypeObjetRepereInfo) => {
-        console.log(res);
-        
-        if(res === undefined) {
-
-        } else {
-         this.ToastAffiche = true;
-         this.refreshListes();
-         //TODO
-         setTimeout(() => 
-         {
-          this.ToastAffiche = false;
-         },
-         10000);
-         
-        }
-      }).catch((e) => {
-      })
+    
+    if ( identifiant != '' && libelle != '') {
+      if(this.radio === "OR") {
+        this.fetchCreateTypeObject.createTypeOR(identifiant,libelle).then((res: TypeObjetRepereInfo) => {
+          if(res === undefined) {
+            this.manageToast("Erreur de création", "Le type d'objet repère existe déjà", "red")
+          } else {  
+            this.manageToast("Création", "L'objet repère " + identifiant.toUpperCase() + " a été crée", "#006400")
+            this.refreshListes();
+            this.close();         
+          }
+        }).catch((e) => {
+        })
+      } else if ( this.radio === "O" ){
+        this.fetchCreateTypeObject.createTypeO(identifiant,libelle).then((res: TypeObjetRepereInfo) => {
+          if(res === undefined) {
+            this.manageToast("Erreur de création", "Le type d'objet existe déjà", "red")
+          } else {
+            this.manageToast("Création", "L'objet " + identifiant.toUpperCase() + " a été crée", "#006400")
+            this.refreshListes();
+            this.close();
+          }
+        }).catch((e) => {
+        })
+      }
+    } else {
+      this.formValidate = true;
     }
   }
 
 
   updateTypeObjet(identifiant : string, libelle : string) {
-    if ( this.selectedType == this.TypeObject.OR){
-      this.fetchCreateTypeObject.updateTypeOR(identifiant,libelle).then((res: TypeObjetRepereInfo) => {
-        console.log(res);
-        if (res === undefined) {
-
-        } else {
-          this.ToastAffiche = true;
-          this.refreshListes();
-          //TODO
-          setTimeout(() => 
-          {
-          this.ToastAffiche = false;
-          },
-          10000);
-        }
-
-      }).catch((e) => {
-      })
-    } else if ( this.selectedType === this.TypeObject.O ){
-      this.fetchCreateTypeObject.updateTypeO(identifiant,libelle).then((res: TypeObjetRepereInfo) => {
-        console.log(res);
-        if (res === undefined) {
-
-        } else {
-          this.ToastAffiche = true;
-          this.refreshListes();
-          //TODO
-          setTimeout(() => 
-          {
-          this.ToastAffiche = false;
-          },
-          10000);
-        }
-
-      }).catch((e) => {
-      })
+    console.log(identifiant +" " +libelle)
+    if ( identifiant != '' && libelle != '') {
+      if ( this.selectedType == this.TypeObject.OR){
+        this.fetchCreateTypeObject.updateTypeOR(identifiant,libelle).then((res: TypeObjetRepereInfo) => {
+          console.log(res);
+          if (res === undefined) {
+            this.manageToast("Erreur de modification", "Identificateur inconnu", "red")
+          } else {
+            this.manageToast("Modification", "L'objet repère " + identifiant.toUpperCase() + " a été modifié", "#ff8c00")
+            this.refreshListes();
+            this.close();
+          }
+        }).catch((e) => {
+        })
+      } else if ( this.selectedType === this.TypeObject.O ){
+        this.fetchCreateTypeObject.updateTypeO(identifiant,libelle).then((res: TypeObjetRepereInfo) => {
+          console.log(res);
+          if (res === undefined) {
+            this.manageToast("Erreur de modification", "Identificateur inconnu", "red")
+          } else {
+            this.manageToast("Modification", "L'objet " + identifiant.toUpperCase() + " a été modifié", "#ff8c00")
+            this.refreshListes();
+            this.close();
+          }
+        }).catch((e) => {
+        })
+      }
+    } else {
+      this.formValidate = true;
     }
-
   }
 
   deleteTypeObjet() {
@@ -172,41 +203,26 @@ export class CreateTypeObjectComponent implements OnInit {
       this.fetchCreateTypeObject.deleteTypeOR(this.idSelected).then((res: any) => {
         console.log(res);
         if (res === undefined) {
-
+          this.manageToast("Erreur de suppression", "Identificateur inconnu ou objets liés", "red")
         } else {
-          this.ToastAffiche = true;
+          this.manageToast("Supprimer", "L'objet repère " + this.idSelected + " a été supprimé", "#cd5c5c")
           this.refreshListes();
-          //TODO
-          setTimeout(() => 
-          {
-          this.ToastAffiche = false;
-          },
-          10000);
+          this.close();
         }
-
       }).catch((e) => {
       })
-    }else if ( this.selectedType === this.TypeObject.O ){
+    } else if ( this.selectedType === this.TypeObject.O ){
       this.fetchCreateTypeObject.deleteTypeO(this.idSelected).then((res: any) => {
         if (res === undefined) {
-
+          this.manageToast("Erreur de suppression", "Identificateur inconnu ou objets liés", "red")
         } else {
-          this.ToastAffiche = true;
+          this.manageToast("Supprimer", "L'objet " + this.idSelected + " a été supprimé", "#cd5c5c")
           this.refreshListes();
-          //TODO
-          setTimeout(() => 
-          {
-          this.ToastAffiche = false;
-          },
-          10000);
+          this.close();
         }
-
       }).catch((e) => {
       })
-    
-    
     }
-
   }
 
 }

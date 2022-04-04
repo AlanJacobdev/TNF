@@ -9,6 +9,9 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { VisualisationComponent } from './visualisation/visualisation.component';
 import { CreateTypeObjectComponent } from './create-type-object/create-type-object.component';
 import { FormsModule } from '@angular/forms';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { SearchTablePipe } from './create-type-object/search-table.pipe';
+import { CreateObjectComponent } from './create-object/create-object.component';
 
 @NgModule({
   declarations: [
@@ -17,13 +20,16 @@ import { FormsModule } from '@angular/forms';
     ConnexionComponent,
     NavbarComponent,
     VisualisationComponent,
-    CreateTypeObjectComponent
+    CreateTypeObjectComponent,
+    SearchTablePipe,
+    CreateObjectComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    FontAwesomeModule
   ],
   providers: [],
   bootstrap: [AppComponent]

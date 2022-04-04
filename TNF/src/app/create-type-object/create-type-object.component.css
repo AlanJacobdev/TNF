@@ -39,3 +39,34 @@ table {
 .uppercase {
     text-transform: uppercase;
 }
+
+.close {
+    font-size: 2rem;
+    justify-content: start;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+    display: flex;
+    color: #ea0000;
+    cursor: pointer;
+  
+}
+
+.close:hover {
+    transform: translate(0.5px, 0.5px) scale(1.05,1.05);
+}
+
+.btn-light:hover {
+    background-color: #f2f2f2;
+    border-color: #f2f2f2;
+}
+
+.form-check-input:checked {
+    background-color: #595959;
+    border-color: #595959;
+  }
+
+.form-check-input:focus {
+    outline: 0;
+    box-shadow: 0 0 0 .25rem rgba(159, 159, 159, 0.25);
+}

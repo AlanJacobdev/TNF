@@ -20,6 +20,17 @@ export interface TypeObjetRepereInfo {
     dateModification : string
 }
 
+export interface TypeObjetRepereTableau {
+    idType : string,
+    libelleTypeOR : string,
+    profilCreation : string,
+    posteCreation : string,
+    dateCreation : string,
+    profilModification : string,
+    posteModification : string,
+    dateModification : string
+}
+
 export enum createTypeObject {
     OR = "OR",
     O = "O"

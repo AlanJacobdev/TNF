@@ -2,8 +2,8 @@
     <div class="row">
         <div class="col-lg-6 col-xs-12 mt-4">
             <div class="input-group">
-            <label class="input-group-text" for="searchObject">Recherche</label>
-            <input class="form-control" type="text" placeholder="Identifiant" id="searchObject">
+            <label class="input-group-text" for="searchObject" >Recherche</label>
+            <input class="form-control" type="text" placeholder="Identifiant" id="searchObject" [(ngModel)]="searchText">
             </div>
         </div>
     </div>
@@ -13,7 +13,7 @@
                 <li class="list-group-item col-6 text-center border rounded-top-left border-bottom-0" (click)="selectType(this.TypeObject.OR)" [ngClass]="{'bg-light': this.selectedType === this.TypeObject.OR}" >Type Objet Repere</li>
                 <li class="list-group-item col-6 text-center border rounded-top-right border-bottom-0" (click)="selectType(this.TypeObject.O)" [ngClass]="{'bg-light': this.selectedType === this.TypeObject.O}" >Type Objet</li>
             </ul>
-            <div class="col-12 py-3 bg-light border border-top-0">
+            <div class="col-12 py-3 bg-light border border-top-0  shadow-sm">
                 <div class="scrolltable cursor-pointer col-12 col-xl-10 offset-xl-1"> 
                     <table class="table table-hover">
                         <thead>
@@ -24,15 +24,15 @@
                         </thead>
                         <tbody>
                             <ng-container *ngIf="this.selectedType === this.TypeObject.OR; else afficheTypeObjet" >
-                                <tr *ngFor="let typeOR of listeTypeOR" (click)="selectObject(typeOR.idTypeOR)" [ngClass]="{'table-active': typeOR.idTypeOR === this.idSelected}"> 
-                                    <td class="col-2"> {{typeOR.idTypeOR}} </td>
+                                <tr *ngFor="let typeOR of listeTypeOR | searchTable: searchText" (click)="selectObject(typeOR.idType)" [ngClass]="{'table-active': typeOR.idType === this.idSelected}"> 
+                                    <td class="col-2"> {{typeOR.idType}} </td>
                                     <td class="col-10"> {{typeOR.libelleTypeOR}} </td>
                                 </tr>
                             </ng-container>
                             <ng-template #afficheTypeObjet>
-                                <tr *ngFor="let typeO of listeTypeO" (click)="selectObject(typeO.idType)" [ngClass]="{'table-active': typeO.idType === this.idSelected}">
-                                    <td class="col-6"> {{typeO.idType}} </td>
-                                    <td class="col-6"> {{typeO.libelleType}} </td>
+                                <tr *ngFor="let typeO of listeTypeO | searchTable: searchText" (click)="selectObject(typeO.idType)" [ngClass]="{'table-active': typeO.idType === this.idSelected}">
+                                    <td class="col-2"> {{typeO.idType}} </td>
+                                    <td class="col-10"> {{typeO.libelleType}} </td>
                                 </tr>
                             </ng-template>
                         </tbody>
@@ -43,38 +43,50 @@
 
         <div *ngIf="!changesNow; else formType" class="col-lg-6 col-xs-12 mt-5 order-1 order-lg-2">
             <div class="row my-5">
-                <button (click)="selectCreateType()" type="button" class="btn btn-lg btn-light col-12 col-lg-6 offset-lg-3 ">Créer un nouveau type</button>
+                <button (click)="selectCreateType()" type="button" class="btn btn-lg btn-light col-12 col-lg-6 offset-lg-3 shadow-sm ">Créer un nouveau type</button>
             </div>
-            <div (click)="selectModifyType()" *ngIf="this.idSelected !== ''" class="row my-5">
-                <button type="button" class="btn btn-lg btn-light col-12 col-lg-6 offset-lg-3">Modifier le type</button>
+            <div *ngIf="this.idSelected !== ''" class="row my-5">
+                <button (click)="selectModifyType()"type="button" class="btn btn-lg btn-light col-12 col-lg-6 offset-lg-3 shadow-sm">Modifier le type</button>
             </div>
-            <div (click)="deleteTypeObjet()" *ngIf="this.idSelected !== ''" class="row my-5">
-                <button type="button" class="btn btn-lg btn-light col-12 col-lg-6 offset-lg-3">Supprimer le type</button>
+            <div *ngIf="this.idSelected !== ''" class="row my-5">
+                <button (click)="selectDeleteType()" type="button" class="btn btn-lg btn-light col-12 col-lg-6 offset-lg-3 shadow-sm">Supprimer le type</button>
             </div>
         </div>
         <ng-template #formType >
             <ng-container *ngIf="idSelected == ''; else modification">
-                <div class="col-lg-5 col-xs-12 mt-5 offset-lg-1 order-1 order-lg-2">
-                    <div class="row border rounded py-3 px-3">
-                        <div class="me-5 text-center">
-                            <p class="fs-3">Création </p>
+                <div class="col-lg-5 col-xs-12 mt-5 offset-lg-1 order-1 order-lg-2 needs-validation"  [ngClass]="{'was-validated': formValidate === true}">
+                    <div class="container-fluid border rounded py-3 px-3 shadow-sm">
+                        <div class="text-center row">
+                            <span class="fs-3 col-10 offset-1 ">Création </span>
+                            <fa-icon class="close col-1 text-right" [icon]="faXmark" (click)="close()"></fa-icon>
+                        </div>
+                        <div class ="col-12 mt-3 text-center">
                             <div class="form-check form-check-inline">
-                                <input [(ngModel)]="radio" value="OR" class="form-check-input" type="radio" name="inlineRadioOptions" id="OR" >
+                                <input [(ngModel)]="radio" value="OR" class="form-check-input" type="radio" name="inlineRadioOptions" id="OR" required>
                                 <label class="form-check-label" for="OR">Objet repère</label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input [(ngModel)]="radio" value="O" class="form-check-input" type="radio" name="inlineRadioOptions" id="O" >
+                                <input [(ngModel)]="radio" value="O" class="form-check-input" type="radio" name="inlineRadioOptions" id="O" required>
                                 <label class="form-check-label" for="O">Objet</label>
+                            </div>
+                            <div class="invalid-tooltip">
+                                Veuillez renseigner un Type d'Objet.
                             </div>
                         </div>
                         <div class="col-12 col-lg-10 offset-lg-1 my-3">
                             <div class="form-floating mb-3">
-                                <input #Identifiant type="text" maxlength="2" class="form-control uppercase" id="IdType" placeholder="">
+                                <input #Identifiant type="text" maxlength="2" class="form-control uppercase" id="IdType" placeholder="" required>
                                 <label for="IdType">Identifiant</label>
+                                <div class="invalid-tooltip">
+                                    Veuillez renseigner un ID.
+                                </div>
                             </div>
                             <div class="form-floating">
-                                <input #Libelle type="text" class="form-control" id="IdLibelle" placeholder="">
+                                <input #Libelle type="text" class="form-control" id="IdLibelle" placeholder="" required>
                                 <label for="IdLibelle">Libelle</label>
+                                <div class="invalid-tooltip">
+                                    Veuillez renseigner un libellé.
+                                </div>
                             </div>
                         </div>
                         <button (click)="createTypeObjet(Identifiant.value, Libelle.value)" type="button" class="btn btn-lg btn-light col-10 offset-1 col-lg-6 offset-lg-3 my-2">Créer</button>
@@ -82,22 +94,44 @@
                 </div>
             </ng-container>
             <ng-template #modification >
+                <ng-container *ngIf="!this.suppresion; else supp">
+                    <div class="col-lg-5 col-xs-12 mt-5 offset-lg-1 order-1 order-lg-2 needs-validation"  [ngClass]="{'was-validated': formValidate === true}" >
+                        <div class="container-fluid border rounded py-3 px-3 shadow-sm">
+                            <div class="text-center row ">
+                                <span class="fs-3 col-10 offset-1">Modification </span>
+                                <fa-icon class="close col-1 text-right" [icon]="faXmark" (click)="close()"></fa-icon>
+                            </div>
+                            <div class="col-12 col-lg-10 offset-lg-1 my-3">
+                                <div class="form-floating mb-3">
+                                    <input #ModifIdentifiant type="text" class="form-control" id="IdType" placeholder="" disabled readonly [value]="this.objectSelect.idTypeObjet">
+                                    <label for="IdType">Identifiant</label>
+                                </div>
+                                <div class="form-floating"> 
+                                    <input #ModifLibelle type="text" class="form-control" id="IdLibelle" placeholder="" [value]="this.objectSelect.libelleTypeObjet" required>
+                                    <label for="IdLibelle">Libelle</label>
+                                    <div class="invalid-tooltip">
+                                        Veuillez renseigner un libellé.
+                                    </div>
+                                </div>
+                            </div>
+                            <button (click)="updateTypeObjet(ModifIdentifiant.value, ModifLibelle.value)" type="button" class="btn btn-lg btn-light col-10 offset-1 col-lg-6 offset-lg-3 my-2">Modifier</button>
+                        </div>
+                    </div>
+                </ng-container>
+            </ng-template> 
+            <ng-template #supp >
                 <div class="col-lg-5 col-xs-12 mt-5 offset-lg-1 order-1 order-lg-2">
-                    <div class="row border rounded py-3 px-3">
-                        <div class="me-5 text-center">
-                            <p class="fs-3">Modification</p>
+                    <div class="container-fluid border rounded py-3 px-3 shadow-sm">
+                        <div class="text-center row ">
+                            <span class="fs-3 col-10 offset-1">Suppresion</span>
+                            <fa-icon class="close col-1 text-right" [icon]="faXmark" (click)="close()"></fa-icon>
                         </div>
-                        <div class="col-12 col-lg-10 offset-lg-1 my-3">
-                            <div class="form-floating mb-3">
-                                <input #ModifIdentifiant type="text" class="form-control" id="IdType" placeholder="" disabled readonly [value]="this.objectSelect.idTypeObjet">
-                                <label for="IdType">Identifiant</label>
-                            </div>
-                            <div class="form-floating">
-                                <input #ModifLibelle type="text" class="form-control" id="IdLibelle" placeholder="" [value]="this.objectSelect.libelleTypeObjet">
-                                <label for="IdLibelle">Libelle</label>
+                        <div class="col-12 col-lg-10 offset-lg-1 my-5">
+                            <div class="text-center fs-5">
+                                Voulez-vous supprimer le type <b>{{idSelected}}</b> ?
                             </div>
                         </div>
-                        <button (click)="updateTypeObjet(ModifIdentifiant.value, ModifLibelle.value)" type="button" class="btn btn-lg btn-light col-10 offset-1 col-lg-6 offset-lg-3 my-2">Modifier</button>
+                        <button (click)="deleteTypeObjet()" type="button" class="btn btn-lg btn-light col-10 offset-1 col-lg-6 offset-lg-3 my-2">Supprimer</button>
                     </div>
                 </div>
             </ng-template> 
@@ -108,13 +142,12 @@
     <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
         <div id="liveToast" class="toast hide"  data-bs-autohide="false" role="alert" data-bs-delay="10000" aria-live="assertive" aria-atomic="true" [ngClass]="ToastAffiche ? 'show' : 'hide'">
         <div class="toast-header">
-            <img src="..." class="rounded me-2" alt="...">
-            <strong class="me-auto">Bootstrap</strong>
-            <small>11 mins ago</small>
-            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            <svg class="bd-placeholder-img rounded me-2" width="20" height="20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" attr.fill="{{colorToast}}"></rect></svg>
+            <strong class="me-auto">{{typeToast}}</strong>
+            <button (click)="closeToast()" type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
         </div>
         <div class="toast-body">
-            Hello, world! This is a toast message.
+            {{messageToast}}
         </div>
         </div>
     </div>
