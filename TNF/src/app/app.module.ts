@@ -12,6 +12,7 @@ import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { SearchTablePipe } from './create-type-object/search-table.pipe';
 import { CreateObjectComponent } from './create-object/create-object.component';
+import { FilterVisualisationPipe } from './visualisation/pipe/filter-visualisation.pipe';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { CreateObjectComponent } from './create-object/create-object.component';
     VisualisationComponent,
     CreateTypeObjectComponent,
     SearchTablePipe,
-    CreateObjectComponent
+    CreateObjectComponent,
+    FilterVisualisationPipe
   ],
   imports: [
     BrowserModule,

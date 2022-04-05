@@ -1,0 +1,6 @@
+.scrolltable {
+    max-height: 500px;
+    overflow: scroll;
+    overflow-x: hidden;
+    overflow-y: auto;
+}

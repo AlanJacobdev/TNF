@@ -11,6 +11,12 @@
             </select>
             </div>
         </div>
+        <div class="col-lg-4 offset-lg-1 col-xs-12 mt-4">
+          <div class="input-group">
+            <label class="input-group-text" for="search" >Recherche</label>
+            <input class="form-control" type="text" placeholder="Identifiant" id="search" [(ngModel)]="searchText">
+            </div>
+      </div>
     </div>
     <div class="row mt-3 ">
         <div class="col-sm-12 col-lg-4 col-xxl-4 order-2 order-lg-1">
@@ -30,7 +36,7 @@
                             <td class="text-center" colspan="2">Aucun Objet Repère</td>
                         </tr>
                         <ng-template #afficheOR>
-                            <tr *ngFor="let objetRepere of listeObjetRepere" (click)="selectOR(objetRepere.idObjetRepere)" [ngClass]="{'table-active': objetRepere.idObjetRepere === this.selectedOr , 'actifNow' : objetRepere.idObjetRepere === this.selectedNow }">
+                            <tr *ngFor="let objetRepere of listeObjetRepere | filterVisualisation : searchText" (click)="selectOR(objetRepere.idObjetRepere)" [ngClass]="{'table-active': objetRepere.idObjetRepere === this.selectedOr , 'actifNow' : objetRepere.idObjetRepere === this.selectedNow }">
                                 <td class="col-5">{{objetRepere.idObjetRepere}}</td>
                                 <td class="col-7">{{objetRepere.libelleObjetRepere}}</td>
                             </tr>
@@ -57,7 +63,7 @@
                       <td class="text-center" colspan="2">Aucun Item</td>
                     </tr>
                     <ng-template #afficheItem>
-                      <tr *ngFor="let item of listeItem"  (click)="selectItem(item.idItem)" [ngClass]="{'table-active': item.idItem === this.selectedItem , 'actifNow' : item.idItem === this.selectedNow }" >
+                      <tr *ngFor="let item of listeItem | filterVisualisation : searchText"  (click)="selectItem(item.idItem)" [ngClass]="{'table-active': item.idItem === this.selectedItem , 'actifNow' : item.idItem === this.selectedNow }" >
                           <td class="col-5">{{item.idItem}}</td>
                           <td class="col-7">{{item.libelleItem}}</td>
                       </tr>
@@ -85,7 +91,7 @@
                       <td class="text-center" colspan="2">Aucun Sous Item</td>
                     </tr>
                     <ng-template #afficheSousItem>
-                      <tr *ngFor="let sousItem of listeSousItem"  (click)="selectSO(sousItem.idSousItem)" [ngClass]="{'table-active': sousItem.idSousItem === this.selectedSousItem, 'actifNow' : sousItem.idSousItem === this.selectedNow }">
+                      <tr *ngFor="let sousItem of listeSousItem filterVisualisation : searchText "  (click)="selectSO(sousItem.idSousItem)" [ngClass]="{'table-active': sousItem.idSousItem === this.selectedSousItem, 'actifNow' : sousItem.idSousItem === this.selectedNow }">
                           <td class="col-5">{{sousItem.idSousItem}}</td>
                           <td class="col-7">{{sousItem.libelleSousItem}}</td>
                       </tr>

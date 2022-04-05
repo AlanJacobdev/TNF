@@ -1,1 +1,86 @@
-<p>create-object works!</p>
+<div class="container">
+    <div class="row mt-1">
+        <div class="row col-lg-4 col-xs-12 mt-4 ">
+            <legend class="col-form-label col-3 col-lg-4 pt-0 align-self-center text-center">Objet</legend>
+            <div class ="col-6">
+                <div class="form-check form-check">
+                    <input (change)="selectObject(this.TypeObject.OR)" class="form-check-input" type="radio" name="inlineRadioOptions" id="OR" required checked>
+                    <label class="form-check-label" for="OR">Objet repère</label>
+                </div>
+                <div class="form-check form-check">
+                    <input (change)="selectObject(this.TypeObject.Item)" class="form-check-input" type="radio" name="inlineRadioOptions" id="O" required>
+                    <label class="form-check-label" for="O">Objet</label>
+                </div>
+                <div class="form-check form-check">
+                    <input (change)="selectObject(this.TypeObject.SI)" class="form-check-input" type="radio" name="inlineRadioOptions" id="SI" required>
+                    <label class="form-check-label" for="SI">Sous Item</label>
+                </div>
+                <div class="invalid-tooltip">
+                    Veuillez renseigner un Type d'Objet.
+                </div>
+            </div>
+        </div>
+        <div class="row col-lg-7 col-xs-12">
+            <div class="col-12 col-lg-9 mt-3">
+                <div class="row mb-3">
+                    <div class="input-group">
+                        <label class="input-group-text col-3 col-lg-2" for="atelierSelect">Atelier</label>
+                        <select (change)=selectAtelier($event) class="form-select" id="atelierSelect" aria-label="Default select example">
+                            <option value =-1 selected>Sélectionner l'atelier</option>
+                            <option *ngFor="let atelier of listeAtelier" [value]="atelier.idAtelier">
+                                {{atelier.idAtelier}} - {{atelier.libelleAtelier}}
+                            </option>
+                        </select>
+                    </div> 
+                </div>
+                <div class="row ">
+                    <div *ngIf="this.objectNow ==='OR'" class="input-group">
+                        <label class="input-group-text col-3 col-lg-2" for="atelierSelect">Type</label>
+                        <select (change)=selectType($event) class="form-select" id="atelierSelect" aria-label="Default select example">
+                            <option value =-1 selected>Sélectionner le type </option>
+                            <option *ngFor="let type of listeTypeOR" [value]="type.idType">
+                                {{type.libelleTypeOR}}
+                            </option>
+                        </select>
+                    </div>
+                    <div *ngIf="this.objectNow !=='OR'" class="input-group">
+                        <label class="input-group-text col-3 col-lg-2" for="atelierSelect"> Type </label>
+                        <select (change)=selectType($event) class="form-select" id="atelierSelect" aria-label="Default select example">
+                            <option value =-1 selected>Sélectionner le type </option>
+                            <option *ngFor="let type of listeTypeO" [value]="type.idType">
+                                {{type.libelleType}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+
+        <div class="row col-lg-7 offset-lg-1 col-xs-12 mt-lg-5">
+            <div class="scrolltable"> 
+                <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th class="col-4" scope="col-4">N° Séquentiel</th>
+                        <th class="col-8" scope="col-8">Libellé</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngIf="this.listeNUetOr.length === 0; else afficheSousItem">
+                        <td class="text-center" colspan="2">Aucun Sous Item</td>
+                      </tr>
+                      <ng-template #afficheSousItem>
+                        <tr *ngFor="let nuOR of listeNUetOr" [ngClass]="{'table-active': nuOR.libelleOR !==''}" >
+                            <td class="col-4">{{nuOR.numeroUnique}}</td>
+                            <td class="col-8">{{nuOR.libelleOR}}</td>
+                        </tr>
+                      </ng-template>
+                      
+                    </tbody>
+                  </table>
+              </div>
+        </div>
+
+    </div>
+</div>

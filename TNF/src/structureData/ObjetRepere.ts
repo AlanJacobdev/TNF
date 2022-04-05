@@ -23,3 +23,8 @@ export interface ObjetRepereAffichage {
     dateModification: string,
     description: string
 }
+
+export interface NUetOR {
+    numeroUnique: string,
+    libelleOR: string
+}

@@ -21,7 +21,7 @@ export class VisualisationComponent implements OnInit {
   public selectedItem: string = "";
   public selectedSousItem: string = "";
   public selectedNow : string = "";
-
+  public searchText : string = "";
   public objectTypeNow: typeObjet = typeObjet.Aucun;
   public Ornow : ObjetRepereAffichage = {
     idObjetRepere: '',
