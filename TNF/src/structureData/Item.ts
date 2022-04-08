@@ -27,9 +27,22 @@ export interface ItemAffichage {
     description: string
 }
 
+export interface ItemEtDispo{
+    idItem: string,
+    libelle: string
+}
+
 export enum typeObjet {
     OR = "OR",
     Item = "Item",
     SI = "SI",
     Aucun = "Aucun"
+}
+
+export interface ItemModification {
+    idItem: string,
+    libelleItem: string,
+    valide: boolean,
+    description: string
+
 }

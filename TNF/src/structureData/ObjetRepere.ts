@@ -28,3 +28,10 @@ export interface NUetOR {
     numeroUnique: string,
     libelleOR: string
 }
+
+export interface ObjetRepereModification {
+    idObjetRepere: string,
+    libelleObjetRepere: string,
+    valide: boolean,
+    description: string
+}

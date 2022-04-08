@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
 import { AtelierInfo } from 'src/structureData/Atelier';
 import { ItemInfo } from 'src/structureData/Item';
+import { ObjetRepereInfo } from 'src/structureData/ObjetRepere';
 import { SousItemInfo } from 'src/structureData/SousItem';
 
 @Injectable({
@@ -25,7 +26,7 @@ export class FetchVisuService {
   async getObjetRepereByAteliers(Atelier : string) : Promise<any> {
     let url = "http://localhost:3000/objetrepere/getORByAtelier/{atelier}"
     url = url.replace("{atelier}", Atelier)
-    const res : AtelierInfo[] = await lastValueFrom(this.http.get<AtelierInfo[]>(url));
+    const res : ObjetRepereInfo[] = await lastValueFrom(this.http.get<ObjetRepereInfo[]>(url));
     if (res.length == 0) {
       return undefined;
     } else {

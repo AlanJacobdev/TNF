@@ -46,18 +46,18 @@
                         <table class="table table-hover cursor ">
                             <thead>
                             <tr>
-                                <th class="col-4" scope="col-4">N° Séquentiel</th>
-                                <th class="col-8" scope="col-8">Libellé</th>
+                                <th class="col-4 text-center" scope="col-4">N° Séquentiel</th>
+                                <th class="col-8 text-center align-middle" scope="col-8">Libellé</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr *ngIf="this.listeNUetOr.length === 0; else afficheDispoOR">
-                                <td class="text-center" colspan="2">Aucun numéro unique</td>
+                            <tr *ngIf="this.listeOR.length === 0; else afficheOR">
+                                <td class="text-center" colspan="2">Aucun Sous Item</td>
                             </tr>
-                            <ng-template #afficheDispoOR>
-                                <tr *ngFor="let nuOR of listeNUetOr" (click)="(nuOR.libelleOR === '') ? selectNU(nuOR.numeroUnique) : ''" [ngClass]="{'table-active': nuOR.libelleOR !=='', 'actifNow' : nuOR.numeroUnique === this.nuSelect }" >
-                                    <td class="col-4">{{nuOR.numeroUnique}}</td>
-                                    <td class="col-8">{{nuOR.libelleOR}}</td>
+                            <ng-template #afficheOR>
+                                <tr *ngFor="let OR of listeOR" (click)="selectOR(OR.idObjetRepere)" [ngClass]="{'actifNow' : OR.idObjetRepere === this.idORSelect }" >
+                                    <td class="col-4">{{OR.idObjetRepere}}</td>
+                                    <td class="col-8">{{OR.libelleObjetRepere}}</td>
                                 </tr>
                             </ng-template>
                             
@@ -70,42 +70,33 @@
                 <div class="col-12 col-lg-4 mt-5 px-lg-5 offset-lg-1 needs-validation"  [ngClass]="{'was-validated': formValidate === true}">
                     <div class="container-fluid border rounded shadow-sm py-2">
                         <div class="text-center row">
-                            <span class="fs-3 col-10 offset-1 ">Création </span>
+                            <span class="fs-3 col-10 offset-1 ">Modification </span>
                         </div>
                         
                         <div class="col-12 col-lg-10 offset-lg-1 my-3">
                             <div class="form-floating mb-3">
-                                <input #Identifiant type="text" maxlength="6" class="form-control uppercase" id="IdType" placeholder="" required [value]="this.typeNow + this.nuSelect" disabled readonly>
+                                <input #IdentifiantOR type="text" maxlength="6" class="form-control uppercase" id="IdType" placeholder="" required [value]="this.orSelect.idObjetRepere" disabled readonly>
                                 <label for="IdType">Identifiant</label>
                             </div>
                             <div class="form-floating mb-3">
-                                    <select (change)=selectType($event) class="form-select" id="atelierSelect" aria-label="Default select example">
-                                        <option value ="" selected>Sélectionner le type </option>
-                                        <option *ngFor="let type of listeTypeOR" [value]="type.idType">
-                                            {{type.libelleTypeOR}}
-                                        </option>
-                                    </select>
-                                    <label for="atelierSelect">Type</label>
-                            </div>
-                            <div class="form-floating mb-3">
-                                <input #Libelle type="text" maxlength="50" class="form-control" id="IdLibelle" placeholder="" required>
+                                <input #LibelleOR type="text" maxlength="50" class="form-control" id="IdLibelle" placeholder="" required [value]="this.orSelect.libelleObjetRepere">
                                 <label for="IdLibelle">Libelle</label>
                                 <div class="invalid-tooltip">
                                     Veuillez renseigner un libellé.
                                 </div>
                             </div>
                             <div class="form-floating mb-3">
-                                <input #Description type="text" class="form-control" id="IdDescription" placeholder="" >
+                                <input #DescriptionOR type="text" class="form-control" id="IdDescription" placeholder="" [value]="this.orSelect.description">
                                 <label for="IdDescription">Description</label>
                             </div>
                             <div class="form-check ms-2">
-                                <input #Valide class="form-check-input" type="checkbox" (change)="setcheckValide()" id="IdValide"  >
+                                <input #ValideOR class="form-check-input" type="checkbox" (change)="setcheckValide()" id="IdValide" checked="this.orSelect.valide" >
                                 <label class="form-check-label" for="IdValide">
                                 Valide
                                 </label>
                             </div>
                         </div>
-                        <button *ngIf="this.atelierSelect != '' && this.nuSelect != '' && this.typeNow != ''" (click)="createObjet(Libelle.value, Description.value)" type="button" class="btn btn-lg btn-light col-10 offset-1 col-lg-6 offset-lg-3 my-2">Créer</button>
+                        <button *ngIf="this.idORSelect != ''" (click)="modifyObjet(LibelleOR.value, DescriptionOR.value)" type="button" class="btn btn-lg btn-light col-10 offset-1 col-lg-6 offset-lg-3 my-2">Modifier</button>
                     </div>
                 </div>
             </ng-container>
@@ -121,11 +112,11 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr *ngIf="this.listeOR.length === 0; else afficheOR">
-                                <td class="text-center" colspan="2">Aucun Item</td>
+                            <tr *ngIf="this.listeOR.length === 0; else afficheOrItem">
+                                <td class="text-center" colspan="2">Aucun Sous Item</td>
                             </tr>
-                            <ng-template #afficheOR>
-                                <tr *ngFor="let OR of listeOR" (click)="selectOR(OR.idObjetRepere)" [ngClass]="{'actifNow' : OR.idObjetRepere === this.orSelect }" >
+                            <ng-template #afficheOrItem>
+                                <tr *ngFor="let OR of listeOR" (click)="selectOR(OR.idObjetRepere)" [ngClass]="{'actifNow' : OR.idObjetRepere === this.idORSelect }" >
                                     <td class="col-4">{{OR.idObjetRepere}}</td>
                                     <td class="col-8">{{OR.libelleObjetRepere}}</td>
                                 </tr>
@@ -146,13 +137,12 @@
                             </thead>
                             <tbody>
                             <tr *ngIf="this.listeItem.length === 0; else afficheItem">
-                                <td *ngIf="this.typeNow === ''" class="text-center" colspan="2">Sélectionner un type d'objet</td>
-                                <td *ngIf="this.typeNow !== ''" class="text-center" colspan="2">Aucun Sous Item</td>
+                                <td class="text-center" colspan="2">Aucun Item</td>
                             </tr>
                             <ng-template #afficheItem>
-                                <tr *ngFor="let item of listeItem"  (click)="(item.libelle === '') ? selectItem(item.idItem) : ''"[ngClass]="{'table-active': item.libelle !=='', 'actifNow' : item.idItem === this.itemSelect }" >
+                                <tr *ngFor="let item of listeItem"  (click)="selectItem(item.idItem)" [ngClass]="{'actifNow' : item.idItem === this.idItemSelect }" >
                                     <td class="col-4">{{item.idItem}}</td>
-                                    <td class="col-8">{{item.libelle}}</td>
+                                    <td class="col-8">{{item.libelleItem}}</td>
                                 </tr>
                             </ng-template>
                             
@@ -166,59 +156,35 @@
                 <div class="col-12 col-lg-4 mt-5 px-lg-5 needs-validation"  [ngClass]="{'was-validated': formValidate === true}">
                     <div class="container-fluid border rounded shadow-sm py-2">
                         <div class="text-center row">
-                            <span class="fs-3 col-10 offset-1 ">Création </span>
+                            <span class="fs-3 col-10 offset-1">Modification</span>
                         </div>
                         
                         <div class="col-12 col-lg-10 offset-lg-1 my-3">
                             <div class="form-floating mb-3">
-                                <input #Identifiant type="text" maxlength="6" class="form-control uppercase" id="IdType" placeholder="" required [value]="this.itemSelect + ((this.checkSecurite) ? 'Z' : '')" disabled readonly>
+                                <input #Identifiant type="text" maxlength="6" class="form-control uppercase" id="IdType" placeholder="" required [value]="this.itemSelect.idItem" disabled readonly>
                                 <label for="IdType">Identifiant</label>
                             </div>
                             <div class="form-floating mb-3">
-                                    <select (change)=selectType($event) class="form-select" id="atelierSelect" aria-label="Default select example">
-                                        <option value ="" selected>Sélectionner le type </option>
-                                        <option *ngFor="let type of listeTypeO" [value]="type.idType">
-                                            {{type.libelleType}}
-                                        </option>
-                                    </select>
-                                    <label  for="atelierSelect"> Type </label>
-                            </div>
-                            <div class="form-floating mb-3">
-                                <input #LibelleItem type="text" maxlength="50" class="form-control" id="IdLibelle" placeholder="" required>
+                                <input #LibelleItem type="text" maxlength="50" class="form-control" id="IdLibelle" placeholder="" [value]="this.itemSelect.libelleItem" required>
                                 <label for="IdLibelle">Libelle</label>
                                 <div class="invalid-tooltip">
                                     Veuillez renseigner un libellé.
                                 </div>
                             </div>
                             <div class="form-floating mb-3">
-                                <input #DigitItem type="number" oninput="this.value = this.value.replace(/\D+/g, '')" min="0" max="9" maxlength="1" class="form-control" id="IdDigit" placeholder=""  [value]="this.itemSelect.slice(-1)" required disabled readonly>
-                                <label for="IdDigit">Digit</label>
-                                <div class="invalid-tooltip">
-                                    Veuillez renseigner un digit.
-                                </div>
-                            </div>
-                            <div class="form-floating mb-3">
-                                <input #DescriptionItem type="text" class="form-control" id="IdDescription" placeholder="" >
+                                <input #DescriptionItem type="text" class="form-control" id="IdDescription" placeholder="" [value]="this.itemSelect.description">
                                 <label for="IdDescription">Description</label>
                             </div>
-                            <div class="form-check ms-2 mb-3">
-                                <input #SecuriteItem class="form-check-input" type="checkbox" (change)="setcheckSecurite()" id="IdSecurite"  >
-                                <label class="form-check-label" for="IdSecurite">
-                                Securité
-                                </label>
-                            </div>
                             <div class="form-check ms-2">
-                                <input #ValideItem class="form-check-input" type="checkbox" (change)="setcheckValide()" id="IdValide"  >
+                                <input #ValideItem class="form-check-input" type="checkbox" (change)="setcheckValide()" id="IdValide" [(ngModel)]="this.checkValide" >
                                 <label class="form-check-label" for="IdValide">
                                 Valide
                                 </label>
                             </div>
                         </div>
-                        <button *ngIf="this.atelierSelect != '' && this.itemSelect != '' && this.typeNow != ''" (click)="createItem(LibelleItem.value, DigitItem.value, DescriptionItem.value)" type="button" class="btn btn-lg btn-light col-10 offset-1 col-lg-6 offset-lg-3 my-2">Créer</button>
+                        <button *ngIf="this.idItemSelect != ''" (click)="modifyItem(LibelleItem.value, DescriptionItem.value)" type="button" class="btn btn-lg btn-light col-10 offset-1 col-lg-6 offset-lg-3 my-2"> Modifier </button>
                     </div>
                 </div>
-
-
             </ng-container>
         </div>
         
