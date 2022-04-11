@@ -79,7 +79,7 @@
                                 <label for="IdType">Identifiant</label>
                             </div>
                             <div class="form-floating mb-3">
-                                    <select (change)=selectType($event) class="form-select" id="atelierSelect" aria-label="Default select example">
+                                    <select (change)=selectType($event) [(ngModel)] ="this.typeNow" class="form-select" id="atelierSelect" aria-label="Default select example">
                                         <option value ="" selected>Sélectionner le type </option>
                                         <option *ngFor="let type of listeTypeOR" [value]="type.idType">
                                             {{type.libelleTypeOR}}
@@ -175,7 +175,7 @@
                                 <label for="IdType">Identifiant</label>
                             </div>
                             <div class="form-floating mb-3">
-                                    <select (change)=selectType($event) class="form-select" id="atelierSelect" aria-label="Default select example">
+                                    <select (change)=selectType($event) [(ngModel)] ="this.typeNow" class="form-select" id="atelierSelect" aria-label="Default select example">
                                         <option value ="" selected>Sélectionner le type </option>
                                         <option *ngFor="let type of listeTypeO" [value]="type.idType">
                                             {{type.libelleType}}
@@ -198,17 +198,17 @@
                                 </div>
                             </div>
                             <div class="form-floating mb-3">
-                                <input #DescriptionItem type="text" class="form-control" id="IdDescription" placeholder="" >
+                                <input #DescriptionItem type="text"  class="form-control" id="IdDescription" placeholder="" >
                                 <label for="IdDescription">Description</label>
                             </div>
                             <div class="form-check ms-2 mb-3">
-                                <input #SecuriteItem class="form-check-input" type="checkbox" (change)="setcheckSecurite()" id="IdSecurite"  >
+                                <input #SecuriteItem class="form-check-input" type="checkbox" [checked] ="this.checkSecurite" (change)="setcheckSecurite()" id="IdSecurite"  >
                                 <label class="form-check-label" for="IdSecurite">
                                 Securité
                                 </label>
                             </div>
                             <div class="form-check ms-2">
-                                <input #ValideItem class="form-check-input" type="checkbox" (change)="setcheckValide()" id="IdValide"  >
+                                <input #ValideItem class="form-check-input" type="checkbox" (change)="setcheckValide()" [checked] ="this.checkValide" id="IdValide"  >
                                 <label class="form-check-label" for="IdValide">
                                 Valide
                                 </label>

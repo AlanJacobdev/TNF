@@ -40,6 +40,7 @@ export class CreateObjectComponent implements OnChanges {
   public typeToast : string = ""
   public colorToast : string = "";
 
+
   constructor(private fetchCreateTypeObject : FetchcreateTypeObjectService, private fetchVisuService : FetchVisuService, private fetchCreateObjectService: FetchCreateObjectService) {
     this.getListType();
     this.getAteliers();
@@ -140,6 +141,15 @@ export class CreateObjectComponent implements OnChanges {
     }
   }
 
+  deleteDataForm() {
+    this.nuSelect = ""
+    this.checkSecurite = false;
+    this.checkSecurite = false;
+    this.checkValide = false;
+    this.typeNow = "";
+    this.itemSelect = "";
+  }
+
   public selectAtelier (Atelier : any) {
     let atelier;
     try {
@@ -147,7 +157,9 @@ export class CreateObjectComponent implements OnChanges {
     } catch  {
       atelier = Atelier;
     }
-    console.log(atelier)
+
+    this.listeItem.splice(0);
+    this.deleteDataForm();
     if( atelier == '') {   
       this.listeNUetOr.splice(0);
       this.listeOR.splice(0);
@@ -158,6 +170,7 @@ export class CreateObjectComponent implements OnChanges {
         this.afficherNUOR(atelier)
       } else if (this.objectNow === this.TypeObject.Item){
         this.getObjetRepereByAteliers();
+        
       }
     }
   }
@@ -209,11 +222,6 @@ export class CreateObjectComponent implements OnChanges {
     this.formValidate = false;
   }
 
-  resetValueForm() {
-    this.checkSecurite = false;
-    this.checkValide = false;
-  }
-
   createObjet(libelle : string, description : string) {
    
     if ( this.nuSelect != '' && this.typeNow != '' && libelle != '') {
@@ -242,7 +250,7 @@ export class CreateObjectComponent implements OnChanges {
         } else {  
           this.manageToast("Création", "L'item " + this.typeNow + this.orSelect.substring(2,6)+ digitNumber+ ((this.checkSecurite)? 'Z' : '')+ " a été crée", "#006400")
           this.getSIfromORandDispo();   
-          this.resetValueForm();   
+          this.deleteDataForm();   
         }
       }).catch((e) => {
       })

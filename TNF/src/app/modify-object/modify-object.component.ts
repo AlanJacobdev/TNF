@@ -70,7 +70,7 @@ export class ModifyObjectComponent implements OnInit {
   }
 
 
-  getObjetRepereByAteliers(){
+  getObjetRepereByAtelier(){
     this.fetchVisuService.getObjetRepereByAteliers(this.atelierSelect).then((list: ObjetRepereInfo[]) => {
       if (list != undefined) {
         this.listeOR = list;
@@ -112,28 +112,35 @@ export class ModifyObjectComponent implements OnInit {
       atelier = Atelier;
     }
     this.idORSelect = "";
+    this.idItemSelect = "";
+    this.listeItem.splice(0);
     this.orSelect = {
       idObjetRepere : '',
       libelleObjetRepere : '',
       valide : false,
       description : ''
     }
+    this.itemSelect = {
+      idItem: '',
+      libelleItem: '',
+      valide: false,
+      description: ''
+    }
     if( atelier == '') {
       this.listeOR.splice(0);
       this.atelierSelect = '';
-      
+
     } else {
       this.atelierSelect = atelier;
       if(this.objectNow === this.TypeObject.OR ) {
-        this.getObjetRepereByAteliers();
+        this.getObjetRepereByAtelier();
       } else if (this.objectNow === this.TypeObject.Item){
-        this.getObjetRepereByAteliers();
+        this.getObjetRepereByAtelier();
       }
     }
   }
 
   public selectOR(idOR : string) {
-    console.log(idOR)
     if (this.objectNow === this.TypeObject.OR ) {
       let orInfo = this.listeOR.find((element) => element.idObjetRepere === idOR);
       if (orInfo != undefined) {
@@ -141,6 +148,7 @@ export class ModifyObjectComponent implements OnInit {
         this.orSelect.libelleObjetRepere = orInfo.libelleObjetRepere;
         this.orSelect.valide = orInfo.valide;
         this.orSelect.description = orInfo.description;
+        this.checkValide = orInfo.valide;
       }
       this.idORSelect = idOR;
     } else if (this.objectNow === this.TypeObject.Item) {
@@ -160,8 +168,11 @@ export class ModifyObjectComponent implements OnInit {
         this.itemSelect.valide = itemInfo.actif;
         this.itemSelect.description = itemInfo.description;
         this.checkValide = itemInfo.actif
+        console.log(this.itemSelect.valide + " " +this.checkValide);
       }    
     }
+
+    
   }
 
   public selectObject (object : typeObjet) {
@@ -199,7 +210,7 @@ export class ModifyObjectComponent implements OnInit {
             let selectedOR = this.orSelect;
             this.manageToast("Création", "L'objet repère " + this.orSelect.idObjetRepere+ " a été modifié", "#006400");
             this.refreshValidationForm();
-            this.selectAtelier(this.atelierSelect);
+            this.getObjetRepereByAtelier();
             this.orSelect = selectedOR;
             this.idORSelect = selectedOR.idObjetRepere;
           }
@@ -212,20 +223,18 @@ export class ModifyObjectComponent implements OnInit {
 
   modifyItem(libelle : string, description : string){
     if (libelle != '' ) {
+      
+      
       this.fetchModifyTypeObject.modifyitem(this.itemSelect.idItem, libelle, this.checkValide, description).then((res: any) => {
         if(typeof res === 'string') {
           this.manageToast("Erreur de création", res , "red")
         } else {  
-          let selectedOR = this.idORSelect;
-          let selectedItem = this.itemSelect;
-          this.manageToast("Création", "L'item " + this.itemSelect.idItem+ " a été modifié", "#006400");
           this.refreshValidationForm();
-          this.selectAtelier(this.atelierSelect);
+          let selectedOR = this.idORSelect;
+          this.manageToast("Création", "L'item " + this.itemSelect.idItem+ " a été modifié", "#006400");
           this.idORSelect = selectedOR;
-          this.itemSelect = selectedItem;
-          this.idItemSelect = selectedItem.idItem;
           this.getItemFromOR();
-          this.selectItem(this.idItemSelect);
+          console.log(selectedOR + " " + this.idORSelect + " " + this.itemSelect )
         }
       }).catch((e) => {
       })

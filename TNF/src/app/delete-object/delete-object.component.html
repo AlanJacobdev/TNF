@@ -1,8 +1,8 @@
 <div class="container-fluid px-5">
     <div class="row mt-3 px-5">
-        <div class="col-12 col-lg-8">
+        <div class="col-12 col-lg-12">
             <div class="row">
-                <div class=" row col-lg-5 col-12 mt-4 ">
+                <div class="row offset-lg-2 col-lg-3 col-12 mt-4 ">
                     <legend class="col-form-label col-3 col-lg-4 pt-0 align-self-center text-center">Objet</legend>
                     <div class ="col-9 col-lg-6">
                         <div class="form-check form-check">
@@ -22,7 +22,7 @@
                         </div>
                     </div>
                 </div>
-                <div class=" col-lg-7 col-12">
+                <div class=" col-lg-5 col-12">
                     <div class="col-11 mt-5">
                         <div class="row ">
                             <div class="input-group">
@@ -41,7 +41,7 @@
         </div>
         <div class="row m-0 p-0"> 
             <ng-container *ngIf="objectNow == 'OR'">
-                <div class="col-lg-6 offset-lg-1 col-xs-12 mt-lg-5">
+                <div class="col-lg-6 offset-lg-3 col-12 mt-lg-5">
                     <div class="scrolltable"> 
                         <table class="table table-hover cursor ">
                             <thead>
@@ -55,7 +55,7 @@
                                 <td class="text-center" colspan="2">Aucun Sous Item</td>
                             </tr>
                             <ng-template #afficheOR>
-                                <tr *ngFor="let OR of listeOR" (click)="selectOR(OR.idObjetRepere)" [ngClass]="{'actifNow' : OR.idObjetRepere === this.idORSelect }" >
+                                <tr data-bs-toggle="modal" data-bs-target="#Suppresion" *ngFor="let OR of listeOR" (click)="selectOR(OR.idObjetRepere)" [ngClass]="{'actifNow' : OR.idObjetRepere === this.idORSelect }" >
                                     <td class="col-4">{{OR.idObjetRepere}}</td>
                                     <td class="col-8">{{OR.libelleObjetRepere}}</td>
                                 </tr>
@@ -65,44 +65,11 @@
                         </table>
                     </div>
                 </div>
-        
-
-                <div class="col-12 col-lg-4 mt-5 px-lg-5 offset-lg-1 needs-validation"  [ngClass]="{'was-validated': formValidate === true}">
-                    <div class="container-fluid border rounded shadow-sm py-2">
-                        <div class="text-center row">
-                            <span class="fs-3 col-10 offset-1 ">Modification </span>
-                        </div>
-                        
-                        <div class="col-12 col-lg-10 offset-lg-1 my-3">
-                            <div class="form-floating mb-3">
-                                <input #IdentifiantOR type="text" maxlength="6" class="form-control uppercase" id="IdType" placeholder="" required [value]="this.orSelect.idObjetRepere" disabled readonly>
-                                <label for="IdType">Identifiant</label>
-                            </div>
-                            <div class="form-floating mb-3">
-                                <input #LibelleOR type="text" maxlength="50" class="form-control" id="IdLibelle" placeholder="" required [value]="this.orSelect.libelleObjetRepere">
-                                <label for="IdLibelle">Libelle</label>
-                                <div class="invalid-tooltip">
-                                    Veuillez renseigner un libellé.
-                                </div>
-                            </div>
-                            <div class="form-floating mb-3">
-                                <input #DescriptionOR type="text" class="form-control" id="IdDescription" placeholder="" [value]="this.orSelect.description">
-                                <label for="IdDescription">Description</label>
-                            </div>
-                            <div class="form-check ms-2">
-                                <input #ValideOR class="form-check-input" type="checkbox" (change)="setcheckValide()" id="IdValide" [checked]="this.checkValide" >
-                                <label class="form-check-label" for="IdValide">
-                                Valide
-                                </label>
-                            </div>
-                        </div>
-                        <button *ngIf="this.idORSelect != ''" (click)="modifyObjet(LibelleOR.value, DescriptionOR.value)" type="button" class="btn btn-lg btn-light col-10 offset-1 col-lg-6 offset-lg-3 my-2">Modifier</button>
-                    </div>
-                </div>
             </ng-container>
 
             <ng-container  *ngIf="objectNow == 'Item'">
-                <div class="col-lg-4 px-lg-5 col-xs-12 mt-lg-5">
+                
+                <div class="offset-lg-2 col-lg-4 px-lg-5 col-12 mt-lg-5">
                     <div class="scrolltable"> 
                         <table class="table table-hover cursor ">
                             <thead>
@@ -140,7 +107,7 @@
                                 <td class="text-center" colspan="2">Aucun Item</td>
                             </tr>
                             <ng-template #afficheItem>
-                                <tr *ngFor="let item of listeItem"  (click)="selectItem(item.idItem)" [ngClass]="{'actifNow' : item.idItem === this.idItemSelect }" >
+                                <tr data-bs-toggle="modal" data-bs-target="#Suppresion" *ngFor="let item of listeItem"  (click)="selectItem(item.idItem)" [ngClass]="{'actifNow' : item.idItem === this.idItemSelect }" >
                                     <td class="col-4">{{item.idItem}}</td>
                                     <td class="col-8">{{item.libelleItem}}</td>
                                 </tr>
@@ -150,41 +117,7 @@
                         </table>
                     </div>
                 </div>
-
-
-
-                <div class="col-12 col-lg-4 mt-5 px-lg-5 needs-validation"  [ngClass]="{'was-validated': formValidate === true}">
-                    <div class="container-fluid border rounded shadow-sm py-2">
-                        <div class="text-center row">
-                            <span class="fs-3 col-10 offset-1">Modification</span>
-                        </div>
-                        
-                        <div class="col-12 col-lg-10 offset-lg-1 my-3">
-                            <div class="form-floating mb-3">
-                                <input #Identifiant type="text" maxlength="6" class="form-control uppercase" id="IdType" placeholder="" required [value]="this.itemSelect.idItem" disabled readonly>
-                                <label for="IdType">Identifiant</label>
-                            </div>
-                            <div class="form-floating mb-3">
-                                <input #LibelleItem type="text" maxlength="50" class="form-control" id="IdLibelle" placeholder="" [value]="this.itemSelect.libelleItem" required>
-                                <label for="IdLibelle">Libelle</label>
-                                <div class="invalid-tooltip">
-                                    Veuillez renseigner un libellé.
-                                </div>
-                            </div>
-                            <div class="form-floating mb-3">
-                                <input #DescriptionItem type="text" class="form-control" id="IdDescription" placeholder="" [value]="this.itemSelect.description">
-                                <label for="IdDescription">Description</label>
-                            </div>
-                            <div class="form-check ms-2">
-                                <input #ValideItem class="form-check-input" type="checkbox" (change)="setcheckValide()" id="IdValide" [checked]="this.checkValide" >
-                                <label class="form-check-label" for="IdValide">
-                                Valide
-                                </label>
-                            </div>
-                        </div>
-                        <button *ngIf="this.idItemSelect != ''" (click)="modifyItem(LibelleItem.value, DescriptionItem.value)" type="button" class="btn btn-lg btn-light col-10 offset-1 col-lg-6 offset-lg-3 my-2"> Modifier </button>
-                    </div>
-                </div>
+            
             </ng-container>
         </div>
         
@@ -202,4 +135,30 @@
         </div>
         </div>
     </div>
+
+    
+
 </div>
+
+  
+  <!-- Modal -->
+  <div class="modal  fade" id="Suppresion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Supprimer</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div *ngIf="this.objectNow === this.TypeObject.OR" class="modal-body">
+          Voulez-vous supprimer l'objet repère {{this.idORSelect}} ? 
+        </div>
+        <div *ngIf="this.objectNow === this.TypeObject.Item" class="modal-body">
+            Voulez-vous supprimer l'item {{this.idItemSelect}} ? 
+          </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="deleteObject()" data-bs-dismiss="modal">Supprimer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  

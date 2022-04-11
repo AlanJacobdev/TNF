@@ -14,6 +14,7 @@ import { SearchTablePipe } from './create-type-object/search-table.pipe';
 import { CreateObjectComponent } from './create-object/create-object.component';
 import { FilterVisualisationPipe } from './visualisation/pipe/filter-visualisation.pipe';
 import { ModifyObjectComponent } from './modify-object/modify-object.component';
+import { DeleteObjectComponent } from './delete-object/delete-object.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { ModifyObjectComponent } from './modify-object/modify-object.component';
     SearchTablePipe,
     CreateObjectComponent,
     FilterVisualisationPipe,
-    ModifyObjectComponent
+    ModifyObjectComponent,
+    DeleteObjectComponent
   ],
   imports: [
     BrowserModule,
