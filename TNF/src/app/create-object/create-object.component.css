@@ -5,21 +5,7 @@
     overflow-y: auto;
 }
 
-.close {
-    font-size: 2rem;
-    justify-content: start;
-    margin: 0;
-    padding: 0;
-    text-align: left;
-    display: flex;
-    color: #ea0000;
-    cursor: pointer;
-  
-}
 
-.close:hover {
-    transform: translate(0.5px, 0.5px) scale(1.05,1.05);
-}
 
 .cursor {
     cursor: pointer;

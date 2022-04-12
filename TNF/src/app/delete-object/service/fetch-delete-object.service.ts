@@ -11,8 +11,10 @@ export class FetchDeleteObjectService {
   constructor(private readonly http: HttpClient, private cookieService : CookieService) { }
 
   async supprimerObject(idOR : string): Promise<any> {
-    let url = "http://localhost:3000/objetrepere/{idOR}";
+    let user = this.cookieService.get('login');
+    let url = "http://localhost:3000/objetrepere/{idOR}/{User}";
     url = url.replace("{idOR}", idOR)
+    url = url.replace("{User}", user)
     try {
       const res : any = await lastValueFrom(this.http.delete<any>(url));
       console.log(res);
@@ -40,8 +42,10 @@ export class FetchDeleteObjectService {
   }
 
   async supprimerItem(idItem : string): Promise<any> {
-    let url = "http://localhost:3000/item/{idItem}";
+    let user = this.cookieService.get('login');
+    let url = "http://localhost:3000/item/{idItem}/{User}";
     url = url.replace("{idItem}", idItem)
+    url = url.replace("{User}", user)
     try {
       const res : any = await lastValueFrom(this.http.delete<any>(url));
       console.log(res);

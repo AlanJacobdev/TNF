@@ -42,7 +42,7 @@ table {
 
 .close {
     font-size: 2rem;
-    justify-content: start;
+    justify-content: flex-start;
     margin: 0;
     padding: 0;
     text-align: left;

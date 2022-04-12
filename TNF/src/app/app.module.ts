@@ -15,6 +15,7 @@ import { CreateObjectComponent } from './create-object/create-object.component';
 import { FilterVisualisationPipe } from './visualisation/pipe/filter-visualisation.pipe';
 import { ModifyObjectComponent } from './modify-object/modify-object.component';
 import { DeleteObjectComponent } from './delete-object/delete-object.component';
+import { RecopieObjectComponent } from './recopie-object/recopie-object.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { DeleteObjectComponent } from './delete-object/delete-object.component';
     CreateObjectComponent,
     FilterVisualisationPipe,
     ModifyObjectComponent,
-    DeleteObjectComponent
+    DeleteObjectComponent,
+    RecopieObjectComponent
   ],
   imports: [
     BrowserModule,
