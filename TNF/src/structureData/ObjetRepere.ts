@@ -35,3 +35,16 @@ export interface ObjetRepereModification {
     valide: boolean,
     description: string
 }
+
+export interface ObjetRepereSave {
+    idObjetRepere : string,
+    libelleObjetRepere  : string,
+    codeType : string,
+    numeroUnique : string,
+    valide : boolean,
+    description: string,
+    etat : string,
+    date : string,
+    profilModification : string,
+    posteModification : string
+}

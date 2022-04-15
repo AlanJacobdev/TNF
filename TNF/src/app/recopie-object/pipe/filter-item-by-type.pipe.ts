@@ -1,9 +1,9 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'filterVisualisation'
+  name: 'filterItemByType'
 })
-export class FilterVisualisationPipe implements PipeTransform {
+export class FilterItemByTypePipe implements PipeTransform {
 
   transform(value: any, args?: any): any {
     if (!value) return null;
@@ -11,9 +11,8 @@ export class FilterVisualisationPipe implements PipeTransform {
 
     args = args.toLowerCase();
     return value.filter(function(item: any) {
-      return JSON.stringify(item)
-        .toLowerCase()
-        .includes(args);
+      console.log(item.idType)
+        return item.idItem.toLowerCase().includes(args);
     });
   }
 

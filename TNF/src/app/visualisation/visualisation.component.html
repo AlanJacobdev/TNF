@@ -16,7 +16,12 @@
             <label class="input-group-text" for="search" >Recherche</label>
             <input class="form-control" type="text" placeholder="Identifiant" id="search" [(ngModel)]="searchText">
             </div>
-      </div>
+        </div>
+        <div *ngIf="this.objectTypeNow != TypeObjet.Aucun" class="col-lg-3 mt-4 text-end">
+          <button data-bs-toggle="modal" data-bs-target="#History" type="button" (click)=getHistory(); class="btn btn-light"><fa-icon class="close col-1 text-right" [icon]="faHistory" ></fa-icon>  Historique</button>
+        </div>
+        
+        
     </div>
     <div class="row mt-3 ">
         <div class="col-sm-12 col-lg-4 col-xxl-4 order-2 order-lg-1">
@@ -101,7 +106,7 @@
                 </table>
             </div>
         </div>
-        <div class="col-xxl-10 offset-xxl-1 mt-5 order-1 order-lg-4 border rounded">
+        <div class="col-xxl-10 offset-xxl-1 mt-lg-5 mt-1 order-1 order-lg-4 border rounded">
           <div class="row my-1">
             <ng-container *ngIf="selectedNow === ''; else displayInfo">
               <div class="col-12 my-5 text-center">
@@ -285,3 +290,197 @@
         </div>
     </div>
 </div>
+    <!-- Modal -->
+<div class="modal fade" id="History" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Historique de {{this.selectedNow}} </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        
+        <ng-container *ngIf="objectTypeNow == 'OR'; else NgItemHistory">
+          <ng-container *ngIf="this.ORHistory.length !=0; else NoHistory"> 
+            <div *ngFor="let or of this.ORHistory" class="border-bottom" >
+              <div class="container ">
+                  <div class="row m-3 border border-2 rounded">
+                    <div class="col">
+                      <div class="row border-bottom border-1 justify-content-center p-1">
+                        <div class="row col-4 col-lg-3 justify-content-center text-center text-lg-start">
+                          <fa-icon class="fs-5 col-12 col-sm-2" [icon]="faCalendar" ></fa-icon> 
+                          <span class="col-12 col-sm-10 lh-lg">{{or.date | date: 'dd/MM/yyyy'}}</span>
+                        </div>
+                        <div class="row col-4 col-lg-3 justify-content-center text-center text-lg-start">
+                          <fa-icon class="fs-5 col-12 col-sm-2" [icon]="faClock" ></fa-icon> 
+                          <span class="col-12 col-sm-10 lh-lg">{{or.date | date: 'HH:mm'}}</span>
+                        </div>
+                        <div class="row col-4 col-lg-3 justify-content-center text-center text-lg-start">
+                          <fa-icon class="fs-5 col-12 col-sm-2" [icon]="faUser" ></fa-icon> 
+                          <span class="col-12 col-sm-10 lh-lg">{{or.profilModification}}</span>
+                        </div>
+                      </div>
+                      <div class="row m-3">
+                        <div class="col-12 col-lg-5 col-xl-6 mb-3"> 
+                          <div class=" input-group">
+                            <label for="IdentifiantHistory" class="input-group-text col-4 col-lg-6">Identifiant</label>
+                            <input type="text" readonly disabled class="form-control bg-light" id="IdentifiantHistory" [value]="or.idObjetRepere">
+                          </div>
+                        </div>
+                        <div class="col-12 col-lg-7 col-xl-6 mb-3">
+                          <div class=" input-group">
+                            <label for="IdentifiantHistory" class="input-group-text col-4">Libelle</label>
+                            <input type="text" readonly disabled class="form-control bg-light" id="IdentifiantHistory" [value]="or.libelleObjetRepere">
+                          </div>
+                        </div>
+                        <div class="col-12 col-lg-5 col-xl-6 mb-3 ">
+                          <div class=" input-group">
+                            <label for="IdentifiantHistory" class="input-group-text col-4 col-lg-6">Valide</label>
+                            <input type="text" readonly disabled class="form-control bg-light" id="IdentifiantHistory" [value]="(or.valide)? 'Oui' : 'Non'">
+                          </div>
+                        </div>
+                        <div class="col-12 col-lg-7 col-xl-6 mb-3">
+                          <div class=" input-group">
+                            <label for="IdentifiantHistory" class="input-group-text col-4">Description</label>
+                            <input type="text" readonly disabled class="form-control bg-light" id="IdentifiantHistory" [value]="or.description">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+        </ng-container>
+        <ng-template #NoHistory>
+          <div class="container">
+            <div class="row"> 
+              <div class="col text-center">
+                Aucun historique n'est disponible pour cet objet.
+              </div>
+            </div>
+          </div>
+        </ng-template>
+
+        <ng-template #NgItemHistory>
+          <ng-container  *ngIf="objectTypeNow == 'Item'; else NgSIHistory">
+            <ng-container *ngIf="this.ItemHistory.length !=0; else NoHistory">
+              <div *ngFor="let item of this.ItemHistory" class="border-bottom" >
+                <div class="container ">
+                    <div class="row m-3 border border-2 rounded">
+                      <div class="col">
+                        <div class="row border-bottom border-1 justify-content-center p-1">
+                          <div class="row col-4 col-lg-3 justify-content-center text-center text-lg-start">
+                            <fa-icon class="fs-5 col-12 col-sm-2" [icon]="faCalendar" ></fa-icon> 
+                            <span class="col-12 col-sm-10 lh-lg">{{item.date | date: 'dd/MM/yyyy'}}</span>
+                          </div>
+                          <div class="row col-4 col-lg-3 justify-content-center text-center text-lg-start">
+                            <fa-icon class="fs-5 col-12 col-sm-2" [icon]="faClock" ></fa-icon> 
+                            <span class="col-12 col-sm-10 lh-lg">{{item.date | date: 'HH:mm'}}</span>
+                          </div>
+                          <div class="row col-4 col-lg-3 justify-content-center text-center text-lg-start">
+                            <fa-icon class="fs-5 col-12 col-sm-2" [icon]="faUser" ></fa-icon> 
+                            <span class="col-12 col-sm-10 lh-lg">{{item.profilModification}}</span>
+                          </div>
+                        </div>
+                        <div class="row m-3">
+                          <div class="col-6 mb-3"> 
+                            <div class="row input-group">
+                              <label for="IdentifiantHistory" class="input-group-text col-4">Identifiant</label>
+                              <input type="text" readonly disabled class="form-control bg-light" id="IdentifiantHistory" [value]="item.idItem">
+                            </div>
+                          </div>
+                          <div class="col-6 mb-3">
+                            <div class="row input-group">
+                              <label for="IdentifiantHistory" class="input-group-text col-4">Libelle</label>
+                              <input type="text" readonly disabled class="form-control bg-light" id="IdentifiantHistory" [value]="item.libelleItem">
+                            </div>
+                          </div>
+                          <div class="col-6 ">
+                            <div class="row input-group">
+                              <label for="IdentifiantHistory" class="input-group-text col-4">Actif</label>
+                              <input type="text" readonly disabled class="form-control bg-light" id="IdentifiantHistory" [value]="(item.actif)? 'Oui' : 'Non'">
+                            </div>
+                          </div>
+                          <div class="col-6">
+                            <div class="row input-group">
+                              <label for="IdentifiantHistory" class="input-group-text col-4">Description</label>
+                              <input type="text" readonly disabled class="form-control bg-light" id="IdentifiantHistory" [value]="item.description">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+          </ng-container>
+        </ng-template>
+
+        <ng-template #NgSIHistory>
+          <ng-container *ngIf="objectTypeNow == 'SI'; else NoHistory">
+            <ng-container *ngIf="this.SIHistory.length !=0; else NoHistory">
+              <div *ngFor="let si of this.SIHistory" class="border-bottom" >
+                <div class="container ">
+                    <div class="row m-3 border border-2 rounded">
+                      <div class="col">
+                        <div class="row border-bottom border-1 justify-content-center p-1">
+                          <div class="row col-4 col-lg-3 justify-content-center text-center text-lg-start">
+                            <fa-icon class="fs-5 col-12 col-sm-2" [icon]="faCalendar" ></fa-icon> 
+                            <span class="col-12 col-sm-10 lh-lg">{{si.date | date: 'dd/MM/yyyy'}}</span>
+                          </div>
+                          <div class="row col-4 col-lg-3 justify-content-center text-center text-lg-start">
+                            <fa-icon class="fs-5 col-12 col-sm-2" [icon]="faClock" ></fa-icon> 
+                            <span class="col-12 col-sm-10 lh-lg">{{si.date | date: 'HH:mm'}}</span>
+                          </div>
+                          <div class="row col-4 col-lg-3 justify-content-center text-center text-lg-start">
+                            <fa-icon class="fs-5 col-12 col-sm-2" [icon]="faUser" ></fa-icon> 
+                            <span class="col-12 col-sm-10 lh-lg">{{si.profilModification}}</span>
+                          </div>
+                        </div>
+                        <div class="row m-3">
+                          <div class="col-6 mb-3"> 
+                            <div class="row input-group">
+                              <label for="IdentifiantHistory" class="input-group-text col-4">Identifiant</label>
+                              <input type="text" readonly disabled class="form-control bg-light" id="IdentifiantHistory" [value]="si.idSousItem">
+                            </div>
+                          </div>
+                          <div class="col-6 mb-3">
+                            <div class="row input-group">
+                              <label for="IdentifiantHistory" class="input-group-text col-4">Libelle</label>
+                              <input type="text" readonly disabled class="form-control bg-light" id="IdentifiantHistory" [value]="si.libelleSousItem">
+                            </div>
+                          </div>
+                          <div class="col-6 ">
+                            <div class="row input-group">
+                              <label for="IdentifiantHistory" class="input-group-text col-4">Actif</label>
+                              <input type="text" readonly disabled class="form-control bg-light" id="IdentifiantHistory" [value]="(si.actif)? 'Oui' : 'Non'">
+                            </div>
+                          </div>
+                          <div class="col-6">
+                            <div class="row input-group">
+                              <label for="IdentifiantHistory" class="input-group-text col-4">Description</label>
+                              <input type="text" readonly disabled class="form-control bg-light" id="IdentifiantHistory" [value]="si.description">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+          </ng-container>
+        </ng-template>
+
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+

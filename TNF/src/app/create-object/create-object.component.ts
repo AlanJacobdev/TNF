@@ -7,14 +7,14 @@ import { FetchcreateTypeObjectService } from '../create-type-object/service/fetc
 import { FetchVisuService } from '../visualisation/service/fetch-visu.service';
 import { FetchCreateObjectService } from './service/fetch-create-object.service';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
-import { SousItemInfo } from 'src/structureData/SousItem';
+
 
 @Component({
   selector: 'app-create-object',
   templateUrl: './create-object.component.html',
   styleUrls: ['./create-object.component.css']
 })
-export class CreateObjectComponent implements OnChanges {
+export class CreateObjectComponent implements OnInit {
 
   public faXmark = faXmark;
   @Input() public radio : typeObjet = typeObjet.Aucun;
@@ -45,12 +45,8 @@ export class CreateObjectComponent implements OnChanges {
     this.getListType();
     this.getAteliers();
    }
-
-  
-  ngOnChanges(changements: SimpleChanges) {
-    //Insérez votre code de détection du changement ici
-    console.log(changements); //Valeur actuelle du libellé (après le changement)
-    console.log(changements['radio'].previousValue); //Ancienne valeur du libellé (avant le changement)
+  ngOnInit(): void {
+    throw new Error('Method not implemented.');
   }
 
   getAteliers(){
@@ -144,10 +140,7 @@ export class CreateObjectComponent implements OnChanges {
   deleteDataForm() {
     this.nuSelect = ""
     this.checkSecurite = false;
-    this.checkSecurite = false;
     this.checkValide = false;
-    this.typeNow = "";
-    this.itemSelect = "";
   }
 
   public selectAtelier (Atelier : any) {

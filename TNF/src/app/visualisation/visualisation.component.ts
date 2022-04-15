@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { AtelierInfo } from 'src/structureData/Atelier';
-import { ItemAffichage, ItemInfo, typeObjet } from 'src/structureData/Item';
-import { ObjetRepereAffichage, ObjetRepereInfo } from 'src/structureData/ObjetRepere';
-import { SousItemAffichage, SousItemInfo } from 'src/structureData/SousItem';
+import { ItemAffichage, ItemInfo, ItemSave, typeObjet } from 'src/structureData/Item';
+import { ObjetRepereAffichage, ObjetRepereInfo, ObjetRepereSave } from 'src/structureData/ObjetRepere';
+import { SousItemAffichage, SousItemInfo, SousItemSave } from 'src/structureData/SousItem';
 import { FetchVisuService } from './service/fetch-visu.service';
+import { faHistory, faCalendar, faUser, faClock } from '@fortawesome/free-solid-svg-icons';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-visualisation',
@@ -12,17 +14,24 @@ import { FetchVisuService } from './service/fetch-visu.service';
 })
 export class VisualisationComponent implements OnInit {
   
+  public faClock = faClock;
+  public faHistory = faHistory;
+  public faCalendar = faCalendar;
+  public faUser = faUser;
   public listeAtelier: AtelierInfo[] = [];
   public listeObjetRepere : ObjetRepereInfo[] = [];
   public listeItem : ItemInfo[] = [];
   public listeSousItem : SousItemInfo[] = [];
-
+  public ORHistory : ObjetRepereSave[] = [];
+  public ItemHistory : ItemSave[] = [];
+  public SIHistory : SousItemSave[] = [];
   public selectedOr: string = "";
   public selectedItem: string = "";
   public selectedSousItem: string = "";
   public selectedNow : string = "";
   public searchText : string = "";
   public objectTypeNow: typeObjet = typeObjet.Aucun;
+  public TypeObjet = typeObjet;
   public Ornow : ObjetRepereAffichage = {
     idObjetRepere: '',
     libelleObjetRepere: '',
@@ -56,7 +65,7 @@ export class VisualisationComponent implements OnInit {
     description: ''
   }
 
-  constructor(private fetchVisuService : FetchVisuService) { 
+  constructor(private fetchVisuService : FetchVisuService, private cookieService : CookieService) { 
     this.fetchVisuService.getAllAteliers().then((list: AtelierInfo[]) => {
       this.listeAtelier = list
       console.log(this.listeAtelier)
@@ -70,6 +79,7 @@ export class VisualisationComponent implements OnInit {
 
   public selectAtelier(Atelier: any ) {
     this.selectedNow = "";
+    this.selectedOr = "";
     this.objectTypeNow = typeObjet.Aucun;
     let value = Atelier.target.value; 
     this.fetchVisuService.getObjetRepereByAteliers(value).then((list: ObjetRepereInfo[]) => {
@@ -82,16 +92,14 @@ export class VisualisationComponent implements OnInit {
         this.listeItem = [];
         this.listeSousItem = [];
       }
-      console.log(this.listeObjetRepere)
     }).catch((e) => {
     })
   }
 
   public selectOR(idOr : string) {
     this.selectedOr = idOr;
-    this.objectTypeNow = typeObjet.OR;
+    this.objectTypeNow = this.TypeObjet.OR;
     let res = this.listeObjetRepere.find(element => element.idObjetRepere === idOr);
-    console.log(res);
     if ( res != undefined){
       this.Ornow.idObjetRepere = res.idObjetRepere ;
       this.Ornow.libelleObjetRepere = res.libelleObjetRepere ;
@@ -105,7 +113,6 @@ export class VisualisationComponent implements OnInit {
       this.Ornow.valide = (res.valide) ? "Oui" : "Non";
 
     }
-
     this.selectedNow = idOr;
     this.selectedItem = "";
     this.selectedSousItem = "";
@@ -124,7 +131,7 @@ export class VisualisationComponent implements OnInit {
 
   public selectItem(idItem : string) {
     this.selectedItem = idItem;
-    this.objectTypeNow = typeObjet.Item;
+    this.objectTypeNow = this.TypeObjet.Item;
     let res = this.listeItem.find(element => element.idItem === idItem);
     console.log(res);
     if ( res != undefined){
@@ -155,7 +162,7 @@ export class VisualisationComponent implements OnInit {
 
   public selectSO(idSousItem : string) {
     this.selectedSousItem = idSousItem;
-    this.objectTypeNow = typeObjet.SI;
+    this.objectTypeNow = this.TypeObjet.SI;
     let res = this.listeSousItem.find(element => element.idSousItem === idSousItem);
     console.log(res);
     if ( res != undefined){
@@ -174,5 +181,50 @@ export class VisualisationComponent implements OnInit {
     this.selectedNow = idSousItem;
   }
 
+
+  public getHistory(){
+    if(this.objectTypeNow == typeObjet.OR) {
+      this.getHistoryOR();
+    } else if (this.objectTypeNow == typeObjet.Item) {
+      this.getHistoryItem();
+    } else if (this.objectTypeNow == typeObjet.SI) {
+      this.getHistorySI();
+    }
+  }
+
+  public getHistoryOR() {
+    this.fetchVisuService.getHistoryObjetRepere(this.selectedNow).then((list: ObjetRepereSave[]) => {
+      if(list == undefined) {
+        this.ORHistory = [];
+      } else {
+        this.ORHistory = list;
+      }
+      console.log(this.listeItem)
+    }).catch((e) => {
+    })
+  }
   
+  public getHistoryItem() {
+    this.fetchVisuService.getHistoryItem(this.selectedNow).then((list: ItemSave[]) => {
+      if(list == undefined) {
+        this.ItemHistory = [];
+      } else {
+        this.ItemHistory = list;
+      }
+      console.log(this.listeItem)
+    }).catch((e) => {
+    })
+  }
+
+  public getHistorySI() {
+    this.fetchVisuService.getHistorySousItem(this.selectedNow).then((list: SousItemSave[]) => {
+      if(list == undefined) {
+        this.SIHistory = [];
+      } else {
+        this.SIHistory = list;
+      }
+      console.log(this.listeItem)
+    }).catch((e) => {
+    })
+  }
 }
