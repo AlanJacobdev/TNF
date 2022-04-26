@@ -10,7 +10,7 @@ table {
 }
 
 .scrolltableItem {
-    max-height: 330px;
+    max-height: 560px;
     min-height: 150px;
     overflow: scroll;
     overflow-x: hidden;

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { elementAt } from 'rxjs';
 import { AtelierInfo } from 'src/structureData/Atelier';
 import { ItemInfo, ItemRecopie } from 'src/structureData/Item';
-import { ObjetRepereInfo } from 'src/structureData/ObjetRepere';
+import { ObjetRepereInfo, ObjetRepereUtile } from 'src/structureData/ObjetRepere';
 import { modificationTypeObject, TypeObjetInfo } from 'src/structureData/TypeObject';
 import { FetchcreateTypeObjectService } from '../create-type-object/service/fetchcreate-type-object.service';
 import { FetchVisuService } from '../visualisation/service/fetch-visu.service';
@@ -23,8 +23,13 @@ export class RecopieObjectComponent implements OnInit {
   public searchText : string = "";
   public selectedOr: string = "";
   public typeNow: string = "";
-
+  public checkAll : boolean = false;
    
+  public atelierCible : string = "";
+  public nuCible : string = "";
+  public ORCible : string = "";
+  public ORCibleExist : boolean = false;
+
   public ToastAffiche : boolean = false; 
   public messageToast : string = "";
   public typeToast : string = ""
@@ -65,7 +70,6 @@ export class RecopieObjectComponent implements OnInit {
           this.listeTypeOOfOR.push(item)
         }
       })
-      console.log(this.listeTypeOOfOR);
     }).catch((e) => {
     })
   }
@@ -87,7 +91,6 @@ export class RecopieObjectComponent implements OnInit {
       })
     }
   }
-
 
   public selectOR(idOr : string) {
     this.selectedOr = idOr;
@@ -115,12 +118,29 @@ export class RecopieObjectComponent implements OnInit {
 
   public selectType(Type: any ) {
     this.typeNow = Type.target.value;
-    console.log(this.listeItem)
+    this.verifyCheckAll();
+  }
+
+  verifyCheckAll(){
+    let allCheckByType = true;
+    for (const item of this.listeItem) {
+      if (item.codeObjet === this.typeNow || this.typeNow === "") {
+        if(item.isPaste === false) {
+          allCheckByType = false;
+        }
+      } 
+    }
+    if (allCheckByType) {
+      this.checkAll = true;
+    } else {
+      this.checkAll = false;
+    }
   }
 
   public checkItem(idItem : string) {
     let index = this.listeItem.findIndex((element) => element.idItem === idItem)
     this.listeItem[index].isPaste = !this.listeItem[index].isPaste;
+    this.verifyCheckAll();
   }
 
   manageToast (title : string, text : string, color : string ){
@@ -142,18 +162,61 @@ export class RecopieObjectComponent implements OnInit {
 
   recopieItem(atelier : string, nu : string){
     let tabItem = this.listeItem.filter(element => element.isPaste === true);
-    console.log(tabItem);
-    
     if (tabItem.length !== 0) {
-      this.fetchRecopieService.recopySpecificItemFromOR(tabItem,this.selectedOr, atelier+nu).then((res: any) => {
-        if(typeof res === 'string') {
-          this.manageToast("Erreur de recopie", res , "red")
-        } else {  
-          this.manageToast("Recopie", res.message, "#006400");
-        }
-      }).catch((e) => {
-      })
+      if(this.ORCibleExist){
+        this.fetchRecopieService.recopySpecificItemFromOR(tabItem,this.selectedOr, atelier+nu).then((res: any) => {
+          if(typeof res === 'string') {
+            this.manageToast("Erreur de recopie", res , "red")
+          } else {  
+            this.manageToast("Recopie", res.message, "#006400");
+          }
+        }).catch((e) => {
+        })
+      } else {
+        this.manageToast("Erreur de recopie", "Objet repère cible inexistant" , "red")
+      }
     }
+  }
+
+  public allSelect() {
+    this.checkAll = !this.checkAll;
+    for (const item of this.listeItem) {
+      if (item.codeObjet === this.typeNow || this.typeNow === "") {
+        item.isPaste = this.checkAll;
+      } 
+    }
+  }
+
+  public selectAtelierCible(Atelier: any ) {
+    this.atelierCible = Atelier.target.value; 
+    if(this.atelierCible != '' && this.nuCible.length == 3) {
+      this.getORByNU();
+    } else {
+      this.ORCible = ""
+    }
+  }
+
+
+  public selectNUCible (NU : any) {
+    this.nuCible = NU.target.value;
+    if(this.atelierCible != '' && this.nuCible.length == 3) {
+      this.getORByNU();
+    } else {
+      this.ORCible = ""
+    }
+  }
+
+  public getORByNU (){
+    this.fetchRecopieService.getORByNU(this.atelierCible+this.nuCible).then((res: ObjetRepereUtile) => {
+      if(typeof res == "undefined" ) {
+        this.ORCible = "Aucun objet repère correspondant";
+        this.ORCibleExist = false;
+      } else {  
+        this.ORCible = res.idObjetRepere + " - " + res.libelleObjetRepere;
+        this.ORCibleExist = true;
+      }
+    }).catch((e) => {
+    })
   }
   
 }

@@ -1,7 +1,7 @@
-<div class="container">
-    <div class="row mt-5">
-        <div class="col-12 col-lg-5">
-            <div class="row mb-3">
+<div class="container-fluid px-5">
+    <div class="row m-0 p-0 mt-5">
+        <div class=" col-12 col-lg-4 px-lg-4">
+            <div class="row col-lg-10 offset-lg-1 mb-3">
                 <div class="input-group">
                 <label class="input-group-text col-3" for="atelierSelect">Atelier</label>
                 <select (change)=selectAtelier($event) class="form-select" id="atelierSelect" aria-label="Default select example">
@@ -12,7 +12,7 @@
                 </select>
                 </div>
             </div>
-            <div class="row mb-5">
+            <div class="row mb-5 col-lg-10 offset-lg-1">
                 <div class="input-group">
                     <label class="input-group-text col-3" for="search" >Recherche</label>
                     <input class="form-control" type="text" placeholder="Identifiant" id="search" [(ngModel)]="searchText">
@@ -45,9 +45,9 @@
                 </div>
             </div>
         </div>
-        <div class="col-12 col-lg-6 offset-lg-1 border rounded py-3 px-4 shadow-sm ">
-            <div class="row col-lg-10 offset-lg-1">
-                <div class=" input-group p-3 ">
+        <div class="col-12 col-lg-4  px-lg-4 ">
+            <div class="row col-lg-10 offset-lg-1 py-lg-4">
+                <div class=" input-group ">
                     <label class="input-group-text col-3" for="typeSelect">Type</label>
                     <select (change)=selectType($event) [(ngModel)] ="this.typeNow" class="form-select" id="typeSelect" aria-label="Default select example">
                         <option value ="" selected>Sélectionner le type </option>
@@ -57,12 +57,12 @@
                     </select>
                 </div>        
             </div>
-            <div class="col px-3 mb-3">
-                <div class="scrolltableItem">
+            <div class="col px-3 py-lg-5">
+                <div class="mt-lg-1 scrolltableItem">
                     <table class="table table-hover table-fixed">
                         <thead>
                         <tr >
-                            <th scope="col"></th>
+                            <th scope="col"><input *ngIf="this.listeItem.length !== 0"class="form-check-input" type="checkbox" (change)="allSelect()" [checked]="this.checkAll" id="flexCheckDefault"></th>
                             <th scope="col">Identifiant</th>
                             <th scope="col">Nom</th>
                         </tr>
@@ -74,7 +74,7 @@
                             <ng-template #afficheItem>
                                 <tr (click)="checkItem(item.idItem)" *ngFor="let item of listeItem | filterItemByType : this.typeNow">
                                     <td class="col-1">
-                                        <input   class="form-check-input" type="checkbox" [checked]="item.isPaste" id="flexCheckDefault">
+                                        <input class="form-check-input" type="checkbox"  [checked]="item.isPaste" id="flexCheckDefault">
                                     </td>
                                     <td class="col-4">{{item.idItem}}</td>
                                     <td class="col-7">{{item.libelleItem}}</td>
@@ -84,25 +84,40 @@
                     </table>
                 </div>
             </div>
-            <div class="row col-lg-10 offset-lg-1 mb-3">
-                <div class="input-group">
-                    <span class="input-group-text col-3">Atelier</span>
-                    <select #AtelierSelect class="form-select" id="atelierSelect" aria-label="Default select example">
-                        <option value ="" selected>Selection de l'atelier</option>
-                        <option *ngFor="let atelier of listeAtelier" [value]="atelier.idAtelier">
-                            {{atelier.idAtelier}} - {{atelier.libelleAtelier}}
-                        </option>
-                    </select>
+        </div>
+        <div class="col-12 col-lg-4 mt-5  ">
+            <div class=" border py-4 px-4 rounded shadow-sm">
+                <p class="fs-4 text-center mb-4 ">Selection de l'objet cible</p>
+                <div class="row col-lg-10 offset-lg-1 mb-3">
+                    <div class="input-group">
+                        <span class="input-group-text col-3">Atelier</span>
+                        <select (change)=selectAtelierCible($event) #AtelierSelect class="form-select" id="atelierSelect" aria-label="Default select example">
+                            <option value ="" selected>Selection de l'atelier</option>
+                            <option *ngFor="let atelier of listeAtelier" [value]="atelier.idAtelier">
+                                {{atelier.idAtelier}} - {{atelier.libelleAtelier}}
+                            </option>
+                        </select>
+                    </div>
                 </div>
-            </div>
-            <div class="row col-lg-10 offset-lg-1 mb-3">
-                <div class="input-group">
-                    <span class="input-group-text col-3">N° Unique</span>
-                    <input #NU type="text" oninput="this.value = this.value.replace(/\D+/g, '')" maxlength="3" min="0" max="999" length="3" class="form-control">
+                <div class="row col-lg-10 offset-lg-1 mb-3">
+                    <div class="input-group">
+                        <span class="input-group-text col-3">N° Unique</span>
+                        <input #NU (input)=selectNUCible($event) type="text" oninput="this.value = this.value.replace(/\D+/g, '')" maxlength="3" min="0" max="999" length="3" class="form-control">
+                    </div>
                 </div>
-            </div>
 
-            <button (click)="recopieItem(AtelierSelect.value, NU.value)" type="button" class="btn btn-lg btn-light col-10 offset-1 col-lg-6 offset-lg-3 my-2">Recopier</button>
+                <div *ngIf="this.ORCible != ''; else orNoExist" class="text-center my-2">
+                    {{this.ORCible}}
+                </div>
+
+                <ng-template #orNoExist >
+                    <div class="my-5">
+                        
+                    </div>
+                </ng-template>
+                
+                <button (click)="recopieItem(AtelierSelect.value, NU.value)" type="button" class="btn btn-lg btn-light col-10 offset-1 col-lg-6 offset-lg-3 my-2">Recopier</button>
+            </div>
         </div>
     </div>
 </div>

@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
+import { ObjetRepereUtile } from 'src/structureData/ObjetRepere';
 import { modificationTypeObject } from 'src/structureData/TypeObject';
 
 @Injectable({
@@ -16,6 +17,17 @@ export class FetchRecopieService {
     url = url.replace("{idOR}", idOR)
     const res : modificationTypeObject[] = await lastValueFrom(this.http.get<modificationTypeObject[]>(url));
     if (res.length == 0) {
+      return undefined;
+    } else {
+      return res;
+    }
+  }
+
+  async getORByNU(nu : string) : Promise<any> {
+    let url = "http://localhost:3000/objetrepere/getORByNU/{NU}"
+    url = url.replace("{NU}", nu)
+    const res : ObjetRepereUtile = await lastValueFrom(this.http.get<ObjetRepereUtile>(url));
+    if (res == undefined) {
       return undefined;
     } else {
       return res;

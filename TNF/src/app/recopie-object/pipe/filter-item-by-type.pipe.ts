@@ -11,7 +11,6 @@ export class FilterItemByTypePipe implements PipeTransform {
 
     args = args.toLowerCase();
     return value.filter(function(item: any) {
-      console.log(item.idType)
         return item.idItem.toLowerCase().includes(args);
     });
   }

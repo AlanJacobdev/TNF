@@ -33,3 +33,7 @@ table th {
 .table > :not(:first-child) {
     border-top : none;  
 }
+
+.table-active {
+    cursor: not-allowed;
+}

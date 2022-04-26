@@ -48,3 +48,8 @@ export interface ObjetRepereSave {
     profilModification : string,
     posteModification : string
 }
+
+export interface ObjetRepereUtile{
+    idObjetRepere : string,
+    libelleObjetRepere  : string
+}
