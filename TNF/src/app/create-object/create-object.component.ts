@@ -40,13 +40,14 @@ export class CreateObjectComponent implements OnInit {
   public typeToast : string = ""
   public colorToast : string = "";
 
+  public description : any = [];
 
   constructor(private fetchCreateTypeObject : FetchcreateTypeObjectService, private fetchVisuService : FetchVisuService, private fetchCreateObjectService: FetchCreateObjectService) {
     this.getListType();
     this.getAteliers();
    }
   ngOnInit(): void {
-    throw new Error('Method not implemented.');
+   
   }
 
   getAteliers(){
@@ -151,6 +152,7 @@ export class CreateObjectComponent implements OnInit {
       atelier = Atelier;
     }
 
+    this.description.splice(0);
     this.listeItem.splice(0);
     this.deleteDataForm();
     if( atelier == '') {   
@@ -185,7 +187,7 @@ export class CreateObjectComponent implements OnInit {
 
   public selectNU (nu : string) {
     this.nuSelect = nu;
-    console.log(nu)
+    this.description.splice(0);
   }
 
   manageToast (title : string, text : string, color : string ){
@@ -215,14 +217,20 @@ export class CreateObjectComponent implements OnInit {
     this.formValidate = false;
   }
 
-  createObjet(libelle : string, description : string) {
-   
+  createObjet(libelle : string) {
     if ( this.nuSelect != '' && this.typeNow != '' && libelle != '') {
+        let tabDesc = [];
+        for ( const d of this.description){
+          if (d.value !== ""){
+            tabDesc.push({"lien": d.value})
+          }
+        }
         this.refreshValidationForm();
-        this.fetchCreateObjectService.createObject(libelle, this.typeNow, this.nuSelect, this.checkValide, description).then((res: any) => {
+        this.fetchCreateObjectService.createObject(libelle, this.typeNow, this.nuSelect, this.checkValide, tabDesc).then((res: any) => {
           if(typeof res === 'string') {
             this.manageToast("Erreur de création", res , "red")
           } else {  
+            console.log(res);
             this.manageToast("Création", "L'objet repère " + this.typeNow + this.nuSelect + " a été crée", "#006400")
             this.afficherNUOR(this.atelierSelect);        
           }
@@ -233,11 +241,17 @@ export class CreateObjectComponent implements OnInit {
     }
   }
 
-  createItem(libelle : string, digit : string, description : string){
+  createItem(libelle : string, digit : string){
     if (libelle != '' && digit != '' ) {
+      let tabDesc = [];
+        for ( const d of this.description){
+          if (d.value !== ""){
+            tabDesc.push({"lien": d.value})
+          }
+        }
       let digitNumber = parseInt(digit);
       this.refreshValidationForm();
-      this.fetchCreateObjectService.createItem(libelle, this.orSelect, this.typeNow, digitNumber, this.checkSecurite, this.orSelect.substring(2,6), this.checkValide, description).then((res: any) => {
+      this.fetchCreateObjectService.createItem(libelle, this.orSelect, this.typeNow, digitNumber, this.checkSecurite, this.orSelect.substring(2,6), this.checkValide, tabDesc).then((res: any) => {
         if(typeof res === 'string') {
           this.manageToast("Erreur de création", res , "red")
         } else {  
@@ -253,7 +267,16 @@ export class CreateObjectComponent implements OnInit {
   }
 
 
+  public addDescription(){
+    this.description.push({value : ""});
+    console.log(this.description);
+    
+  }
 
+  public removeDescription(indice : number){
+    this.description.splice(indice,1)
+  
+  }
 }
 
 

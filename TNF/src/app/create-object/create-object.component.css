@@ -37,3 +37,12 @@ table th {
 .table-active {
     cursor: not-allowed;
 }
+
+.zindexZero{
+    z-index: 0 !important;
+}
+
+.close {
+    font-size: 25px;
+    color : red;
+}

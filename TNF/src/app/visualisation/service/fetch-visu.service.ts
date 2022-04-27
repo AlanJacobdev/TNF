@@ -67,8 +67,6 @@ export class FetchVisuService {
     }
   }
 
-
-
   async getSousItemByItem(Item : string) : Promise<any> {
     let url = "http://localhost:3000/sousitem/getSousItemByItem/{SI}"
     url = url.replace("{SI}", Item)

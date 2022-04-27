@@ -36,7 +36,7 @@ export class FetchCreateObjectService {
   }
 
 
-  async createObject(libelle : string, codeType :string, nu : string, valide: boolean, description : string): Promise<any> {
+  async createObject(libelle : string, codeType :string, nu : string, valide: boolean, description : any[]): Promise<any> {
     let global = this.cookieService.get('login');
     let url = "http://localhost:3000/objetrepere"
     let payload = {
@@ -51,7 +51,8 @@ export class FetchCreateObjectService {
     try {
       const res : ObjetRepereInfo = await lastValueFrom(this.http.post<ObjetRepereInfo>(url, payload));
       if (res.hasOwnProperty('error')) {
-        return undefined
+        const resAny : any = res;
+        return resAny.error;
       } else {
         return res;
       }
@@ -69,7 +70,7 @@ export class FetchCreateObjectService {
   }
 
 
-  async createItem(libelle : string, idOR : string, codeObjet :string, digit : number, securite : boolean, nu : string, actif: boolean, description : string): Promise<any> {
+  async createItem(libelle : string, idOR : string, codeObjet :string, digit : number, securite : boolean, nu : string, actif: boolean, description : any[]): Promise<any> {
     let global = this.cookieService.get('login');
     let url = "http://localhost:3000/item"
     let payload = {
