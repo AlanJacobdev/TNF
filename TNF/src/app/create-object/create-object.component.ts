@@ -142,6 +142,7 @@ export class CreateObjectComponent implements OnInit {
     this.nuSelect = ""
     this.checkSecurite = false;
     this.checkValide = false;
+    this.description.splice(0);
   }
 
   public selectAtelier (Atelier : any) {

@@ -1,3 +1,5 @@
+import { Description } from "./Description"
+
 export interface ItemInfo {
     idItem: string,
     libelleItem: string,
@@ -13,7 +15,7 @@ export interface ItemInfo {
     profilModification: string,
     posteModification: string,
     dateModification:  Date,
-    description: string
+    description: Description[]
 }
 
 export interface ItemAffichage {
@@ -24,7 +26,7 @@ export interface ItemAffichage {
     dateCreation: string,
     profilModification: string,
     dateModification:  string,
-    description: string
+    description: Description[]
 }
 
 export interface ItemEtDispo{
@@ -43,7 +45,7 @@ export interface ItemModification {
     idItem: string,
     libelleItem: string,
     valide: boolean,
-    description: string
+    description: Description[]
 
 }
 
@@ -59,7 +61,7 @@ export interface ItemSave {
     date : string,
     profilModification : string,
     posteModification : string,
-    description : string,
+    description : Description[],
     etat : string
 }
 

@@ -1,11 +1,11 @@
 import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { AtelierInfo } from 'src/structureData/Atelier';
-import { typeObjet, ItemEtDispo, ItemInfo, ItemModification } from 'src/structureData/Item';
-import { ObjetRepereAffichage, ObjetRepereInfo, ObjetRepereModification } from 'src/structureData/ObjetRepere';
-import { TypeObjetRepereTableau, TypeObjetInfo, TypeObjetRepereInfo } from 'src/structureData/TypeObject';
+import { Description } from 'src/structureData/Description';
+import { typeObjet, ItemInfo, ItemModification } from 'src/structureData/Item';
+import { ObjetRepereInfo, ObjetRepereModification } from 'src/structureData/ObjetRepere';
+import { TypeObjetRepereTableau, TypeObjetInfo } from 'src/structureData/TypeObject';
 import { FetchCreateObjectService } from '../create-object/service/fetch-create-object.service';
-import { FetchcreateTypeObjectService } from '../create-type-object/service/fetchcreate-type-object.service';
 import { FetchVisuService } from '../visualisation/service/fetch-visu.service';
 import { FetchModifyObjectService } from './service/fetch-modify-object.service';
 
@@ -34,7 +34,7 @@ export class ModifyObjectComponent implements OnInit {
     idItem: '',
     libelleItem: '',
     valide: false,
-    description: ''
+    description: []
   }
   public formValidate : boolean = false;
   @Input() public checkValide : boolean = false;
@@ -43,12 +43,14 @@ export class ModifyObjectComponent implements OnInit {
     idObjetRepere: '',
     libelleObjetRepere: '',
     valide: false,
-    description: ''
+    description: []
   } ;
   public ToastAffiche : boolean = false; 
   public messageToast : string = "";
   public typeToast : string = ""
   public colorToast : string = "";
+
+  public descriptionObjectSelect : Description[] = [];
 
   constructor(private fetchModifyTypeObject : FetchModifyObjectService, private fetchVisuService : FetchVisuService, private fetchCreateObjectService: FetchCreateObjectService) {
     // this.getListType();
@@ -118,13 +120,13 @@ export class ModifyObjectComponent implements OnInit {
       idObjetRepere : '',
       libelleObjetRepere : '',
       valide : false,
-      description : ''
+      description : []
     }
     this.itemSelect = {
       idItem: '',
       libelleItem: '',
       valide: false,
-      description: ''
+      description: []
     }
     if( atelier == '') {
       this.listeOR.splice(0);
@@ -149,8 +151,14 @@ export class ModifyObjectComponent implements OnInit {
         this.orSelect.valide = orInfo.valide;
         this.orSelect.description = orInfo.description;
         this.checkValide = orInfo.valide;
+        this.descriptionObjectSelect.splice(0);
+        for (const d of this.orSelect.description){
+          this.descriptionObjectSelect.push(d)
+        }
       }
       this.idORSelect = idOR;
+     
+      
     } else if (this.objectNow === this.TypeObject.Item) {
         this.idORSelect = idOR;
         this.getItemFromOR();
@@ -168,16 +176,18 @@ export class ModifyObjectComponent implements OnInit {
         this.itemSelect.valide = itemInfo.actif;
         this.itemSelect.description = itemInfo.description;
         this.checkValide = itemInfo.actif
-        console.log(this.itemSelect.valide + " " +this.checkValide);
+        this.descriptionObjectSelect.splice(0);
+        for (const d of this.itemSelect.description){
+          this.descriptionObjectSelect.push(d)
+        }
       }    
     }
-
-    
   }
 
   public selectObject (object : typeObjet) {
     this.objectNow = object;
-    this.selectAtelier(this.atelierSelect)
+    this.descriptionObjectSelect.splice(0);
+    this.selectAtelier(this.atelierSelect);
   }
 
 
@@ -200,10 +210,10 @@ export class ModifyObjectComponent implements OnInit {
   }
 
 
-  modifyObjet(libelle : string, description : string) {
+  modifyObjet(libelle : string) {
    
     if (libelle != '') {
-        this.fetchModifyTypeObject.modifyObject(this.orSelect.idObjetRepere, libelle, this.checkValide, description).then((res: any) => {
+        this.fetchModifyTypeObject.modifyObject(this.orSelect.idObjetRepere, libelle, this.checkValide, this.descriptionObjectSelect).then((res: any) => {
           if(typeof res === 'string') {
             this.manageToast("Erreur de création", res , "red")
           } else {  
@@ -221,11 +231,9 @@ export class ModifyObjectComponent implements OnInit {
     }
   }
 
-  modifyItem(libelle : string, description : string){
+  modifyItem(libelle : string){
     if (libelle != '' ) {
-      
-      
-      this.fetchModifyTypeObject.modifyitem(this.itemSelect.idItem, libelle, this.checkValide, description).then((res: any) => {
+      this.fetchModifyTypeObject.modifyitem(this.itemSelect.idItem, libelle, this.checkValide, this.descriptionObjectSelect).then((res: any) => {
         if(typeof res === 'string') {
           this.manageToast("Erreur de création", res , "red")
         } else {  
@@ -242,5 +250,14 @@ export class ModifyObjectComponent implements OnInit {
       this.formValidate = true;
     }
   }
+
+  public addDescription(){
+    this.descriptionObjectSelect.push({lien : ""});
+  }
+
+  public removeDescription(indice : number){
+    this.descriptionObjectSelect.splice(indice,1);
+  }
+
 
 }

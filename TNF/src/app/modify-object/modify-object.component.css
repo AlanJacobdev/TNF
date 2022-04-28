@@ -32,3 +32,12 @@ table th {
 .table > :not(:first-child) {
     border-top : none;  
 }
+
+.zindexZero{
+    z-index: 0 !important;
+}
+
+.close {
+    font-size: 25px;
+    color : red;
+}

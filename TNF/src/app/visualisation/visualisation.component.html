@@ -137,9 +137,10 @@
                     </div>
                   </div>
                   <div class="row">
-                    <label for="staticEmail" class="col-4 col-form-label">Description</label>
-                    <div class="col-8">
-                      <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="Ornow.description">
+                    <div class=" mb-3 input-group">
+                      <label class="col-4 col-form-label">Description</label>
+                      <input class="form-control border-0 zindexZero" type="text" [value]="(Ornow.description.length === 0) ? 'Aucune description' : ((Ornow.description.length > 1)? Ornow.description.length + ' descriptions': Ornow.description.length + ' description' ) "  >
+                      <button (click)="setdescriptionFromHistory(false)" *ngIf="Ornow.description.length !== 0" class="input-group-text px-2 py-0 fs-4 border-0 bg-white" data-bs-toggle="modal" data-bs-target="#descriptionModal"><fa-icon class=" text-right close" [icon]="faEye"></fa-icon></button>
                     </div>
                   </div>
                 </div>
@@ -341,9 +342,15 @@
                         </div>
                         <div class="col-12 col-lg-7 col-xl-6 mb-3">
                           <div class=" input-group">
-                            <label for="IdentifiantHistory" class="input-group-text col-4">Description</label>
-                            <input type="text" readonly disabled class="form-control bg-light" id="IdentifiantHistory" [value]="or.description">
+                            <label class="col-4 col-form-label">Description</label>
+                            <input class="form-control border-0 zindexZero" type="text" [value]="(Ornow.description.length === 0) ? 'Aucune description' : ((Ornow.description.length > 1)? Ornow.description.length + ' descriptions': Ornow.description.length + ' description' ) "  >
+                            <button (click)="setdescriptionFromHistory(true)" *ngIf="or.description.length !== 0" class="input-group-text px-2 py-0 fs-4 border-0 bg-white" data-bs-toggle="modal" data-bs-target="#descriptionModal"><fa-icon class=" text-right close" [icon]="faEye"></fa-icon></button>
+     
                           </div>
+                          
+                            
+                  
+
                         </div>
                       </div>
                     </div>
@@ -484,3 +491,21 @@
 
 
 
+<div class="modal fade" id="descriptionModal" tabindex="-1" aria-labelledby="descriptionModal" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollables">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="descriptionModal">Description(s) de {{this.selectedNow}}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <ul class="list-group">
+          <li *ngFor="let desc of this.Ornow.description" class="list-group-item">{{desc.lien}}</li>
+        </ul>
+      </div>
+      <div *ngIf="descriptionFromHistory" class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#History" data-bs-dismiss="modal">Retour</button>
+      </div>
+    </div>
+  </div>
+</div>

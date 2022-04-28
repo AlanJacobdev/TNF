@@ -85,9 +85,15 @@
                                     Veuillez renseigner un libellé.
                                 </div>
                             </div>
+                            <div *ngFor="let d of this.descriptionObjectSelect; let i = index"  > 
+                                <div class="form-floating mb-3 input-group">
+                                    <input  type="text" [(ngModel)]="this.descriptionObjectSelect[i].lien" #name="ngModel" name="lien{{i}}" class="form-control zindexZero"  placeholder="" >
+                                    <label for="IdDescription{{i}}">Description</label>
+                                    <button class="input-group-text px-2 bg-white" (click)="removeDescription(i)"><fa-icon class=" text-right close" [icon]="faXmark"></fa-icon></button>
+                                </div>
+                            </div> 
                             <div class="form-floating mb-3">
-                                <input #DescriptionOR type="text" class="form-control" id="IdDescription" placeholder="" [value]="this.orSelect.description">
-                                <label for="IdDescription">Description</label>
+                                <a class="text-dark cursor" (click)="addDescription()">Ajouter une description</a>
                             </div>
                             <div class="form-check ms-2">
                                 <input #ValideOR class="form-check-input" type="checkbox" (change)="setcheckValide()" id="IdValide" [checked]="this.checkValide" >
@@ -96,7 +102,7 @@
                                 </label>
                             </div>
                         </div>
-                        <button *ngIf="this.idORSelect != ''" (click)="modifyObjet(LibelleOR.value, DescriptionOR.value)" type="button" class="btn btn-lg btn-light col-10 offset-1 col-lg-6 offset-lg-3 my-2">Modifier</button>
+                        <button *ngIf="this.idORSelect != ''" (click)="modifyObjet(LibelleOR.value)" type="button" class="btn btn-lg btn-light col-10 offset-1 col-lg-6 offset-lg-3 my-2">Modifier</button>
                     </div>
                 </div>
             </ng-container>
@@ -171,9 +177,15 @@
                                     Veuillez renseigner un libellé.
                                 </div>
                             </div>
+                            <div *ngFor="let d of this.descriptionObjectSelect; let i = index"  > 
+                                <div class="form-floating mb-3 input-group">
+                                    <input  type="text" [(ngModel)]="this.descriptionObjectSelect[i].lien" #name="ngModel" name="lien{{i}}" class="form-control zindexZero"  placeholder="" >
+                                    <label for="IdDescription{{i}}">Description</label>
+                                    <button class="input-group-text px-2 bg-white" (click)="removeDescription(i)"><fa-icon class=" text-right close" [icon]="faXmark"></fa-icon></button>
+                                </div>
+                            </div> 
                             <div class="form-floating mb-3">
-                                <input #DescriptionItem type="text" class="form-control" id="IdDescription" placeholder="" [value]="this.itemSelect.description">
-                                <label for="IdDescription">Description</label>
+                                <a class="text-dark cursor" (click)="addDescription()">Ajouter une description</a>
                             </div>
                             <div class="form-check ms-2">
                                 <input #ValideItem class="form-check-input" type="checkbox" (change)="setcheckValide()" id="IdValide" [checked]="this.checkValide" >
@@ -182,7 +194,7 @@
                                 </label>
                             </div>
                         </div>
-                        <button *ngIf="this.idItemSelect != ''" (click)="modifyItem(LibelleItem.value, DescriptionItem.value)" type="button" class="btn btn-lg btn-light col-10 offset-1 col-lg-6 offset-lg-3 my-2"> Modifier </button>
+                        <button *ngIf="this.idItemSelect != ''" (click)="modifyItem(LibelleItem.value)" type="button" class="btn btn-lg btn-light col-10 offset-1 col-lg-6 offset-lg-3 my-2"> Modifier </button>
                     </div>
                 </div>
             </ng-container>

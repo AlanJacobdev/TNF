@@ -1,3 +1,5 @@
+import { Description } from "./Description"
+
 export interface ObjetRepereInfo {
     idObjetRepere: string,
     libelleObjetRepere: string,
@@ -10,7 +12,7 @@ export interface ObjetRepereInfo {
     profilModification: string,
     posteModification: string,
     dateModification: Date,
-    description: string
+    description: Description[] 
 }
 
 export interface ObjetRepereAffichage {
@@ -21,7 +23,7 @@ export interface ObjetRepereAffichage {
     dateCreation: string,
     profilModification: string,
     dateModification: string,
-    description: string
+    description: Description[]
 }
 
 export interface NUetOR {
@@ -33,7 +35,7 @@ export interface ObjetRepereModification {
     idObjetRepere: string,
     libelleObjetRepere: string,
     valide: boolean,
-    description: string
+    description: Description[]
 }
 
 export interface ObjetRepereSave {
@@ -42,7 +44,7 @@ export interface ObjetRepereSave {
     codeType : string,
     numeroUnique : string,
     valide : boolean,
-    description: string,
+    description: Description[],
     etat : string,
     date : string,
     profilModification : string,

@@ -4,7 +4,7 @@ import { ItemAffichage, ItemInfo, ItemSave, typeObjet } from 'src/structureData/
 import { ObjetRepereAffichage, ObjetRepereInfo, ObjetRepereSave } from 'src/structureData/ObjetRepere';
 import { SousItemAffichage, SousItemInfo, SousItemSave } from 'src/structureData/SousItem';
 import { FetchVisuService } from './service/fetch-visu.service';
-import { faHistory, faCalendar, faUser, faClock } from '@fortawesome/free-solid-svg-icons';
+import { faHistory, faCalendar, faUser, faClock, faEye } from '@fortawesome/free-solid-svg-icons';
 import { CookieService } from 'ngx-cookie-service';
 
 @Component({
@@ -18,6 +18,7 @@ export class VisualisationComponent implements OnInit {
   public faHistory = faHistory;
   public faCalendar = faCalendar;
   public faUser = faUser;
+  public faEye = faEye;
   public listeAtelier: AtelierInfo[] = [];
   public listeObjetRepere : ObjetRepereInfo[] = [];
   public listeItem : ItemInfo[] = [];
@@ -32,6 +33,7 @@ export class VisualisationComponent implements OnInit {
   public searchText : string = "";
   public objectTypeNow: typeObjet = typeObjet.Aucun;
   public TypeObjet = typeObjet;
+  public descriptionFromHistory : boolean = false;
   public Ornow : ObjetRepereAffichage = {
     idObjetRepere: '',
     libelleObjetRepere: '',
@@ -40,7 +42,7 @@ export class VisualisationComponent implements OnInit {
     dateCreation: '',
     profilModification: '',
     dateModification: '',
-    description: ''
+    description: []
   };
 
   public ItemNow : ItemAffichage = {
@@ -51,7 +53,7 @@ export class VisualisationComponent implements OnInit {
     dateCreation: '',
     profilModification: '',
     dateModification: '',
-    description: ''
+    description: []
   }
   
   public SousItemNow : SousItemAffichage = {
@@ -227,4 +229,13 @@ export class VisualisationComponent implements OnInit {
     }).catch((e) => {
     })
   }
+
+  public setdescriptionFromHistory(bool :boolean) {
+    this.descriptionFromHistory = bool;
+  }
+
+
 }
+
+
+

@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { lastValueFrom } from 'rxjs';
+import { Description } from 'src/structureData/Description';
 import { ItemInfo } from 'src/structureData/Item';
 import { ObjetRepereInfo } from 'src/structureData/ObjetRepere';
 
@@ -14,7 +15,7 @@ export class FetchModifyObjectService {
 
 
 
-  async modifyObject(idOR : string, libelle : string, valide: boolean, description : string): Promise<any> {
+  async modifyObject(idOR : string, libelle : string, valide: boolean, description : Description[]): Promise<any> {
     let global = this.cookieService.get('login');
     let url = "http://localhost:3000/objetrepere/{ID}"
     url = url.replace("{ID}", idOR)
@@ -45,7 +46,7 @@ export class FetchModifyObjectService {
     }
   }
 
-  async modifyitem(idItem : string, libelle : string, valide: boolean, description : string): Promise<any> {
+  async modifyitem(idItem : string, libelle : string, valide: boolean, description : Description[]): Promise<any> {
     let global = this.cookieService.get('login');
     let url = "http://localhost:3000/item/{ID}"
     url = url.replace("{ID}", idItem)
