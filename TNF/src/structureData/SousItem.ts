@@ -1,3 +1,5 @@
+import { Description } from "./Description";
+
 export interface SousItemInfo {
     idSousItem: string,
     libelleSousItem: string,
@@ -12,7 +14,7 @@ export interface SousItemInfo {
     profilModification: string,
     posteModification: string,
     dateModification: Date,
-    description: string
+    description: Description[]
 }
 
 export interface SousItemAffichage {
@@ -23,7 +25,7 @@ export interface SousItemAffichage {
     dateCreation: string,
     profilModification: string,
     dateModification: string,
-    description: string
+    description: Description[]
 }
 
 export interface SousItemSave {
@@ -34,9 +36,9 @@ export interface SousItemSave {
     securite : boolean;
     estPrefixe: boolean;
     actif: boolean;
-    date : Date
+    date : string
     profilModification : string;
     posteModification : string;
-    description: string;
+    description: Description[];
     etat: string;
 }

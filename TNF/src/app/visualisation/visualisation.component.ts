@@ -6,6 +6,7 @@ import { SousItemAffichage, SousItemInfo, SousItemSave } from 'src/structureData
 import { FetchVisuService } from './service/fetch-visu.service';
 import { faHistory, faCalendar, faUser, faClock, faEye } from '@fortawesome/free-solid-svg-icons';
 import { CookieService } from 'ngx-cookie-service';
+import { Description } from 'src/structureData/Description';
 
 @Component({
   selector: 'app-visualisation',
@@ -34,6 +35,7 @@ export class VisualisationComponent implements OnInit {
   public objectTypeNow: typeObjet = typeObjet.Aucun;
   public TypeObjet = typeObjet;
   public descriptionFromHistory : boolean = false;
+  public descriptionHistory : Description[] = [];
   public Ornow : ObjetRepereAffichage = {
     idObjetRepere: '',
     libelleObjetRepere: '',
@@ -64,7 +66,7 @@ export class VisualisationComponent implements OnInit {
     dateCreation: '',
     profilModification: '',
     dateModification: '',
-    description: ''
+    description: []
   }
 
   constructor(private fetchVisuService : FetchVisuService, private cookieService : CookieService) { 
@@ -234,6 +236,24 @@ export class VisualisationComponent implements OnInit {
     this.descriptionFromHistory = bool;
   }
 
+  public setDescriptionHistory(id : string, date : string) {
+    if(this.objectTypeNow == typeObjet.OR) {
+      let res = this.ORHistory.find(element => element.idObjetRepere === id && element.date === date);
+      if(res !== undefined){
+        this.descriptionHistory = res.description;
+      }      
+    } else if (this.objectTypeNow == typeObjet.Item) {
+      let res = this.ItemHistory.find(element => element.idItem === id && element.date === date);
+      if(res !== undefined){
+        this.descriptionHistory = res.description;
+      } 
+    } else if (this.objectTypeNow == typeObjet.SI) {
+      let res = this.SIHistory.find(element => element.idSousItem === id && element.date === date);
+      if(res !== undefined){
+        this.descriptionHistory = res.description;
+      } 
+    }
+  }
 
 }
 

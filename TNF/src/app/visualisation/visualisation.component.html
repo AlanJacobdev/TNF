@@ -197,9 +197,10 @@
                     </div>
                   </div>
                   <div class="row">
-                    <label for="staticEmail" class="col-4 col-form-label">Description</label>
-                    <div class="col-8">
-                      <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="ItemNow.description">
+                    <div class=" mb-3 input-group">
+                      <label class="col-4 col-form-label">Description</label>
+                      <input class="form-control border-0 zindexZero" type="text" [value]="(ItemNow.description.length === 0) ? 'Aucune description' : ((ItemNow.description.length > 1)? ItemNow.description.length + ' descriptions': ItemNow.description.length + ' description' ) "  >
+                      <button (click)="setdescriptionFromHistory(false)" *ngIf="ItemNow.description.length !== 0" class="input-group-text px-2 py-0 fs-4 border-0 bg-white" data-bs-toggle="modal" data-bs-target="#descriptionModal"><fa-icon class=" text-right close" [icon]="faEye"></fa-icon></button>
                     </div>
                   </div>
                 </div>
@@ -253,9 +254,10 @@
                     </div>
                   </div>
                   <div class="row">
-                    <label for="staticEmail" class="col-4 col-form-label">Description</label>
-                    <div class="col-8">
-                      <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="SousItemNow.description">
+                    <div class=" mb-3 input-group">
+                      <label class="col-4 col-form-label">Description</label>
+                      <input class="form-control border-0 zindexZero" type="text" [value]="(SousItemNow.description.length === 0) ? 'Aucune description' : ((SousItemNow.description.length > 1)? SousItemNow.description.length + ' descriptions': SousItemNow.description.length + ' description' ) "  >
+                      <button (click)="setdescriptionFromHistory(false)" *ngIf="SousItemNow.description.length !== 0" class="input-group-text px-2 py-0 fs-4 border-0 bg-white" data-bs-toggle="modal" data-bs-target="#descriptionModal"><fa-icon class=" text-right close" [icon]="faEye"></fa-icon></button>
                     </div>
                   </div>
                 </div>
@@ -340,18 +342,14 @@
                             <input type="text" readonly disabled class="form-control bg-light" id="IdentifiantHistory" [value]="(or.valide)? 'Oui' : 'Non'">
                           </div>
                         </div>
-                        <div class="col-12 col-lg-7 col-xl-6 mb-3">
-                          <div class=" input-group">
-                            <label class="col-4 col-form-label">Description</label>
-                            <input class="form-control border-0 zindexZero" type="text" [value]="(Ornow.description.length === 0) ? 'Aucune description' : ((Ornow.description.length > 1)? Ornow.description.length + ' descriptions': Ornow.description.length + ' description' ) "  >
-                            <button (click)="setdescriptionFromHistory(true)" *ngIf="or.description.length !== 0" class="input-group-text px-2 py-0 fs-4 border-0 bg-white" data-bs-toggle="modal" data-bs-target="#descriptionModal"><fa-icon class=" text-right close" [icon]="faEye"></fa-icon></button>
-     
+                 
+                        <div class=" col-12 col-lg-5 col-xl-6 mb-3 ">
+                          <div class="input-group">
+                            <label class="col-4 input-group-text col-form-label">Description</label>
+                            <input readonly disabled class="form-control border bg-light zindexZero" type="text" [value]="(or.description.length === 0) ? 'Aucune description' : ((or.description.length > 1)? or.description.length + ' descriptions': or.description.length + ' description' ) "  >
+                            <button (click)="setdescriptionFromHistory(true); setDescriptionHistory(or.idObjetRepere,or.date)" *ngIf="or.description.length !== 0" class="input-group-text px-2 border py-0 fs-4 bg-white" data-bs-toggle="modal" data-bs-target="#descriptionModal"><fa-icon class=" text-right close" [icon]="faEye"></fa-icon></button>
                           </div>
-                          
-                            
-                  
-
-                        </div>
+                         </div>
                       </div>
                     </div>
                 </div>
@@ -500,10 +498,24 @@
       </div>
       <div class="modal-body">
         <ul class="list-group">
-          <li *ngFor="let desc of this.Ornow.description" class="list-group-item">{{desc.lien}}</li>
+          <ng-container *ngIf="!this.descriptionFromHistory">
+            <ng-container *ngIf="this.objectTypeNow == TypeObjet.OR">
+              <li *ngFor="let desc of this.Ornow.description" class="list-group-item">{{desc.lien}}</li>
+            </ng-container>
+            <ng-container *ngIf="this.objectTypeNow == TypeObjet.Item">
+              <li *ngFor="let desc of this.ItemNow.description" class="list-group-item">{{desc.lien}}</li>
+            </ng-container>
+            <ng-container *ngIf="this.objectTypeNow == TypeObjet.SI">
+              <li *ngFor="let desc of this.SousItemNow.description" class="list-group-item">{{desc.lien}}</li>
+            </ng-container>
+            
+          </ng-container>
+          <ng-container *ngIf="this.descriptionFromHistory">
+            <li *ngFor="let desc of this.descriptionHistory" class="list-group-item">{{desc.lien}}</li>
+          </ng-container>
         </ul>
       </div>
-      <div *ngIf="descriptionFromHistory" class="modal-footer">
+      <div *ngIf="this.descriptionFromHistory" class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#History" data-bs-dismiss="modal">Retour</button>
       </div>
     </div>
