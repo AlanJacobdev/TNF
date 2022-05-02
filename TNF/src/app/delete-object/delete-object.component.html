@@ -22,18 +22,24 @@
                         </div>
                     </div>
                 </div>
-                <div class=" col-lg-5 col-12">
-                    <div class="col-11 mt-5">
-                        <div class="row ">
-                            <div class="input-group">
-                                <label class="input-group-text col-3 col-lg-2" for="atelierSelect">Atelier</label>
-                                <select (change)=selectAtelier($event) class="form-select" id="atelierSelect" aria-label="Default select example">
-                                    <option value ="" selected>Sélectionner l'atelier</option>
-                                    <option *ngFor="let atelier of listeAtelier" [value]="atelier.idAtelier">
-                                        {{atelier.idAtelier}} - {{atelier.libelleAtelier}}
-                                    </option>
-                                </select>
-                            </div> 
+                <div class=" col-lg-4 col-12">
+                    <div class="row">
+                        <div class="col-12 mt-1">
+                                <div class="input-group">
+                                    <label class="input-group-text " for="atelierSelect">Atelier</label>
+                                    <select (change)=selectAtelier($event) class="form-select" id="atelierSelect" aria-label="Default select example">
+                                        <option value ="" selected>Sélectionner l'atelier</option>
+                                        <option *ngFor="let atelier of listeAtelier" [value]="atelier.idAtelier">
+                                            {{atelier.idAtelier}} - {{atelier.libelleAtelier}}
+                                        </option>
+                                    </select>
+                                </div> 
+                        </div>
+                        <div class="col-12 mt-3">
+                                <div class="input-group">
+                                    <label class="input-group-text " for="atelierSelect">Recherche</label>
+                                    <input class="form-control" type="text" placeholder="Identifiant" id="search" [(ngModel)]="searchText">
+                                </div> 
                         </div>
                     </div>
                 </div>
@@ -58,7 +64,7 @@
                                 <td class="text-center" colspan="2">Aucun Sous Item</td>
                             </tr>
                             <ng-template #afficheOR>
-                                <tr data-bs-toggle="modal" data-bs-target="#Suppresion" *ngFor="let OR of listeOR" (click)="selectOR(OR.idObjetRepere)" [ngClass]="{'actifNow' : OR.idObjetRepere === this.idORSelect }" >
+                                <tr data-bs-toggle="modal" data-bs-target="#Suppresion" *ngFor="let OR of listeOR | filterSuppression : searchText" (click)="selectOR(OR.idObjetRepere)" [ngClass]="{'actifNow' : OR.idObjetRepere === this.idORSelect }" >
                                     <td class="col-4">{{OR.idObjetRepere}}</td>
                                     <td class="col-8">{{OR.libelleObjetRepere}}</td>
                                 </tr>
@@ -89,7 +95,7 @@
                                 <td class="text-center" colspan="2">Aucun Sous Item</td>
                             </tr>
                             <ng-template #afficheOrItem>
-                                <tr *ngFor="let OR of listeOR" (click)="selectOR(OR.idObjetRepere)" [ngClass]="{'actifNow' : OR.idObjetRepere === this.idORSelect }" >
+                                <tr *ngFor="let OR of listeOR | filterSuppression : searchText" (click)="selectOR(OR.idObjetRepere)" [ngClass]="{'actifNow' : OR.idObjetRepere === this.idORSelect }" >
                                     <td class="col-4">{{OR.idObjetRepere}}</td>
                                     <td class="col-8">{{OR.libelleObjetRepere}}</td>
                                 </tr>
@@ -116,7 +122,7 @@
                                 <td class="text-center" colspan="2">Aucun Item</td>
                             </tr>
                             <ng-template #afficheItem>
-                                <tr data-bs-toggle="modal" data-bs-target="#Suppresion" *ngFor="let item of listeItem"  (click)="selectItem(item.idItem)" [ngClass]="{'actifNow' : item.idItem === this.idItemSelect }" >
+                                <tr data-bs-toggle="modal" data-bs-target="#Suppresion" *ngFor="let item of listeItem | filterSuppression : searchText"  (click)="selectItem(item.idItem)" [ngClass]="{'actifNow' : item.idItem === this.idItemSelect }" >
                                     <td class="col-4">{{item.idItem}}</td>
                                     <td class="col-8">{{item.libelleItem}}</td>
                                 </tr>

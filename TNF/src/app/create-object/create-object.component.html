@@ -6,16 +6,16 @@
                     <legend class="col-form-label col-3 col-lg-4 pt-0 align-self-center text-center">Objet</legend>
                     <div class ="col-9 col-lg-6">
                         <div class="form-check form-check">
-                            <input (change)="selectObject(this.TypeObject.OR)" class="form-check-input" type="radio" name="inlineRadioOptions" id="OR" required checked>
-                            <label class="form-check-label" for="OR">Objet repère</label>
+                            <input (change)="selectObject(this.TypeObject.OR)" class="form-check-input" type="radio" name="inlineRadioOptions" id="trueActif" required checked>
+                            <label class="form-check-label" for="trueActif">Objet repère</label>
                         </div>
                         <div class="form-check form-check">
-                            <input (change)="selectObject(this.TypeObject.Item)" class="form-check-input" type="radio" name="inlineRadioOptions" id="Item" required>
-                            <label class="form-check-label" for="Item">Item</label>
+                            <input (change)="selectObject(this.TypeObject.Item)" class="form-check-input" type="radio" name="inlineRadioOptions" id="falseActif" required>
+                            <label class="form-check-label" for="falseActif">Item</label>
                         </div>
                         <div class="form-check form-check">
-                            <input (change)="selectObject(this.TypeObject.SI)" class="form-check-input" type="radio" name="inlineRadioOptions" id="SI" required>
-                            <label class="form-check-label" for="SI">Sous Item</label>
+                            <input (change)="selectObject(this.TypeObject.SI)" class="form-check-input" type="radio" name="inlineRadioOptions" id="ignoredActif" required>
+                            <label class="form-check-label" for="ignoredActif">Sous Item</label>
                         </div>
                         <div class="invalid-tooltip">
                             Veuillez renseigner un Type d'Objet.

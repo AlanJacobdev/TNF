@@ -41,6 +41,8 @@ export class DeleteObjectComponent implements OnInit {
   public typeToast : string = ""
   public colorToast : string = "";
 
+  public searchText : string = "";
+  
   constructor( private fetchVisuService : FetchVisuService, private fetchDeleteObjectService :FetchDeleteObjectService) {
     // this.getListType();
     this.getAteliers();

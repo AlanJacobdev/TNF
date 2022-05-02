@@ -51,9 +51,10 @@ export class ModifyObjectComponent implements OnInit {
   public colorToast : string = "";
 
   public descriptionObjectSelect : Description[] = [];
+  public searchText : string = "";
 
   constructor(private fetchModifyTypeObject : FetchModifyObjectService, private fetchVisuService : FetchVisuService, private fetchCreateObjectService: FetchCreateObjectService) {
-    // this.getListType();
+
     this.getAteliers();
    }
   ngOnInit(): void {

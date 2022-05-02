@@ -6,6 +6,7 @@ import { ConnexionComponent } from './connexion/connexion.component';
 import { CreateObjectComponent } from './create-object/create-object.component';
 import { CreateTypeObjectComponent } from './create-type-object/create-type-object.component';
 import { DeleteObjectComponent } from './delete-object/delete-object.component';
+import { ExportationComponent } from './exportation/exportation.component';
 import { ModifyObjectComponent } from './modify-object/modify-object.component';
 import { RecopieObjectComponent } from './recopie-object/recopie-object.component';
 import { VisualisationComponent } from './visualisation/visualisation.component';
@@ -19,6 +20,7 @@ const routes: Routes = [
   { path: 'modificationObjet', component : ModifyObjectComponent, canActivate: [ AuthGuard ]},
   { path: 'suppressionObjet', component : DeleteObjectComponent, canActivate: [ AuthGuard ]},
   { path: 'recopieObjet', component : RecopieObjectComponent, canActivate: [ AuthGuard ]},
+  { path: 'exportation', component : ExportationComponent, canActivate: [ AuthGuard ]},
   { path: '**', redirectTo: ''}
 ];
 

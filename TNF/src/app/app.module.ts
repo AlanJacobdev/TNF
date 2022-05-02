@@ -18,6 +18,9 @@ import { DeleteObjectComponent } from './delete-object/delete-object.component';
 import { RecopieObjectComponent } from './recopie-object/recopie-object.component';
 import { FilterRecopiePipe } from './recopie-object/pipe/filter-recopie.pipe';
 import { FilterItemByTypePipe } from './recopie-object/pipe/filter-item-by-type.pipe';
+import { ExportationComponent } from './exportation/exportation.component';
+import { FilterModificationPipe } from './modify-object/pipe/filter-modification.pipe';
+import { FilterSuppressionPipe } from './delete-object/pipe/filter-suppression.pipe';
 
 @NgModule({
   declarations: [
@@ -34,7 +37,10 @@ import { FilterItemByTypePipe } from './recopie-object/pipe/filter-item-by-type.
     DeleteObjectComponent,
     RecopieObjectComponent,
     FilterRecopiePipe,
-    FilterItemByTypePipe
+    FilterItemByTypePipe,
+    ExportationComponent,
+    FilterModificationPipe,
+    FilterSuppressionPipe
   ],
   imports: [
     BrowserModule,

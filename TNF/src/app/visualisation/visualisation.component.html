@@ -343,13 +343,13 @@
                           </div>
                         </div>
                  
-                        <div class=" col-12 col-lg-5 col-xl-6 mb-3 ">
+                        <div class=" col-12 col-lg-7 col-xl-6 mb-3 ">
                           <div class="input-group">
                             <label class="col-4 input-group-text col-form-label">Description</label>
                             <input readonly disabled class="form-control border bg-light zindexZero" type="text" [value]="(or.description.length === 0) ? 'Aucune description' : ((or.description.length > 1)? or.description.length + ' descriptions': or.description.length + ' description' ) "  >
                             <button (click)="setdescriptionFromHistory(true); setDescriptionHistory(or.idObjetRepere,or.date)" *ngIf="or.description.length !== 0" class="input-group-text px-2 border py-0 fs-4 bg-white" data-bs-toggle="modal" data-bs-target="#descriptionModal"><fa-icon class=" text-right close" [icon]="faEye"></fa-icon></button>
                           </div>
-                         </div>
+                        </div>
                       </div>
                     </div>
                 </div>
@@ -389,28 +389,29 @@
                           </div>
                         </div>
                         <div class="row m-3">
-                          <div class="col-6 mb-3"> 
-                            <div class="row input-group">
+                          <div class="col-12 col-lg-5 col-xl-6 mb-3"> 
+                            <div class="input-group">
                               <label for="IdentifiantHistory" class="input-group-text col-4">Identifiant</label>
                               <input type="text" readonly disabled class="form-control bg-light" id="IdentifiantHistory" [value]="item.idItem">
                             </div>
                           </div>
-                          <div class="col-6 mb-3">
-                            <div class="row input-group">
+                          <div class="col-12 col-lg-7 col-xl-6 mb-3">
+                            <div class="input-group">
                               <label for="IdentifiantHistory" class="input-group-text col-4">Libelle</label>
                               <input type="text" readonly disabled class="form-control bg-light" id="IdentifiantHistory" [value]="item.libelleItem">
                             </div>
                           </div>
-                          <div class="col-6 ">
-                            <div class="row input-group">
+                          <div class="col-12 col-lg-5 col-xl-6 mb-3 ">
+                            <div class="input-group">
                               <label for="IdentifiantHistory" class="input-group-text col-4">Actif</label>
                               <input type="text" readonly disabled class="form-control bg-light" id="IdentifiantHistory" [value]="(item.actif)? 'Oui' : 'Non'">
                             </div>
                           </div>
-                          <div class="col-6">
-                            <div class="row input-group">
-                              <label for="IdentifiantHistory" class="input-group-text col-4">Description</label>
-                              <input type="text" readonly disabled class="form-control bg-light" id="IdentifiantHistory" [value]="item.description">
+                          <div class=" col-12 col-lg-7 col-xl-6 mb-3 ">
+                            <div class="input-group">
+                              <label class="col-4 input-group-text col-form-label">Description</label>
+                              <input readonly disabled class="form-control border bg-light zindexZero" type="text" [value]="(item.description.length === 0) ? 'Aucune description' : ((item.description.length > 1)? item.description.length + ' descriptions': item.description.length + ' description' ) "  >
+                              <button (click)="setdescriptionFromHistory(true); setDescriptionHistory(item.idItem,item.date)" *ngIf="item.description.length !== 0" class="input-group-text px-2 border py-0 fs-4 bg-white" data-bs-toggle="modal" data-bs-target="#descriptionModal"><fa-icon class=" text-right close" [icon]="faEye"></fa-icon></button>
                             </div>
                           </div>
                         </div>
@@ -444,28 +445,29 @@
                           </div>
                         </div>
                         <div class="row m-3">
-                          <div class="col-6 mb-3"> 
-                            <div class="row input-group">
+                          <div class="col-12 col-lg-5 col-xl-6 mb-3"> 
+                            <div class="input-group">
                               <label for="IdentifiantHistory" class="input-group-text col-4">Identifiant</label>
                               <input type="text" readonly disabled class="form-control bg-light" id="IdentifiantHistory" [value]="si.idSousItem">
                             </div>
                           </div>
-                          <div class="col-6 mb-3">
-                            <div class="row input-group">
+                          <div class="col-12 col-lg-7 col-xl-6 mb-3">
+                            <div class="input-group">
                               <label for="IdentifiantHistory" class="input-group-text col-4">Libelle</label>
                               <input type="text" readonly disabled class="form-control bg-light" id="IdentifiantHistory" [value]="si.libelleSousItem">
                             </div>
                           </div>
-                          <div class="col-6 ">
-                            <div class="row input-group">
+                          <div class="col-12 col-lg-5 col-xl-6 mb-3">
+                            <div class="input-group">
                               <label for="IdentifiantHistory" class="input-group-text col-4">Actif</label>
                               <input type="text" readonly disabled class="form-control bg-light" id="IdentifiantHistory" [value]="(si.actif)? 'Oui' : 'Non'">
                             </div>
                           </div>
-                          <div class="col-6">
-                            <div class="row input-group">
-                              <label for="IdentifiantHistory" class="input-group-text col-4">Description</label>
-                              <input type="text" readonly disabled class="form-control bg-light" id="IdentifiantHistory" [value]="si.description">
+                          <div class=" col-12 col-lg-7 col-xl-6 mb-3 ">
+                            <div class="input-group">
+                              <label class="col-4 input-group-text col-form-label">Description</label>
+                              <input readonly disabled class="form-control border bg-light zindexZero" type="text" [value]="(si.description.length === 0) ? 'Aucune description' : ((si.description.length > 1)? si.description.length + ' descriptions': si.description.length + ' description' ) "  >
+                              <button (click)="setdescriptionFromHistory(true); setDescriptionHistory(si.idSousItem,si.date)" *ngIf="si.description.length !== 0" class="input-group-text px-2 border py-0 fs-4 bg-white" data-bs-toggle="modal" data-bs-target="#descriptionModal"><fa-icon class=" text-right close" [icon]="faEye"></fa-icon></button>
                             </div>
                           </div>
                         </div>
@@ -508,7 +510,6 @@
             <ng-container *ngIf="this.objectTypeNow == TypeObjet.SI">
               <li *ngFor="let desc of this.SousItemNow.description" class="list-group-item">{{desc.lien}}</li>
             </ng-container>
-            
           </ng-container>
           <ng-container *ngIf="this.descriptionFromHistory">
             <li *ngFor="let desc of this.descriptionHistory" class="list-group-item">{{desc.lien}}</li>
