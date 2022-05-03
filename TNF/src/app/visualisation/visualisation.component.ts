@@ -34,6 +34,7 @@ export class VisualisationComponent implements OnInit {
   public searchText : string = "";
   public objectTypeNow: typeObjet = typeObjet.Aucun;
   public TypeObjet = typeObjet;
+  public isActif : boolean = false;
   public descriptionFromHistory : boolean = false;
   public descriptionHistory : Description[] = [];
   public Ornow : ObjetRepereAffichage = {
@@ -72,12 +73,11 @@ export class VisualisationComponent implements OnInit {
   constructor(private fetchVisuService : FetchVisuService, private cookieService : CookieService) { 
     this.fetchVisuService.getAllAteliers().then((list: AtelierInfo[]) => {
       this.listeAtelier = list
-      console.log(this.listeAtelier)
     }).catch((e) => {
     })
   }
 
-
+  
   ngOnInit(): void {
   }
 

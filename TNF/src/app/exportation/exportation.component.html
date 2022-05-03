@@ -1,8 +1,8 @@
 <div class="container">
-    <div class="shadow-sm p-3 mt-4">
+    <div class="shadow-sm border offset-1 col-10 pt-3 pb-3 mt-4">
         <div class="row mb-3">
-            <div class="col-12 col-lg-6">
-                <div class="input-group">
+            <div class="col-12 col-lg-6 px-5">
+                <div class="input-group ">
                     <label class="input-group-text " for="atelierSelect">Atelier</label>
                     <select (change)=selectAtelier($event) class="form-select" id="atelierSelect" aria-label="Default select example">
                         <option value ="" selected>Sélectionner l'atelier</option>
@@ -12,7 +12,7 @@
                     </select>
                 </div> 
             </div>
-            <div class="col-12 col-lg-6 d-flex justify-content-between">
+            <div class="col-12 px-5 col-lg-6 d-flex justify-content-between">
                 <legend class="col-form-label col-sm-2 pt-0">Date</legend>
                 <div>
                     <label class="pe-3" for="start">Début </label>
@@ -25,7 +25,7 @@
             </div>
         </div>
         <div class="row mb-3">
-            <div class="col-12 col-lg-6">
+            <div class="col-12  col-lg-6 px-5">
                 <div class="input-group">
                     <label class="input-group-text " for="TypeObjetSelect">Type Objet</label>
                     <select (change)=selectTypeObjet($event) class="form-select" id="TypeObjetSelect" aria-label="Default select example">
@@ -34,9 +34,9 @@
                             {{typeObjet.idType}} - {{typeObjet.libelleType}}
                         </option>
                     </select>
-                </div> 
+                </div>  
             </div>
-            <div class="col-12 col-lg-6 ">
+            <div class="col-12 px-5 col-lg-6 ">
                 <legend class="col-form-label col-sm-2 pt-0">Actif </legend>
                 <div class="form-check form-check-inline">
                     <input (change)="selectActif(1)" class="form-check-input" type="radio" name="actif" id="trueActif" value="">
@@ -47,7 +47,7 @@
                     <label class="form-check-label" for="falseActif">Non</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input (change)="selectActif(-1)" class="form-check-input" type="radio" name="actif" id="ignoredActif" value="">
+                    <input (change)="selectActif(-1)" class="form-check-input" type="radio" name="actif" id="ignoredActif" checked value="">
                     <label class="form-check-label" for="ignoredActif">Ignorer</label>
                 </div>
 
@@ -55,13 +55,15 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-12 col-lg-6">
+            <div class="col-12  col-lg-6 px-5">
                 <div class="input-group">
                     <label class="input-group-text " for="ObjetRepère">Objet repère</label>
-                    <input class="form-control" type="text" placeholder="Identifiant" id="ObjetRepère" [(ngModel)]="objetRepere" >
+                    <input class="form-control " [ngClass]="orExisted == 1 ? 'orValid' : orExisted == 0 ? 'orInvalide' : ''" type="text" placeholder="Identifiant" id="ObjetRepère" [(ngModel)]="objetRepere" maxlength="6" (input)=orExist($event)>
+                    <div *ngIf="orExisted != -1" [ngClass]="orExisted == 1 ? 'labelValid' : orExisted == 0 ? 'labelInvalide' : ''"  class="text-center">{{this.orExistedData}}</div>
+                    <div *ngIf="orExisted == -1" class="py-2 labelInvalide"> </div>
                 </div> 
             </div>
-            <div class="col-6">
+            <div class="col-12 px-5 col-lg-6">
                 <legend class="col-form-label col-sm-2 pt-0">Securité</legend>
                     <div class="form-check form-check-inline">
                         <input (change)="selectSecurite(1)" class="form-check-input" type="radio" name="securite" id="trueSecurite" value="">
@@ -72,10 +74,13 @@
                         <label class="form-check-label" for="falseSecurite">Non</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input (change)="selectSecurite(-1)" class="form-check-input" type="radio" name="securite" id="ignoredSecurite" value="">
+                        <input (change)="selectSecurite(-1)" class="form-check-input" type="radio" name="securite" id="ignoredSecurite" checked value="">
                         <label class="form-check-label" for="ignoredSecurite">Ignorer</label>
                     </div> 
             </div>
+        </div>
+        <div class="row">
+            <button (click)="valideForm()" type="button" class="btn btn-lg btn-light col-6 offset-3 col-lg-2 offset-lg-5 mt-3">Valider</button>
         </div>
     </div>
 
@@ -85,18 +90,18 @@
                 <table class="table table-hover cursor ">
                     <thead>
                     <tr>
-                        <th class="col-4 text-center" scope="col-4">N° Séquentiel</th>
-                        <th class="col-8 text-center align-middle" scope="col-8">Libellé</th>
+                        <th class="col-4" scope="col-4">N° Séquentiel</th>
+                        <th class="col-8  align-middle" scope="col-8">Libellé</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr *ngIf="this.exportData.length === 0; else afficheOrItem">
-                        <td class="text-center" colspan="2">Aucun Sous Item</td>
+                        <td class="text-center" colspan="2">Aucun Item</td>
                     </tr>
                     <ng-template #afficheOrItem>
-                        <tr *ngFor="let OR of exportData" >
-                            <td class="col-4">{{OR.idObjetRepere}}</td>
-                            <td class="col-8">{{OR.libelleObjetRepere}}</td>
+                        <tr *ngFor="let item of exportData" >
+                            <td class="col-4">{{item.idItem}}</td>
+                            <td class="col-8">{{item.libelleItem}}</td>
                         </tr>
                     </ng-template>
                     </tbody>
@@ -104,8 +109,26 @@
             </div>
         </div>
     </div>
+    <div class="row">
+        <div class="col-10 offset-1 col-lg-6 offset-lg-3 mt-3">
+            <div class="input-group mb-3">
+                <input [(ngModel)]="this.nomExport" type="text" class="form-control col-10" placeholder="Nom du fichier">
+                <button (click)="exportExcel()"class="btn btn-outline-secondary col-2" type="button" id="button-addon2">Exporter</button>
+            </div>
+        </div>
+    </div>
 </div>
 
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+    <div id="liveToast" class="toast hide"  data-bs-autohide="false" role="alert" data-bs-delay="10000" aria-live="assertive" aria-atomic="true" [ngClass]="ToastAffiche ? 'show' : 'hide'">
+    <div class="toast-header">
+        <svg class="bd-placeholder-img rounded me-2" width="20" height="20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" attr.fill="{{colorToast}}"></rect></svg>
+        <strong class="me-auto">{{typeToast}}</strong>
+        <button (click)="closeToast()" type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body">
+        {{messageToast}}
+    </div>
+    </div>
+</div>
 
-
-<button (click)="exportExcel()" type="button" class="btn btn-lg btn-light col-10 offset-1 col-lg-6 offset-lg-3 my-2"> Export </button>

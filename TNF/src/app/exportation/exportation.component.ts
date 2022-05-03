@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import * as FileSaver from 'file-saver';
 import { AtelierInfo } from 'src/structureData/Atelier';
+import { ItemAffichage, ItemEtDispo, ItemInfo } from 'src/structureData/Item';
+import { ObjetRepereUtile } from 'src/structureData/ObjetRepere';
 import { TypeObjetInfo } from 'src/structureData/TypeObject';
 import { FetchcreateTypeObjectService } from '../create-type-object/service/fetchcreate-type-object.service';
 import { FetchVisuService } from '../visualisation/service/fetch-visu.service';
@@ -13,7 +15,7 @@ import { FetchExportationService } from './service/fetch-exportation.service';
 })
 export class ExportationComponent implements OnInit {
 
-  exportData : any[] = [];
+  public exportData : ItemAffichage[] = [];
   public listeAtelier: AtelierInfo[] = [];
   public atelier: string = "";
   public typeObjet: string = "";
@@ -25,9 +27,17 @@ export class ExportationComponent implements OnInit {
   public dateFin : string = "";
   public actif : number = -1;
   public securite : number = -1;
+  public nomExport : string = "";
+
+  public ToastAffiche : boolean = false; 
+  public messageToast : string = "";
+  public typeToast : string = ""
+  public colorToast : string = "";
+
+  public orExisted : number = -1;
+  public orExistedData : string = "";
 
   constructor(private fetchExportationService : FetchExportationService,private fetchVisuService : FetchVisuService, private fetchCreateTypeObject : FetchcreateTypeObjectService) { 
-    this.dummyData();
     this.getAteliers();
     this.getListType();
   }
@@ -56,6 +66,21 @@ export class ExportationComponent implements OnInit {
     })
   }
 
+  closeToast(){
+    this.ToastAffiche = false;
+  }
+
+  manageToast (title : string, text : string, color : string ){
+    this.typeToast = title;
+    this.colorToast = color;
+    this.messageToast = text;
+    this.ToastAffiche = true;
+    setTimeout(() => 
+    {
+      this.ToastAffiche = false;
+    },
+    10000);
+  }
 
 
   public selectAtelier (Atelier : any) {
@@ -109,23 +134,43 @@ export class ExportationComponent implements OnInit {
    
   }
 
+  public orExist (idOr : any){
+    const id = idOr.target.value;
+    if (id.length == 6){
+      this.fetchExportationService.getORbyId(id).then((res: ObjetRepereUtile) => {
+      if (res == undefined) {
+        this.orExisted = 0;
+        this.orExistedData = "Objet repère inconnu";
+      } else {
+        this.orExisted = 1;
+        this.orExistedData = res.idObjetRepere +" - "+ res.libelleObjetRepere;
+      }
+      }).catch((e) => {
+      })
+    } else {
+      this.orExisted = -1;
+      this.orExistedData = "";
+    }
+
+   
+  }
+  
+
 
   valideForm(){
-    this.fetchExportationService.getExportItem(this.atelier, this.typeObjet, this.objetRepere, this.dateDebut, this.dateFin, this.actif, +this.securite).then((list: TypeObjetInfo[]) => {
-      this.listeTypeO = list
+    this.fetchExportationService.getExportItem((this.atelier == '' ? '-1' : this.atelier), (this.typeObjet == '' ? '-1' : this.typeObjet), (this.objetRepere == '' ? '-1' : this.objetRepere),
+    (this.dateDebut == '' ? '-1' : this.dateDebut), (this.dateFin == '' ? '-1' : this.dateFin), this.actif, this.securite).then((list: ItemAffichage[]) => {
+
+      if(list == undefined) {
+        this.exportData.splice(0)
+        this.manageToast("Recherche d'item", "Données invalides" , "red")
+      } else {
+        this.exportData = list
+      }
+
+      console.log(list)
     }).catch((e) => {
     })
-  }
-
-  dummyData() {
-    this.exportData = [
-      { id: 1, Company: 'Alfreds Futterkiste', Contact: 'Maria Anders', Country: 'Germany' },
-      { id: 2, Company: 'Centro comercial Moctezuma', Contact: 'Francisco Chang', Country: 'Mexico' },
-      { id: 3, Company: 'Ernst Handel', Contact: 'Roland Mendel', Country: 'Austria' },
-      { id: 4, Company: 'Island Trading', Contact: 'Helen Bennett', Country: 'UK' },
-      { id: 5, Company: 'Laughing Bacchus Winecellars', Contact: 'Yoshi Tannamuri', Country: 'Canada' },
-      { id: 6, Company: 'Magazzini Alimentari Riuniti', Contact: 'Giovanni Rovelli', Country: 'Italy' },
-    ]
   }
 
 
@@ -137,11 +182,13 @@ export class ExportationComponent implements OnInit {
         //xlsx.utils.sheet_add_aoa(worksheet, [['NEW VALUE from NODE']], {origin: 'F4'});        
         const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
         const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
-        this.saveExcel(excelBuffer, "ExportExcel");
+        console.log(this.nomExport);
+        
+        this.saveExcel(excelBuffer, this.nomExport);
 
       })
     } else {
-
+      this.manageToast("Erreur d'import", "Aucune données à exporter" , "red")
     }
   }
 

@@ -2,7 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { lastValueFrom } from 'rxjs';
-import { ItemEtDispo } from 'src/structureData/Item';
+import { ItemAffichage } from 'src/structureData/Item';
+import { ObjetRepereUtile } from 'src/structureData/ObjetRepere';
 
 @Injectable({
   providedIn: 'root'
@@ -24,8 +25,8 @@ export class FetchExportationService {
     url = url.replace("{estSecurite}", estSecurite.toString())
     
     try {
-      const res : ItemEtDispo = await lastValueFrom(this.http.get<ItemEtDispo>(url));
-      if (res.hasOwnProperty('error')) {
+      const res : ItemAffichage[] = await lastValueFrom(this.http.get<ItemAffichage[]>(url));
+      if (res.hasOwnProperty('error') || res.length == 0 ) {
         return undefined
       } else {
         return res;
@@ -43,5 +44,15 @@ export class FetchExportationService {
     }
   }
 
+
+  async getORbyId (idOr : string) : Promise<any>{
+    let url = "http://localhost:3000/objetrepere/{idOr}"
+    url = url.replace("{idOr}", idOr)
+    const res : ObjetRepereUtile = await lastValueFrom(this.http.get<ObjetRepereUtile>(url));
+    if( res == null){
+      return undefined
+    }
+    return res;
+  }
 
 }
