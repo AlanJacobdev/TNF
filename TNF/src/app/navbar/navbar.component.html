@@ -1,73 +1,97 @@
 <ng-template [ngIf]="printMenu()">
-<nav class="navbar navbar-expand-xl navbar-light bg-light">
+    <nav class="navbar navbar-expand-xl navbar-light bg-light shadow-sm">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="">
+                <img class="me-3" src="./assets/Logo_Laïta.jpg" alt="Laïta" width="70" height="36">
+                <span class="titleNav">Itemisation</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+                aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav w-100 justify-content-around">
+                    <li class="nav-item position-relative" routerLinkActive="active">
+                        <a class="nav-link " routerLink="/visualisation" routerLinkActive="active" (click)="selectPage('Visualisation')">Visualisation</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Importation
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <li><a class="dropdown-item" href="#">Action</a></li>
+                            <li><a class="dropdown-item" href="#">Another action</a></li>
+                            <li><a class="dropdown-item" href="#">Something else here</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown " [ngClass]="{'active': GO0.isActive || GO1.isActive || GO2.isActive || GO3.isActive}" >
+                        <a class="nav-link dropdown-toggle"
+                            [ngClass]="{'active': GO0.isActive || GO1.isActive || GO2.isActive || GO3.isActive}"
+                            href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            Gestion Objets
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <li><a #GO0="routerLinkActive" class="dropdown-item" routerLink="/creationObjet"
+                                    routerLinkActive="active" (click)="selectPage('Création d\'objets')" >Création d'objets</a></li>
+                            <li><a #GO1="routerLinkActive" class="dropdown-item" routerLink="/modificationObjet"
+                                    routerLinkActive="active" (click)="selectPage('Modification d\'objets')">Modification d'objets</a></li>
+                            <li><a #GO2="routerLinkActive" class="dropdown-item" routerLink="/suppressionObjet"
+                                    routerLinkActive="active" (click)="selectPage('Suppression d\'objets')">Suppression d'objets</a></li>
+                            <li><a #GO3="routerLinkActive" class="dropdown-item" routerLink="/recopieObjet"
+                                    routerLinkActive="active" (click)="selectPage('Recopie d\'objets')">Recopie d'objets</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown" [ngClass]="{'active': GD0.isActive}">
+                        <a class="nav-link dropdown-toggle" [ngClass]="{'active': GD0.isActive}" href="#"
+                            id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Gestion Données
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <li><a #GD0="routerLinkActive" class="dropdown-item" routerLink="/exportation"
+                                    routerLinkActive="active" (click)="selectPage('Exportation')"> Exportation </a></li>
+                            <li><a class="dropdown-item" href="#">Another action</a></li>
+                            <li><a class="dropdown-item" href="#">Something else here</a></li>
+                        </ul>
+                    </li>
+                    <ng-template [ngIf]="estAdmin">
+                        <li class="nav-item dropdown" [ngClass]="{'active': PA0.isActive}"> 
+                            <a class="nav-link dropdown-toggle" [ngClass]="{'active': PA0.isActive}" href="#"
+                                id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                Paramétrage
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <li><a #PA0="routerLinkActive" class="dropdown-item" routerLink="/gestionTypeObjet"
+                                routerLinkActive="active" (click)="selectPage('Gestion des types d\'objet')">Gestion des types d'objet</a></li>
+                                <li><a class="dropdown-item" href="#">Another action</a></li>
+                                <li><a class="dropdown-item" href="#">Something else here</a></li>
+                            </ul>
+                        </li>
+                    </ng-template>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            {{Nom}} {{Prenom}}
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <li><a class="dropdown-item" href="#">Action</a></li>
+                            <li><a class="dropdown-item" href="#">Another action</a></li>
+                            <li><a class="dropdown-item cursor" (click)="disconnect()">Déconnexion</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
     <div class="container-fluid">
-      <a class="navbar-brand" href="">
-        <img class="me-3" src="./assets/Logo_Laïta.jpg" alt="Laïta" width="70" height="36">
-        <span class = "titleNav">Itemisation</span>
-      </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNavDropdown">
-        <ul class="navbar-nav w-100 justify-content-around">
-            <li class="nav-item ">
-                <a class="nav-link" routerLink="/visualisation">Visualisation</a>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    Importation
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                    <li><a class="dropdown-item" href="#">Action</a></li>
-                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                    <li><a class="dropdown-item" href="#">Something else here</a></li>
-                </ul>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    Gestion Objets
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                    <li><a class="dropdown-item" routerLink="/creationObjet">Création d'objets</a></li>
-                    <li><a class="dropdown-item" routerLink="/modificationObjet">Modification d'objets</a></li>
-                    <li><a class="dropdown-item" routerLink="/suppressionObjet">Suppression d'objets</a></li>
-                    <li><a class="dropdown-item" routerLink="/recopieObjet">Recopie d'objets</a></li>
-                </ul>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    Gestion Données
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                    <li><a class="dropdown-item" routerLink="/exportation"> Exportation </a></li>
-                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                    <li><a class="dropdown-item" href="#">Something else here</a></li>
-                </ul>
-            </li>
-            <ng-template [ngIf]="estAdmin">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Paramétrage
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <li><a class="dropdown-item" routerLink="/gestionTypeObjet">Gestion des types d'objet</a></li>
-                        <li><a class="dropdown-item" href="#">Another action</a></li>
-                        <li><a class="dropdown-item" href="#">Something else here</a></li>
-                    </ul>
-                </li>
-            </ng-template>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    {{Nom}} {{Prenom}}
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                    <li><a class="dropdown-item" href="#">Action</a></li>
-                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                    <li><a class="dropdown-item cursor" (click)="disconnect()" >Déconnexion</a></li>
-                </ul>
-            </li>
-        </ul>
-      </div>
+        <div class="row">
+            <div class="col fs-4  border-bottom pt-1 pb-2 text-center">
+                    {{this.Page}}
+            </div>
+        
+        </div>
     </div>
-  </nav>
+    
 </ng-template>

@@ -11,13 +11,21 @@
             </select>
             </div>
         </div>
-        <div class="col-lg-4 offset-lg-1 col-xs-12 mt-4">
+        <div class="col-lg-4 col-xs-12 mt-4">
           <div class="input-group">
             <label class="input-group-text" for="search" >Recherche</label>
-            <input class="form-control" type="text" placeholder="Identifiant" id="search" [(ngModel)]="searchText">
+            <input class="form-control" type="text" placeholder="Identifiant" id="search" [(ngModel)]="searchText" >
             </div>
         </div>
-        <div *ngIf="this.objectTypeNow != TypeObjet.Aucun" class="col-lg-3 mt-4 text-end">
+        <div class="col-lg-2 col-6 mt-4 align-self-center">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" [(ngModel)]="this.isValide" (click)="CheckIfORSelectedValide()">
+            <label class="form-check-label" for="flexCheckDefault">
+              Objet repère valide
+            </label>
+          </div>
+        </div>
+        <div *ngIf="this.objectTypeNow != TypeObjet.Aucun" class="col-lg-2 col-6 mt-4 text-end">
           <button data-bs-toggle="modal" data-bs-target="#History" type="button" (click)=getHistory(); class="btn btn-light"><fa-icon class="close col-1 text-right" [icon]="faHistory" ></fa-icon>  Historique</button>
         </div>
         
@@ -41,7 +49,7 @@
                             <td class="text-center" colspan="2">Aucun Objet Repère</td>
                         </tr>
                         <ng-template #afficheOR>
-                            <tr *ngFor="let objetRepere of listeObjetRepere | filterVisualisation : searchText" (click)="selectOR(objetRepere.idObjetRepere)" [ngClass]="{'table-active': objetRepere.idObjetRepere === this.selectedOr , 'actifNow' : objetRepere.idObjetRepere === this.selectedNow }">
+                            <tr *ngFor="let objetRepere of listeObjetRepere | filterVisualisation : searchText | actifVisualisation : isValide" (click)="selectOR(objetRepere.idObjetRepere)" [ngClass]="{'table-active': objetRepere.idObjetRepere === this.selectedOr , 'actifNow' : objetRepere.idObjetRepere === this.selectedNow }">
                                 <td class="col-5">{{objetRepere.idObjetRepere}}</td>
                                 <td class="col-7">{{objetRepere.libelleObjetRepere}}</td>
                             </tr>
@@ -96,7 +104,7 @@
                       <td class="text-center" colspan="2">Aucun Sous Item</td>
                     </tr>
                     <ng-template #afficheSousItem>
-                      <tr *ngFor="let sousItem of listeSousItem filterVisualisation : searchText "  (click)="selectSO(sousItem.idSousItem)" [ngClass]="{'table-active': sousItem.idSousItem === this.selectedSousItem, 'actifNow' : sousItem.idSousItem === this.selectedNow }">
+                      <tr *ngFor="let sousItem of listeSousItem | filterVisualisation : searchText "  (click)="selectSO(sousItem.idSousItem)" [ngClass]="{'table-active': sousItem.idSousItem === this.selectedSousItem, 'actifNow' : sousItem.idSousItem === this.selectedNow }">
                           <td class="col-5">{{sousItem.idSousItem}}</td>
                           <td class="col-7">{{sousItem.libelleSousItem}}</td>
                       </tr>
@@ -106,7 +114,7 @@
                 </table>
             </div>
         </div>
-        <div class="col-xxl-10 offset-xxl-1 mt-lg-5 mt-1 order-1 order-lg-4 border rounded">
+        <div class="col-xxl-10 offset-xxl-1 mt-lg-5 mt-1 order-1 order-lg-4 border border-1 colorBorder rounded shadow-sm">
           <div class="row my-1">
             <ng-container *ngIf="selectedNow === ''; else displayInfo">
               <div class="col-12 my-5 text-center">
@@ -137,7 +145,7 @@
                     </div>
                   </div>
                   <div class="row">
-                    <div class=" mb-3 input-group">
+                    <div class=" input-group">
                       <label class="col-4 col-form-label">Description</label>
                       <input class="form-control border-0 zindexZero" type="text" [value]="(Ornow.description.length === 0) ? 'Aucune description' : ((Ornow.description.length > 1)? Ornow.description.length + ' descriptions': Ornow.description.length + ' description' ) "  >
                       <button (click)="setdescriptionFromHistory(false)" *ngIf="Ornow.description.length !== 0" class="input-group-text px-2 py-0 fs-4 border-0 bg-white" data-bs-toggle="modal" data-bs-target="#descriptionModal"><fa-icon class=" text-right close" [icon]="faEye"></fa-icon></button>
@@ -158,7 +166,7 @@
                     </div>
                   </div>
                   <div class="row">
-                    <label for="staticEmail" class="col-4 col-form-label">Poste Modification</label>
+                    <label for="staticEmail" class="col-4 col-form-label">Profil Modification</label>
                     <div class="col-8">
                       <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="Ornow.profilModification">
                     </div>
@@ -197,7 +205,7 @@
                     </div>
                   </div>
                   <div class="row">
-                    <div class=" mb-3 input-group">
+                    <div class="input-group">
                       <label class="col-4 col-form-label">Description</label>
                       <input class="form-control border-0 zindexZero" type="text" [value]="(ItemNow.description.length === 0) ? 'Aucune description' : ((ItemNow.description.length > 1)? ItemNow.description.length + ' descriptions': ItemNow.description.length + ' description' ) "  >
                       <button (click)="setdescriptionFromHistory(false)" *ngIf="ItemNow.description.length !== 0" class="input-group-text px-2 py-0 fs-4 border-0 bg-white" data-bs-toggle="modal" data-bs-target="#descriptionModal"><fa-icon class=" text-right close" [icon]="faEye"></fa-icon></button>
@@ -218,7 +226,7 @@
                     </div>
                   </div>
                   <div class="row">
-                    <label for="staticEmail" class="col-4 col-form-label">Poste Modification</label>
+                    <label for="staticEmail" class="col-4 col-form-label">Profil Modification</label>
                     <div class="col-8">
                       <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="ItemNow.profilModification">
                     </div>
@@ -254,7 +262,7 @@
                     </div>
                   </div>
                   <div class="row">
-                    <div class=" mb-3 input-group">
+                    <div class="input-group">
                       <label class="col-4 col-form-label">Description</label>
                       <input class="form-control border-0 zindexZero" type="text" [value]="(SousItemNow.description.length === 0) ? 'Aucune description' : ((SousItemNow.description.length > 1)? SousItemNow.description.length + ' descriptions': SousItemNow.description.length + ' description' ) "  >
                       <button (click)="setdescriptionFromHistory(false)" *ngIf="SousItemNow.description.length !== 0" class="input-group-text px-2 py-0 fs-4 border-0 bg-white" data-bs-toggle="modal" data-bs-target="#descriptionModal"><fa-icon class=" text-right close" [icon]="faEye"></fa-icon></button>
@@ -275,7 +283,7 @@
                     </div>
                   </div>
                   <div class="row">
-                    <label for="staticEmail" class="col-4 col-form-label">Poste Modification</label>
+                    <label for="staticEmail" class="col-4 col-form-label">Profil Modification</label>
                     <div class="col-8">
                       <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="SousItemNow.profilModification">
                     </div>

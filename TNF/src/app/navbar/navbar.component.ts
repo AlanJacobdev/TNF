@@ -15,6 +15,7 @@ export class NavbarComponent implements OnInit {
   @Input() public estConnecte : boolean = false;
   public Nom : string ="";
   public Prenom : string = "";
+  public Page : string = "";
 
   constructor(private navbarService : NavBarService, private authService : AuthService, private cookieService: CookieService) { 
     this.navbarService.isUserLoggedIn.subscribe( value => {
@@ -34,6 +35,8 @@ export class NavbarComponent implements OnInit {
     this.Prenom = this.cookieService.get('UserName');
     this.Nom = this.cookieService.get('UserLastName')
     this.estAdmin = this.cookieService.get('Admin') === "true" ? true : false;
+    const nomPage = localStorage.getItem('page');
+    this.Page = (nomPage) != null ? nomPage : "";
   }
 
   printMenu() {
@@ -45,6 +48,11 @@ export class NavbarComponent implements OnInit {
     await this.authService.deconnexion();
     this.navbarService.setEstConnecte(false);
     this.navbarService.setEstAdmin(false);    
+  }
+
+  public selectPage(nomPage : string){
+    this.Page = nomPage;
+    localStorage.setItem('page', nomPage)
   }
 
 }

@@ -8,7 +8,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-lg-6 col-xs-12 mt-5 order-2 order-lg-1">
+        <div class="col-lg-6 col-xs-12 mt-lg-5 mt-3 order-2 order-lg-1">
             <ul class="list-group list-group-horizontal cursor-pointer">
                 <li class="list-group-item col-6 text-center border rounded-top-left border-bottom-0" (click)="selectType(this.TypeObject.OR)" [ngClass]="{'bg-light': this.selectedType === this.TypeObject.OR}" >Type Objet Repere</li>
                 <li class="list-group-item col-6 text-center border rounded-top-right border-bottom-0" (click)="selectType(this.TypeObject.O)" [ngClass]="{'bg-light': this.selectedType === this.TypeObject.O}" >Type Objet</li>
@@ -41,15 +41,32 @@
             </div>
         </div>
 
-        <div *ngIf="!changesNow; else formType" class="col-lg-6 col-xs-12 mt-5 order-1 order-lg-2">
-            <div class="row my-5">
-                <button (click)="selectCreateType()" type="button" class="btn btn-lg btn-light col-12 col-lg-6 offset-lg-3 shadow-sm ">Créer un nouveau type</button>
-            </div>
-            <div *ngIf="this.idSelected !== ''" class="row my-5">
-                <button (click)="selectModifyType()"type="button" class="btn btn-lg btn-light col-12 col-lg-6 offset-lg-3 shadow-sm">Modifier le type</button>
-            </div>
-            <div *ngIf="this.idSelected !== ''" class="row my-5">
-                <button (click)="selectDeleteType()" type="button" class="btn btn-lg btn-light col-12 col-lg-6 offset-lg-3 shadow-sm">Supprimer le type</button>
+        <div *ngIf="!changesNow; else formType" class="col-lg-6 col-xs-12 mt-3 mt-lg-5 order-1 order-lg-2">
+            <div class="row">
+                <div class="col-lg-12 col-3 my-lg-3">
+                    <button (click)="selectCreateType()" type="button" class="btn btn-lg btn-light col-12 col-lg-6 offset-lg-3 shadow-sm ">
+                        <div class="d-none d-lg-block">Créer un nouveau type</div>
+                        <div class="d-block d-lg-none"><fa-icon class="fs-3 col-12" [icon]="faPlus" ></fa-icon> </div>
+                    </button>
+                </div>
+                <div *ngIf="this.idSelected !== ''" class="col-lg-12 col-3 my-lg-3">
+                    <button (click)="selectModifyType()"type="button" class="btn btn-lg btn-light col-12 col-lg-6 offset-lg-3 shadow-sm">
+                        <div class="d-none d-lg-block">Modifier le type</div>
+                        <div class="d-block d-lg-none"><fa-icon class="fs-3 col-12" [icon]="faPen" ></fa-icon> </div>
+                    </button>
+                </div>
+                <div *ngIf="this.idSelected !== ''" class="col-lg-12 col-3 my-lg-3">
+                    <button (click)="selectDeleteType()" type="button" class="btn btn-lg btn-light col-12 col-lg-6 offset-lg-3 shadow-sm">
+                        <div class="d-none d-lg-block">Supprimer le type </div>
+                        <div class="d-block d-lg-none"><fa-icon class="fs-3 col-12" [icon]="faTrashCan" ></fa-icon> </div>
+                    </button>
+                </div>
+                <div *ngIf="this.idSelected !== ''" class="col-lg-12 col-3 my-lg-3">
+                    <button (click)="selectInformation()" type="button" class="btn btn-lg btn-light col-12 col-lg-6 offset-lg-3 shadow-sm">
+                        <div class="d-none d-lg-block">Informations</div>
+                        <div class="d-block d-lg-none"><fa-icon class="fs-3 col-12" [icon]="faInfo" ></fa-icon> </div>
+                    </button>
+                </div>
             </div>
         </div>
         <ng-template #formType >
@@ -94,7 +111,7 @@
                 </div>
             </ng-container>
             <ng-template #modification >
-                <ng-container *ngIf="!this.suppresion; else supp">
+                <ng-container *ngIf="!this.suppresion && !this.information; else supp">
                     <div class="col-lg-5 col-xs-12 mt-5 offset-lg-1 order-1 order-lg-2 needs-validation"  [ngClass]="{'was-validated': formValidate === true}" >
                         <div class="container-fluid border rounded py-3 px-3 shadow-sm">
                             <div class="text-center row ">
@@ -120,20 +137,99 @@
                 </ng-container>
             </ng-template> 
             <ng-template #supp >
-                <div class="col-lg-5 col-xs-12 mt-5 offset-lg-1 order-1 order-lg-2">
-                    <div class="container-fluid border rounded py-3 px-3 shadow-sm">
-                        <div class="text-center row ">
-                            <span class="fs-3 col-10 offset-1">Suppresion</span>
-                            <fa-icon class="close col-1 text-right" [icon]="faXmark" (click)="close()"></fa-icon>
+                <ng-container *ngIf="!this.information; else info">
+                    <div class="col-lg-5 col-xs-12 mt-5 offset-lg-1 order-1 order-lg-2">
+                        <div class="container-fluid border rounded py-3 px-3 shadow-sm">
+                            <div class="text-center row ">
+                                <span class="fs-3 col-10 offset-1">Suppresion</span>
+                                <fa-icon class="close col-1 text-right" [icon]="faXmark" (click)="close()"></fa-icon>
+                            </div>
+                            <div class="col-12 col-lg-10 offset-lg-1 my-5">
+                                <div class="text-center fs-5">
+                                    Voulez-vous supprimer le type <b>{{idSelected}}</b> ?
+                                </div>
+                            </div>
+                            <button (click)="deleteTypeObjet()" type="button" class="btn btn-lg btn-light col-10 offset-1 col-lg-6 offset-lg-3 my-2">Supprimer</button>
                         </div>
-                        <div class="col-12 col-lg-10 offset-lg-1 my-5">
-                            <div class="text-center fs-5">
-                                Voulez-vous supprimer le type <b>{{idSelected}}</b> ?
+                    </div>
+                </ng-container>
+            </ng-template> 
+            <ng-template #info >
+                    <div class="col-lg-5 col-xs-12 mt-5 offset-lg-1 order-1 order-lg-2">
+                        <div class="container-fluid border rounded py-3 px-3 shadow-sm">
+                            <div class="text-center row ">
+                                <span class="fs-3 col-10 offset-1">Informations</span>
+                                <fa-icon class="close col-1 text-right" [icon]="faXmark" (click)="close()"></fa-icon>
+                            </div>
+                            <div class="row m-3 border border-2 rounded">
+                                <div class="col-12">
+                                    <div class="row fs-5 justify-content-center border-bottom">
+                                        Création
+                                    </div>
+                                    <div class="row my-3">
+                                        <div class="col-4">
+                                            <div class="row">
+                                                <fa-icon class="fs-5 col-12 text-center " [icon]="faUser" ></fa-icon> 
+                                            </div>
+                                            <div class="row text-center">
+                                                <span class="col-12  lh-lg">{{this.selectedType ===this.TypeObject.OR ? this.infoTORSelect.profilCreation : this.infoTOSelect.profilCreation}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="row">
+                                                <fa-icon class="fs-5 col-12 text-center" [icon]="faCalendar" ></fa-icon>
+                                            </div>
+                                            <div class="row text-center">
+                                                <span class="col-12 lh-lg">{{(this.selectedType ===this.TypeObject.OR ? this.infoTORSelect.dateCreation : this.infoTOSelect.dateCreation) | date: 'dd/MM/yyyy'}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="row ">
+                                                <fa-icon class="fs-5 col-12 text-center" [icon]="faClock" ></fa-icon> 
+                                            </div>
+                                            <div class="row text-center">
+                                                <span class="col-12  lh-lg">{{(this.selectedType ===this.TypeObject.OR ? this.infoTORSelect.dateCreation : this.infoTOSelect.dateCreation) | date: 'HH:mm'}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div *ngIf="(this.selectedType === this.TypeObject.OR ? this.infoTORSelect.profilModification != null : this.infoTOSelect.profilModification !=null)" class="row m-3 border border-2 rounded">
+                                <div class="col-12">
+                                    <div class="row fs-5 justify-content-center border-bottom">
+                                        Modification
+                                    </div>
+                                    <div class="row my-3">
+                                        <div class="col-4">
+                                            <div class="row">
+                                                <fa-icon class="fs-5 col-12 text-center " [icon]="faUser" ></fa-icon> 
+                                            </div>
+                                            <div class="row text-center">
+                                                <span class="col-12  lh-lg">{{this.selectedType ===this.TypeObject.OR ? this.infoTORSelect.profilModification : this.infoTOSelect.profilModification}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="row">
+                                                <fa-icon class="fs-5 col-12 text-center" [icon]="faCalendar" ></fa-icon>
+                                            </div>
+                                            <div class="row text-center">
+                                                <span class="col-12 lh-lg">{{(this.selectedType ===this.TypeObject.OR ? this.infoTORSelect.dateModification : this.infoTOSelect.dateModification) | date: 'dd/MM/yyyy'}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="row ">
+                                                <fa-icon class="fs-5 col-12 text-center" [icon]="faClock" ></fa-icon> 
+                                            </div>
+                                            <div class="row text-center">
+                                                <span class="col-12  lh-lg">{{(this.selectedType ===this.TypeObject.OR ? this.infoTORSelect.dateModification : this.infoTOSelect.dateModification) | date: 'HH:mm'}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <button (click)="deleteTypeObjet()" type="button" class="btn btn-lg btn-light col-10 offset-1 col-lg-6 offset-lg-3 my-2">Supprimer</button>
                     </div>
-                </div>
             </ng-template> 
         </ng-template>
     </div>

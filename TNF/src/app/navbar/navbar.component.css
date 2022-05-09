@@ -14,3 +14,21 @@
 .cursor{
     cursor: pointer;
  }
+
+ a.active {
+     font-weight:bold !important
+ }
+
+ li.active::before  {
+    content: '';
+    position: absolute;
+    left: 30%;
+    top: 95%;
+    width: 0;
+    height: 0;
+    border-left: 26px solid transparent;
+    border-right: 26px solid transparent;
+    border-bottom: 18px solid white;
+    clear: both;
+    filter: drop-shadow(0px -4px 1px rgba(0,0,0,0.03));
+ }

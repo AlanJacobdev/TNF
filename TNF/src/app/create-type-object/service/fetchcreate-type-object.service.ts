@@ -92,10 +92,10 @@ export class FetchcreateTypeObjectService {
       profilCreation : global,
       posteCreation : ""
     }
-    const res : TypeObjetRepereInfo = await lastValueFrom(this.http.post<TypeObjetRepereInfo>(url, payload));
+    const res : any = await lastValueFrom(this.http.post<any>(url, payload));
     console.log(res)
     if (res.hasOwnProperty('error')) {
-      return undefined
+      return res['error'];
     } else {
       return res;
     }
@@ -111,10 +111,10 @@ export class FetchcreateTypeObjectService {
       profilModification : global,
       posteModification : ""
     }
-    const res : TypeObjetRepereInfo = await lastValueFrom(this.http.put<TypeObjetRepereInfo>(url, payload));
+    const res : any = await lastValueFrom(this.http.put<any>(url, payload));
     console.log(res)
     if (res.hasOwnProperty('error')) {
-      return undefined
+      return res['error']
     } else {
       return res;
     }

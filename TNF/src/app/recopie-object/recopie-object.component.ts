@@ -25,10 +25,11 @@ export class RecopieObjectComponent implements OnInit {
   public typeNow: string = "";
   public checkAll : boolean = false;
    
+  public atelier : string = "";
   public atelierCible : string = "";
   public nuCible : string = "";
   public ORCible : string = "";
-  public ORCibleExist : boolean = false;
+  public ORCibleExist : number = -1;
 
   public ToastAffiche : boolean = false; 
   public messageToast : string = "";
@@ -78,6 +79,8 @@ export class RecopieObjectComponent implements OnInit {
   public selectAtelier(Atelier: any ) {
     this.selectedOr = "";
     let value = Atelier.target.value; 
+    this.atelier = value;
+    this.selectAtelierCible(Atelier);
     if (value == '') {
       this.listeObjetRepere.splice(0);
     } else {
@@ -95,6 +98,7 @@ export class RecopieObjectComponent implements OnInit {
   public selectOR(idOr : string) {
     this.selectedOr = idOr;
     this.listeItem.splice(0);
+    this.checkAll = false;
     this.fetchVisuService.getItemByObjetRepere(idOr).then((list: ItemRecopie[]) => {
       if(list == undefined) {
         this.listeItem = [];
@@ -163,7 +167,7 @@ export class RecopieObjectComponent implements OnInit {
   recopieItem(atelier : string, nu : string){
     let tabItem = this.listeItem.filter(element => element.isPaste === true);
     if (tabItem.length !== 0) {
-      if(this.ORCibleExist){
+      if(this.ORCibleExist == 1){
         this.fetchRecopieService.recopySpecificItemFromOR(tabItem,this.selectedOr, atelier+nu).then((res: any) => {
           if(typeof res === 'string') {
             this.manageToast("Erreur de recopie", res , "red")
@@ -175,6 +179,8 @@ export class RecopieObjectComponent implements OnInit {
       } else {
         this.manageToast("Erreur de recopie", "Objet repère cible inexistant" , "red")
       }
+    } else {
+      this.manageToast("Erreur de recopie", "Veuillez sélectionner des items à recopier" , "red")
     }
   }
 
@@ -193,6 +199,7 @@ export class RecopieObjectComponent implements OnInit {
       this.getORByNU();
     } else {
       this.ORCible = ""
+      this.ORCibleExist = -1
     }
   }
 
@@ -203,6 +210,7 @@ export class RecopieObjectComponent implements OnInit {
       this.getORByNU();
     } else {
       this.ORCible = ""
+      this.ORCibleExist = -1
     }
   }
 
@@ -210,10 +218,10 @@ export class RecopieObjectComponent implements OnInit {
     this.fetchRecopieService.getORByNU(this.atelierCible+this.nuCible).then((res: ObjetRepereUtile) => {
       if(typeof res == "undefined" ) {
         this.ORCible = "Aucun objet repère correspondant";
-        this.ORCibleExist = false;
+        this.ORCibleExist = 0;
       } else {  
         this.ORCible = res.idObjetRepere + " - " + res.libelleObjetRepere;
-        this.ORCibleExist = true;
+        this.ORCibleExist = 1;
       }
     }).catch((e) => {
     })

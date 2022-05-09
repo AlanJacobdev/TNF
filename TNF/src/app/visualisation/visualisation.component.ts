@@ -34,7 +34,7 @@ export class VisualisationComponent implements OnInit {
   public searchText : string = "";
   public objectTypeNow: typeObjet = typeObjet.Aucun;
   public TypeObjet = typeObjet;
-  public isActif : boolean = false;
+  public isValide : boolean = false;
   public descriptionFromHistory : boolean = false;
   public descriptionHistory : Description[] = [];
   public Ornow : ObjetRepereAffichage = {
@@ -252,6 +252,18 @@ export class VisualisationComponent implements OnInit {
       if(res !== undefined){
         this.descriptionHistory = res.description;
       } 
+    }
+  }
+
+  public CheckIfORSelectedValide(){
+    if(this.isValide = true) {
+      if(this.Ornow.valide == 'Non') {
+        this.selectedOr = "";
+        this.selectedNow = "";
+        this.listeItem.splice(0);
+        this.listeSousItem.splice(0);
+      }
+
     }
   }
 

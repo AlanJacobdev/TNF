@@ -21,6 +21,7 @@ import { FilterItemByTypePipe } from './recopie-object/pipe/filter-item-by-type.
 import { ExportationComponent } from './exportation/exportation.component';
 import { FilterModificationPipe } from './modify-object/pipe/filter-modification.pipe';
 import { FilterSuppressionPipe } from './delete-object/pipe/filter-suppression.pipe';
+import { ActifVisualisationPipe } from './visualisation/pipe/actif-visualisation.pipe';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { FilterSuppressionPipe } from './delete-object/pipe/filter-suppression.p
     FilterItemByTypePipe,
     ExportationComponent,
     FilterModificationPipe,
-    FilterSuppressionPipe
+    FilterSuppressionPipe,
+    ActifVisualisationPipe
   ],
   imports: [
     BrowserModule,

@@ -65,7 +65,7 @@
                     <table class="table table-hover table-fixed">
                         <thead>
                         <tr >
-                            <th scope="col"><input *ngIf="this.listeItem.length !== 0"class="form-check-input" type="checkbox" (change)="allSelect()" [checked]="this.checkAll" id="flexCheckDefault"></th>
+                            <th scope="col"><input *ngIf="this.listeItem.length !== 0" class="form-check-input" type="checkbox" (change)="allSelect()" [checked]="this.checkAll" id="flexCheckDefault"></th>
                             <th scope="col">Identifiant</th>
                             <th scope="col">Nom</th>
                         </tr>
@@ -94,7 +94,7 @@
                 <div class="row col-lg-10 offset-lg-1 mb-3">
                     <div class="input-group">
                         <span class="input-group-text col-3">Atelier</span>
-                        <select (change)=selectAtelierCible($event) #AtelierSelect class="form-select" id="atelierSelect" aria-label="Default select example">
+                        <select (change)=selectAtelierCible($event) #AtelierSelect class="form-select" id="atelierSelect" aria-label="Default select example" [(ngModel)]="atelierCible" disabled>
                             <option value ="" selected>Selection de l'atelier</option>
                             <option *ngFor="let atelier of listeAtelier" [value]="atelier.idAtelier">
                                 {{atelier.idAtelier}} - {{atelier.libelleAtelier}}
@@ -104,20 +104,20 @@
                 </div>
                 <div class="row col-lg-10 offset-lg-1 mb-3">
                     <div class="input-group">
-                        <span class="input-group-text col-3">N° Unique</span>
+                        <span class="input-group-text col-3">Numéro</span>
                         <input #NU (input)=selectNUCible($event) type="text" oninput="this.value = this.value.replace(/\D+/g, '')" maxlength="3" min="0" max="999" length="3" class="form-control">
                     </div>
                 </div>
 
-                <div *ngIf="this.ORCible != ''; else orNoExist" class="text-center my-2">
-                    {{this.ORCible}}
-                </div>
 
-                <ng-template #orNoExist >
-                    <div class="my-5">
-                        
+                <div class="row col-lg-10 offset-lg-1 mb-1">
+                    <div class="input-group">
+                        <span class="input-group-text col-3">N° Unique</span>
+                        <input type="text" class="form-control" [ngClass]="this.ORCibleExist == 1 ? 'orValid' : this.ORCibleExist == 0 ? 'orInvalide' : ''"   [value]="this.atelierCible + this.nuCible" readonly>
                     </div>
-                </ng-template>
+                </div>
+                <div *ngIf="this.ORCibleExist != -1" [ngClass]="this.ORCibleExist == 1 ? 'labelValid' : 'labelInvalide'"  class="text-center">{{this.ORCible}}</div>
+                <div *ngIf="this.ORCibleExist == -1" class="py-2 mb-1 labelInvalide"> </div>
                 
                 <button (click)="recopieItem(AtelierSelect.value, NU.value)" type="button" class="btn btn-lg btn-light col-10 offset-1 col-lg-6 offset-lg-3 my-2">Recopier</button>
             </div>
