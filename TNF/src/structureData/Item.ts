@@ -73,3 +73,12 @@ export interface ItemRecopie {
     actif: boolean,
     isPaste : boolean
 }
+
+export interface ItemSuppresion {
+    idItem: string,
+    libelleItem: string,
+    idOR: string,
+    codeObjet: string,
+    actif: boolean,
+    isPaste? : boolean
+}

@@ -163,7 +163,10 @@ export class ExportationComponent implements OnInit {
 
       if(list == undefined) {
         this.exportData.splice(0)
-        this.manageToast("Recherche d'item", "Données invalides" , "red")
+        this.manageToast("Erreur recherche d'item", "Aucune donnée ne correspond à votre recherche" , "red")
+      } else if(typeof list === 'string') {
+        this.exportData.splice(0)
+        this.manageToast("Erreur recherche d'item", list , "red")
       } else {
         this.exportData = list
       }

@@ -52,7 +52,7 @@
                     <select (change)=selectType($event) [(ngModel)] ="this.typeNow" class="form-select" id="typeSelect" aria-label="Default select example">
                         <option value ="" selected>Sélectionner le type </option>
                         <option *ngFor="let type of listeTypeOOfOR" [value]="type.idTypeObjet">
-                            {{type.libelleTypeObjet}}
+                            {{type.idTypeObjet}} - {{type.libelleTypeObjet}}
                         </option>
                     </select>
                 </div>        

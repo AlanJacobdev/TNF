@@ -22,6 +22,8 @@ import { ExportationComponent } from './exportation/exportation.component';
 import { FilterModificationPipe } from './modify-object/pipe/filter-modification.pipe';
 import { FilterSuppressionPipe } from './delete-object/pipe/filter-suppression.pipe';
 import { ActifVisualisationPipe } from './visualisation/pipe/actif-visualisation.pipe';
+import { FilterTypePipe } from './modify-object/pipe/filter-type.pipe';
+
 
 @NgModule({
   declarations: [
@@ -42,7 +44,8 @@ import { ActifVisualisationPipe } from './visualisation/pipe/actif-visualisation
     ExportationComponent,
     FilterModificationPipe,
     FilterSuppressionPipe,
-    ActifVisualisationPipe
+    ActifVisualisationPipe,
+    FilterTypePipe
   ],
   imports: [
     BrowserModule,

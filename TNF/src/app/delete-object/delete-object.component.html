@@ -1,53 +1,44 @@
-<div class="container-fluid px-5">
-    <div class="row mt-3 px-5">
+<div class="container-fluid px-lg-5">
+    <div class="row mt-3 px-lg-5">
         <div class="col-12 col-lg-12">
             <div class="row">
-                <div class="row offset-lg-2 col-lg-3 col-12 mt-4 ">
-                    <legend class="col-form-label col-3 col-lg-4 pt-0 align-self-center text-center">Objet</legend>
-                    <div class ="col-9 col-lg-6">
-                        <div class="form-check form-check">
-                            <input (change)="selectObject(this.TypeObject.OR)" class="form-check-input" type="radio" name="inlineRadioOptions" id="OR" required checked>
-                            <label class="form-check-label" for="OR">Objet repère</label>
-                        </div>
-                        <div class="form-check form-check">
-                            <input (change)="selectObject(this.TypeObject.Item)" class="form-check-input" type="radio" name="inlineRadioOptions" id="Item" required>
-                            <label class="form-check-label" for="Item">Item</label>
-                        </div>
-                        <div class="form-check form-check">
-                            <input (change)="selectObject(this.TypeObject.SI)" class="form-check-input" type="radio" name="inlineRadioOptions" id="SI" required>
-                            <label class="form-check-label" for="SI">Sous Item</label>
-                        </div>
-                        <div class="invalid-tooltip">
-                            Veuillez renseigner un Type d'Objet.
-                        </div>
+                <div class="col-lg-3 col-12 mt-1">
+                        <div class="input-group">
+                            <label class="input-group-text " for="atelierSelect">Atelier</label>
+                            <select (change)=selectAtelier($event) class="form-select" id="atelierSelect" aria-label="Default select example">
+                                <option value ="" selected>Sélectionner l'atelier</option>
+                                <option *ngFor="let atelier of listeAtelier" [value]="atelier.idAtelier">
+                                    {{atelier.idAtelier}} - {{atelier.libelleAtelier}}
+                                </option>
+                            </select>
+                        </div> 
+                </div>
+                <div class="col-lg-3 col-12 mt-1">
+                        <div class="input-group">
+                            <label class="input-group-text " for="atelierSelect">Recherche</label>
+                            <input class="form-control" type="text" placeholder="Identifiant" id="search" [(ngModel)]="searchText">
+                        </div> 
+                </div>
+
+                <div class="col-lg-2 col-6 mt-1 align-self-center">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" value="" id="checkValide" [(ngModel)]="this.isValide" (click)="CheckIfORSelectedValide()">
+                      <label class="form-check-label" for="checkValide">
+                        Objet repère valide
+                      </label>
                     </div>
                 </div>
-                <div class=" col-lg-4 col-12">
-                    <div class="row">
-                        <div class="col-12 mt-1">
-                                <div class="input-group">
-                                    <label class="input-group-text " for="atelierSelect">Atelier</label>
-                                    <select (change)=selectAtelier($event) class="form-select" id="atelierSelect" aria-label="Default select example">
-                                        <option value ="" selected>Sélectionner l'atelier</option>
-                                        <option *ngFor="let atelier of listeAtelier" [value]="atelier.idAtelier">
-                                            {{atelier.idAtelier}} - {{atelier.libelleAtelier}}
-                                        </option>
-                                    </select>
-                                </div> 
-                        </div>
-                        <div class="col-12 mt-3">
-                                <div class="input-group">
-                                    <label class="input-group-text " for="atelierSelect">Recherche</label>
-                                    <input class="form-control" type="text" placeholder="Identifiant" id="search" [(ngModel)]="searchText">
-                                </div> 
-                        </div>
-                    </div>
-                </div>
+
+                <div class="col-lg-2 col-6 mt-1 align-self-center">
+                    <button (click)="delete()" type="button" data-bs-toggle="modal" data-bs-target="#Suppresion" class="btn btn-light">Supprimer</button>
+                </div> 
+                
+                
             </div>
         </div>
         <div class="row m-0 p-0"> 
             <ng-container *ngIf="objectNow == 'OR'">
-                <div class="col-lg-6 offset-lg-3 col-12 mt-lg-3">
+                <div class="col-lg-4 col-12 mt-lg-3">
                     <div class="row">
                         <caption class="col-12 text-center" >Objet repère</caption>
                     </div>
@@ -55,18 +46,22 @@
                         <table class="table table-hover cursor ">
                             <thead>
                             <tr>
+                                <th class="col-1 text-center" scope="col-1"></th>
                                 <th class="col-4 text-center" scope="col-4">N° Séquentiel</th>
-                                <th class="col-8 text-center align-middle" scope="col-8">Libellé</th>
+                                <th class="col-7 text-center align-middle" scope="col-7">Libellé</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr *ngIf="this.listeOR.length === 0; else afficheOR">
-                                <td class="text-center" colspan="2">Aucun Sous Item</td>
+                                <td class="text-center" colspan="3">Aucun Objet repère</td>
                             </tr>
                             <ng-template #afficheOR>
-                                <tr data-bs-toggle="modal" data-bs-target="#Suppresion" *ngFor="let OR of listeOR | filterSuppression : searchText" (click)="selectOR(OR.idObjetRepere)" [ngClass]="{'actifNow' : OR.idObjetRepere === this.idORSelect }" >
+                                <tr (dblclick)="selectCheckOr(OR.idObjetRepere)" *ngFor="let OR of listeOR | filterSuppression : searchText | filterType : typeNow:'OR' | actifVisualisation : isValide" (click)="selectOR(OR.idObjetRepere)" [ngClass]="{'table-active' : OR.idObjetRepere === this.idORSelect,  'actifNow' : OR.idObjetRepere === this.selectedNow  }" >
+                                    <td class="col-1">
+                                        <input (click)="selectCheckOr(OR.idObjetRepere)" class="form-check-input"  type="checkbox"  [checked]="OR.isPaste" id="flexCheckDefault">
+                                    </td>
                                     <td class="col-4">{{OR.idObjetRepere}}</td>
-                                    <td class="col-8">{{OR.libelleObjetRepere}}</td>
+                                    <td class="col-7">{{OR.libelleObjetRepere}}</td>
                                 </tr>
                             </ng-template>
                             
@@ -74,38 +69,7 @@
                         </table>
                     </div>
                 </div>
-            </ng-container>
-
-            <ng-container  *ngIf="objectNow == 'Item'">
-                
-                <div class="offset-lg-2 col-lg-4 px-lg-5 col-12 mt-lg-3">
-                    <div class="row">
-                        <caption class="col-12 text-center" >Objet repère</caption>
-                    </div>
-                    <div class="scrolltable"> 
-                        <table class="table table-hover cursor ">
-                            <thead>
-                            <tr>
-                                <th class="col-4 text-center" scope="col-4">N° Séquentiel</th>
-                                <th class="col-8 text-center align-middle" scope="col-8">Libellé</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr *ngIf="this.listeOR.length === 0; else afficheOrItem">
-                                <td class="text-center" colspan="2">Aucun Sous Item</td>
-                            </tr>
-                            <ng-template #afficheOrItem>
-                                <tr *ngFor="let OR of listeOR | filterSuppression : searchText" (click)="selectOR(OR.idObjetRepere)" [ngClass]="{'actifNow' : OR.idObjetRepere === this.idORSelect }" >
-                                    <td class="col-4">{{OR.idObjetRepere}}</td>
-                                    <td class="col-8">{{OR.libelleObjetRepere}}</td>
-                                </tr>
-                            </ng-template>
-                            
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="col-lg-4 px-lg-5 col-12 mt-lg-3">
+                <div class="col-lg-4 col-12 mt-lg-3">
                     <div class="row">
                         <caption class="col-12 text-center" >Item</caption>
                     </div>
@@ -113,18 +77,24 @@
                         <table class="table table-hover cursor ">
                             <thead>
                             <tr>
+                                <th class="col-1 text-center" scope="col-1">
+                                  <input *ngIf="this.listeItem.length !== 0" class="form-check-input" type="checkbox" (change)="allSelectItem()" [checked]="this.checkAllItem" [disabled]="Ornow.isPaste == true" id="flexCheckDefault">
+                                </th>
                                 <th class="col-4 text-center" scope="col-4">N° Séquentiel</th>
-                                <th class="col-8 text-center align-middle" scope="col-8">Libellé</th>
+                                <th class="col-7 text-center align-middle" scope="col-7">Libellé</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr *ngIf="this.listeItem.length === 0; else afficheItem">
-                                <td class="text-center" colspan="2">Aucun Item</td>
+                                <td class="text-center" colspan="3">Aucun Item</td>
                             </tr>
                             <ng-template #afficheItem>
-                                <tr data-bs-toggle="modal" data-bs-target="#Suppresion" *ngFor="let item of listeItem | filterSuppression : searchText"  (click)="selectItem(item.idItem)" [ngClass]="{'actifNow' : item.idItem === this.idItemSelect }" >
+                                <tr (dblclick)="selectCheckItem(item.idItem)" *ngFor="let item of listeItem | filterSuppression : searchText | filterType : typeNow:'Item'"  (click)="selectItem(item.idItem)" [ngClass]="{'table-active' : item.idItem === this.idItemSelect, 'actifNow' : item.idItem === this.selectedNow }" >
+                                    <td class="col-1 text-center">
+                                        <input (click)="selectCheckItem(item.idItem)" class="form-check-input"  type="checkbox" [disabled]="Ornow.isPaste == true" [checked]="item.isPaste" id="flexCheckitem">
+                                    </td>
                                     <td class="col-4">{{item.idItem}}</td>
-                                    <td class="col-8">{{item.libelleItem}}</td>
+                                    <td class="col-7">{{item.libelleItem}}</td>
                                 </tr>
                             </ng-template>
                             
@@ -132,7 +102,39 @@
                         </table>
                     </div>
                 </div>
-            
+                <div class="col-lg-4 col-12 mt-lg-3">
+                    <div class="row">
+                        <caption class="col-12 text-center" >Sous Item</caption>
+                    </div>
+                    <div class="scrolltable"> 
+                      <table class="table table-hover cursor">
+                          <thead>
+                            <tr>
+                                <th class="col-1 text-center" scope="col-1">
+                                    <input *ngIf="this.listeSousItem.length !== 0" class="form-check-input text-center" type="checkbox" (change)="allSelectSI()" [checked]="this.checkAllSi" [disabled]="ItemNow.isPaste == true" id="flexCheckDefault">
+                                </th>
+                                <th class="col-4 text-center" scope="col-4">N° Séquentiel</th>
+                                <th class="col-7 text-center align-middle" scope="col-7">Libellé</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngIf="this.listeSousItem.length === 0; else afficheSousItem">
+                              <td class="text-center" colspan="3">Aucun Sous Item</td>
+                            </tr>
+                            <ng-template #afficheSousItem>
+                              <tr (dblclick)="selectCheckSi(sousItem.idSousItem)" *ngFor="let sousItem of listeSousItem | filterVisualisation : searchText" (click)="selectSO(sousItem.idSousItem)" [ngClass]="{'table-active': sousItem.idSousItem === this.idSousItemSelect, 'actifNow' : sousItem.idSousItem === this.selectedNow }">
+                                <td class="col-1 text-center">
+                                    <input (click)="selectCheckSi(sousItem.idSousItem)" class="form-check-input"  type="checkbox" [disabled]="ItemNow.isPaste == true" [checked]="sousItem.isPaste" id="flexCheckDefault">
+                                </td>  
+                                <td class="col-4">{{sousItem.idSousItem}}</td>
+                                <td class="col-7">{{sousItem.libelleSousItem}}</td>
+                              </tr>
+                            </ng-template>
+                            
+                          </tbody>
+                        </table>
+                    </div>
+                </div>
             </ng-container>
         </div>
         
@@ -157,21 +159,86 @@
 
   
   <!-- Modal -->
-  <div class="modal  fade" id="Suppresion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+  <div class="modal fade" id="Suppresion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Supprimer</h5>
+          <h5 class="modal-title" id="exampleModalLabel">Récapitulatif de suppression</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div *ngIf="this.objectNow === this.TypeObject.OR" class="modal-body">
-          Voulez-vous supprimer l'objet repère {{this.idORSelect}} ? 
+        <div class="modal-body">
+                <div *ngIf="this.ORDeleted.length == 0 && this.ItemDeleted.length == 0 && this.SiDeleted.length == 0; else recap" class="my-5 text-center">
+                    Aucune demande de suppresion d'objet 
+                </div>
+            
+            <ng-template #recap>
+                <div class="accordion" id="accordionExample">
+                    <div *ngIf="this.ORDeleted.length != 0" class="accordion-item">
+                      <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                          Objet repère
+                        </button>
+                      </h2>
+                      <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" >
+                        <div class="accordion-body">
+                            <div *ngFor="let OR of this.ORDeleted; last as isLast" class="row py-2" [ngClass]="{'border-bottom' : !isLast}">
+                                <div class="col-9">
+                                    <b>{{OR}}</b> et ses objets liés (item et sous-item)
+                                </div>
+                                <div class="col-3">
+
+                                </div>
+                            </div>
+
+                        </div>
+                      </div>
+                    </div>
+                    <div *ngIf="this.ItemDeleted.length != 0" class="accordion-item">
+                      <h2 class="accordion-header" id="headingTwo">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                          Item
+                        </button>
+                      </h2>
+                      <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo" >
+                        <div class="accordion-body">
+                            <div *ngFor="let Item of this.ItemDeleted; last as isLast" class="row py-2" [ngClass]="{'border-bottom' : !isLast}">
+                                <div class="col-9">
+                                    <b>{{Item}}</b> et ses objets liés (sous-item)
+                                </div>
+                                <div class="col-3">
+
+                                </div>
+                            </div>
+
+                        </div>
+                      </div>
+                    </div>
+                    <div *ngIf="this.SiDeleted.length != 0" class="accordion-item">
+                      <h2 class="accordion-header" id="headingThree">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                          Sous-Item
+                        </button>
+                      </h2>
+                      <div id="collapseThree" class="accordion-collapse collapse show" aria-labelledby="headingThree" >
+                        <div class="accordion-body">
+                            <div *ngFor="let SI of this.SiDeleted; last as isLast" class="row py-2" [ngClass]="{'border-bottom' : !isLast}">
+                                <div class="col-9">
+                                    <b>{{SI}}</b> 
+                                </div>
+                                <div class="col-3">
+
+                                </div>
+                            </div>
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+            </ng-template>
         </div>
-        <div *ngIf="this.objectNow === this.TypeObject.Item" class="modal-body">
-            Voulez-vous supprimer l'item {{this.idItemSelect}} ? 
-          </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="deleteObject()" data-bs-dismiss="modal">Supprimer</button>
+          <button type="button" class="btn btn-secondary" (click)="resetDeleted()" data-bs-dismiss="modal">Supprimer</button>
         </div>
       </div>
     </div>

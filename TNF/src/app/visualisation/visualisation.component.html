@@ -6,7 +6,7 @@
             <select (change)=selectAtelier($event) class="form-select" id="atelierSelect" aria-label="Default select example">
                 <option value =-1 selected>Selection de l'atelier</option>
                 <option *ngFor="let atelier of listeAtelier" [value]="atelier.idAtelier">
-                    {{atelier.idAtelier}} {{atelier.libelleAtelier}}
+                    {{atelier.idAtelier}} - {{atelier.libelleAtelier}}
                 </option>
             </select>
             </div>

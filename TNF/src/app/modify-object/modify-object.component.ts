@@ -1,11 +1,13 @@
+import { getLocaleFirstDayOfWeek } from '@angular/common';
 import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { AtelierInfo } from 'src/structureData/Atelier';
 import { Description } from 'src/structureData/Description';
 import { typeObjet, ItemInfo, ItemModification } from 'src/structureData/Item';
 import { ObjetRepereInfo, ObjetRepereModification } from 'src/structureData/ObjetRepere';
-import { TypeObjetRepereTableau, TypeObjetInfo } from 'src/structureData/TypeObject';
+import { TypeObjetRepereTableau, TypeObjetInfo, TypeObjetRepereInfo } from 'src/structureData/TypeObject';
 import { FetchCreateObjectService } from '../create-object/service/fetch-create-object.service';
+import { FetchcreateTypeObjectService } from '../create-type-object/service/fetchcreate-type-object.service';
 import { FetchVisuService } from '../visualisation/service/fetch-visu.service';
 import { FetchModifyObjectService } from './service/fetch-modify-object.service';
 
@@ -45,6 +47,7 @@ export class ModifyObjectComponent implements OnInit {
     valide: false,
     description: []
   } ;
+  public selectedNow : string = "";
   public ToastAffiche : boolean = false; 
   public messageToast : string = "";
   public typeToast : string = ""
@@ -53,12 +56,38 @@ export class ModifyObjectComponent implements OnInit {
   public descriptionObjectSelect : Description[] = [];
   public searchText : string = "";
 
-  constructor(private fetchModifyTypeObject : FetchModifyObjectService, private fetchVisuService : FetchVisuService, private fetchCreateObjectService: FetchCreateObjectService) {
+  constructor(private fetchModifyTypeObject : FetchModifyObjectService, private fetchCreateTypeObject : FetchcreateTypeObjectService,private fetchVisuService : FetchVisuService, private fetchCreateObjectService: FetchCreateObjectService) {
 
     this.getAteliers();
+    this.getListType();
    }
   ngOnInit(): void {
   
+  }
+
+  getListType(){
+    this.listeTypeOR.splice(0);
+    this.fetchCreateTypeObject.getTypeObjetRepere().then((list: TypeObjetRepereInfo[]) => {
+      list.forEach((e : TypeObjetRepereInfo) => {
+        let typeOr : TypeObjetRepereTableau = {
+          idType: e.idTypeOR ,
+          libelleTypeOR: e.libelleTypeOR ,
+          profilCreation: e.profilCreation ,
+          posteCreation: e.posteCreation ,
+          dateCreation: e.posteCreation ,
+          profilModification: e.profilCreation ,
+          posteModification: e.posteModification ,
+          dateModification: e.dateModification 
+        };
+        this.listeTypeOR.push(typeOr)
+      })
+    }).catch((e) => {
+    })
+    
+    this.fetchCreateTypeObject.getTypeObjet().then((list: TypeObjetInfo[]) => {
+      this.listeTypeO = list
+    }).catch((e) => {
+    })
   }
 
   getAteliers(){
@@ -142,6 +171,14 @@ export class ModifyObjectComponent implements OnInit {
       }
     }
   }
+  public selectTypeObjet (TypeObjet : any) {
+    try {
+      this.typeNow = TypeObjet.target.value;
+    } catch  {
+      this.typeNow = TypeObjet;
+    }
+  }
+  
 
   public selectOR(idOR : string) {
     if (this.objectNow === this.TypeObject.OR ) {
@@ -158,17 +195,26 @@ export class ModifyObjectComponent implements OnInit {
         }
       }
       this.idORSelect = idOR;
-     
+      this.selectedNow = idOR
       
     } else if (this.objectNow === this.TypeObject.Item) {
         this.idORSelect = idOR;
+        this.selectedNow = idOR;
         this.getItemFromOR();
+        this.itemSelect = {
+          idItem: '',
+          libelleItem: '',
+          valide: false,
+          description: []
+        }
+        this.idItemSelect ="";
     }
   }
 
 
   public selectItem(idItem : string){
     this.idItemSelect = idItem;
+    this.selectedNow = idItem
     if (this.objectNow === this.TypeObject.Item ) {
       let itemInfo = this.listeItem.find((element) => element.idItem === idItem)
       if (itemInfo != undefined) {
@@ -189,6 +235,7 @@ export class ModifyObjectComponent implements OnInit {
     this.objectNow = object;
     this.descriptionObjectSelect.splice(0);
     this.selectAtelier(this.atelierSelect);
+    this.typeNow = "";
   }
 
 

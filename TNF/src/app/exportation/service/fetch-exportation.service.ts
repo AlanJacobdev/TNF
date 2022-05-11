@@ -25,8 +25,12 @@ export class FetchExportationService {
     url = url.replace("{estSecurite}", estSecurite.toString())
     
     try {
-      const res : ItemAffichage[] = await lastValueFrom(this.http.get<ItemAffichage[]>(url));
-      if (res.hasOwnProperty('error') || res.length == 0 ) {
+      const res : any[] = await lastValueFrom(this.http.get<any[]>(url));
+      console.log(res);
+      
+      if (res.hasOwnProperty('error')) {
+        return res[0].error
+      } else if (res.length == 0 ){
         return undefined
       } else {
         return res;

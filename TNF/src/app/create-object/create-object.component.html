@@ -85,7 +85,7 @@
                                     <select (change)=selectType($event) [(ngModel)] ="this.typeNow" class="form-select" id="atelierSelect" aria-label="Default select example">
                                         <option value ="" selected>Sélectionner le type </option>
                                         <option *ngFor="let type of listeTypeOR" [value]="type.idType">
-                                            {{type.libelleTypeOR}}
+                                            {{type.idType}} - {{type.libelleTypeOR}} 
                                         </option>
                                     </select>
                                     <label for="atelierSelect">Type</label>
@@ -193,7 +193,7 @@
                                     <select (change)=selectType($event) [(ngModel)] ="this.typeNow" class="form-select" id="atelierSelect" aria-label="Default select example">
                                         <option value ="" selected>Sélectionner le type </option>
                                         <option *ngFor="let type of listeTypeO" [value]="type.idType">
-                                            {{type.libelleType}}
+                                            {{type.idType}} - {{type.libelleType}}
                                         </option>
                                     </select>
                                     <label  for="atelierSelect"> Type </label>

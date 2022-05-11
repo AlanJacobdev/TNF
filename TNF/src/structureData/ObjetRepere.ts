@@ -55,3 +55,11 @@ export interface ObjetRepereUtile{
     idObjetRepere : string,
     libelleObjetRepere  : string
 }
+
+export interface ObjetRepereSuppression {
+    idObjetRepere: string,
+    libelleObjetRepere: string,
+    codeType: string,
+    valide: boolean,
+    isPaste? : boolean
+}

@@ -42,3 +42,12 @@ export interface SousItemSave {
     description: Description[];
     etat: string;
 }
+
+export interface SousItemSuppression {
+    idSousItem: string,
+    libelleSousItem: string,
+    idItem: string,
+    codeSousItem: string,
+    actif: boolean,
+    isPaste? : boolean
+}
