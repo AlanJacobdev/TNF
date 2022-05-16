@@ -1,10 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { ThisReceiver } from '@angular/compiler';
 import { Component, Input, OnInit } from '@angular/core';
-import { faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faXmark, faCircleCheck, faCircleXmark} from '@fortawesome/free-solid-svg-icons';
+import { CookieService } from 'ngx-cookie-service';
 import { AtelierInfo } from 'src/structureData/Atelier';
-import { typeObjet, ItemInfo, ItemAffichage, ItemSuppresion } from 'src/structureData/Item';
-import { ObjetRepereAffichage, ObjetRepereInfo, ObjetRepereSuppression } from 'src/structureData/ObjetRepere';
-import { SousItemAffichage, SousItemInfo, SousItemSuppression } from 'src/structureData/SousItem';
+import { typeObjet, ItemInfo, ItemSuppresion } from 'src/structureData/Item';
+import { ObjetRepereInfo, ObjetRepereSuppression } from 'src/structureData/ObjetRepere';
+import { SousItemInfo, SousItemSuppression } from 'src/structureData/SousItem';
+import { deleteObject, returnDeleteObject } from 'src/structureData/Suppression';
 import { TypeObjetRepereTableau, TypeObjetInfo, TypeObjetRepereInfo } from 'src/structureData/TypeObject';
 import { FetchcreateTypeObjectService } from '../create-type-object/service/fetchcreate-type-object.service';
 import { FetchVisuService } from '../visualisation/service/fetch-visu.service';
@@ -18,6 +21,8 @@ import { FetchDeleteObjectService } from './service/fetch-delete-object.service'
 export class DeleteObjectComponent implements OnInit {
 
   public faXmark = faXmark;
+  public faCircleCheck = faCircleCheck;
+  public faCircleXmark = faCircleXmark;
   @Input() public radio : typeObjet = typeObjet.Aucun;
   public listeTypeOR: TypeObjetRepereTableau[] = [];
   public listeTypeO: TypeObjetInfo[] = [];
@@ -66,6 +71,11 @@ export class DeleteObjectComponent implements OnInit {
   public ORDeleted : string[]= [];
   public ItemDeleted : string[] = [];
   public SiDeleted : string[] = [];
+  public returnOfDeleted : returnDeleteObject = {
+    listeOR: [],
+    listeItem: [],
+    listeSI: []
+  };
 
   public selectedNow : string = "";
   public formValidate : boolean = false;
@@ -79,7 +89,7 @@ export class DeleteObjectComponent implements OnInit {
   public searchText : string = "";
   public isValide : boolean = false;
   public selectMultiple : boolean = false;
-  constructor( private fetchVisuService : FetchVisuService, private fetchDeleteObjectService :FetchDeleteObjectService, private fetchCreateTypeObject: FetchcreateTypeObjectService) {
+  constructor( private fetchVisuService : FetchVisuService, private fetchDeleteObjectService :FetchDeleteObjectService, private fetchCreateTypeObject: FetchcreateTypeObjectService, private cookieService : CookieService) {
     this.getListType();
     this.getAteliers();
    }
@@ -480,6 +490,8 @@ export class DeleteObjectComponent implements OnInit {
   }
 
   delete(){
+    
+    
     this.resetDeleted();
     for(const or of this.listeOR){
       if (or.isPaste){
@@ -505,17 +517,71 @@ export class DeleteObjectComponent implements OnInit {
       }
     }
 
-    console.log(this.ORDeleted);
-    console.log(this.ItemDeleted);
-    console.log(this.SiDeleted);
-    
-    
+  
+ 
   }
-
+  closeRecap(){
+    this.returnOfDeleted = {
+      listeOR: [],
+      listeItem: [],
+      listeSI: []
+    }
+  }
   
   resetDeleted(){
     this.ORDeleted.splice(0);
     this.ItemDeleted.splice(0);
     this.SiDeleted.splice(0);
+  }
+
+  deleteConfirmation(){
+    const res : deleteObject = {
+      listeOR : this.ORDeleted,
+      listeItem : this.ItemDeleted,
+      listeSI : this.SiDeleted
+  }
+
+    const isAdmin = this.cookieService.get('Admin')
+    if (isAdmin === 'true' ){
+      this.fetchDeleteObjectService.deleteObjectsAsAdmin(res).then((res: any) => {
+        if(res == undefined) {
+          this.manageToast("Erreur de suppression", res , "red")
+        } else {  
+          this.returnOfDeleted = res;
+          this.manageToast("Suppression", res, "#006400");
+        }
+      }).catch((e) => {
+      })
+    } else {
+      this.fetchDeleteObjectService.deleteObjects(res).then((res: any) => {
+        if(res == undefined) {
+          this.manageToast("Erreur de suppression", "Aucun élement n'a été supprimé", "red")
+        } else {  
+          this.returnOfDeleted = res;
+          console.log(res);
+          
+          
+        }
+      }).catch((e) => {
+      })
+    }
+  }
+
+  returnDeleteOrNot(typeObjet : typeObjet , idObjet : string){
+    let res;
+    if(typeObjet == this.TypeObject.OR){
+      res = this.returnOfDeleted.listeOR.find(element => element.objet === idObjet)
+      console.log(res?.value);
+      return res?.value
+    } else if (typeObjet == this.TypeObject.Item) {
+      res = this.returnOfDeleted.listeItem.find(element => element.objet === idObjet)
+      console.log(res?.value);
+      return res?.value
+    } else if (typeObjet == this.TypeObject.SI) {
+      res = this.returnOfDeleted.listeSI.find(element => element.objet === idObjet)
+      console.log(res?.value);
+      return res?.value
+    }
+    return undefined;
   }
 }

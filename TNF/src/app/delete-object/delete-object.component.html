@@ -164,7 +164,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Récapitulatif de suppression</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <button type="button" class="btn-close" (click)="closeRecap()" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
                 <div *ngIf="this.ORDeleted.length == 0 && this.ItemDeleted.length == 0 && this.SiDeleted.length == 0; else recap" class="my-5 text-center">
@@ -182,12 +182,23 @@
                       <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" >
                         <div class="accordion-body">
                             <div *ngFor="let OR of this.ORDeleted; last as isLast" class="row py-2" [ngClass]="{'border-bottom' : !isLast}">
-                                <div class="col-9">
+                                <div class="col-9 align-self-center">
                                     <b>{{OR}}</b> et ses objets liés (item et sous-item)
                                 </div>
-                                <div class="col-3">
-
+                                <div *ngIf="returnDeleteOrNot(TypeObject.OR, OR); else errorReturnOR" class="col-3 d-flex justify-content-evenly">
+                                  <div class="align-self-center d-none d-sm-block">Succès</div>
+                                  <fa-icon class=" text-center fs-3 text-success" [icon]="faCircleCheck "></fa-icon>
                                 </div>
+                                <ng-template #errorReturnOR>
+                                  <div *ngIf="returnDeleteOrNot(TypeObject.OR, OR) == false; else undefinedReturnOR" class="col-3 d-flex justify-content-evenly">
+                                    <div class="align-self-center d-none d-sm-block">Erreur</div>
+                                    <fa-icon class=" text-center fs-3 text-danger" [icon]="faCircleXmark"></fa-icon>
+                                  </div>
+                                </ng-template>
+                                <ng-template #undefinedReturnOR>
+                                  <div class="col-3 d-flex justify-content-evenly">
+                                  </div>
+                                </ng-template>
                             </div>
 
                         </div>
@@ -202,12 +213,23 @@
                       <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo" >
                         <div class="accordion-body">
                             <div *ngFor="let Item of this.ItemDeleted; last as isLast" class="row py-2" [ngClass]="{'border-bottom' : !isLast}">
-                                <div class="col-9">
+                                <div class="col-9 align-self-center">
                                     <b>{{Item}}</b> et ses objets liés (sous-item)
                                 </div>
-                                <div class="col-3">
-
+                                <div *ngIf="returnDeleteOrNot(TypeObject.Item, Item); else errorReturnItem" class="col-3 d-flex justify-content-evenly">
+                                  <div class="align-self-center d-none d-sm-block">Succès</div>
+                                  <fa-icon class=" text-center fs-3 text-success" [icon]="faCircleCheck "></fa-icon>
                                 </div>
+                                <ng-template #errorReturnItem>
+                                  <div *ngIf="returnDeleteOrNot(TypeObject.Item, Item) == false ; else undefinedReturnItem" class="col-3 d-flex justify-content-evenly">
+                                    <div class="align-self-center d-none d-sm-block">Erreur</div>
+                                    <fa-icon class=" text-center fs-3 text-danger" [icon]="faCircleXmark"></fa-icon>
+                                  </div>
+                                </ng-template>
+                                <ng-template #undefinedReturnItem>
+                                  <div class="col-3 d-flex justify-content-evenly">
+                                  </div>
+                                </ng-template>
                             </div>
 
                         </div>
@@ -225,9 +247,20 @@
                                 <div class="col-9">
                                     <b>{{SI}}</b> 
                                 </div>
-                                <div class="col-3">
-
+                                <div *ngIf="returnDeleteOrNot(TypeObject.SI, SI); else errorReturnSI" class="col-3 d-flex justify-content-evenly">
+                                  <div class="align-self-center d-none d-sm-block">Succès</div>
+                                  <fa-icon class=" text-center fs-3 text-success" [icon]="faCircleCheck "></fa-icon>
                                 </div>
+                                <ng-template #errorReturnSI>
+                                  <div *ngIf="returnDeleteOrNot(TypeObject.SI, SI) == false; else undefinedReturnSI" class="col-3 d-flex justify-content-evenly">
+                                    <div class="align-self-center d-none d-sm-block">Erreur</div>
+                                    <fa-icon class=" text-center fs-3 text-danger" [icon]="faCircleXmark"></fa-icon>
+                                  </div>
+                                </ng-template>
+                                <ng-template #undefinedReturnSI>
+                                  <div class="col-3 d-flex justify-content-evenly">
+                                  </div>
+                                </ng-template>
                             </div>
 
                         </div>
@@ -238,7 +271,8 @@
             </ng-template>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="resetDeleted()" data-bs-dismiss="modal">Supprimer</button>
+          <button type="button" class="btn btn-secondary" (click)="deleteConfirmation()" >Supprimer</button>
+          <!-- data-bs-dismiss="modal" -->
         </div>
       </div>
     </div>

@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { lastValueFrom } from 'rxjs';
+import { deleteObject } from 'src/structureData/Suppression';
 
 @Injectable({
   providedIn: 'root'
@@ -72,5 +73,53 @@ export class FetchDeleteObjectService {
     }
   }
 
+
+  async deleteObjects(ObjectToDelete : deleteObject){
+    let user = this.cookieService.get('login');
+    let url = "http://localhost:3000/service-suppression/deleteObject/{login}";
+    url = url.replace("{login}", user)
+    try {
+      const res : any = await lastValueFrom(this.http.delete<any>(url, {body:ObjectToDelete}))
+      if (res.length == 0) {
+        return undefined;
+      } else {
+        return res;
+      }
+    } catch (e : any){
+      let returnError;
+      if(e.hasOwnProperty('error')){
+        if(e.error.hasOwnProperty('error')){
+          returnError=e.error["error"];
+        } else {
+          returnError=e.error["message"];
+        }
+      }
+    return returnError;
+    }
+  }
+
+  async deleteObjectsAsAdmin(ObjectToDelete : deleteObject){
+    let user = this.cookieService.get('login');
+    let url = "http://localhost:3000/service-suppression/deleteObjectAsAdmin/{login}";
+    url = url.replace("{login}", user)
+    try {
+      const res : any = await lastValueFrom(this.http.delete<any>(url, {body:ObjectToDelete}));
+      if (res.length == 0) {
+        return undefined;
+      } else {
+        return res;
+      }
+    } catch (e : any){
+      let returnError;
+      if(e.hasOwnProperty('error')){
+        if(e.error.hasOwnProperty('error')){
+          returnError=e.error["error"];
+        } else {
+          returnError=e.error["message"];
+        }
+      }
+    return returnError;
+    }
+  }
 
 }
