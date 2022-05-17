@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { CookieService } from 'ngx-cookie-service';
 import { lastValueFrom } from 'rxjs';
 import { ObjetRepereUtile } from 'src/structureData/ObjetRepere';
 import { modificationTypeObject } from 'src/structureData/TypeObject';
@@ -9,7 +10,7 @@ import { modificationTypeObject } from 'src/structureData/TypeObject';
 })
 export class FetchRecopieService {
 
-  constructor(private readonly http: HttpClient) { }
+  constructor(private readonly http: HttpClient, private cookieService : CookieService) { }
 
 
   async getHistoryItem(idOR : string) : Promise<any> {
@@ -38,9 +39,11 @@ export class FetchRecopieService {
 
 
   async recopySpecificItemFromOR(listItems : any[], idOR: string, nu : string) : Promise<any> {
-    let url = "http://localhost:3000/service-recopie/recopySpecificItemFromOR/{idOR}/{NU}"
+    let user = this.cookieService.get('login');
+    let url = "http://localhost:3000/service-recopie/recopySpecificItemFromOR/{idOR}/{NU}/{profil}"
     url = url.replace("{idOR}", idOR)
     url = url.replace("{NU}", nu)
+    url = url.replace("{profil}", user)
     const res : any = await lastValueFrom(this.http.post<any>(url, listItems));    
     console.log(res.error)
     if (res.length == 0) {

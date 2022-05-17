@@ -153,14 +153,11 @@
         </div>
     </div>
 
-    
-
 </div>
-
   
   <!-- Modal -->
   <div class="modal fade" id="Suppresion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Récapitulatif de suppression</h5>
@@ -172,6 +169,21 @@
                 </div>
             
             <ng-template #recap>
+              <div *ngIf="suppressionEnCours" class="spinnerWaiting">
+                <div class="spinner-grow" role="status">
+                  <span class="visually-hidden ">Loading...</span>
+                </div>
+                <div class="spinner-grow" role="status">
+                  <span class="visually-hidden ">Loading...</span>
+                </div>
+                <div class="spinner-grow" role="status">
+                  <span class="visually-hidden ">Loading...</span>
+                </div>
+                <div class="fs-4">
+                  Suppression en cours
+                </div>
+              </div>
+              <div [ngClass]="{loading : suppressionEnCours}">
                 <div class="accordion" id="accordionExample">
                     <div *ngIf="this.ORDeleted.length != 0" class="accordion-item">
                       <h2 class="accordion-header" id="headingOne">
@@ -181,7 +193,7 @@
                       </h2>
                       <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" >
                         <div class="accordion-body">
-                            <div *ngFor="let OR of this.ORDeleted; last as isLast" class="row py-2" [ngClass]="{'border-bottom' : !isLast}">
+                            <div *ngFor="let OR of this.ORDeleted; last as isLast" class="row" [ngClass]="{'border-bottom' : !isLast}">
                                 <div class="col-9 align-self-center">
                                     <b>{{OR}}</b> et ses objets liés (item et sous-item)
                                 </div>
@@ -196,7 +208,7 @@
                                   </div>
                                 </ng-template>
                                 <ng-template #undefinedReturnOR>
-                                  <div class="col-3 d-flex justify-content-evenly">
+                                  <div class="col-3 d-flex py-3 justify-content-evenly">
                                   </div>
                                 </ng-template>
                             </div>
@@ -212,7 +224,7 @@
                       </h2>
                       <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo" >
                         <div class="accordion-body">
-                            <div *ngFor="let Item of this.ItemDeleted; last as isLast" class="row py-2" [ngClass]="{'border-bottom' : !isLast}">
+                            <div *ngFor="let Item of this.ItemDeleted; last as isLast" class="row" [ngClass]="{'border-bottom' : !isLast}">
                                 <div class="col-9 align-self-center">
                                     <b>{{Item}}</b> et ses objets liés (sous-item)
                                 </div>
@@ -227,7 +239,7 @@
                                   </div>
                                 </ng-template>
                                 <ng-template #undefinedReturnItem>
-                                  <div class="col-3 d-flex justify-content-evenly">
+                                  <div class="col-3 d-flex py-3 my-1 justify-content-evenly">
                                   </div>
                                 </ng-template>
                             </div>
@@ -243,7 +255,7 @@
                       </h2>
                       <div id="collapseThree" class="accordion-collapse collapse show" aria-labelledby="headingThree" >
                         <div class="accordion-body">
-                            <div *ngFor="let SI of this.SiDeleted; last as isLast" class="row py-2" [ngClass]="{'border-bottom' : !isLast}">
+                            <div *ngFor="let SI of this.SiDeleted; last as isLast" class="row " [ngClass]="{'border-bottom' : !isLast}">
                                 <div class="col-9">
                                     <b>{{SI}}</b> 
                                 </div>
@@ -258,7 +270,7 @@
                                   </div>
                                 </ng-template>
                                 <ng-template #undefinedReturnSI>
-                                  <div class="col-3 d-flex justify-content-evenly">
+                                  <div class="col-3 py-3 d-flex justify-content-evenly">
                                   </div>
                                 </ng-template>
                             </div>
@@ -267,14 +279,43 @@
                       </div>
                     </div>
                   </div>
-
+                </div>
+                  
             </ng-template>
         </div>
+        <div class="container  mx-0 px-0">
+          
+          <div *ngIf="!suppWithDmdAdmin && suppExecEnd" class="row border-top d-flex justify-content-center pt-1 pb-2">
+            <div class="col-1 text-end pt-1">
+              <fa-icon class=" text-center fs-3 text-success" [icon]="faCircleCheck "></fa-icon>  
+            </div>
+            <div class="col-11 fw-bold align-self-center fs-6"> 
+              Les suppressions ont bien été effectuées 
+            </div>
+          <div *ngIf="suppWithDmdAdmin && suppExecEnd" class="row border-top pt-1 pb-2">
+            <div class="col-1 text-end pt-1">
+              <fa-icon class=" fs-3 text-danger" [icon]="faCircleXmark"></fa-icon> 
+            </div>
+            <div class="col-11">
+              <div class="row text-start">
+                <div class=" col-12 fw-bold fs-6">
+                  Néccessite l'intervention d'un administrateur
+                </div>
+                <div class=" col-12 fs-6">
+                  Veuillez faire une demande pour qu'un administrateur puisse effectuer ces suppressions
+                </div>
+              </div> 
+            </div>
+          </div>
+          
+        </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="deleteConfirmation()" >Supprimer</button>
-          <!-- data-bs-dismiss="modal" -->
+          <button *ngIf="!suppExecEnd && this.ORDeleted.length != 0 || this.ItemDeleted.length != 0 || this.SiDeleted.length != 0" type="button" class="btn btn-secondary" (click)="deleteConfirmation()" >Supprimer</button>
+          <button *ngIf="suppWithDmdAdmin && suppExecEnd" type="button" class="btn btn-secondary" (click)="deleteConfirmation()"> Faire une demande de suppression</button>
+          <button type="button" class="btn btn-secondary" (click)="closeRecap()" data-bs-dismiss="modal" >Fermer</button>
+          
         </div>
       </div>
     </div>
   </div>
-  
+

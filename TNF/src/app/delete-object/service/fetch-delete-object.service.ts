@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { lastValueFrom } from 'rxjs';
-import { deleteObject } from 'src/structureData/Suppression';
+import { deleteObject, returnDeleteObject } from 'src/structureData/Suppression';
 
 @Injectable({
   providedIn: 'root'
@@ -80,7 +80,8 @@ export class FetchDeleteObjectService {
     url = url.replace("{login}", user)
     try {
       const res : any = await lastValueFrom(this.http.delete<any>(url, {body:ObjectToDelete}))
-      if (res.length == 0) {
+      
+      if (res.listeOR.length == 0 && res.listeItem.length == 0 && res.listeSI.length == 0) {        
         return undefined;
       } else {
         return res;
@@ -103,8 +104,8 @@ export class FetchDeleteObjectService {
     let url = "http://localhost:3000/service-suppression/deleteObjectAsAdmin/{login}";
     url = url.replace("{login}", user)
     try {
-      const res : any = await lastValueFrom(this.http.delete<any>(url, {body:ObjectToDelete}));
-      if (res.length == 0) {
+      const res : returnDeleteObject = await lastValueFrom(this.http.delete<returnDeleteObject>(url, {body:ObjectToDelete}));
+      if (res.listeOR.length == 0 && res.listeItem.length == 0 && res.listeSI.length == 0) {        
         return undefined;
       } else {
         return res;
