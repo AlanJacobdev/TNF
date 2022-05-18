@@ -75,15 +75,18 @@ export class FetchDeleteObjectService {
 
 
   async deleteObjects(ObjectToDelete : deleteObject){
+    
     let user = this.cookieService.get('login');
     let url = "http://localhost:3000/service-suppression/deleteObject/{login}";
     url = url.replace("{login}", user)
     try {
       const res : any = await lastValueFrom(this.http.delete<any>(url, {body:ObjectToDelete}))
-      
+      console.log(res);
       if (res.listeOR.length == 0 && res.listeItem.length == 0 && res.listeSI.length == 0) {        
         return undefined;
       } else {
+        
+        
         return res;
       }
     } catch (e : any){

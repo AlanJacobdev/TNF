@@ -1,8 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { ThisReceiver } from '@angular/compiler';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { faXmark, faCircleCheck, faCircleXmark, faCircleInfo} from '@fortawesome/free-solid-svg-icons';
-import * as bootstrap from 'bootstrap';
 import { CookieService } from 'ngx-cookie-service';
 import { AtelierInfo } from 'src/structureData/Atelier';
 import { typeObjet, ItemInfo, ItemSuppresion } from 'src/structureData/Item';
@@ -98,7 +95,24 @@ export class DeleteObjectComponent implements OnInit {
     this.getListType();
     this.getAteliers();
    }
+  
+   @ViewChild('modal') crudModal: ElementRef | undefined;
+   
+
   ngOnInit(): void {
+    var exampleModal = document.getElementById('Suppression')
+    if(exampleModal != null){
+      exampleModal.addEventListener('keydown', function (event) {
+      if(event.key ==="Escape"){
+        console.log("escape");
+      }
+      })
+      exampleModal.addEventListener('click', function (event) {
+        const target = event.target as HTMLTextAreaElement;
+        console.log(target.classList.contains('show'));
+        
+    })
+  }  
   
   }
    
@@ -143,6 +157,7 @@ export class DeleteObjectComponent implements OnInit {
   getObjetRepereByAtelier(){
     this.fetchVisuService.getObjetRepereByAteliers(this.atelierSelect).then((list: ObjetRepereInfo[]) => {
       if (list != undefined) {
+        this.listeOR.splice(0);
         list.forEach((e : ObjetRepereSuppression) => {
           let OR : ObjetRepereSuppression = {
             idObjetRepere : e.idObjetRepere,
@@ -239,26 +254,22 @@ export class DeleteObjectComponent implements OnInit {
       
   public selectAtelier (Atelier : any) {
     let atelier;
-    
+    console.log("test")
     try {
       atelier = Atelier.target.value;
     } catch  {
       atelier = Atelier;
     }
     this.idORSelect = "";
+    this.listeSousItem.splice(0);
+    this.listeItem.splice(0);
     if( atelier == '') {
       this.listeOR.splice(0);
-      this.listeItem.splice(0);
       this.atelierSelect = '';
       
     } else {
-      this.listeItem.splice(0);
       this.atelierSelect = atelier;
-      if(this.objectNow === this.TypeObject.OR ) {
-        this.getObjetRepereByAtelier();
-      } else if (this.objectNow === this.TypeObject.Item){
-        this.getObjetRepereByAtelier();
-      }
+      this.getObjetRepereByAtelier();
     }
   }
 
@@ -496,8 +507,11 @@ export class DeleteObjectComponent implements OnInit {
   }
 
   delete(){
-    this.suppExecEnd = false;
     
+    
+
+
+    this.suppExecEnd = false;
     this.resetDeleted();
     for(const or of this.listeOR){
       if (or.isPaste){
@@ -533,14 +547,19 @@ export class DeleteObjectComponent implements OnInit {
       listeSI: []
     }
   }
-  
+
+  resetPasteList(){
+    this.isPasteSaveSI.splice(0);
+    this.isPasteSaveItem.splice(0);
+  }
+
   resetDeleted(){
     this.ORDeleted.splice(0);
     this.ItemDeleted.splice(0);
     this.SiDeleted.splice(0);
   }
 
-  deleteConfirmation(){
+  async deleteConfirmation(){
     this.suppressionEnCours = true;
     const res : deleteObject = {
       listeOR : this.ORDeleted,
@@ -550,9 +569,8 @@ export class DeleteObjectComponent implements OnInit {
 
     const isAdmin = this.cookieService.get('Admin')
     if (isAdmin === 'true' ){
-      this.fetchDeleteObjectService.deleteObjectsAsAdmin(res).then((res: any) => {
+      await this.fetchDeleteObjectService.deleteObjectsAsAdmin(res).then((res: any) => {
         console.log(res);
-        
         if(res == undefined) {
           this.manageToast("Erreur de suppression", res , "red")
           this.setDemandeAdmin(true);
@@ -563,50 +581,66 @@ export class DeleteObjectComponent implements OnInit {
         this.suppExecEnd = true;
         this.suppressionEnCours = false;
       }).catch((e) => {
-        console.log("1");
         
       })
     } else {
-      this.fetchDeleteObjectService.deleteObjects(res).then((res: any) => {
+      await this.fetchDeleteObjectService.deleteObjects(res).then(async (res: any) => {
+        console.log(res);
         if(res == undefined) {
           this.manageToast("Erreur de suppression", "Aucun élement n'a été supprimé", "red")
-          this.setDemandeAdmin(true);
+  
+          this.suppExecEnd = true;
+          this.suppressionEnCours = false;
         } else {  
           this.returnOfDeleted = res;
-          console.log(res);
+          await this.verifyIfDmdAdmin();
+          this.suppExecEnd = true;
+          this.suppressionEnCours = false;
+          this.selectAtelier(this.atelierSelect);
+          
         }
-        this.suppExecEnd = true;
-        this.suppressionEnCours = false;
+        
       }).catch((e) => {
-        console.log("2");
 
       })
     }
    
   }
 
+  async verifyIfDmdAdmin(){
+    
+    if(this.returnOfDeleted != undefined){
+      if (this.returnOfDeleted.listeOR.length != 0)
+      for ( const objet of this.returnOfDeleted.listeOR ){
+        if(objet.value == false && this.suppWithDmdAdmin == false){
+          this.setDemandeAdmin(true);
+        }
+      }
+      for ( const objet of this.returnOfDeleted.listeItem ){
+        if(objet.value == false && this.suppWithDmdAdmin == false){
+          this.setDemandeAdmin(true);
+        }
+      }
+      for ( const objet of this.returnOfDeleted.listeSI ){
+        if(objet.value == false && this.suppWithDmdAdmin == false){
+          this.setDemandeAdmin(true);
+        }
+      }
+    }
+  }
+
+
+
   returnDeleteOrNot(typeObjet : typeObjet , idObjet : string){
     let res;
     if(typeObjet == this.TypeObject.OR){
       res = this.returnOfDeleted.listeOR.find(element => element.objet === idObjet)
-      console.log(res?.value);
-      if(res?.value == false && this.suppWithDmdAdmin == false){
-        this.setDemandeAdmin(true);
-      }
       return res?.value
     } else if (typeObjet == this.TypeObject.Item) {
       res = this.returnOfDeleted.listeItem.find(element => element.objet === idObjet)
-      console.log(res?.value);
-      if(res?.value == false && this.suppWithDmdAdmin == false){
-        this.setDemandeAdmin(true);
-      }
       return res?.value
     } else if (typeObjet == this.TypeObject.SI) {
       res = this.returnOfDeleted.listeSI.find(element => element.objet === idObjet)
-      console.log(res?.value);
-      if(res?.value == false && this.suppWithDmdAdmin == false){
-        this.setDemandeAdmin(true);
-      }
       return res?.value
     }
     return undefined;
