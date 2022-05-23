@@ -1,9 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faChevronRight, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { AtelierInfo } from 'src/structureData/Atelier';
 import { Description } from 'src/structureData/Description';
 import { typeObjet, ItemInfo, ItemModification, etat } from 'src/structureData/Item';
 import { ObjetRepereInfo, ObjetRepereModification } from 'src/structureData/ObjetRepere';
+import { SousItemInfo, SousItemModification } from 'src/structureData/SousItem';
 import { TypeObjetRepereTableau, TypeObjetInfo, TypeObjetRepereInfo, modificationTypeObject } from 'src/structureData/TypeObject';
 import { FetchcreateTypeObjectService } from '../create-type-object/service/fetchcreate-type-object.service';
 import { FetchRecopieService } from '../recopie-object/service/fetch-recopie.service';
@@ -17,6 +18,7 @@ import { FetchModifyObjectService } from './service/fetch-modify-object.service'
 })
 export class ModifyObjectComponent implements OnInit {
 
+  public faChevronRight = faChevronRight;
   public faXmark = faXmark;
   @Input() public radio : typeObjet = typeObjet.Aucun;
   public listeTypeOR: TypeObjetRepereTableau[] = [];
@@ -25,6 +27,8 @@ export class ModifyObjectComponent implements OnInit {
   public listeAtelier: AtelierInfo[] = [];
   public listeOR : ObjetRepereInfo[] = [];
   public listeItem : ItemInfo[] = [];
+  public listeSousItem : SousItemInfo[] = [];
+
   public typeNow: string = "";
   public objectNow : typeObjet = typeObjet.OR;
   public objectTypeNow: any;
@@ -41,8 +45,17 @@ export class ModifyObjectComponent implements OnInit {
   public etat : etat = etat.Aucun;
   public etatNow =etat;
   public etatError : boolean = false;
+  public idSISelect : string = "";
+  public siSelect : SousItemModification = {
+    idSousItem: '',
+    libelleSousItem: '',
+    etat: '',
+    description: []
+  }
+  public LibelleSousItem : string = "";
+  public orSelectedForItem : boolean = false;
 
-  
+  public description : any = [];
   public formValidate : boolean = false;
   @Input() public checkValide : boolean = false;
   public idORSelect : string = "";
@@ -144,6 +157,8 @@ export class ModifyObjectComponent implements OnInit {
   getItemFromOR() {
       this.fetchVisuService.getItemByObjetRepere(this.idORSelect).then((list: ItemInfo[]) => {
         if (list != undefined) {
+          console.log(list);
+          
           this.listeItem = list;        
         } else {
           this.listeItem.splice(0);
@@ -153,8 +168,23 @@ export class ModifyObjectComponent implements OnInit {
       })
   }
 
+  getSousItemByItem(){
+    this.fetchVisuService.getSousItemByItem(this.idItemSelect).then((list: SousItemInfo[]) => {
+      if(list == undefined) {
+        this.listeSousItem = [];
+      } else {
+        this.listeSousItem = list;
+      }
+    }).catch((e) => {
+    })
+  }
+
   setcheckValide() {
     this.checkValide = !this.checkValide;
+  }
+
+  setOrSelectedForItem (value : boolean){
+    this.orSelectedForItem = value;
   }
 
 
@@ -191,11 +221,7 @@ export class ModifyObjectComponent implements OnInit {
 
     } else {
       this.atelierSelect = atelier;
-      if(this.objectNow === this.TypeObject.OR ) {
-        this.getObjetRepereByAtelier();
-      } else if (this.objectNow === this.TypeObject.Item){
-        this.getObjetRepereByAtelier();
-      }
+      this.getObjetRepereByAtelier();
     }
   }
   public selectTypeObjet (TypeObjet : any) {
@@ -208,6 +234,9 @@ export class ModifyObjectComponent implements OnInit {
   
 
   public selectOR(idOR : string) {
+    this.idORSelect = idOR;
+    this.selectedNow = idOR;
+    
     if (this.objectNow === this.TypeObject.OR ) {
       let orInfo = this.listeOR.find((element) => element.idObjetRepere === idOR);
       if (orInfo != undefined) {
@@ -221,12 +250,8 @@ export class ModifyObjectComponent implements OnInit {
           this.descriptionObjectSelect.push(d)
         }
       }
-      this.idORSelect = idOR;
-      this.selectedNow = idOR
-      
     } else if (this.objectNow === this.TypeObject.Item) {
-        this.idORSelect = idOR;
-        this.selectedNow = idOR;
+       
         this.getItemFromOR();
         this.getListTypeItemsByOR();
         this.itemSelect = {
@@ -236,7 +261,13 @@ export class ModifyObjectComponent implements OnInit {
           description: []
         }
         this.idItemSelect ="";
+    } else if (this.objectNow === this.TypeObject.SI){
+        this.orSelectedForItem = true;
+        this.getItemFromOR();
+        this.selectedNow = idOR;
+        this.getListTypeItemsByOR();
     }
+
   }
 
 
@@ -257,7 +288,29 @@ export class ModifyObjectComponent implements OnInit {
           this.descriptionObjectSelect.push(d)
         }
       }    
+    } else if (this.objectNow === this.TypeObject.SI) {
+      this.idSISelect = "";
+      this.getSousItemByItem();
     }
+  }
+
+  selectSI(idSousItem : string){
+    this.idSISelect = idSousItem;
+    this.selectedNow = idSousItem;
+    let siInfo = this.listeSousItem.find((element) => element.idSousItem === idSousItem);
+    if (siInfo != undefined) {
+      this.siSelect.idSousItem = siInfo.idSousItem;
+      this.siSelect.libelleSousItem = siInfo.libelleSousItem;
+      this.siSelect.description = siInfo.description;
+      this.siSelect.etat = siInfo.etat;
+      this.descriptionObjectSelect.splice(0);
+      this.etat= siInfo.etat == 'A' ? etat.A : siInfo.etat == 'EA' ? etat.EA : siInfo.etat == 'HS' ? etat.HS : etat.Aucun;
+        for (const d of this.siSelect.description){
+          this.descriptionObjectSelect.push(d)
+        }
+    }
+    console.log(this.descriptionObjectSelect);
+    
   }
 
   public selectObject (object : typeObjet) {
@@ -330,6 +383,14 @@ export class ModifyObjectComponent implements OnInit {
     } else {
       this.formValidate = true;
     }
+  }
+
+  modifySI(){
+    
+      /************/
+     /*   TODO   */
+    /************/
+
   }
 
   public addDescription(){

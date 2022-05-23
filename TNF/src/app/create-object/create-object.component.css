@@ -38,6 +38,10 @@ table th {
     cursor: not-allowed;
 }
 
+.selectObject{
+    --bs-table-accent-bg: var(--bs-table-active-bg);
+}
+
 .zindexZero{
     z-index: 0 !important;
 }
@@ -55,9 +59,16 @@ table th {
     transition-duration: 1s;
 }
 
+.fs-6 {
+    font-size : 1rem !important;
+}
+
 .fs-7 {
-    font-size : 0.9rem;
-    transition-duration: 0.5s
+    font-size : 0.9rem !important;
+}
+
+.changeFont {
+    transition-duration: 0.75s;
 }
 
 .displayNameColumn{
@@ -66,11 +77,56 @@ table th {
     animation-fill-mode: forwards;
 }
 
+
 @keyframes fadeIn {
     99% {
       visibility: hidden;
     }
     100% {
+      visibility: visible ;
+    }
+}
+
+.displayNameColumnShorter{
+    visibility: hidden;
+    animation: 0.25s fadeIn;
+    animation-fill-mode: forwards;
+}
+
+
+@keyframes fadeIn {
+    99% {
+      visibility: hidden;
+    }
+    100% {
+      visibility: visible ;
+    }
+}
+
+.notDisplayNameColumn{
+    visibility: visible;
+    animation: 0.5s fadeOut;
+    animation-fill-mode: forwards;
+}
+
+@keyframes fadeOut {
+    99% {
       visibility: visible;
     }
-  }
+    100% {
+      visibility: hidden;
+    }
+}
+
+
+.nowrapColumn {
+    white-space: nowrap;
+}
+
+.padding4 {
+    padding : 0.4rem 0.5rem;
+}
+
+.col-lg-0 {
+    width: 0%;
+}

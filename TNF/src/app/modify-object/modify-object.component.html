@@ -1,4 +1,4 @@
-<div class="container-fluid px-5">
+<div class="container-fluid">
     <div class="row mt-3 px-lg-5">
         <div class="col-12">
             <div class="row">
@@ -71,6 +71,8 @@
             </div>
         </div>
         <div class="row m-0 p-0"> 
+
+
             <ng-container *ngIf="objectNow == 'OR'">
                 <div class="col-lg-6 offset-lg-1 col-xs-12 mt-lg-3">
                     <div class="row">
@@ -245,6 +247,156 @@
                     </div>
                 </div>
             </ng-container>
+
+
+
+            <ng-container *ngIf="objectNow == 'SI'">
+                <div class="col-lg-4 px-lg-5 col-xs-12 mt-lg-3 transitionOr " [ngClass]="{'col-lg-1 ps-lg-5' : this.orSelectedForItem , 'col-lg-4 px-lg-5' : !this.orSelectedForItem }">
+                    <div class="row">
+                        <caption class="col-12 text-center changeFont" [ngClass]="{'fs-6' : !this.orSelectedForItem , 'fs-7' : this.orSelectedForItem }" >Objet repère</caption>
+                    </div>
+                    <div class="scrolltable"> 
+                        <table class="table table-hover cursor ">
+                            <thead>
+                            <tr>
+                                <ng-container *ngIf="!this.orSelectedForItem; else ReturnToOR ">
+                                    <th (click)="setOrSelectedForItem(true)" class="col-4 text-center"  scope="col-4">
+                                        <span [ngClass]="{'displayNameColumn' : !this.orSelectedForItem && this.idORSelect !='', 'nowrapColumn' : !this.orSelectedForItem && this.idORSelect !=''}">N° Séquentiel</span>
+                                    </th>
+                                    <th (click)="setOrSelectedForItem(true)" class="col-8 text-center align-middle transitionOr" scope="col-8">
+                                        <span [ngClass]="{'displayNameColumn' : !this.orSelectedForItem && this.idORSelect !='', 'nowrapColumn' : !this.orSelectedForItem && this.idORSelect !=''}">Libellé</span>
+                                    </th>
+                                </ng-container>
+                                <ng-template #ReturnToOR>
+                                    <th (click)="setOrSelectedForItem(false)" class="col-4 text-center transitionOr padding4" scope="col-3"><fa-icon class="fs-5 col-12 text-center " [icon]="faChevronRight"></fa-icon> </th>
+                                </ng-template>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr *ngIf="this.listeOR.length === 0; else afficheSIOR">
+                                <td class="text-center" colspan="2">Aucun Objet repère</td>
+                            </tr>
+                            <ng-template #afficheSIOR>
+                                <tr *ngFor="let OR of listeOR" (click)="selectOR(OR.idObjetRepere)" [ngClass]="{'selectObject': OR.idObjetRepere === this.idORSelect, 'actifNow' : OR.idObjetRepere === this.selectedNow }" >
+                                    <td class="col-4">{{OR.idObjetRepere}}</td>
+                                    <td *ngIf="!this.orSelectedForItem" [ngClass]="{'nowrapColumn' : !this.orSelectedForItem && this.idORSelect !=''}" class="col-8">{{OR.libelleObjetRepere}}</td>
+                                </tr>
+                            </ng-template>
+                            
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-12 mt-lg-3">
+                    <div class="row">
+                        <caption class="col-12 text-center" >Item</caption>
+                    </div>
+                    <div class="scrolltable"> 
+                        <table class="table table-hover cursor ">
+                            <thead>
+                            <tr>
+                                <th class="col-4 text-center" scope="col-4">N° Séquentiel</th>
+                                <th class="col-8 text-center align-middle" scope="col-8">Libellé</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr *ngIf="this.listeItem.length === 0; else afficheSIItem">
+                                <td class="text-center" colspan="2">Aucun Item</td>
+                            </tr>
+                            <ng-template #afficheSIItem>
+                                <tr *ngFor="let item of listeItem | filterType : typeNow :'Item'"  (click)="selectItem(item.idItem)" [ngClass]="{'selectObject': item.idItem == this.itemSelect, 'actifNow' : item.idItem === this.selectedNow }" >
+                                    <td class="col-4">{{item.idItem}}</td>
+                                    <td class="col-8">{{item.libelleItem}}</td>
+                                </tr>
+                            </ng-template>
+                            
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-12 mt-lg-3 transitionOr" [ngClass]="{'col-lg-4' : this.orSelectedForItem , 'col-lg-0' : !this.orSelectedForItem }">
+                    <div class="row ">
+                        <caption class="col-12 text-center nowrapColumn" [ngClass]="{'notDisplayNameColumn' : !this.orSelectedForItem && this.idORSelect !='', 'displayNameColumnShorter' : this.orSelectedForItem ,invisible : idORSelect == ''}">Sous Item</caption>
+                    </div>
+                    <div class="scrolltable"> 
+                        <table class="table table-hover cursor ">
+                            <thead>
+                            <tr>
+                                <th class="col-4 text-center nowrapColumn" scope="col-4">N° Séquentiel</th>
+                                <th class="col-8 text-center align-middle nowrapColumn" scope="col-8" >Libellé</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr *ngIf="this.listeSousItem.length === 0; else afficheSISI">
+                                <td class="text-center" colspan="2">Aucun Sous Item</td>
+                            </tr>
+                            <ng-template #afficheSISI>
+                                <tr *ngFor="let sousItem of listeSousItem"  (click)="selectSI(sousItem.idSousItem)" [ngClass]="{'selectObject': sousItem.idSousItem === this.idSISelect, 'actifNow' : sousItem.idSousItem === this.selectedNow }">
+                                    <td class="col-5" [ngClass] ="{'nowrapColumn' : !this.orSelectedForItem && this.idORSelect !=''}">{{sousItem.idSousItem}}</td>
+                                    <td class="col-7" [ngClass] ="{'nowrapColumn' : !this.orSelectedForItem && this.idORSelect !=''}">{{sousItem.libelleSousItem}}</td>
+                                </tr>
+                            </ng-template>
+                            
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="col-12 col-lg-3 needs-validation mt-5"  [ngClass]="{'was-validated': formValidate === true}">
+                    <div class="container-fluid border rounded shadow-sm py-2">
+                        <div class="text-center row">
+                            <span class="fs-3 col-10 offset-1 ">Modification </span>
+                        </div>
+                        
+                        <div class="col-12 col-lg-10 offset-lg-1 my-3">
+                            <div class="form-floating mb-3">
+                                <input #Identifiant type="text" maxlength="6" class="form-control uppercase" id="IdType" placeholder="" required [value]="this.idSISelect" disabled readonly>
+                                <label for="IdType">Identifiant</label>
+                            </div>
+                            <div class="form-floating mb-3" [ngClass]="{'mb-3': !errorLibelle}">
+                                <input [(ngModel)]="LibelleSousItem" type="text" maxlength="50" class="form-control" id="IdLibelle" placeholder="" [value]="this.siSelect.libelleSousItem" required (focusout)="focusOutLibelle()" [ngClass]="{'box-error border border-danger': errorLibelle}">
+                                <label for="IdLibelle">Libelle</label>
+                                <p *ngIf="errorLibelle" class="text-danger text-center py-0 my-1"> Requiert l'identifiant de l'item</p>
+                                <div class="invalid-tooltip">
+                                    Veuillez renseigner un libellé.
+                                </div>
+                            </div>
+                            
+                            <div *ngFor="let d of this.descriptionObjectSelect; let i = index"  > 
+                                <div class="form-floating mb-3 input-group">
+                                    <input  type="text" [(ngModel)]="this.descriptionObjectSelect[i].lien" #name="ngModel" name="lien{{i}}" class="form-control zindexZero"  placeholder="" >
+                                    <label for="IdDescription{{i}}">Description</label>
+                                    <button class="input-group-text px-2 bg-white" (click)="removeDescription(i)"><fa-icon class=" text-right close" [icon]="faXmark"></fa-icon></button>
+                                </div>
+                            </div> 
+                            <div class="form-floating mb-3">
+                                <a class="text-dark cursor" (click)="addDescription()">Ajouter une description</a>
+                            </div>
+                            
+                            <div class="form-check form-check-inline ms-2">
+                                <input [(ngModel)]="etat" (click)="selectEtat(this.etatNow.A)" [ngClass]="{'border-danger' : etatError}" class="form-check-input" type="radio" name="radioEtat" id="inlineRadio1" value="A" required>
+                                <label [ngClass]="{'text-danger' : etatError}" class="form-check-label" for="inlineRadio1">Actif</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input [(ngModel)]="etat" (click)="selectEtat(this.etatNow.EA)" [ngClass]="{'border-danger' : etatError}" class="form-check-input" type="radio" name="radioEtat" id="inlineRadio2" value="EA" required>
+                                <label [ngClass]="{'text-danger' : etatError}" class="form-check-label" for="inlineRadio2">En attente</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input [(ngModel)]="etat" (click)="selectEtat(this.etatNow.HS)" [ngClass]="{'border-danger' : etatError}" class="form-check-input" type="radio" name="radioEtat" id="inlineRadio3" value="HS" required>
+                                <label [ngClass]="{'text-danger' : etatError}" class="form-check-label" for="inlineRadio3">Hors service</label>
+                            </div>
+                           
+                        </div>
+                        <button *ngIf="this.atelierSelect != '' && this.idItemSelect != '' " (click)="modifySI()" type="button" class="btn btn-lg btn-light col-10 offset-1 col-lg-6 offset-lg-3 my-2">Modifier</button>
+                    </div>
+                </div>
+
+
+            </ng-container>
+
+
         </div>
         
     </div>

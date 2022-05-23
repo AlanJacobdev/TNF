@@ -42,6 +42,86 @@ table th {
     color : red;
 }
 
+.selectObject{
+    --bs-table-accent-bg: var(--bs-table-active-bg);
+}
+
 .box-error{
     box-shadow: 0 0 0 .25rem rgba(253, 13, 13, 0.25) !important;
+}
+
+.transitionOr{
+    transition-duration: 1s;
+}
+
+.fs-6 {
+    font-size : 1rem !important;
+}
+
+.fs-7 {
+    font-size : 0.9rem !important;
+}
+
+.changeFont {
+    transition-duration: 0.75s;
+}
+
+.displayNameColumn{
+    visibility: hidden;
+    animation: 0.75s fadeIn;
+    animation-fill-mode: forwards;
+}
+
+
+@keyframes fadeIn {
+    99% {
+      visibility: hidden;
+    }
+    100% {
+      visibility: visible ;
+    }
+}
+
+.displayNameColumnShorter{
+    visibility: hidden;
+    animation: 0.25s fadeIn;
+    animation-fill-mode: forwards;
+}
+
+
+@keyframes fadeIn {
+    99% {
+      visibility: hidden;
+    }
+    100% {
+      visibility: visible ;
+    }
+}
+
+.notDisplayNameColumn{
+    visibility: visible;
+    animation: 0.5s fadeOut;
+    animation-fill-mode: forwards;
+}
+
+@keyframes fadeOut {
+    99% {
+      visibility: visible;
+    }
+    100% {
+      visibility: hidden;
+    }
+}
+
+
+.nowrapColumn {
+    white-space: nowrap;
+}
+
+.padding4 {
+    padding : 0.4rem 0.5rem;
+}
+
+.col-lg-0 {
+    width: 0%;
 }

@@ -1,12 +1,14 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AtelierInfo } from 'src/structureData/Atelier';
-import { etat, ItemEtDispo, typeObjet } from 'src/structureData/Item';
+import { etat, ItemInfo, typeObjet } from 'src/structureData/Item';
 import { NUetOR, ObjetRepereInfo } from 'src/structureData/ObjetRepere';
-import { TypeObjetInfo, TypeObjetRepereInfo, TypeObjetRepereTableau } from 'src/structureData/TypeObject';
+import { modificationTypeObject, TypeObjetInfo, TypeObjetRepereInfo, TypeObjetRepereTableau } from 'src/structureData/TypeObject';
 import { FetchcreateTypeObjectService } from '../create-type-object/service/fetchcreate-type-object.service';
 import { FetchVisuService } from '../visualisation/service/fetch-visu.service';
 import { FetchCreateObjectService } from './service/fetch-create-object.service';
 import { faXmark, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { SousItemInfo } from 'src/structureData/SousItem';
+import { FetchRecopieService } from '../recopie-object/service/fetch-recopie.service';
 
 
 @Component({
@@ -24,14 +26,18 @@ export class CreateObjectComponent implements OnInit {
   public listeAtelier: AtelierInfo[] = [];
   public listeNUetOr : NUetOR[] = [];
   public listeOR : ObjetRepereInfo[] = [];
-  public listeItem : ItemEtDispo[] = [];
+  public listeItem : ItemInfo[] = [];
+  public listeSousItem : SousItemInfo[] = [];
+  public listeTypeItemOfOR : modificationTypeObject[] = [];
+
+  public typeOfItemOR : string = "";
   public typeNow: string = "";
   public objectNow : typeObjet = typeObjet.OR;
   public objectTypeNow: any;
   public TypeObject = typeObjet;
-
+  public searchText : string = "";
   public etat : etat = etat.Aucun;
-  public etatNow =etat;
+  public etatNow = etat;
   public etatError : boolean = false;
   public atelierSelect : string = "";
   public nuSelect : string = "";
@@ -39,8 +45,9 @@ export class CreateObjectComponent implements OnInit {
   public formValidate : boolean = false;
   public checkValide : boolean = false;
   public checkSecurite : boolean = false;
- 
-  
+  public checkPrefixe : boolean = false;
+  public selectNow : string = "";
+  public siSelect : string = "";
   public orSelect : string ="";
   public ToastAffiche : boolean = false; 
   public messageToast : string = "";
@@ -49,9 +56,10 @@ export class CreateObjectComponent implements OnInit {
   public description : any = [];
   public errorLibelle : boolean = false;
   public LibelleItem : string = "";
+  public LibelleSousItem : string = "";
   public orSelectedForItem : boolean = false;
 
-  constructor(private fetchCreateTypeObject : FetchcreateTypeObjectService, private fetchVisuService : FetchVisuService, private fetchCreateObjectService: FetchCreateObjectService) {
+  constructor(private fetchCreateTypeObject : FetchcreateTypeObjectService, private fetchVisuService : FetchVisuService, private fetchCreateObjectService: FetchCreateObjectService, private fetchRecopieService : FetchRecopieService) {
     this.getListType();
     this.getAteliers();
    }
@@ -111,7 +119,7 @@ export class CreateObjectComponent implements OnInit {
   getItemFromOrAndDispo() {
 
     if (this.typeNow != '' && this.orSelect != ''){
-      this.fetchCreateObjectService.getItemFromOrAndDispo(this.orSelect, this.typeNow).then((list: ItemEtDispo[]) => {
+      this.fetchCreateObjectService.getItemFromOrAndDispo(this.orSelect, this.typeNow).then((list: ItemInfo[]) => {
         if (list != undefined) {
           this.listeItem = list;
           this.itemSelect="";
@@ -127,12 +135,60 @@ export class CreateObjectComponent implements OnInit {
     }
   }
 
+  getListTypeItemsByOR(){
+    this.fetchRecopieService.getTypeOfItemsOfOR(this.orSelect).then((list: modificationTypeObject[]) => {
+      this.listeTypeItemOfOR.splice(0);
+      list.forEach((e : modificationTypeObject) => {
+        const libelle = this.listeTypeO.find(element => element.idType === e.idTypeObjet);
+        if (libelle != undefined) {
+          let item : modificationTypeObject = {
+            idTypeObjet: e.idTypeObjet,
+            libelleTypeObjet: libelle.libelleType
+          };
+          this.listeTypeItemOfOR.push(item)
+        }
+      })
+    }).catch((e) => {
+    })
+  }
+
+
+  getItemByObjetRepere(){
+    if ( this.orSelect != ''){
+      this.fetchVisuService.getItemByObjetRepere(this.orSelect).then((list: ItemInfo[]) => {
+        if(list == undefined) {
+          this.listeItem = [];
+        } else {
+          this.listeItem = list;
+        }
+      }).catch((e) => {
+      })
+    }
+  }
+
+  getSousItemByItem(){
+    this.fetchVisuService.getSousItemByItem(this.itemSelect).then((list: SousItemInfo[]) => {
+      if(list == undefined) {
+        this.listeSousItem = [];
+      } else {
+        this.listeSousItem = list;
+      }
+    }).catch((e) => {
+    })
+  }
+
+
+
+
   setcheckValide() {
     this.checkValide = !this.checkValide;
   }
 
   setcheckSecurite(){
     this.checkSecurite =!this.checkSecurite;
+  }
+  setPrefixe(){
+    this.checkPrefixe =!this.checkPrefixe;
   }
 
   closeToast(){
@@ -153,6 +209,7 @@ export class CreateObjectComponent implements OnInit {
     this.checkValide = false;
     this.description.splice(0);
     this.etat = etat.Aucun;
+    this.checkPrefixe = false;
   }
 
   public selectAtelier (Atelier : any) {
@@ -162,7 +219,7 @@ export class CreateObjectComponent implements OnInit {
     } catch  {
       atelier = Atelier;
     }
-
+    this.selectNow = "";
     this.description.splice(0);
     this.listeItem.splice(0);
     this.deleteDataForm();
@@ -191,13 +248,30 @@ export class CreateObjectComponent implements OnInit {
     }
     if(this.objectNow === this.TypeObject.SI){
       this.orSelectedForItem = true;
+      this.getItemByObjetRepere();
+      this.selectNow = idOR;
+      this.getListTypeItemsByOR();
     }
     
   }
 
-
   public selectItem(idItem : string){
     this.itemSelect = idItem;
+    this.selectNow = idItem;
+    this.siSelect = "";
+    this.getSousItemByItem();
+  }
+
+  public selectSI(idSI : string) {
+    this.siSelect = idSI
+  }
+
+  public selectTypeObjet (TypeObjet : any) {
+    try {
+      this.typeOfItemOR = TypeObjet.target.value;
+    } catch  {
+      this.typeOfItemOR = TypeObjet;
+    }
   }
 
   public selectObject (object : typeObjet) {
@@ -274,7 +348,6 @@ export class CreateObjectComponent implements OnInit {
   }
 
   createItem( digit : string){
-    console.log(this.etat);
     
     if (this.LibelleItem != '' && digit != '' && this.etat != this.etatNow.Aucun ) {
       if(!this.LibelleItem.toUpperCase().includes(this.orSelect)){
@@ -307,11 +380,42 @@ export class CreateObjectComponent implements OnInit {
     }
   }
 
+  createSI(){
+
+    if (this.LibelleSousItem != '' && this.typeNow != '' && this.etat != this.etatNow.Aucun ) {
+      if(!this.LibelleSousItem.toUpperCase().includes(this.itemSelect)){
+        this.manageToast("Erreur de création", "Le libellé ne contient pas l'identifiant de l'item dont il dépend " , "red")
+      } else {
+        let tabDesc = [];
+          for ( const d of this.description){
+            if (d.value !== ""){
+              tabDesc.push({"lien": d.value})
+            }
+          }
+       
+        this.refreshValidationForm();
+        this.fetchCreateObjectService.createSousItem(this.LibelleSousItem.replace(this.itemSelect.toLowerCase(), this.itemSelect.toUpperCase()), this.itemSelect, this.typeNow, this.checkPrefixe, this.checkSecurite, this.etat, tabDesc).then((res: any) => {
+          if(typeof res === 'string') {
+            this.manageToast("Erreur de création", res , "red")
+          } else {  
+            this.manageToast("Création", "L'item " + res.idSousItem + " a été crée", "#006400")
+            this.getSousItemByItem();   
+            this.deleteDataForm(); 
+          }
+        }).catch((e) => {
+        })
+      }
+    } else {
+      if(this.etat == this.etatNow.Aucun){
+        this.etatError = true;
+      }
+      this.formValidate = true;
+    }
+  }
+  
 
   public addDescription(){
     this.description.push({value : ""});
-    console.log(this.description);
-    
   }
 
   public removeDescription(indice : number){
@@ -320,7 +424,6 @@ export class CreateObjectComponent implements OnInit {
   }
 
   focusOutLibelle(){
-    
     if (this.objectNow === this.TypeObject.Item) {
       if(!this.LibelleItem.toUpperCase().includes(this.orSelect)){
         this.errorLibelle = true;
@@ -328,8 +431,17 @@ export class CreateObjectComponent implements OnInit {
         this.errorLibelle = false;
       }
     }
-
+    if (this.objectNow === this.TypeObject.SI) {
+      if(!this.LibelleSousItem.toUpperCase().includes(this.itemSelect)){
+        this.errorLibelle = true;
+      } else {
+        this.errorLibelle = false;
+      }
+    }
   }
+
+ 
+
 
 
 

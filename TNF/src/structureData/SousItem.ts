@@ -17,6 +17,13 @@ export interface SousItemInfo {
     description: Description[]
 }
 
+export interface SousItemModification {
+    idSousItem: string,
+    libelleSousItem: string,
+    etat: string,
+    description: Description[]
+}
+
 export interface SousItemAffichage {
     idSousItem: string,
     libelleSousItem: string,
@@ -50,4 +57,9 @@ export interface SousItemSuppression {
     codeSousItem: string,
     etat: string,
     isPaste? : boolean
+}
+
+export interface SousItemEtDispo{
+    idSousItem: string,
+    libelleSousItem: string,
 }

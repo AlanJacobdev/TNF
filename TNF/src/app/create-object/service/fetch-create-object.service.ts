@@ -4,6 +4,8 @@ import { CookieService } from 'ngx-cookie-service';
 import { lastValueFrom } from 'rxjs';
 import { ItemEtDispo, ItemInfo } from 'src/structureData/Item';
 import { NUetOR, ObjetRepereInfo } from 'src/structureData/ObjetRepere';
+import { SousItemInfo } from 'src/structureData/SousItem';
+import { Sousitem } from 'src/structureData/Suppression';
 
 @Injectable({
   providedIn: 'root'
@@ -88,7 +90,8 @@ export class FetchCreateObjectService {
     try {
       const res : ItemInfo = await lastValueFrom(this.http.post<ItemInfo>(url, payload));
       if (res.hasOwnProperty('error')) {
-        return undefined
+        const resAny : any = res;
+        return resAny.error;
       } else {
         return res;
       }
@@ -104,4 +107,45 @@ export class FetchCreateObjectService {
       return returnError;
     }
   }
+
+
+  async createSousItem(libelle : string, idItem : string, codeObjet :string, prefixe : boolean, securite : boolean, etat: string, description : any[]){
+    let global = this.cookieService.get('login');
+    let url = "http://localhost:3000/sousitem"
+    let payload = {
+      libelleSousItem : libelle,
+      idItem : idItem,
+      codeSousItem : codeObjet,
+      securite : securite,
+      estPrefixe : prefixe,
+      etat : etat,
+      description : description,
+      profilCreation : global,
+      posteCreation : ''
+    }
+    try {
+      const res : SousItemInfo = await lastValueFrom(this.http.post<SousItemInfo>(url, payload));
+
+      if (res.hasOwnProperty('error')) {
+        const resAny : any = res;
+        return resAny.error;
+      } else {
+        return res;
+      }
+    } catch (e : any) {
+        let returnError;
+        if(e.hasOwnProperty('error')){
+          if(e.error.hasOwnProperty('status')){
+            returnError=e.error["error"];
+          } else {
+            returnError=e.error.message[0];
+          }
+        }
+      return returnError;
+    }
+
+
+   
+  }
+
 }
