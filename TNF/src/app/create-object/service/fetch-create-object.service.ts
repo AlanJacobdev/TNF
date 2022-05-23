@@ -70,7 +70,7 @@ export class FetchCreateObjectService {
   }
 
 
-  async createItem(libelle : string, idOR : string, codeObjet :string, digit : number, securite : boolean, nu : string, actif: boolean, description : any[]): Promise<any> {
+  async createItem(libelle : string, idOR : string, codeObjet :string, digit : number, securite : boolean, nu : string, etat: string, description : any[]): Promise<any> {
     let global = this.cookieService.get('login');
     let url = "http://localhost:3000/item"
     let payload = {
@@ -80,7 +80,7 @@ export class FetchCreateObjectService {
       numeroUnique : nu,
       digit: digit,
       securite : securite,
-      actif: actif,
+      etat: etat,
       description : description,
       profilCreation : global,
       posteCreation : ""

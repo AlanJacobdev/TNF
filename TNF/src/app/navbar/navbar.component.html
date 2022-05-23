@@ -1,7 +1,7 @@
 <ng-template [ngIf]="printMenu()">
     <nav class="navbar navbar-expand-xl navbar-light bg-light shadow-sm">
         <div class="container-fluid">
-            <a class="navbar-brand" href="">
+            <a class="navbar-brand acceuilnav" routerLink=""  (click)="selectPage('Acceuil')" [ngClass]="{'active': this.Page == 'Acceuil' }">
                 <img class="me-3" src="./assets/Logo_Laïta.jpg" alt="Laïta" width="70" height="36">
                 <span class="titleNav">Itemisation</span>
             </a>

@@ -13,7 +13,7 @@ export class FetchRecopieService {
   constructor(private readonly http: HttpClient, private cookieService : CookieService) { }
 
 
-  async getHistoryItem(idOR : string) : Promise<any> {
+  async getTypeOfItemsOfOR(idOR : string) : Promise<any> {
     let url = "http://localhost:3000/item/getTypeOfItemsOfOR/{idOR}"
     url = url.replace("{idOR}", idOR)
     const res : modificationTypeObject[] = await lastValueFrom(this.http.get<modificationTypeObject[]>(url));

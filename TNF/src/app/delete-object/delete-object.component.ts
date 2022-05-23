@@ -1,11 +1,11 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { faXmark, faCircleCheck, faCircleXmark, faCircleInfo} from '@fortawesome/free-solid-svg-icons';
 import { CookieService } from 'ngx-cookie-service';
 import { AtelierInfo } from 'src/structureData/Atelier';
 import { typeObjet, ItemInfo, ItemSuppresion } from 'src/structureData/Item';
 import { ObjetRepereInfo, ObjetRepereSuppression } from 'src/structureData/ObjetRepere';
 import { SousItemInfo, SousItemSuppression } from 'src/structureData/SousItem';
-import { deleteObject, returnDeleteObject } from 'src/structureData/Suppression';
+import { deleteObject, demandeAdmin, returnDeleteObject } from 'src/structureData/Suppression';
 import { TypeObjetRepereTableau, TypeObjetInfo, TypeObjetRepereInfo } from 'src/structureData/TypeObject';
 import { FetchcreateTypeObjectService } from '../create-type-object/service/fetchcreate-type-object.service';
 import { FetchVisuService } from '../visualisation/service/fetch-visu.service';
@@ -45,13 +45,13 @@ export class DeleteObjectComponent implements OnInit {
     valide: false,
     isPaste: false
   };
-  public test : string = "ezzeez"
+
   public ItemNow : ItemSuppresion = {
     idItem: '',
     libelleItem: '',
     idOR: '',
     codeObjet: '',
-    actif: false,
+    etat: '',
     isPaste: false
   }
   
@@ -60,7 +60,7 @@ export class DeleteObjectComponent implements OnInit {
     libelleSousItem: '',
     idItem: '',
     codeSousItem: '',
-    actif: false,
+    etat: '',
     isPaste: false
   }
   public isPasteSaveItem : ItemSuppresion[] = [];
@@ -78,7 +78,9 @@ export class DeleteObjectComponent implements OnInit {
   public suppressionEnCours : boolean = false;
   public suppExecEnd : boolean = false;
   public suppWithDmdAdmin : boolean = false;
-
+  public demandeAdmin : boolean = false;
+  public motifDemande : string = ""; 
+  
   public selectedNow : string = "";
   public formValidate : boolean = false;
   @Input() public checkValide : boolean = false;
@@ -95,23 +97,23 @@ export class DeleteObjectComponent implements OnInit {
     this.getListType();
     this.getAteliers();
    }
-  
-   @ViewChild('modal') crudModal: ElementRef | undefined;
-   
+     
 
   ngOnInit(): void {
     var exampleModal = document.getElementById('Suppression')
     if(exampleModal != null){
-      exampleModal.addEventListener('keydown', function (event) {
-      if(event.key ==="Escape"){
-        console.log("escape");
+      exampleModal.addEventListener('keydown', (evt) => {
+      if(evt.key ==="Escape" && this.suppExecEnd){
+        this.endOfDelete();
       }
       })
-      exampleModal.addEventListener('click', function (event) {
-        const target = event.target as HTMLTextAreaElement;
-        console.log(target.classList.contains('show'));
-        
-    })
+      exampleModal.addEventListener('click', (evt) => {
+        const target = evt.target as HTMLTextAreaElement;
+        if(target.classList.contains('show') && this.suppExecEnd){
+          this.endOfDelete();
+        }
+      }
+    )
   }  
   
   }
@@ -185,7 +187,7 @@ export class DeleteObjectComponent implements OnInit {
               idItem : e.idItem,
               libelleItem : e.libelleItem,
               codeObjet : e.codeObjet,
-              actif : e.actif,
+              etat : e.etat,
               idOR : e.idOR,
               isPaste: false
             };
@@ -225,7 +227,7 @@ export class DeleteObjectComponent implements OnInit {
             idSousItem : e.idSousItem,
             libelleSousItem : e.libelleSousItem,
             codeSousItem : e.codeSousItem,        
-            actif : e.actif,
+            etat : e.etat,
             idItem : e.idItem,
             isPaste: false
           };
@@ -254,13 +256,13 @@ export class DeleteObjectComponent implements OnInit {
       
   public selectAtelier (Atelier : any) {
     let atelier;
-    console.log("test")
     try {
       atelier = Atelier.target.value;
     } catch  {
       atelier = Atelier;
     }
     this.idORSelect = "";
+    this.selectedNow =""
     this.listeSousItem.splice(0);
     this.listeItem.splice(0);
     if( atelier == '') {
@@ -507,10 +509,6 @@ export class DeleteObjectComponent implements OnInit {
   }
 
   delete(){
-    
-    
-
-
     this.suppExecEnd = false;
     this.resetDeleted();
     for(const or of this.listeOR){
@@ -536,24 +534,26 @@ export class DeleteObjectComponent implements OnInit {
         }
       }
     }
-
-  
- 
   }
-  closeRecap(){
+
+  async closeRecap(){
     this.returnOfDeleted = {
       listeOR: [],
       listeItem: [],
       listeSI: []
     }
+
+    if(this.suppExecEnd){
+      this.endOfDelete();
+    }
   }
 
-  resetPasteList(){
+  async resetPasteList(){
     this.isPasteSaveSI.splice(0);
     this.isPasteSaveItem.splice(0);
   }
 
-  resetDeleted(){
+  async resetDeleted(){
     this.ORDeleted.splice(0);
     this.ItemDeleted.splice(0);
     this.SiDeleted.splice(0);
@@ -570,25 +570,20 @@ export class DeleteObjectComponent implements OnInit {
     const isAdmin = this.cookieService.get('Admin')
     if (isAdmin === 'true' ){
       await this.fetchDeleteObjectService.deleteObjectsAsAdmin(res).then((res: any) => {
-        console.log(res);
         if(res == undefined) {
-          this.manageToast("Erreur de suppression", res , "red")
           this.setDemandeAdmin(true);
         } else {  
           this.returnOfDeleted = res;
-          this.manageToast("Suppression", res, "#006400");
         }
         this.suppExecEnd = true;
         this.suppressionEnCours = false;
+        this.selectAtelier(this.atelierSelect);
       }).catch((e) => {
         
       })
     } else {
       await this.fetchDeleteObjectService.deleteObjects(res).then(async (res: any) => {
-        console.log(res);
         if(res == undefined) {
-          this.manageToast("Erreur de suppression", "Aucun élement n'a été supprimé", "red")
-  
           this.suppExecEnd = true;
           this.suppressionEnCours = false;
         } else {  
@@ -597,7 +592,6 @@ export class DeleteObjectComponent implements OnInit {
           this.suppExecEnd = true;
           this.suppressionEnCours = false;
           this.selectAtelier(this.atelierSelect);
-          
         }
         
       }).catch((e) => {
@@ -629,8 +623,6 @@ export class DeleteObjectComponent implements OnInit {
     }
   }
 
-
-
   returnDeleteOrNot(typeObjet : typeObjet , idObjet : string){
     let res;
     if(typeObjet == this.TypeObject.OR){
@@ -649,4 +641,76 @@ export class DeleteObjectComponent implements OnInit {
   setDemandeAdmin(value : boolean ){
     this.suppWithDmdAdmin = value;
   }
+
+  demandeSuppAdmin(){
+    this.demandeAdmin = true;
+  }
+
+  sendDemande(){
+    let demande : demandeAdmin = {
+      motif: this.motifDemande,
+      orDelete: [],
+      itemDelete: [],
+      sousItemDelete: [],
+      profilCréation: this.cookieService.get('login')
+    };
+
+    if (this.returnOfDeleted.listeOR.length != 0){
+      for ( const or of this.returnOfDeleted.listeOR){
+        if(!or.value){
+          demande.orDelete.push({
+            idObjetRepere : or.objet
+          });
+        }
+      }
+    }
+
+    if (this.returnOfDeleted.listeItem.length != 0){
+      for ( const item of this.returnOfDeleted.listeItem){
+        if(!item.value){
+          demande.itemDelete.push({
+            idItem : item.objet
+          });
+        }
+      }
+    }
+
+    if (this.returnOfDeleted.listeSI.length != 0){
+      for ( const si of this.returnOfDeleted.listeSI){
+        if(!si.value){
+          demande.sousItemDelete.push({
+            idSousItem : si.objet
+          });
+        }
+      }
+    }
+
+      this.fetchDeleteObjectService.demandeAdmin(demande).then(async (res: any) => {
+      console.log(res);
+      if(res == undefined) {
+        
+      } else {  
+        this.manageToast("Demande de suppression", "La demande a été transmises aux administrateurs", "#006400");
+        this.demandeAdmin = false;
+        await this.endOfDelete();
+      }
+      
+    }).catch((e) => {
+
+    })
+ 
+  }
+
+  async endOfDelete(){
+    await this.resetPasteList();
+    await this.resetDeleted();
+    await this.closeRecap();
+    this.suppExecEnd = false;
+    this.demandeAdmin = false;
+    this.motifDemande = "";
+  }
+
+
+  
+
 }

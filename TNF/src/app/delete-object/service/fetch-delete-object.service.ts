@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { lastValueFrom } from 'rxjs';
-import { deleteObject, returnDeleteObject } from 'src/structureData/Suppression';
+import { deleteObject, demandeAdmin, returnDeleteObject } from 'src/structureData/Suppression';
 
 @Injectable({
   providedIn: 'root'
@@ -125,5 +125,14 @@ export class FetchDeleteObjectService {
     return returnError;
     }
   }
+
+
+  async demandeAdmin(deleteObjects : demandeAdmin) : Promise<any> {
+    let url = "http://localhost:3000/demande-admin"
+    const res : any = await lastValueFrom(this.http.post<any>(url, deleteObjects));    
+    return res
+    
+  }
+
 
 }

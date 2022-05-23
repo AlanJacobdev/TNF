@@ -114,7 +114,7 @@
                 </table>
             </div>
         </div>
-        <div class="col-xxl-10 offset-xxl-1 mt-lg-5 mt-1 order-1 order-lg-4 border border-1 colorBorder rounded shadow-sm">
+        <div class="col-xxl-10 offset-xxl-1 mt-lg-5 mt-1 order-1 order-lg-4 border border-1 colorBorder rounded ">
           <div class="row my-1">
             <ng-container *ngIf="selectedNow === ''; else displayInfo">
               <div class="col-12 my-5 text-center">
@@ -199,9 +199,9 @@
                     </div>
                   </div>
                   <div class="row">
-                    <label for="staticEmail" class="col-4 col-form-label">Actif</label>
+                    <label for="staticEmail" class="col-4 col-form-label">Etat</label>
                     <div class="col-8">
-                      <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="ItemNow.actif">
+                      <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="ItemNow.etat">
                     </div>
                   </div>
                   <div class="row">
@@ -258,7 +258,7 @@
                   <div class="row">
                     <label for="staticEmail" class="col-4 col-form-label">Actif</label>
                     <div class="col-8">
-                      <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="SousItemNow.actif">
+                      <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="SousItemNow.etat">
                     </div>
                   </div>
                   <div class="row">
@@ -412,7 +412,7 @@
                           <div class="col-12 col-lg-5 col-xl-6 mb-3 ">
                             <div class="input-group">
                               <label for="IdentifiantHistory" class="input-group-text col-4">Actif</label>
-                              <input type="text" readonly disabled class="form-control bg-light" id="IdentifiantHistory" [value]="(item.actif)? 'Oui' : 'Non'">
+                              <input type="text" readonly disabled class="form-control bg-light" id="IdentifiantHistory" [value]="item.etat">
                             </div>
                           </div>
                           <div class=" col-12 col-lg-7 col-xl-6 mb-3 ">
@@ -468,7 +468,7 @@
                           <div class="col-12 col-lg-5 col-xl-6 mb-3">
                             <div class="input-group">
                               <label for="IdentifiantHistory" class="input-group-text col-4">Actif</label>
-                              <input type="text" readonly disabled class="form-control bg-light" id="IdentifiantHistory" [value]="(si.actif)? 'Oui' : 'Non'">
+                              <input type="text" readonly disabled class="form-control bg-light" id="IdentifiantHistory" [value]="si.etat">
                             </div>
                           </div>
                           <div class=" col-12 col-lg-7 col-xl-6 mb-3 ">

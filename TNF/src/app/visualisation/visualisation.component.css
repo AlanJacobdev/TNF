@@ -35,6 +35,8 @@ table th {
 
 .colorBorder{
     border-color: #0060a081 !important;
+    border-width: 1px !important;
+    box-shadow: 0 .010rem .25rem #0060a081 !important
 }
 
 

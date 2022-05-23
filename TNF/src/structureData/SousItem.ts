@@ -7,7 +7,7 @@ export interface SousItemInfo {
     codeSousItem: string,
     securite: boolean,
     estPrefixe: boolean,
-    actif: boolean,
+    etat: string,
     profilCreation: string,
     posteCreation: string,
     dateCreation: Date,
@@ -20,7 +20,7 @@ export interface SousItemInfo {
 export interface SousItemAffichage {
     idSousItem: string,
     libelleSousItem: string,
-    actif: string,
+    etat: string,
     profilCreation: string,
     dateCreation: string,
     profilModification: string,
@@ -35,12 +35,12 @@ export interface SousItemSave {
     codeSousItem: string;
     securite : boolean;
     estPrefixe: boolean;
-    actif: boolean;
+    etat: string;
     date : string
     profilModification : string;
     posteModification : string;
     description: Description[];
-    etat: string;
+    status: string;
 }
 
 export interface SousItemSuppression {
@@ -48,6 +48,6 @@ export interface SousItemSuppression {
     libelleSousItem: string,
     idItem: string,
     codeSousItem: string,
-    actif: boolean,
+    etat: string,
     isPaste? : boolean
 }

@@ -36,6 +36,8 @@ export class RecopieObjectComponent implements OnInit {
   public typeToast : string = ""
   public colorToast : string = "";
 
+  public recopieEnCours : boolean = false;
+
   constructor(private fetchRecopieService : FetchRecopieService, private fetchVisuService : FetchVisuService, private fetchCreateTypeObject : FetchcreateTypeObjectService) { 
     this.getListObject();
     this.getListAtelier();
@@ -59,7 +61,7 @@ export class RecopieObjectComponent implements OnInit {
   }
   
   getListTypeObject(){
-    this.fetchRecopieService.getHistoryItem(this.selectedOr).then((list: modificationTypeObject[]) => {
+    this.fetchRecopieService.getTypeOfItemsOfOR(this.selectedOr).then((list: modificationTypeObject[]) => {
       this.listeTypeOOfOR.splice(0);
       list.forEach((e : modificationTypeObject) => {
         const libelle = this.listeTypeO.find(element => element.idType === e.idTypeObjet);
@@ -110,7 +112,7 @@ export class RecopieObjectComponent implements OnInit {
             libelleItem: e.libelleItem,
             idOR: e.idOR,
             codeObjet: e.codeObjet,
-            actif: e.actif,
+            etat: e.etat,
             isPaste: false
           };
           this.listeItem.push(item)
@@ -165,14 +167,18 @@ export class RecopieObjectComponent implements OnInit {
 
 
   recopieItem(atelier : string, nu : string){
+    
     let tabItem = this.listeItem.filter(element => element.isPaste === true);
     if (tabItem.length !== 0) {
       if(this.ORCibleExist == 1){
+        this.recopieEnCours = true;
         this.fetchRecopieService.recopySpecificItemFromOR(tabItem,this.selectedOr, atelier+nu).then((res: any) => {
           if(typeof res === 'string') {
             this.manageToast("Erreur de recopie", res , "red")
+            this.recopieEnCours = false;
           } else {  
             this.manageToast("Recopie", res.message, "#006400");
+            this.recopieEnCours = false;
           }
         }).catch((e) => {
         })

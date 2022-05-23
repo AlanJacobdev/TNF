@@ -46,3 +46,31 @@ table th {
     font-size: 25px;
     color : red;
 }
+
+.box-error{
+    box-shadow: 0 0 0 .25rem rgba(253, 13, 13, 0.25) !important;
+}
+
+.transitionOr{
+    transition-duration: 1s;
+}
+
+.fs-7 {
+    font-size : 0.9rem;
+    transition-duration: 0.5s
+}
+
+.displayNameColumn{
+    visibility: hidden;
+    animation: 0.75s fadeIn;
+    animation-fill-mode: forwards;
+}
+
+@keyframes fadeIn {
+    99% {
+      visibility: hidden;
+    }
+    100% {
+      visibility: visible;
+    }
+  }

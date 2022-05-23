@@ -1,12 +1,12 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { AtelierInfo } from 'src/structureData/Atelier';
-import { ItemEtDispo, typeObjet } from 'src/structureData/Item';
+import { etat, ItemEtDispo, typeObjet } from 'src/structureData/Item';
 import { NUetOR, ObjetRepereInfo } from 'src/structureData/ObjetRepere';
 import { TypeObjetInfo, TypeObjetRepereInfo, TypeObjetRepereTableau } from 'src/structureData/TypeObject';
 import { FetchcreateTypeObjectService } from '../create-type-object/service/fetchcreate-type-object.service';
 import { FetchVisuService } from '../visualisation/service/fetch-visu.service';
 import { FetchCreateObjectService } from './service/fetch-create-object.service';
-import { faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faXmark, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 
 
 @Component({
@@ -16,6 +16,7 @@ import { faXmark } from '@fortawesome/free-solid-svg-icons';
 })
 export class CreateObjectComponent implements OnInit {
 
+  public faChevronRight = faChevronRight;
   public faXmark = faXmark;
   @Input() public radio : typeObjet = typeObjet.Aucun;
   public listeTypeOR: TypeObjetRepereTableau[] = [];
@@ -28,19 +29,27 @@ export class CreateObjectComponent implements OnInit {
   public objectNow : typeObjet = typeObjet.OR;
   public objectTypeNow: any;
   public TypeObject = typeObjet;
+
+  public etat : etat = etat.Aucun;
+  public etatNow =etat;
+  public etatError : boolean = false;
   public atelierSelect : string = "";
   public nuSelect : string = "";
   public itemSelect: string = "";
   public formValidate : boolean = false;
   public checkValide : boolean = false;
   public checkSecurite : boolean = false;
+ 
+  
   public orSelect : string ="";
   public ToastAffiche : boolean = false; 
   public messageToast : string = "";
   public typeToast : string = ""
   public colorToast : string = "";
-
   public description : any = [];
+  public errorLibelle : boolean = false;
+  public LibelleItem : string = "";
+  public orSelectedForItem : boolean = false;
 
   constructor(private fetchCreateTypeObject : FetchcreateTypeObjectService, private fetchVisuService : FetchVisuService, private fetchCreateObjectService: FetchCreateObjectService) {
     this.getListType();
@@ -99,7 +108,7 @@ export class CreateObjectComponent implements OnInit {
     })
   }
 
-  getSIfromORandDispo() {
+  getItemFromOrAndDispo() {
 
     if (this.typeNow != '' && this.orSelect != ''){
       this.fetchCreateObjectService.getItemFromOrAndDispo(this.orSelect, this.typeNow).then((list: ItemEtDispo[]) => {
@@ -114,7 +123,7 @@ export class CreateObjectComponent implements OnInit {
       }).catch((e) => {
       })
     } else {
-      console.log("erreur")
+    
     }
   }
 
@@ -134,7 +143,7 @@ export class CreateObjectComponent implements OnInit {
     this.objectTypeNow = typeObjet.Aucun;
     this.typeNow = Type.target.value;    
     if (this.objectNow === this.TypeObject.Item) {
-      this.getSIfromORandDispo();
+      this.getItemFromOrAndDispo();
     }
   }
 
@@ -143,6 +152,7 @@ export class CreateObjectComponent implements OnInit {
     this.checkSecurite = false;
     this.checkValide = false;
     this.description.splice(0);
+    this.etat = etat.Aucun;
   }
 
   public selectAtelier (Atelier : any) {
@@ -164,7 +174,7 @@ export class CreateObjectComponent implements OnInit {
       this.atelierSelect = atelier;
       if(this.objectNow === this.TypeObject.OR ) {
         this.afficherNUOR(atelier)
-      } else if (this.objectNow === this.TypeObject.Item){
+      } else {
         this.getObjetRepereByAteliers();
         
       }
@@ -173,7 +183,16 @@ export class CreateObjectComponent implements OnInit {
 
   public selectOR(idOR : string) {
     this.orSelect = idOR;
-    this.getSIfromORandDispo();
+    if (this.objectNow === this.TypeObject.Item) {
+      this.getItemFromOrAndDispo();
+      if(this.LibelleItem != ''){
+        this.focusOutLibelle();
+      }
+    }
+    if(this.objectNow === this.TypeObject.SI){
+      this.orSelectedForItem = true;
+    }
+    
   }
 
 
@@ -183,7 +202,20 @@ export class CreateObjectComponent implements OnInit {
 
   public selectObject (object : typeObjet) {
     this.objectNow = object;
+    this.typeNow = "";
     this.selectAtelier(this.atelierSelect)
+    this.orSelect = "";
+    this.orSelectedForItem = false;
+    
+  }
+
+  selectEtat(etat : etat){
+    this.etat = etat;
+    this.etatError = false;
+  }
+
+  setOrSelectedForItem (value : boolean){
+    this.orSelectedForItem = value;
   }
 
   public selectNU (nu : string) {
@@ -231,7 +263,6 @@ export class CreateObjectComponent implements OnInit {
           if(typeof res === 'string') {
             this.manageToast("Erreur de création", res , "red")
           } else {  
-            console.log(res);
             this.manageToast("Création", "L'objet repère " + this.typeNow + this.nuSelect + " a été crée", "#006400")
             this.afficherNUOR(this.atelierSelect);        
           }
@@ -242,27 +273,36 @@ export class CreateObjectComponent implements OnInit {
     }
   }
 
-  createItem(libelle : string, digit : string){
-    if (libelle != '' && digit != '' ) {
-      let tabDesc = [];
-        for ( const d of this.description){
-          if (d.value !== ""){
-            tabDesc.push({"lien": d.value})
+  createItem( digit : string){
+    console.log(this.etat);
+    
+    if (this.LibelleItem != '' && digit != '' && this.etat != this.etatNow.Aucun ) {
+      if(!this.LibelleItem.toUpperCase().includes(this.orSelect)){
+        this.manageToast("Erreur de création", "Le libellé ne contient pas l'identifiant de l'objet repère " , "red")
+      } else {
+        let tabDesc = [];
+          for ( const d of this.description){
+            if (d.value !== ""){
+              tabDesc.push({"lien": d.value})
+            }
           }
-        }
-      let digitNumber = parseInt(digit);
-      this.refreshValidationForm();
-      this.fetchCreateObjectService.createItem(libelle, this.orSelect, this.typeNow, digitNumber, this.checkSecurite, this.orSelect.substring(2,6), this.checkValide, tabDesc).then((res: any) => {
-        if(typeof res === 'string') {
-          this.manageToast("Erreur de création", res , "red")
-        } else {  
-          this.manageToast("Création", "L'item " + this.typeNow + this.orSelect.substring(2,6)+ digitNumber+ ((this.checkSecurite)? 'Z' : '')+ " a été crée", "#006400")
-          this.getSIfromORandDispo();   
-          this.deleteDataForm();   
-        }
-      }).catch((e) => {
-      })
+        let digitNumber = parseInt(digit);
+        this.refreshValidationForm();
+        this.fetchCreateObjectService.createItem(this.LibelleItem.replace(this.orSelect.toLowerCase(), this.orSelect.toUpperCase()), this.orSelect, this.typeNow, digitNumber, this.checkSecurite, this.orSelect.substring(2,6), this.etat, tabDesc).then((res: any) => {
+          if(typeof res === 'string') {
+            this.manageToast("Erreur de création", res , "red")
+          } else {  
+            this.manageToast("Création", "L'item " + this.typeNow + this.orSelect.substring(2,6)+ digitNumber+ ((this.checkSecurite)? 'Z' : '')+ " a été crée", "#006400")
+            this.getItemFromOrAndDispo();   
+            this.deleteDataForm(); 
+          }
+        }).catch((e) => {
+        })
+      }
     } else {
+      if(this.etat == this.etatNow.Aucun){
+        this.etatError = true;
+      }
       this.formValidate = true;
     }
   }
@@ -278,6 +318,21 @@ export class CreateObjectComponent implements OnInit {
     this.description.splice(indice,1)
   
   }
+
+  focusOutLibelle(){
+    
+    if (this.objectNow === this.TypeObject.Item) {
+      if(!this.LibelleItem.toUpperCase().includes(this.orSelect)){
+        this.errorLibelle = true;
+      } else {
+        this.errorLibelle = false;
+      }
+    }
+
+  }
+
+
+
 }
 
 

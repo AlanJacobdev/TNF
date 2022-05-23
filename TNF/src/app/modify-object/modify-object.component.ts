@@ -1,13 +1,12 @@
-import { getLocaleFirstDayOfWeek } from '@angular/common';
-import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { AtelierInfo } from 'src/structureData/Atelier';
 import { Description } from 'src/structureData/Description';
-import { typeObjet, ItemInfo, ItemModification } from 'src/structureData/Item';
+import { typeObjet, ItemInfo, ItemModification, etat } from 'src/structureData/Item';
 import { ObjetRepereInfo, ObjetRepereModification } from 'src/structureData/ObjetRepere';
-import { TypeObjetRepereTableau, TypeObjetInfo, TypeObjetRepereInfo } from 'src/structureData/TypeObject';
-import { FetchCreateObjectService } from '../create-object/service/fetch-create-object.service';
+import { TypeObjetRepereTableau, TypeObjetInfo, TypeObjetRepereInfo, modificationTypeObject } from 'src/structureData/TypeObject';
 import { FetchcreateTypeObjectService } from '../create-type-object/service/fetchcreate-type-object.service';
+import { FetchRecopieService } from '../recopie-object/service/fetch-recopie.service';
 import { FetchVisuService } from '../visualisation/service/fetch-visu.service';
 import { FetchModifyObjectService } from './service/fetch-modify-object.service';
 
@@ -21,6 +20,7 @@ export class ModifyObjectComponent implements OnInit {
   public faXmark = faXmark;
   @Input() public radio : typeObjet = typeObjet.Aucun;
   public listeTypeOR: TypeObjetRepereTableau[] = [];
+  public listeTypeItemOfOR : modificationTypeObject[] = [];
   public listeTypeO: TypeObjetInfo[] = [];
   public listeAtelier: AtelierInfo[] = [];
   public listeOR : ObjetRepereInfo[] = [];
@@ -35,9 +35,14 @@ export class ModifyObjectComponent implements OnInit {
   public itemSelect : ItemModification = {
     idItem: '',
     libelleItem: '',
-    valide: false,
+    etat: '',
     description: []
   }
+  public etat : etat = etat.Aucun;
+  public etatNow =etat;
+  public etatError : boolean = false;
+
+  
   public formValidate : boolean = false;
   @Input() public checkValide : boolean = false;
   public idORSelect : string = "";
@@ -47,16 +52,19 @@ export class ModifyObjectComponent implements OnInit {
     valide: false,
     description: []
   } ;
+
   public selectedNow : string = "";
   public ToastAffiche : boolean = false; 
   public messageToast : string = "";
   public typeToast : string = ""
   public colorToast : string = "";
-
+  public LibelleItem : string = "";
+  public errorLibelle : boolean = false;
   public descriptionObjectSelect : Description[] = [];
   public searchText : string = "";
 
-  constructor(private fetchModifyTypeObject : FetchModifyObjectService, private fetchCreateTypeObject : FetchcreateTypeObjectService,private fetchVisuService : FetchVisuService, private fetchCreateObjectService: FetchCreateObjectService) {
+
+  constructor(private fetchModifyTypeObject : FetchModifyObjectService, private fetchCreateTypeObject : FetchcreateTypeObjectService,private fetchVisuService : FetchVisuService, private fetchRecopieService : FetchRecopieService) {
 
     this.getAteliers();
     this.getListType();
@@ -89,6 +97,25 @@ export class ModifyObjectComponent implements OnInit {
     }).catch((e) => {
     })
   }
+
+  getListTypeItemsByOR(){
+    this.fetchRecopieService.getTypeOfItemsOfOR(this.idORSelect).then((list: modificationTypeObject[]) => {
+      this.listeTypeItemOfOR.splice(0);
+      list.forEach((e : modificationTypeObject) => {
+        const libelle = this.listeTypeO.find(element => element.idType === e.idTypeObjet);
+        if (libelle != undefined) {
+          let item : modificationTypeObject = {
+            idTypeObjet: e.idTypeObjet,
+            libelleTypeObjet: libelle.libelleType
+          };
+          this.listeTypeItemOfOR.push(item)
+        }
+      })
+    }).catch((e) => {
+    })
+  }
+
+
 
   getAteliers(){
     this.fetchVisuService.getAllAteliers().then((list: AtelierInfo[]) => {
@@ -155,7 +182,7 @@ export class ModifyObjectComponent implements OnInit {
     this.itemSelect = {
       idItem: '',
       libelleItem: '',
-      valide: false,
+      etat: '',
       description: []
     }
     if( atelier == '') {
@@ -201,10 +228,11 @@ export class ModifyObjectComponent implements OnInit {
         this.idORSelect = idOR;
         this.selectedNow = idOR;
         this.getItemFromOR();
+        this.getListTypeItemsByOR();
         this.itemSelect = {
           idItem: '',
           libelleItem: '',
-          valide: false,
+          etat: '',
           description: []
         }
         this.idItemSelect ="";
@@ -220,9 +248,10 @@ export class ModifyObjectComponent implements OnInit {
       if (itemInfo != undefined) {
         this.itemSelect.idItem = itemInfo.idItem;
         this.itemSelect.libelleItem = itemInfo.libelleItem;
-        this.itemSelect.valide = itemInfo.actif;
+        this.LibelleItem = itemInfo.libelleItem;
+        this.itemSelect.etat = itemInfo.etat;
         this.itemSelect.description = itemInfo.description;
-        this.checkValide = itemInfo.actif
+        this.etat = itemInfo.etat == 'A' ? etat.A : itemInfo.etat == 'EA' ? etat.EA : itemInfo.etat == 'HS' ? etat.HS : etat.Aucun;
         this.descriptionObjectSelect.splice(0);
         for (const d of this.itemSelect.description){
           this.descriptionObjectSelect.push(d)
@@ -263,10 +292,10 @@ export class ModifyObjectComponent implements OnInit {
     if (libelle != '') {
         this.fetchModifyTypeObject.modifyObject(this.orSelect.idObjetRepere, libelle, this.checkValide, this.descriptionObjectSelect).then((res: any) => {
           if(typeof res === 'string') {
-            this.manageToast("Erreur de création", res , "red")
+            this.manageToast("Erreur de modification", res , "red")
           } else {  
             let selectedOR = this.orSelect;
-            this.manageToast("Création", "L'objet repère " + this.orSelect.idObjetRepere+ " a été modifié", "#006400");
+            this.manageToast("Modification", "L'objet repère " + this.orSelect.idObjetRepere+ " a été modifié", "#006400");
             this.refreshValidationForm();
             this.getObjetRepereByAtelier();
             this.orSelect = selectedOR;
@@ -279,21 +308,25 @@ export class ModifyObjectComponent implements OnInit {
     }
   }
 
-  modifyItem(libelle : string){
-    if (libelle != '' ) {
-      this.fetchModifyTypeObject.modifyitem(this.itemSelect.idItem, libelle, this.checkValide, this.descriptionObjectSelect).then((res: any) => {
-        if(typeof res === 'string') {
-          this.manageToast("Erreur de création", res , "red")
-        } else {  
-          this.refreshValidationForm();
-          let selectedOR = this.idORSelect;
-          this.manageToast("Création", "L'item " + this.itemSelect.idItem+ " a été modifié", "#006400");
-          this.idORSelect = selectedOR;
-          this.getItemFromOR();
-          console.log(selectedOR + " " + this.idORSelect + " " + this.itemSelect )
-        }
-      }).catch((e) => {
-      })
+  modifyItem(){
+    if (this.LibelleItem != '' ) {
+      if(!this.LibelleItem.toUpperCase().includes(this.idORSelect)){
+        this.manageToast("Erreur de modification", "Le libellé ne contient pas l'identifiant de l'objet repère " , "red")
+      } else {
+        this.fetchModifyTypeObject.modifyitem(this.itemSelect.idItem, this.LibelleItem.toUpperCase(), this.etat, this.descriptionObjectSelect).then((res: any) => {
+          if(typeof res === 'string') {
+            this.manageToast("Erreur de modification", res , "red")
+          } else {  
+            this.refreshValidationForm();
+            let selectedOR = this.idORSelect;
+            this.manageToast("Création", "L'item " + this.itemSelect.idItem+ " a été modifié", "#006400");
+            this.idORSelect = selectedOR;
+            this.getItemFromOR();
+            console.log(selectedOR + " " + this.idORSelect + " " + this.itemSelect )
+          }
+        }).catch((e) => {
+        })
+      }
     } else {
       this.formValidate = true;
     }
@@ -307,5 +340,22 @@ export class ModifyObjectComponent implements OnInit {
     this.descriptionObjectSelect.splice(indice,1);
   }
 
+  focusOutLibelle(){
+    
+    if (this.objectNow === this.TypeObject.Item) {
+      if(!this.LibelleItem.toUpperCase().includes(this.idORSelect)){
+        this.errorLibelle = true;
+      } else {
+        this.errorLibelle = false;
+      }
+    }
+
+  }
+
+
+  selectEtat(etat : etat){
+    this.etat = etat;
+    this.etatError = false;
+  }
 
 }

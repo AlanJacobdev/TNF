@@ -51,7 +51,7 @@ export class VisualisationComponent implements OnInit {
   public ItemNow : ItemAffichage = {
     idItem: '',
     libelleItem: '',
-    actif: '',
+    etat: '',
     profilCreation: '',
     dateCreation: '',
     profilModification: '',
@@ -62,7 +62,7 @@ export class VisualisationComponent implements OnInit {
   public SousItemNow : SousItemAffichage = {
     idSousItem: '',
     libelleSousItem: '',
-    actif: '',
+    etat: '',
     profilCreation: '',
     dateCreation: '',
     profilModification: '',
@@ -148,7 +148,7 @@ export class VisualisationComponent implements OnInit {
       const datem = new Date(res.dateModification).toISOString().split('T')[0] + " " + new Date(res.dateModification).toTimeString().split(' ')[0]
       this.ItemNow.dateModification = (res.dateModification != null) ? datem : "Inconnue"; 
       this.ItemNow.description = res.description ;
-      this.ItemNow.actif = (res.actif) ? "Oui" : "Non";
+      this.ItemNow.etat = res.etat == 'A' ? "Actif" : res.etat == 'EA' ? 'En attente' : res.etat == 'HS' ? 'Hors Service' : 'Non défini';
 
     }
     this.selectedNow = idItem;
@@ -179,7 +179,7 @@ export class VisualisationComponent implements OnInit {
       const datem = new Date(res.dateModification).toISOString().split('T')[0] + " " + new Date(res.dateModification).toTimeString().split(' ')[0]
       this.SousItemNow.dateModification = (res.dateModification != null) ? datem : "Inconnue"; 
       this.SousItemNow.description = res.description ;
-      this.SousItemNow.actif = (res.actif) ? "Oui" : "Non";
+      this.SousItemNow.etat = res.etat = 'A' ? "Actif" : res.etat == 'EA' ? 'En attente' : res.etat == 'HS' ? 'Hors Service' : 'Non défini';
 
     }
     this.selectedNow = idSousItem;

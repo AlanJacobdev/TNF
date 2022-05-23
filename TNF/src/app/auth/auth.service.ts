@@ -40,7 +40,7 @@ export class AuthService {
       this.connection = true;
       this.cookieService.set('UserName', res[0].PRENOMUT.trim());
       this.cookieService.set('UserLastName', res[0].NOMUTILI.trim());
-      this.cookieService.set('Admin', "false");
+      this.cookieService.set('Admin', "true");
       this.cookieService.set('login', login);
     }
    

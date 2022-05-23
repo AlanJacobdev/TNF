@@ -8,7 +8,7 @@ export interface ItemInfo {
     digit: 0,
     codeObjet: string,
     securite: boolean,
-    actif: boolean,
+    etat: string,
     profilCreation: string,
     posteCreation: string,
     dateCreation: Date,
@@ -21,7 +21,7 @@ export interface ItemInfo {
 export interface ItemAffichage {
     idItem: string,
     libelleItem: string,
-    actif: string,
+    etat: string,
     profilCreation: string,
     dateCreation: string,
     profilModification: string,
@@ -41,10 +41,17 @@ export enum typeObjet {
     Aucun = "Aucun"
 }
 
+export enum etat {
+    EA = "EA",
+    A = "A",
+    HS = "HS",
+    Aucun = "Aucun"
+}
+
 export interface ItemModification {
     idItem: string,
     libelleItem: string,
-    valide: boolean,
+    etat: string,
     description: Description[]
 
 }
@@ -57,12 +64,12 @@ export interface ItemSave {
     digit : number,
     codeObjet : string,
     securite : boolean,
-    actif : boolean,
+    etat : string,
     date : string,
     profilModification : string,
     posteModification : string,
     description : Description[],
-    etat : string
+    status : string
 }
 
 export interface ItemRecopie {
@@ -70,7 +77,7 @@ export interface ItemRecopie {
     libelleItem: string,
     idOR: string,
     codeObjet: string,
-    actif: boolean,
+    etat: string,
     isPaste : boolean
 }
 
@@ -79,6 +86,6 @@ export interface ItemSuppresion {
     libelleItem: string,
     idOR: string,
     codeObjet: string,
-    actif: boolean,
+    etat: string,
     isPaste? : boolean
 }

@@ -6,15 +6,15 @@
                     <legend class="col-form-label col-3 col-lg-4 pt-0 align-self-center text-center">Objet</legend>
                     <div class ="col-9 col-lg-6">
                         <div class="form-check form-check">
-                            <input (change)="selectObject(this.TypeObject.OR)" class="form-check-input" type="radio" name="inlineRadioOptions" id="OR" required checked>
+                            <input (change)="selectObject(this.TypeObject.OR)" class="form-check-input" type="radio" name="radioType" id="OR" required checked>
                             <label class="form-check-label" for="OR">Objet repère</label>
                         </div>
                         <div class="form-check form-check">
-                            <input (change)="selectObject(this.TypeObject.Item)" class="form-check-input" type="radio" name="inlineRadioOptions" id="Item" required>
+                            <input (change)="selectObject(this.TypeObject.Item)" class="form-check-input" type="radio" name="radioType" id="Item" required>
                             <label class="form-check-label" for="Item">Item</label>
                         </div>
                         <div class="form-check form-check">
-                            <input (change)="selectObject(this.TypeObject.SI)" class="form-check-input" type="radio" name="inlineRadioOptions" id="SI" required>
+                            <input (change)="selectObject(this.TypeObject.SI)" class="form-check-input" type="radio" name="radioType" id="SI" required>
                             <label class="form-check-label" for="SI">Sous Item</label>
                         </div>
                         <div class="invalid-tooltip">
@@ -50,7 +50,7 @@
                             <div *ngIf="this.objectNow === this.TypeObject.OR" class="input-group">
                                 <label class="input-group-text " for="TypeObjetSelect">Type Objet</label>
                                 <select (change)=selectTypeObjet($event) class="form-select" id="TypeObjetSelect" aria-label="Default select example" [(ngModel)]="typeNow">
-                                    <option value ="" selected>Sélectionner un type d'objet</option>
+                                    <option value="" selected>Sélectionner un type d'objet</option>
                                     <option *ngFor="let typeObjet of listeTypeOR" [value]="typeObjet.idType">
                                         {{typeObjet.idType}} - {{typeObjet.libelleTypeOR}}
                                     </option>
@@ -60,8 +60,8 @@
                                 <label class="input-group-text " for="TypeObjetSelect">Type Objet</label>
                                 <select (change)=selectTypeObjet($event) class="form-select" id="TypeObjetSelect" aria-label="Default select example" [(ngModel)]="typeNow">
                                     <option value ="" selected>Sélectionner un type d'objet</option>
-                                    <option *ngFor="let typeObjet of listeTypeO" [value]="typeObjet.idType">
-                                        {{typeObjet.idType}} - {{typeObjet.libelleType}}
+                                    <option *ngFor="let typeObjet of listeTypeItemOfOR" [value]="typeObjet.idTypeObjet">
+                                        {{typeObjet.idTypeObjet}} - {{typeObjet.libelleTypeObjet}}
                                     </option>
                                 </select>
                             </div>  
@@ -211,8 +211,9 @@
                                 <label for="IdType">Identifiant</label>
                             </div>
                             <div class="form-floating mb-3">
-                                <input #LibelleItem type="text" maxlength="50" class="form-control" id="IdLibelle" placeholder="" [value]="this.itemSelect.libelleItem" required>
+                                <input [(ngModel)]="LibelleItem" type="text" maxlength="50" class="form-control" id="IdLibelle" placeholder="" [value]="this.itemSelect.libelleItem"  (focusout)="focusOutLibelle()" required [ngClass]="{'box-error border border-danger': errorLibelle}">
                                 <label for="IdLibelle">Libelle</label>
+                                <p *ngIf="errorLibelle" class="text-danger text-center py-0 my-1"> Requiert l'identifiant de l'objet repère</p>
                                 <div class="invalid-tooltip">
                                     Veuillez renseigner un libellé.
                                 </div>
@@ -227,14 +228,20 @@
                             <div class="form-floating mb-3">
                                 <a class="text-dark cursor" (click)="addDescription()">Ajouter une description</a>
                             </div>
-                            <div class="form-check ms-2">
-                                <input #ValideItem class="form-check-input" type="checkbox" (change)="setcheckValide()" id="IdValide" [checked]="this.checkValide" >
-                                <label class="form-check-label" for="IdValide">
-                                Valide
-                                </label>
+                            <div class="form-check form-check-inline ms-2">
+                                <input [(ngModel)]="etat" (click)="selectEtat(this.etatNow.A)" [ngClass]="{'border-danger' : etatError}" class="form-check-input" type="radio" name="radioEtat" id="inlineRadio1" value="A" required>
+                                <label [ngClass]="{'text-danger' : etatError}" class="form-check-label" for="inlineRadio1">Actif</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input [(ngModel)]="etat" (click)="selectEtat(this.etatNow.EA)" [ngClass]="{'border-danger' : etatError}" class="form-check-input" type="radio" name="radioEtat" id="inlineRadio2" value="EA" required>
+                                <label [ngClass]="{'text-danger' : etatError}" class="form-check-label" for="inlineRadio2">En attente</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input [(ngModel)]="etat" (click)="selectEtat(this.etatNow.HS)" [ngClass]="{'border-danger' : etatError}" class="form-check-input" type="radio" name="radioEtat" id="inlineRadio3" value="HS" required>
+                                <label [ngClass]="{'text-danger' : etatError}" class="form-check-label" for="inlineRadio3">Hors service</label>
                             </div>
                         </div>
-                        <button *ngIf="this.idItemSelect != ''" (click)="modifyItem(LibelleItem.value)" type="button" class="btn btn-lg btn-light col-10 offset-1 col-lg-6 offset-lg-3 my-2"> Modifier </button>
+                        <button *ngIf="this.idItemSelect != ''" (click)="modifyItem()" type="button" class="btn btn-lg btn-light col-10 offset-1 col-lg-6 offset-lg-3 my-2"> Modifier </button>
                     </div>
                 </div>
             </ng-container>

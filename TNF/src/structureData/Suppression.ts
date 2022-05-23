@@ -14,3 +14,23 @@ export interface returnSuppression {
     objet : string,
     value : boolean
 }
+
+export interface demandeAdmin {
+    motif : string;
+    orDelete : Objetrepere[];
+    itemDelete : Item[];
+    sousItemDelete : Sousitem[];
+    profilCréation : string;
+}
+
+export interface Objetrepere{
+    idObjetRepere : string;
+}
+
+export interface Item{
+    idItem : string;
+}
+
+export interface Sousitem{
+    idSousItem : string;
+}

@@ -283,8 +283,7 @@
                   
             </ng-template>
         </div>
-        <div class="container  mx-0 px-0">
-          
+        <div class="container  mx-0 px-0 mt-1">
           <div *ngIf="!suppWithDmdAdmin && suppExecEnd" class="row border-top d-flex justify-content-center pt-1 pb-2">
             <div class="col-1 text-end pt-1">
               <fa-icon class=" text-center fs-3 text-success" [icon]="faCircleCheck "></fa-icon>  
@@ -303,16 +302,26 @@
                   Néccessite l'intervention d'un administrateur
                 </div>
                 <div class=" col-12 fs-6">
-                  Veuillez faire une demande pour qu'un administrateur puisse effectuer ces suppressions
+                  Veuillez faire une demande pour qu'un administrateur puisse effectuer ces suppressions (Problème de droits)
                 </div>
               </div> 
             </div>
           </div>
-          
+        </div>
+        <div *ngIf="demandeAdmin" class="container border-top ">
+          <div class="row">
+            <div class="col-12">
+              <div class="mb-3">
+                <label for="exampleFormControlTextarea1" class="form-label mt-1">Motif de la demande</label>
+                <textarea [(ngModel)]="motifDemande" class="form-control" id="exampleFormControlTextarea1" rows="2"></textarea>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="modal-footer">
           <button *ngIf="!suppExecEnd && (this.ORDeleted.length != 0 || this.ItemDeleted.length != 0 || this.SiDeleted.length != 0)" type="button" class="btn btn-secondary" (click)="deleteConfirmation()" >Supprimer</button>
-          <button *ngIf="suppWithDmdAdmin && suppExecEnd" type="button" class="btn btn-secondary" (click)="deleteConfirmation()"> Faire une demande de suppression</button>
+          <button *ngIf="suppWithDmdAdmin && suppExecEnd && !demandeAdmin " type="button" class="btn btn-secondary" (click)="demandeSuppAdmin()"> Faire une demande de suppression</button>
+          <button *ngIf="demandeAdmin" type="button" class="btn btn-secondary" (click)="sendDemande()" data-bs-dismiss="modal">Envoyer la demande</button>
           <button type="button" class="btn btn-secondary" (click)="closeRecap()" data-bs-dismiss="modal" >Fermer</button>
           
         </div>
