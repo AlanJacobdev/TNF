@@ -91,7 +91,7 @@
                                 <td class="text-center" colspan="2">Aucun Objet repère</td>
                             </tr>
                             <ng-template #afficheOR>
-                                <tr *ngFor="let OR of listeOR | filterModification : searchText | filterType : typeNow:'OR'" (click)="selectOR(OR.idObjetRepere)" [ngClass]="{'actifNow' : OR.idObjetRepere === this.idORSelect }" >
+                                <tr *ngFor="let OR of listeOR | filterModification : searchText:'OR' | filterType : typeNow:'OR'" (click)="selectOR(OR.idObjetRepere)" [ngClass]="{'actifNow' : OR.idObjetRepere === this.idORSelect }" >
                                     <td class="col-4">{{OR.idObjetRepere}}</td>
                                     <td class="col-8">{{OR.libelleObjetRepere}}</td>
                                 </tr>
@@ -161,7 +161,7 @@
                                 <td class="text-center" colspan="2">Aucun Objet repère</td>
                             </tr>
                             <ng-template #afficheOrItem>
-                                <tr *ngFor="let OR of listeOR | filterModification : searchText" (click)="selectOR(OR.idObjetRepere)" [ngClass]="{'table-active': OR.idObjetRepere === this.idORSelect, 'actifNow' : OR.idObjetRepere === this.selectedNow }" >
+                                <tr *ngFor="let OR of listeOR | filterModification : searchText :'ItemOR'" (click)="selectOR(OR.idObjetRepere)" [ngClass]="{'table-active': OR.idObjetRepere === this.idORSelect, 'actifNow' : OR.idObjetRepere === this.selectedNow }" >
                                     <td class="col-4">{{OR.idObjetRepere}}</td>
                                     <td class="col-8">{{OR.libelleObjetRepere}}</td>
                                 </tr>
@@ -188,7 +188,7 @@
                                 <td class="text-center" colspan="2">Aucun Item</td>
                             </tr>
                             <ng-template #afficheItem>
-                                <tr *ngFor="let item of listeItem | filterModification : searchText | filterType : typeNow:'Item'"  (click)="selectItem(item.idItem)" [ngClass]="{'actifNow' : item.idItem === this.idItemSelect }" >
+                                <tr *ngFor="let item of listeItem | filterModification : searchText : 'Item' | filterType : typeNow:'Item'"  (click)="selectItem(item.idItem)" [ngClass]="{'actifNow' : item.idItem === this.idItemSelect }" >
                                     <td class="col-4">{{item.idItem}}</td>
                                     <td class="col-8">{{item.libelleItem}}</td>
                                 </tr>
@@ -260,10 +260,10 @@
                             <thead>
                             <tr>
                                 <ng-container *ngIf="!this.orSelectedForItem; else ReturnToOR ">
-                                    <th (click)="setOrSelectedForItem(true)" class="col-4 text-center"  scope="col-4">
+                                    <th (click)="(this.atelierSelect != '' && this.idORSelect != '' )? setOrSelectedForItem(true) : ''" class="col-4 text-center"  scope="col-4">
                                         <span [ngClass]="{'displayNameColumn' : !this.orSelectedForItem && this.idORSelect !='', 'nowrapColumn' : !this.orSelectedForItem && this.idORSelect !=''}">N° Séquentiel</span>
                                     </th>
-                                    <th (click)="setOrSelectedForItem(true)" class="col-8 text-center align-middle transitionOr" scope="col-8">
+                                    <th (click)="(this.atelierSelect != '' && this.idORSelect != '' )? setOrSelectedForItem(true) : ''" class="col-8 text-center align-middle transitionOr" scope="col-8">
                                         <span [ngClass]="{'displayNameColumn' : !this.orSelectedForItem && this.idORSelect !='', 'nowrapColumn' : !this.orSelectedForItem && this.idORSelect !=''}">Libellé</span>
                                     </th>
                                 </ng-container>
@@ -277,7 +277,7 @@
                                 <td class="text-center" colspan="2">Aucun Objet repère</td>
                             </tr>
                             <ng-template #afficheSIOR>
-                                <tr *ngFor="let OR of listeOR" (click)="selectOR(OR.idObjetRepere)" [ngClass]="{'selectObject': OR.idObjetRepere === this.idORSelect, 'actifNow' : OR.idObjetRepere === this.selectedNow }" >
+                                <tr *ngFor="let OR of listeOR | filterModification : searchText : 'SIOR'" (click)="selectOR(OR.idObjetRepere)" [ngClass]="{'selectObject': OR.idObjetRepere === this.idORSelect, 'actifNow' : OR.idObjetRepere === this.selectedNow }" >
                                     <td class="col-4">{{OR.idObjetRepere}}</td>
                                     <td *ngIf="!this.orSelectedForItem" [ngClass]="{'nowrapColumn' : !this.orSelectedForItem && this.idORSelect !=''}" class="col-8">{{OR.libelleObjetRepere}}</td>
                                 </tr>
@@ -304,8 +304,8 @@
                             <tr *ngIf="this.listeItem.length === 0; else afficheSIItem">
                                 <td class="text-center" colspan="2">Aucun Item</td>
                             </tr>
-                            <ng-template #afficheSIItem>
-                                <tr *ngFor="let item of listeItem | filterType : typeNow :'Item'"  (click)="selectItem(item.idItem)" [ngClass]="{'selectObject': item.idItem == this.itemSelect, 'actifNow' : item.idItem === this.selectedNow }" >
+                            <ng-template #afficheSIItem>                                                                                       
+                                <tr *ngFor="let item of listeItem | filterModification : searchText : 'SI'| filterType : typeNow :'Item'"  (click)="selectItem(item.idItem)" [ngClass]="{'selectObject': item.idItem == this.idItemSelect, 'actifNow' : item.idItem === this.selectedNow }" >
                                     <td class="col-4">{{item.idItem}}</td>
                                     <td class="col-8">{{item.libelleItem}}</td>
                                 </tr>
@@ -333,7 +333,7 @@
                                 <td class="text-center" colspan="2">Aucun Sous Item</td>
                             </tr>
                             <ng-template #afficheSISI>
-                                <tr *ngFor="let sousItem of listeSousItem"  (click)="selectSI(sousItem.idSousItem)" [ngClass]="{'selectObject': sousItem.idSousItem === this.idSISelect, 'actifNow' : sousItem.idSousItem === this.selectedNow }">
+                                <tr *ngFor="let sousItem of listeSousItem | filterModification : searchText : 'SI'"  (click)="selectSI(sousItem.idSousItem)" [ngClass]="{'selectObject': sousItem.idSousItem === this.idSISelect, 'actifNow' : sousItem.idSousItem === this.selectedNow }">
                                     <td class="col-5" [ngClass] ="{'nowrapColumn' : !this.orSelectedForItem && this.idORSelect !=''}">{{sousItem.idSousItem}}</td>
                                     <td class="col-7" [ngClass] ="{'nowrapColumn' : !this.orSelectedForItem && this.idORSelect !=''}">{{sousItem.libelleSousItem}}</td>
                                 </tr>
@@ -389,7 +389,7 @@
                             </div>
                            
                         </div>
-                        <button *ngIf="this.atelierSelect != '' && this.idItemSelect != '' " (click)="modifySI()" type="button" class="btn btn-lg btn-light col-10 offset-1 col-lg-6 offset-lg-3 my-2">Modifier</button>
+                        <button *ngIf="this.atelierSelect != '' && this.idItemSelect != '' && this.idSISelect != '' " (click)="modifySI()" type="button" class="btn btn-lg btn-light col-10 offset-1 col-lg-6 offset-lg-3 my-2">Modifier</button>
                     </div>
                 </div>
 

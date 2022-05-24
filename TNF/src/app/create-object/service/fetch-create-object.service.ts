@@ -29,7 +29,7 @@ export class FetchCreateObjectService {
     let url = "http://localhost:3000/item/getItemFromOrAndDispo/{idOR}/{type}";
     url = url.replace("{idOR}", idOr)
     url = url.replace("{type}", type)
-    const res : ItemEtDispo[] = await lastValueFrom(this.http.get<ItemEtDispo[]>(url));
+    const res : ItemInfo[] = await lastValueFrom(this.http.get<ItemInfo[]>(url));
     if (res.length == 0) {
       return undefined;
     } else {

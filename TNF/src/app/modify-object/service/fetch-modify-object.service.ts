@@ -81,13 +81,12 @@ export class FetchModifyObjectService {
   }
 
 
-  async modifySI(idSousItem : string, libelle : string, estPrefixe : string, etat: string, description : Description[]): Promise<any> {
+  async modifySI(idSousItem : string, libelle : string, etat: string, description : Description[]): Promise<any> {
     let global = this.cookieService.get('login');
     let url = "http://localhost:3000/sousitem/{ID}"
     url = url.replace("{ID}", idSousItem)
     let payload = {
       libelleSousItem : libelle,
-      estPrefixe : estPrefixe,
       etat : etat,
       description :description,
       profilModification : global,

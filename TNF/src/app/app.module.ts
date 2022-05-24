@@ -23,6 +23,7 @@ import { FilterModificationPipe } from './modify-object/pipe/filter-modification
 import { FilterSuppressionPipe } from './delete-object/pipe/filter-suppression.pipe';
 import { ActifVisualisationPipe } from './visualisation/pipe/actif-visualisation.pipe';
 import { FilterTypePipe } from './modify-object/pipe/filter-type.pipe';
+import { FilterNUPipe } from './create-object/pipe/filter-nu.pipe';
 
 
 @NgModule({
@@ -45,7 +46,8 @@ import { FilterTypePipe } from './modify-object/pipe/filter-type.pipe';
     FilterModificationPipe,
     FilterSuppressionPipe,
     ActifVisualisationPipe,
-    FilterTypePipe
+    FilterTypePipe,
+    FilterNUPipe
   ],
   imports: [
     BrowserModule,

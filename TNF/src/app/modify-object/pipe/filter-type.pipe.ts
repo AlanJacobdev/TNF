@@ -23,7 +23,6 @@ export class FilterTypePipe implements PipeTransform {
             .includes(args);
         });
       } else {
-        
         return value.filter(function(item: any) {
           return JSON.stringify(item.codeSousItem)
             .toLowerCase()

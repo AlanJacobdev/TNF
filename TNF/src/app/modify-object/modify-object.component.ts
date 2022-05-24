@@ -28,7 +28,6 @@ export class ModifyObjectComponent implements OnInit {
   public listeOR : ObjetRepereInfo[] = [];
   public listeItem : ItemInfo[] = [];
   public listeSousItem : SousItemInfo[] = [];
-
   public typeNow: string = "";
   public objectNow : typeObjet = typeObjet.OR;
   public objectTypeNow: any;
@@ -185,6 +184,18 @@ export class ModifyObjectComponent implements OnInit {
 
   setOrSelectedForItem (value : boolean){
     this.orSelectedForItem = value;
+    if(!value){
+      if(this.selectedNow == this.idSISelect || this.selectedNow == this.idItemSelect){
+        this.selectedNow = this.idORSelect;
+      }
+      this.idSISelect = "";
+      this.siSelect = {
+        idSousItem: '',
+        libelleSousItem: '',
+        etat: '',
+        description: []
+      }
+    }
   }
 
 
@@ -202,7 +213,12 @@ export class ModifyObjectComponent implements OnInit {
     }
     this.idORSelect = "";
     this.idItemSelect = "";
+    this.idSISelect = "";
+    this.selectedNow = "";
     this.listeItem.splice(0);
+    this.listeSousItem.splice(0);
+    this.setOrSelectedForItem(false);
+    this.errorLibelle = false;
     this.orSelect = {
       idObjetRepere : '',
       libelleObjetRepere : '',
@@ -212,6 +228,12 @@ export class ModifyObjectComponent implements OnInit {
     this.itemSelect = {
       idItem: '',
       libelleItem: '',
+      etat: '',
+      description: []
+    }
+    this.siSelect = {
+      idSousItem: '',
+      libelleSousItem: '',
       etat: '',
       description: []
     }
@@ -234,6 +256,7 @@ export class ModifyObjectComponent implements OnInit {
   
 
   public selectOR(idOR : string) {
+    let lastID = this.idORSelect
     this.idORSelect = idOR;
     this.selectedNow = idOR;
     
@@ -250,6 +273,12 @@ export class ModifyObjectComponent implements OnInit {
           this.descriptionObjectSelect.push(d)
         }
       }
+      this.siSelect = {
+        idSousItem: '',
+        libelleSousItem: '',
+        etat: '',
+        description: []
+      }
     } else if (this.objectNow === this.TypeObject.Item) {
        
         this.getItemFromOR();
@@ -261,12 +290,26 @@ export class ModifyObjectComponent implements OnInit {
           description: []
         }
         this.idItemSelect ="";
+        this.descriptionObjectSelect.splice(0);
+        this.etat = etat.Aucun
+        
     } else if (this.objectNow === this.TypeObject.SI){
         this.orSelectedForItem = true;
         this.getItemFromOR();
         this.selectedNow = idOR;
         this.getListTypeItemsByOR();
+        this.siSelect = {
+          idSousItem: '',
+          libelleSousItem: '',
+          etat: '',
+          description: []
+        }
+        this.idItemSelect = "";
+        this.idSISelect = "";
+        this.listeSousItem.splice(0);
+        this.descriptionObjectSelect.splice(0);
     }
+
 
   }
 
@@ -291,6 +334,17 @@ export class ModifyObjectComponent implements OnInit {
     } else if (this.objectNow === this.TypeObject.SI) {
       this.idSISelect = "";
       this.getSousItemByItem();
+      this.siSelect = {
+        idSousItem: '',
+        libelleSousItem: '',
+        etat: '',
+        description: []
+      }
+      this.etat = etat.Aucun
+      if (this.orSelectedForItem == false) {
+        this.setOrSelectedForItem(true);
+      }
+      this.descriptionObjectSelect.splice(0);
     }
   }
 
@@ -309,7 +363,6 @@ export class ModifyObjectComponent implements OnInit {
           this.descriptionObjectSelect.push(d)
         }
     }
-    console.log(this.descriptionObjectSelect);
     
   }
 
@@ -366,16 +419,16 @@ export class ModifyObjectComponent implements OnInit {
       if(!this.LibelleItem.toUpperCase().includes(this.idORSelect)){
         this.manageToast("Erreur de modification", "Le libellé ne contient pas l'identifiant de l'objet repère " , "red")
       } else {
-        this.fetchModifyTypeObject.modifyitem(this.itemSelect.idItem, this.LibelleItem.toUpperCase(), this.etat, this.descriptionObjectSelect).then((res: any) => {
+        let idORUpf = this.LibelleItem.toUpperCase().indexOf(this.idORSelect)
+        let idORGetUpper = this.LibelleItem.substring(idORUpf,this.idORSelect.length).toUpperCase();
+        let idORGet = this.LibelleItem.substring(idORUpf,this.idORSelect.length);
+        this.fetchModifyTypeObject.modifyitem(this.itemSelect.idItem, this.LibelleItem.replace(idORGet, idORGetUpper), this.etat, this.descriptionObjectSelect).then((res: any) => {
           if(typeof res === 'string') {
             this.manageToast("Erreur de modification", res , "red")
           } else {  
             this.refreshValidationForm();
-            let selectedOR = this.idORSelect;
             this.manageToast("Création", "L'item " + this.itemSelect.idItem+ " a été modifié", "#006400");
-            this.idORSelect = selectedOR;
             this.getItemFromOR();
-            console.log(selectedOR + " " + this.idORSelect + " " + this.itemSelect )
           }
         }).catch((e) => {
         })
@@ -387,9 +440,27 @@ export class ModifyObjectComponent implements OnInit {
 
   modifySI(){
     
-      /************/
-     /*   TODO   */
-    /************/
+    if (this.LibelleSousItem != '' ) {
+      if(!this.LibelleSousItem.toUpperCase().includes(this.idItemSelect)){
+        this.manageToast("Erreur de modification", "Le libellé ne contient pas l'identifiant de l'item dont il dépend" , "red")
+      } else {
+        let idItemUpf = this.LibelleItem.toUpperCase().indexOf(this.idORSelect)
+        let idItemGetUpper = this.LibelleItem.substring(idItemUpf,this.idORSelect.length).toUpperCase();
+        let idItemGet = this.LibelleItem.substring(idItemUpf,this.idORSelect.length);
+        this.fetchModifyTypeObject.modifySI(this.siSelect.idSousItem,  this.LibelleSousItem.replace(idItemGet, idItemGetUpper), this.etat, this.descriptionObjectSelect).then((res: any) => {
+          if(typeof res === 'string') {
+            this.manageToast("Erreur de modification", res , "red")
+          } else {  
+            this.refreshValidationForm();
+            this.manageToast("Création", "Le sous-item " + this.itemSelect.idItem+ " a été modifié", "#006400");
+            this.getSousItemByItem();
+          }
+        }).catch((e) => {
+        })
+      }
+    } else {
+      this.formValidate = true;
+    }
 
   }
 
@@ -402,17 +473,22 @@ export class ModifyObjectComponent implements OnInit {
   }
 
   focusOutLibelle(){
-    
-    if (this.objectNow === this.TypeObject.Item) {
+    if (this.objectNow === this.TypeObject.Item && this.idItemSelect != '') {
       if(!this.LibelleItem.toUpperCase().includes(this.idORSelect)){
         this.errorLibelle = true;
       } else {
         this.errorLibelle = false;
       }
+    } else if (this.objectNow === this.TypeObject.SI && this.idSISelect != ''){
+      if(!this.LibelleSousItem.toUpperCase().includes(this.idItemSelect)){
+        this.errorLibelle = true;
+      } else {
+        this.errorLibelle = false;
+      }
     }
-
   }
 
+  
 
   selectEtat(etat : etat){
     this.etat = etat;

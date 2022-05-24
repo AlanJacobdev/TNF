@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AtelierInfo } from 'src/structureData/Atelier';
-import { etat, ItemInfo, typeObjet } from 'src/structureData/Item';
+import { etat, ItemEtDispo, ItemInfo, typeObjet } from 'src/structureData/Item';
 import { NUetOR, ObjetRepereInfo } from 'src/structureData/ObjetRepere';
 import { modificationTypeObject, TypeObjetInfo, TypeObjetRepereInfo, TypeObjetRepereTableau } from 'src/structureData/TypeObject';
 import { FetchcreateTypeObjectService } from '../create-type-object/service/fetchcreate-type-object.service';
@@ -26,14 +26,13 @@ export class CreateObjectComponent implements OnInit {
   public listeAtelier: AtelierInfo[] = [];
   public listeNUetOr : NUetOR[] = [];
   public listeOR : ObjetRepereInfo[] = [];
-  public listeItem : ItemInfo[] = [];
+  public listeItem : ItemEtDispo[] = [];
   public listeSousItem : SousItemInfo[] = [];
   public listeTypeItemOfOR : modificationTypeObject[] = [];
 
   public typeOfItemOR : string = "";
   public typeNow: string = "";
   public objectNow : typeObjet = typeObjet.OR;
-  public objectTypeNow: any;
   public TypeObject = typeObjet;
   public searchText : string = "";
   public etat : etat = etat.Aucun;
@@ -119,11 +118,10 @@ export class CreateObjectComponent implements OnInit {
   getItemFromOrAndDispo() {
 
     if (this.typeNow != '' && this.orSelect != ''){
-      this.fetchCreateObjectService.getItemFromOrAndDispo(this.orSelect, this.typeNow).then((list: ItemInfo[]) => {
+      this.fetchCreateObjectService.getItemFromOrAndDispo(this.orSelect, this.typeNow).then((list: ItemEtDispo[]) => {  
         if (list != undefined) {
           this.listeItem = list;
           this.itemSelect="";
-          
         } else {
           this.listeItem.splice(0);
           console.log("Liste Objet repère : Connexion impossible ou aucun OR")
@@ -131,7 +129,7 @@ export class CreateObjectComponent implements OnInit {
       }).catch((e) => {
       })
     } else {
-    
+      console.log("Type ou Objet repère non renseigné");
     }
   }
 
@@ -155,7 +153,7 @@ export class CreateObjectComponent implements OnInit {
 
   getItemByObjetRepere(){
     if ( this.orSelect != ''){
-      this.fetchVisuService.getItemByObjetRepere(this.orSelect).then((list: ItemInfo[]) => {
+      this.fetchVisuService.getItemByObjetRepere(this.orSelect).then((list: ItemEtDispo[]) => {
         if(list == undefined) {
           this.listeItem = [];
         } else {
@@ -177,9 +175,6 @@ export class CreateObjectComponent implements OnInit {
     })
   }
 
-
-
-
   setcheckValide() {
     this.checkValide = !this.checkValide;
   }
@@ -196,7 +191,6 @@ export class CreateObjectComponent implements OnInit {
   }
       
   public selectType(Type: any ) {
-    this.objectTypeNow = typeObjet.Aucun;
     this.typeNow = Type.target.value;    
     if (this.objectNow === this.TypeObject.Item) {
       this.getItemFromOrAndDispo();
@@ -220,8 +214,12 @@ export class CreateObjectComponent implements OnInit {
       atelier = Atelier;
     }
     this.selectNow = "";
+    this.orSelect = "";
+    this.itemSelect = "";
+    this.siSelect = "";
     this.description.splice(0);
     this.listeItem.splice(0);
+    this.errorLibelle = false;
     this.deleteDataForm();
     if( atelier == '') {   
       this.listeNUetOr.splice(0);
@@ -252,6 +250,7 @@ export class CreateObjectComponent implements OnInit {
       this.selectNow = idOR;
       this.getListTypeItemsByOR();
     }
+    console.log(this.listeItem);
     
   }
 
@@ -260,10 +259,18 @@ export class CreateObjectComponent implements OnInit {
     this.selectNow = idItem;
     this.siSelect = "";
     this.getSousItemByItem();
+      if (this.orSelectedForItem == false) {
+        this.setOrSelectedForItem(true);
+      }
+    this.deleteDataForm();
+    this.LibelleSousItem = "";
+    
+    
   }
 
   public selectSI(idSI : string) {
-    this.siSelect = idSI
+    this.siSelect = idSI;
+    this.selectNow = idSI;
   }
 
   public selectTypeObjet (TypeObjet : any) {
@@ -288,8 +295,16 @@ export class CreateObjectComponent implements OnInit {
     this.etatError = false;
   }
 
+ 
   setOrSelectedForItem (value : boolean){
     this.orSelectedForItem = value;
+    if(!value){
+      if(this.selectNow == this.siSelect || this.selectNow == this.itemSelect){
+        this.selectNow = this.orSelect;
+      }
+      this.siSelect = "";
+      this.LibelleSousItem = ""
+    }
   }
 
   public selectNU (nu : string) {
@@ -348,7 +363,6 @@ export class CreateObjectComponent implements OnInit {
   }
 
   createItem( digit : string){
-    
     if (this.LibelleItem != '' && digit != '' && this.etat != this.etatNow.Aucun ) {
       if(!this.LibelleItem.toUpperCase().includes(this.orSelect)){
         this.manageToast("Erreur de création", "Le libellé ne contient pas l'identifiant de l'objet repère " , "red")
@@ -361,6 +375,7 @@ export class CreateObjectComponent implements OnInit {
           }
         let digitNumber = parseInt(digit);
         this.refreshValidationForm();
+        
         this.fetchCreateObjectService.createItem(this.LibelleItem.replace(this.orSelect.toLowerCase(), this.orSelect.toUpperCase()), this.orSelect, this.typeNow, digitNumber, this.checkSecurite, this.orSelect.substring(2,6), this.etat, tabDesc).then((res: any) => {
           if(typeof res === 'string') {
             this.manageToast("Erreur de création", res , "red")
