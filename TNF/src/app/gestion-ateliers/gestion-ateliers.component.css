@@ -1,0 +1,72 @@
+.rounded-top-right {
+    border-bottom-right-radius: 0rem;
+    border-left: none !important;
+}
+.rounded-top-left {
+    border-bottom-left-radius: 0rem !important ;
+    border-right: none !important;
+}
+
+table > tbody > tr:last-child > td {
+    border :none;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.scrolltable {
+    max-height: 600px;
+    overflow: scroll;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+table th {
+    position: sticky;
+    top: 0;
+    background-color: rgb(250, 250, 250);  
+}
+
+table {
+    background-color: rgb(254, 254, 254);
+}
+
+.createDiv{
+    height: 600px;
+}
+
+.uppercase {
+    text-transform: uppercase;
+}
+
+.close {
+    font-size: 2rem;
+    justify-content: flex-start;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+    display: flex;
+    color: #ea0000;
+    cursor: pointer;
+  
+}
+
+.close:hover {
+    transform: translate(0.5px, 0.5px) scale(1.05,1.05);
+}
+
+.btn-light:hover {
+    background-color: #f2f2f2;
+    border-color: #f2f2f2;
+}
+
+.form-check-input:checked {
+    background-color: #595959;
+    border-color: #595959;
+  }
+
+.form-check-input:focus {
+    outline: 0;
+    box-shadow: 0 0 0 .25rem rgba(159, 159, 159, 0.25);
+}

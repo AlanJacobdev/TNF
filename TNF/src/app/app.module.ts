@@ -24,6 +24,8 @@ import { FilterSuppressionPipe } from './delete-object/pipe/filter-suppression.p
 import { ActifVisualisationPipe } from './visualisation/pipe/actif-visualisation.pipe';
 import { FilterTypePipe } from './modify-object/pipe/filter-type.pipe';
 import { FilterNUPipe } from './create-object/pipe/filter-nu.pipe';
+import { GestionAteliersComponent } from './gestion-ateliers/gestion-ateliers.component';
+import { FilterAtelierPipe } from './gestion-ateliers/pipe/filter-atelier.pipe';
 
 
 @NgModule({
@@ -47,7 +49,9 @@ import { FilterNUPipe } from './create-object/pipe/filter-nu.pipe';
     FilterSuppressionPipe,
     ActifVisualisationPipe,
     FilterTypePipe,
-    FilterNUPipe
+    FilterNUPipe,
+    GestionAteliersComponent,
+    FilterAtelierPipe
   ],
   imports: [
     BrowserModule,

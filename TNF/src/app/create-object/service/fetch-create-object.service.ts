@@ -6,6 +6,7 @@ import { ItemEtDispo, ItemInfo } from 'src/structureData/Item';
 import { NUetOR, ObjetRepereInfo } from 'src/structureData/ObjetRepere';
 import { SousItemInfo } from 'src/structureData/SousItem';
 import { Sousitem } from 'src/structureData/Suppression';
+import { TypeObjetInfo } from 'src/structureData/TypeObject';
 
 @Injectable({
   providedIn: 'root'
@@ -27,9 +28,20 @@ export class FetchCreateObjectService {
 
   async getItemFromOrAndDispo(idOr : string, type : string): Promise<any> {
     let url = "http://localhost:3000/item/getItemFromOrAndDispo/{idOR}/{type}";
-    url = url.replace("{idOR}", idOr)
-    url = url.replace("{type}", type)
+    url = url.replace("{idOR}", idOr);
+    url = url.replace("{type}", type);
     const res : ItemInfo[] = await lastValueFrom(this.http.get<ItemInfo[]>(url));
+    if (res.length == 0) {
+      return undefined;
+    } else {
+      return res;
+    }
+  }
+
+  async getAllTypeAvailable (idItem: string): Promise<any>{
+    let url = "http://localhost:3000/sousitem/getAllTypeAvailable/{idItem}"
+    url = url.replace("{idItem}", idItem);
+    const res : TypeObjetInfo[] = await lastValueFrom(this.http.get<TypeObjetInfo[]>(url));
     if (res.length == 0) {
       return undefined;
     } else {
@@ -143,9 +155,6 @@ export class FetchCreateObjectService {
         }
       return returnError;
     }
-
-
-   
   }
 
 }

@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { faChevronRight, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faChevronRight, faMagicWandSparkles, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { AtelierInfo } from 'src/structureData/Atelier';
 import { Description } from 'src/structureData/Description';
 import { typeObjet, ItemInfo, ItemModification, etat } from 'src/structureData/Item';
@@ -18,6 +18,7 @@ import { FetchModifyObjectService } from './service/fetch-modify-object.service'
 })
 export class ModifyObjectComponent implements OnInit {
 
+  public faMagicWandSparkles = faMagicWandSparkles;
   public faChevronRight = faChevronRight;
   public faXmark = faXmark;
   @Input() public radio : typeObjet = typeObjet.Aucun;
@@ -358,6 +359,7 @@ export class ModifyObjectComponent implements OnInit {
       this.siSelect.description = siInfo.description;
       this.siSelect.etat = siInfo.etat;
       this.descriptionObjectSelect.splice(0);
+      this.LibelleSousItem = siInfo.libelleSousItem;
       this.etat= siInfo.etat == 'A' ? etat.A : siInfo.etat == 'EA' ? etat.EA : siInfo.etat == 'HS' ? etat.HS : etat.Aucun;
         for (const d of this.siSelect.description){
           this.descriptionObjectSelect.push(d)
@@ -444,9 +446,10 @@ export class ModifyObjectComponent implements OnInit {
       if(!this.LibelleSousItem.toUpperCase().includes(this.idItemSelect)){
         this.manageToast("Erreur de modification", "Le libellé ne contient pas l'identifiant de l'item dont il dépend" , "red")
       } else {
-        let idItemUpf = this.LibelleItem.toUpperCase().indexOf(this.idORSelect)
-        let idItemGetUpper = this.LibelleItem.substring(idItemUpf,this.idORSelect.length).toUpperCase();
-        let idItemGet = this.LibelleItem.substring(idItemUpf,this.idORSelect.length);
+        let idItemUpf = this.LibelleSousItem.toUpperCase().indexOf(this.idItemSelect)
+        let idItemGetUpper = this.LibelleSousItem.substring(idItemUpf,this.idItemSelect.length).toUpperCase();
+        let idItemGet = this.LibelleSousItem.substring(idItemUpf,this.idItemSelect.length);
+        
         this.fetchModifyTypeObject.modifySI(this.siSelect.idSousItem,  this.LibelleSousItem.replace(idItemGet, idItemGetUpper), this.etat, this.descriptionObjectSelect).then((res: any) => {
           if(typeof res === 'string') {
             this.manageToast("Erreur de modification", res , "red")
@@ -488,7 +491,19 @@ export class ModifyObjectComponent implements OnInit {
     }
   }
 
-  
+  addingParentIdToCurrentLibelle(){
+    if (this.objectNow === this.TypeObject.Item) {
+      if(!this.LibelleItem.toUpperCase().includes(this.idORSelect)){
+        this.LibelleItem += " "+ this.idORSelect;
+        this.focusOutLibelle();
+      }
+    } else if (this.objectNow === this.TypeObject.SI) {
+      if(!this.LibelleSousItem.toUpperCase().includes(this.idItemSelect)){
+        this.LibelleSousItem += " "+ this.idItemSelect;
+        this.focusOutLibelle();
+      }
+    }
+  }  
 
   selectEtat(etat : etat){
     this.etat = etat;

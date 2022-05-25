@@ -219,14 +219,16 @@
                                     </select>
                                     <label  for="atelierSelect"> Type </label>
                             </div>
-                            <div class="form-floating mb-3" [ngClass]="{'mb-3': !errorLibelle}">
-                                <input [(ngModel)]="LibelleItem" type="text" maxlength="50" class="form-control" id="IdLibelle" placeholder="" required (focusout)="focusOutLibelle()" [ngClass]="{'box-error border border-danger': errorLibelle}">
+                            <div class="form-floating mb-3 input-group" [ngClass]="{'mb-3': !errorLibelle}">
+                                <input [(ngModel)]="LibelleItem" type="text" maxlength="50" class="form-control zindexZero" id="IdLibelle" placeholder="" required (focusout)="focusOutLibelle()" [ngClass]="{'box-error border border-danger': errorLibelle}">
                                 <label for="IdLibelle">Libelle</label>
-                                <p *ngIf="errorLibelle" class="text-danger text-center py-0 my-1"> Requiert l'identifiant de l'objet repère</p>
+                                <button *ngIf="errorLibelle" class="input-group-text px-2 bg-white rounded-end" (click)="addingParentIdToCurrentLibelle()" ><fa-icon class=" text-right magicWand" [icon]="faMagicWandSparkles"></fa-icon></button>
                                 <div class="invalid-tooltip">
-                                    Veuillez renseigner un libellé.
-                                </div>
+                                Veuillez renseigner un libellé.
                             </div>
+                            </div>
+                            <p *ngIf="errorLibelle" class="text-danger text-center py-0 my-1"> Requiert l'identifiant de l'objet repère</p>
+                            
                             <div class="form-floating mb-3">
                                 <input #DigitItem type="number" oninput="this.value = this.value.replace(/\D+/g, '')" min="0" max="9" maxlength="1" class="form-control" id="IdDigit" placeholder=""  [value]="this.itemSelect.slice(-1)" required disabled readonly>
                                 <label for="IdDigit">Digit</label>
@@ -329,7 +331,7 @@
                             <ng-template #afficheSIItem>
                                 <tr *ngFor="let item of listeItem | filterModification : searchText : 'SIItem' | filterType : typeOfItemOR :'Item'"  (click)="selectItem(item.idItem)" [ngClass]="{'selectObject': item.idItem == this.itemSelect, 'actifNow' : item.idItem === this.selectNow }" >
                                     <td class="col-4">{{item.idItem}}</td>
-                                    <td class="col-8">{{item.libelle}}</td>
+                                    <td class="col-8">{{item.libelleItem}}</td>
                                 </tr>
                             </ng-template>
                             
@@ -355,7 +357,7 @@
                                 <td class="text-center" colspan="2">Aucun Sous Item</td>
                             </tr>
                             <ng-template #afficheSISI>
-                                <tr *ngFor="let sousItem of listeSousItem | filterModification : searchText : 'SI'"  (click)="selectSI(sousItem.idSousItem)" [ngClass]="{'selectObject': sousItem.idSousItem === this.siSelect, 'actifNow' : sousItem.idSousItem === this.selectNow }">
+                                <tr *ngFor="let sousItem of listeSousItem | filterModification : searchText : 'SI'"  (click)="selectSI(sousItem.idSousItem)" [ngClass]="{'selectObject': sousItem.idSousItem === this.siSelect }">
                                     <td class="col-5" [ngClass] ="{'nowrapColumn' : !this.orSelectedForItem && this.orSelect !=''}">{{sousItem.idSousItem}}</td>
                                     <td class="col-7" [ngClass] ="{'nowrapColumn' : !this.orSelectedForItem && this.orSelect !=''}">{{sousItem.libelleSousItem}}</td>
                                 </tr>
@@ -383,21 +385,21 @@
                             <div class="form-floating mb-3">
                                     <select (change)=selectType($event) [(ngModel)] ="this.typeNow" class="form-select" id="atelierSelect" aria-label="Default select example">
                                         <option value ="" selected>Sélectionner le type </option>
-                                        <option *ngFor="let type of listeTypeO" [value]="type.idType">
+                                        <option *ngFor="let type of listeTypeOAvailableSI" [value]="type.idType">
                                             {{type.idType}} - {{type.libelleType}}
                                         </option>
                                     </select>
                                     <label  for="atelierSelect"> Type </label>
                             </div>
-                            <div class="form-floating mb-3" [ngClass]="{'mb-3': !errorLibelle}">
-                                <input [(ngModel)]="LibelleSousItem" type="text" maxlength="50" class="form-control" id="IdLibelle" placeholder="" required (focusout)="focusOutLibelle()" [ngClass]="{'box-error border border-danger': errorLibelle}">
+                            <div class="form-floating mb-3 input-group" [ngClass]="{'mb-3': !errorLibelle}">
+                                <input [(ngModel)]="LibelleSousItem" type="text" maxlength="50" class="form-control zindexZero" id="IdLibelle" placeholder="" required (focusout)="focusOutLibelle()" [ngClass]="{'box-error border border-danger': errorLibelle}">
                                 <label for="IdLibelle">Libelle</label>
-                                <p *ngIf="errorLibelle" class="text-danger text-center py-0 my-1"> Requiert l'identifiant de l'item</p>
+                                <button *ngIf="errorLibelle" class="input-group-text px-2 bg-white rounded-end" (click)="addingParentIdToCurrentLibelle()" ><fa-icon class=" text-right magicWand" [icon]="faMagicWandSparkles"></fa-icon></button>
                                 <div class="invalid-tooltip">
                                     Veuillez renseigner un libellé.
                                 </div>
                             </div>
-                            
+                            <p *ngIf="errorLibelle" class="text-danger text-center py-0 my-1"> Requiert l'identifiant de l'item</p>
                             <div *ngFor="let d of this.description; let i = index"  > 
                                 <div class="form-floating mb-3 input-group">
                                     <input  type="text" [(ngModel)]="this.description[i].value" #name="ngModel" name="value{{i}}" class="form-control zindexZero"  placeholder="" >

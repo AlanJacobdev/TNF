@@ -1,12 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AtelierInfo } from 'src/structureData/Atelier';
-import { etat, ItemEtDispo, ItemInfo, typeObjet } from 'src/structureData/Item';
+import { etat, ItemInfo, typeObjet } from 'src/structureData/Item';
 import { NUetOR, ObjetRepereInfo } from 'src/structureData/ObjetRepere';
 import { modificationTypeObject, TypeObjetInfo, TypeObjetRepereInfo, TypeObjetRepereTableau } from 'src/structureData/TypeObject';
 import { FetchcreateTypeObjectService } from '../create-type-object/service/fetchcreate-type-object.service';
 import { FetchVisuService } from '../visualisation/service/fetch-visu.service';
 import { FetchCreateObjectService } from './service/fetch-create-object.service';
-import { faXmark, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { faXmark, faChevronRight, faMagicWandSparkles } from '@fortawesome/free-solid-svg-icons';
 import { SousItemInfo } from 'src/structureData/SousItem';
 import { FetchRecopieService } from '../recopie-object/service/fetch-recopie.service';
 
@@ -18,17 +18,20 @@ import { FetchRecopieService } from '../recopie-object/service/fetch-recopie.ser
 })
 export class CreateObjectComponent implements OnInit {
 
+  public faMagicWandSparkles = faMagicWandSparkles;
   public faChevronRight = faChevronRight;
   public faXmark = faXmark;
   @Input() public radio : typeObjet = typeObjet.Aucun;
   public listeTypeOR: TypeObjetRepereTableau[] = [];
   public listeTypeO: TypeObjetInfo[] = [];
+  public listeTypeOAvailableSI : TypeObjetInfo[] = [];
   public listeAtelier: AtelierInfo[] = [];
   public listeNUetOr : NUetOR[] = [];
   public listeOR : ObjetRepereInfo[] = [];
-  public listeItem : ItemEtDispo[] = [];
+  public listeItem : ItemInfo[] = [];
   public listeSousItem : SousItemInfo[] = [];
   public listeTypeItemOfOR : modificationTypeObject[] = [];
+
 
   public typeOfItemOR : string = "";
   public typeNow: string = "";
@@ -103,6 +106,19 @@ export class CreateObjectComponent implements OnInit {
     })
   }
 
+  getAllTypeAvailable(){
+    this.fetchCreateObjectService.getAllTypeAvailable(this.itemSelect).then((list : TypeObjetInfo[]) => {
+      if( list != undefined){
+        this.listeTypeOAvailableSI = list;
+      } else {
+        console.log("Problème pour récupérer les types d'objets pour les SI ");
+        
+      }
+    }).catch((e) =>{
+      
+    })
+  }
+
   getObjetRepereByAteliers(){
     this.fetchVisuService.getObjetRepereByAteliers(this.atelierSelect).then((list: ObjetRepereInfo[]) => {
       if (list != undefined) {
@@ -118,7 +134,7 @@ export class CreateObjectComponent implements OnInit {
   getItemFromOrAndDispo() {
 
     if (this.typeNow != '' && this.orSelect != ''){
-      this.fetchCreateObjectService.getItemFromOrAndDispo(this.orSelect, this.typeNow).then((list: ItemEtDispo[]) => {  
+      this.fetchCreateObjectService.getItemFromOrAndDispo(this.orSelect, this.typeNow).then((list: ItemInfo[]) => {  
         if (list != undefined) {
           this.listeItem = list;
           this.itemSelect="";
@@ -153,12 +169,14 @@ export class CreateObjectComponent implements OnInit {
 
   getItemByObjetRepere(){
     if ( this.orSelect != ''){
-      this.fetchVisuService.getItemByObjetRepere(this.orSelect).then((list: ItemEtDispo[]) => {
+      this.fetchVisuService.getItemByObjetRepere(this.orSelect).then((list: ItemInfo[]) => {
+        console.log(list);
+        
         if(list == undefined) {
           this.listeItem = [];
         } else {
           this.listeItem = list;
-        }
+          }
       }).catch((e) => {
       })
     }
@@ -264,18 +282,22 @@ export class CreateObjectComponent implements OnInit {
       }
     this.deleteDataForm();
     this.LibelleSousItem = "";
+
+    if(this.objectNow === this.TypeObject.SI){
+      this.getAllTypeAvailable();
+    }
     
     
   }
 
   public selectSI(idSI : string) {
     this.siSelect = idSI;
-    this.selectNow = idSI;
   }
 
   public selectTypeObjet (TypeObjet : any) {
     try {
       this.typeOfItemOR = TypeObjet.target.value;
+      console.log(this.typeOfItemOR)
     } catch  {
       this.typeOfItemOR = TypeObjet;
     }
@@ -455,6 +477,21 @@ export class CreateObjectComponent implements OnInit {
     }
   }
 
+
+  addingParentIdToCurrentLibelle(){
+    if (this.objectNow === this.TypeObject.Item) {
+      if(!this.LibelleItem.toUpperCase().includes(this.orSelect)){
+        this.LibelleItem += " "+ this.orSelect;
+        this.focusOutLibelle();
+      }
+    } else if (this.objectNow === this.TypeObject.SI) {
+      if(!this.LibelleSousItem.toUpperCase().includes(this.itemSelect)){
+        this.LibelleSousItem += " "+ this.itemSelect;
+        this.focusOutLibelle();
+      }
+    }
+
+  }
  
 
 
