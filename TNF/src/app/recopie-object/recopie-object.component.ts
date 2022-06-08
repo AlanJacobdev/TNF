@@ -68,7 +68,8 @@ export class RecopieObjectComponent implements OnInit {
         if (libelle != undefined) {
           let item : modificationTypeObject = {
             idTypeObjet: e.idTypeObjet,
-            libelleTypeObjet: libelle.libelleType
+            libelleTypeObjet: libelle.libelleType,
+            actif : e.actif
           };
           this.listeTypeOOfOR.push(item)
         }

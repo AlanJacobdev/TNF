@@ -79,7 +79,7 @@
                                 <td class="text-center" colspan="2">Aucun numéro unique</td>
                             </tr>
                             <ng-template #afficheDispoOR>
-                                <tr *ngFor="let nuOR of listeNUetOr | filterNU : searchText" (click)="(nuOR.libelleOR === '') ? selectNU(nuOR.numeroUnique) : ''" [ngClass]="{'table-active': nuOR.libelleOR !=='', 'actifNow' : nuOR.numeroUnique === this.nuSelect }" >
+                                <tr id="{{nuOR.numeroUnique}}" *ngFor="let nuOR of listeNUetOr | filterNU : searchText" (click)="(nuOR.libelleOR === '') ? selectNU(nuOR.numeroUnique) : ''" [ngClass]="{'table-active': nuOR.libelleOR !=='', 'actifNow' : nuOR.numeroUnique === this.nuSelect, 'surbrillance' : (this.rangeSurbrillance.indexOf(nuOR.numeroUnique) !== -1) }" >
                                     <td class="col-4">{{nuOR.numeroUnique}}</td>
                                     <td class="col-8">{{nuOR.libelleOR}}</td>
                                 </tr>
@@ -128,12 +128,39 @@
                             <div class="form-floating mb-3">
                                 <a class="text-dark cursor" (click)="addDescription()">Ajouter une description</a>
                             </div>
-                            <div class="form-check ms-2">
-                                <input #Valide class="form-check-input" type="checkbox" (change)="setcheckValide()" id="IdValide"  >
-                                <label class="form-check-label" for="IdValide">
-                                Valide
+                            
+                            <div *ngIf="this.atelierSelect != '' && this.nuSelect != ''" class="form-check form-switch ms-1 mb-3 ">
+                                <input class="form-check-input" type="checkbox" (change)="setcheckValide()" id="IdValide" [checked]="this.checkValide">
+                                <label class="form-check-label align-self-center" for="IdValide">
+                                Réserver un intervalle 
                                 </label>
                             </div>
+                                
+                            <div *ngIf="this.checkValide">
+                                <div class="form-floating mb-3 input-group">
+                                    <input #NumberObjet type="number" oninput="this.value = this.value.replace(/\D+/g, '')" min="1" max="999" maxlength="1" class="form-control zindexZero" id="IdNumberObjet" placeholder=""  >
+                                    <label for="IdNumberObjet">Nombre d'objets supplémentaire</label>
+                                    <button class="input-group-text px-2 bg-white" (click)="reservationIsPossible(NumberObjet.value)"><fa-icon class=" text-right validate" [icon]="faCheck"></fa-icon></button>
+                                </div>
+                                <ng-container *ngIf="this.errorReservation">
+                                    <div class="text-center mb-2">Choisir un emplacement</div>
+                                    <div  class="input-group mb-3 justify-content-center" >
+                                        <button class="btn btn-outline-secondary" type="button" (click)="getRangeToCreateOR(NumberObjet.value, false)">
+                                            <fa-icon class=" text-right px-2" [icon]="faChevronLeft"></fa-icon>
+                                        </button>
+                                        <button class="btn btn-outline-secondary px-4" type="button">
+                                            <fa-icon class=" text-right validate" [icon]="faCheck"></fa-icon> 
+                                            <span class="ps-2 fs-5">Valider </span>
+                                        </button>
+                                        <button class="btn btn-outline-secondary" type="button" (click)="getRangeToCreateOR(NumberObjet.value, true)">
+                                            <fa-icon class=" text-right px-2" [icon]="faChevronRight"></fa-icon>
+                                        </button>
+                                    </div>
+                                </ng-container>
+                                
+                            </div>
+                           
+                            
                         </div>
                         <button *ngIf="this.atelierSelect != '' && this.nuSelect != '' && this.typeNow != ''" (click)="createObjet(Libelle.value)" type="button" class="btn btn-lg btn-light col-10 offset-1 col-lg-6 offset-lg-3 mt-2 mb-3">Créer</button>
                     </div>

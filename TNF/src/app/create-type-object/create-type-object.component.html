@@ -71,7 +71,7 @@
         </div>
         <ng-template #formType >
             <ng-container *ngIf="idSelected == ''; else modification">
-                <div class="col-lg-5 col-xs-12 mt-5 offset-lg-1 order-1 order-lg-2 needs-validation"  [ngClass]="{'was-validated': formValidate === true}">
+                <div class="col-lg-5 col-xs-12 mt-5 offset-lg-1 order-1 order-lg-2 needs-validation" [ngClass]="{'was-validated': formValidate === true}">
                     <div class="container-fluid border rounded py-3 px-3 shadow-sm">
                         <div class="text-center row">
                             <span class="fs-3 col-10 offset-1 ">Création </span>
@@ -79,13 +79,15 @@
                         </div>
                         <div class ="col-12 mt-3 text-center">
                             <div class="form-check form-check-inline">
-                                <input [(ngModel)]="radio" value="OR" class="form-check-input" type="radio" name="inlineRadioOptions" id="OR" required>
-                                <label class="form-check-label" for="OR">Objet repère</label>
+                                <input [(ngModel)]="type" (click)="selectTypeObject(this.typeNow.OR)" [ngClass]="{'border-danger' : typeError}" class="form-check-input" type="radio" name="radioType" id="inlineRadio3" value="OR" required>
+                                <label [ngClass]="{'text-danger' : typeError}" class="form-check-label" for="inlineRadio3">Objet repère</label>
                             </div>
+
                             <div class="form-check form-check-inline">
-                                <input [(ngModel)]="radio" value="O" class="form-check-input" type="radio" name="inlineRadioOptions" id="O" required>
-                                <label class="form-check-label" for="O">Objet</label>
+                                <input [(ngModel)]="type" (click)="selectTypeObject(this.typeNow.O)" [ngClass]="{'border-danger' : typeError}" class="form-check-input" type="radio" name="radioType" id="inlineRadio2" value="O" required>
+                                <label [ngClass]="{'text-danger' : typeError}" class="form-check-label" for="inlineRadio2">Objet</label>
                             </div>
+
                             <div class="invalid-tooltip">
                                 Veuillez renseigner un Type d'Objet.
                             </div>
@@ -98,14 +100,21 @@
                                     Veuillez renseigner un ID.
                                 </div>
                             </div>
-                            <div class="form-floating">
+                            <div class="form-floating mb-3">
                                 <input #Libelle type="text" class="form-control" id="IdLibelle" placeholder="" required>
                                 <label for="IdLibelle">Libelle</label>
                                 <div class="invalid-tooltip">
                                     Veuillez renseigner un libellé.
                                 </div>
                             </div>
+                            <div class="form-check">
+                                <input #IdActifCreate class="form-check-input" type="checkbox" (change)="setcheckValide()" id="IdActifCreate" [checked]="this.checkValide" >
+                                <label class="form-check-label" for="IdActifCreate">
+                                Actif
+                                </label>
+                            </div>
                         </div>
+                        
                         <button (click)="createTypeObjet(Identifiant.value, Libelle.value)" type="button" class="btn btn-lg btn-light col-10 offset-1 col-lg-6 offset-lg-3 my-2">Créer</button>
                     </div>
                 </div>
@@ -123,12 +132,18 @@
                                     <input #ModifIdentifiant type="text" class="form-control" id="IdType" placeholder="" disabled readonly [value]="this.objectSelect.idTypeObjet">
                                     <label for="IdType">Identifiant</label>
                                 </div>
-                                <div class="form-floating"> 
+                                <div class="form-floating mb-3"> 
                                     <input #ModifLibelle type="text" class="form-control" id="IdLibelle" placeholder="" [value]="this.objectSelect.libelleTypeObjet" required>
                                     <label for="IdLibelle">Libelle</label>
                                     <div class="invalid-tooltip">
                                         Veuillez renseigner un libellé.
                                     </div>
+                                </div>
+                                <div class="form-check">
+                                    <input #ActifModif class="form-check-input" type="checkbox" (change)="putCheckActif()" id="IdActifModif" [checked]="this.objectSelect.actif" >
+                                    <label class="form-check-label" for="IdActifModif">
+                                    Actif
+                                    </label>
                                 </div>
                             </div>
                             <button (click)="updateTypeObjet(ModifIdentifiant.value, ModifLibelle.value)" type="button" class="btn btn-lg btn-light col-10 offset-1 col-lg-6 offset-lg-3 my-2">Modifier</button>

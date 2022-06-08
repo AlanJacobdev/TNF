@@ -142,7 +142,8 @@ export class DeleteObjectComponent implements OnInit {
           dateCreation: e.posteCreation ,
           profilModification: e.profilCreation ,
           posteModification: e.posteModification ,
-          dateModification: e.dateModification 
+          dateModification: e.dateModification,
+          actif : e.actif
         };
         this.listeTypeOR.push(typeOr)
       })

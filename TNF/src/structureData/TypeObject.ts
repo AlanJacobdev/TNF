@@ -6,7 +6,8 @@ export interface TypeObjetInfo {
     dateCreation : string,
     profilModification : string,
     posteModification : string,
-    dateModification : string
+    dateModification : string,
+    actif : boolean
 }
 
 export interface TypeObjetRepereInfo {
@@ -17,7 +18,8 @@ export interface TypeObjetRepereInfo {
     dateCreation : string,
     profilModification : string,
     posteModification : string,
-    dateModification : string
+    dateModification : string,
+    actif : boolean
 }
 
 export interface TypeObjetRepereTableau {
@@ -28,15 +30,19 @@ export interface TypeObjetRepereTableau {
     dateCreation : string,
     profilModification : string,
     posteModification : string,
-    dateModification : string
+    dateModification : string,
+    actif : boolean
 }
 
+
 export enum createTypeObject {
-    OR = "OR",
-    O = "O"
+  OR = "OR",
+  O = "O",
+  Aucun = "Aucun"
 }
 
 export interface modificationTypeObject{
     idTypeObjet : string,
     libelleTypeObjet : string,
+    actif : boolean
 }

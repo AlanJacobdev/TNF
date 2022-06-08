@@ -157,4 +157,49 @@ export class FetchCreateObjectService {
     }
   }
 
+
+  async reservationIsPossible (Atelier : string, startNU : string , additionalNU : number) {
+    let url = "http://localhost:3000/objetrepere/reservationIsPossible/{Atelier}/{startNU}/{additionalNU}"
+    url = url.replace("{Atelier}", Atelier);
+    url = url.replace("{startNU}", startNU);
+    url = url.replace("{additionalNU}", additionalNU.toString());
+    const res : any = await lastValueFrom(this.http.get<any>(url));
+    console.log(res.hasOwnProperty('error'));
+    
+    let returnError;
+    if(res.hasOwnProperty('error')){
+      returnError = undefined;
+    } else if (res.hasOwnProperty('message')){
+      returnError=res.message;
+    } else {
+      returnError = res;
+    }
+    
+    return returnError;
+  }
+
+  async getRangeToCreateOR (Atelier : string, start : number , bookOr : number, isForward :boolean) {
+    let url = "http://localhost:3000/objetrepere/getRangeToCreateOR/{Atelier}/{start}/{bookOr}/{isForward}"
+    url = url.replace("{Atelier}", Atelier);
+    url = url.replace("{start}", start.toString());
+    url = url.replace("{bookOr}", bookOr.toString());
+    url = url.replace("{isForward}", isForward.toString());
+
+    const res : any = await lastValueFrom(this.http.get<any>(url));
+    console.log(res.hasOwnProperty('error'));
+    
+    let returnError;
+    if(res.hasOwnProperty('error')){
+      returnError = undefined;
+    } else if (res.hasOwnProperty('message')){
+      returnError=res.message;
+    } else {
+      returnError = res;
+    }
+    
+    return returnError;
+
+  }
+
+
 }

@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import {  createTypeObject, modificationTypeObject, TypeObjetInfo, TypeObjetRepereInfo, TypeObjetRepereTableau } from 'src/structureData/TypeObject';
 import { FetchcreateTypeObjectService } from './service/fetchcreate-type-object.service';
 import { faXmark, faCalendar, faUser, faClock, faInfo, faPen, faTrashCan, faPlus} from '@fortawesome/free-solid-svg-icons';
+import { typeObjet } from 'src/structureData/Item';
 
 @Component({
   selector: 'app-create-type-object',
@@ -29,7 +30,8 @@ export class CreateTypeObjectComponent implements OnInit {
   @Input() public radio : string = "";
   public objectSelect : modificationTypeObject = {
     idTypeObjet: '',
-    libelleTypeObjet: ''
+    libelleTypeObjet: '',
+    actif : false
   };
 
   public infoTORSelect : TypeObjetRepereTableau = {
@@ -40,7 +42,8 @@ export class CreateTypeObjectComponent implements OnInit {
     dateCreation: '',
     profilModification: '',
     posteModification: '',
-    dateModification: ''
+    dateModification: '',
+    actif: false
   }
 
   public infoTOSelect : TypeObjetInfo = {
@@ -51,8 +54,15 @@ export class CreateTypeObjectComponent implements OnInit {
     dateCreation: '',
     profilModification: '',
     posteModification: '',
-    dateModification: ''
+    dateModification: '',
+    actif : false
   }
+
+  @Input() public checkValide : boolean = false;
+  public type : createTypeObject = createTypeObject.Aucun;
+  public typeNow = createTypeObject;
+  public typeError : boolean = false;
+
   public ToastAffiche : boolean = false; 
   public messageToast : string = "";
   public typeToast : string = ""
@@ -67,6 +77,22 @@ export class CreateTypeObjectComponent implements OnInit {
   ngOnInit(): void {
   }
 
+
+  setcheckValide() {
+    this.checkValide = !this.checkValide;
+  }
+
+  putCheckActif(){
+    this.objectSelect.actif = !this.objectSelect.actif;
+    console.log(this.objectSelect);
+    
+  }
+
+  selectTypeObject(type : createTypeObject){
+    this.type = type;
+    this.typeError = false;
+  }
+  
   refreshListes(){
 
     this.listeTypeOR.splice(0);
@@ -80,7 +106,8 @@ export class CreateTypeObjectComponent implements OnInit {
           dateCreation: e.dateCreation ,
           profilModification: e.profilModification ,
           posteModification: e.posteModification ,
-          dateModification: e.dateModification 
+          dateModification: e.dateModification,
+          actif : e.actif
         };
         this.listeTypeOR.push(typeOr)
       })
@@ -122,6 +149,7 @@ export class CreateTypeObjectComponent implements OnInit {
     this.suppresion = false;
     this.information = false;
     this.refreshValidationForm();
+    this.type = this.typeNow.Aucun;
   }
 
   closeToast(){
@@ -145,12 +173,14 @@ export class CreateTypeObjectComponent implements OnInit {
       if (res != undefined){
         this.objectSelect.idTypeObjet = res.idType;
         this.objectSelect.libelleTypeObjet = res.libelleTypeOR;
+        this.objectSelect.actif = res.actif;
       }
     } else {
       res = this.listeTypeO.find(element => element.idType === this.idSelected);  
       if (res != undefined){
         this.objectSelect.idTypeObjet = res.idType;
         this.objectSelect.libelleTypeObjet = res.libelleType;
+        this.objectSelect.actif = res.actif
       }
     }
   }
@@ -182,26 +212,31 @@ export class CreateTypeObjectComponent implements OnInit {
   createTypeObjet(identifiant : string, libelle : string) {
 
     
-    if ( identifiant != '' && libelle != '') {
-      if(this.radio === "OR") {
-        this.fetchCreateTypeObject.createTypeOR(identifiant,libelle).then((res: TypeObjetRepereInfo) => {
+    if ( identifiant != '' && libelle != '' && this.type != this.typeNow.Aucun) {
+      if(this.type == this.typeNow.OR) {      
+        console.log("test");  
+        this.fetchCreateTypeObject.createTypeOR(identifiant,libelle, this.checkValide).then((res: TypeObjetRepereInfo) => {
           if(res === undefined) {
             this.manageToast("Erreur de création", "Le type d'objet repère existe déjà", "red")
           } else {  
             this.manageToast("Création", "L'objet repère " + identifiant.toUpperCase() + " a été crée", "#006400")
             this.refreshListes();
-            this.close();         
+            this.checkValide = false;
+            this.close();  
+            this.type = this.typeNow.Aucun;       
           }
         }).catch((e) => {
         })
-      } else if ( this.radio === "O" ){
-        this.fetchCreateTypeObject.createTypeO(identifiant,libelle).then((res: TypeObjetRepereInfo) => {
+      } else if ( this.type == this.typeNow.O){
+        this.fetchCreateTypeObject.createTypeO(identifiant,libelle, this.checkValide).then((res: TypeObjetRepereInfo) => {
           if(typeof res === 'string') {
             this.manageToast("Erreur de création", res, "red")
           } else {
             this.manageToast("Création", "L'objet " + identifiant.toUpperCase() + " a été crée", "#006400")
             this.refreshListes();
+            this.checkValide = false;
             this.close();
+            this.type = this.typeNow.Aucun;       
           }
         }).catch((e) => {
         })
@@ -209,15 +244,17 @@ export class CreateTypeObjectComponent implements OnInit {
     } else {
       this.formValidate = true;
     }
+    
+    
   }
 
 
   updateTypeObjet(identifiant : string, libelle : string) {
-    console.log(identifiant +" " +libelle)
+    console.log(this.checkValide);
+    
     if ( identifiant != '' && libelle != '') {
       if ( this.selectedType == this.TypeObject.OR){
-        this.fetchCreateTypeObject.updateTypeOR(identifiant,libelle).then((res: TypeObjetRepereInfo) => {
-          console.log(res);
+        this.fetchCreateTypeObject.updateTypeOR(identifiant,libelle, this.objectSelect.actif).then((res: TypeObjetRepereInfo) => {
           if (res === undefined) {
             this.manageToast("Erreur de modification", "Identificateur inconnu", "red")
           } else {
@@ -228,7 +265,7 @@ export class CreateTypeObjectComponent implements OnInit {
         }).catch((e) => {
         })
       } else if ( this.selectedType === this.TypeObject.O ){
-        this.fetchCreateTypeObject.updateTypeO(identifiant,libelle).then((res: TypeObjetRepereInfo) => {
+        this.fetchCreateTypeObject.updateTypeO(identifiant,libelle, this.objectSelect.actif).then((res: TypeObjetRepereInfo) => {
           console.log(res);
           if (typeof res === 'string') {
             this.manageToast("Erreur de modification", res, "red")

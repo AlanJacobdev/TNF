@@ -51,6 +51,12 @@ table th {
     color : red;
 }
 
+.validate {
+    font-size: 20px;
+    color : green;
+}
+
+
 .magicWand{
     font-size: 20px;
     color : black;
@@ -135,3 +141,17 @@ table th {
 .col-lg-0 {
     width: 0%;
 }
+
+.surbrillance{
+    animation: 1s ease-in 0s infinite alternate  bgSelectRange;
+}
+
+@keyframes bgSelectRange {
+    from {
+        background-color: aliceblue ;
+    }
+    to {
+        background-color: rgb(179, 219, 255) ;
+    }
+  }
+  

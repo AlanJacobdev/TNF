@@ -31,14 +31,15 @@ export class FetchcreateTypeObjectService {
     }
   }
 
-  async createTypeOR(ID: string, libelle : string): Promise<any> {
+  async createTypeOR(ID: string, libelle : string, actif :boolean): Promise<any> {
     let global = this.cookieService.get('login');
     let url = "http://localhost:3000/typeobjetrepere"
     let payload = {
       idTypeOR : ID.toUpperCase(),
       libelleTypeOR : libelle,
       profilCreation : global,
-      posteCreation : ""
+      posteCreation : "",
+      actif : actif
     }
     const res : TypeObjetRepereInfo = await lastValueFrom(this.http.post<TypeObjetRepereInfo>(url, payload));
     console.log(res)
@@ -49,7 +50,7 @@ export class FetchcreateTypeObjectService {
     }
   }
 
-  async updateTypeOR(ID: string, libelle : string): Promise<any> {
+  async updateTypeOR(ID: string, libelle : string, actif : boolean): Promise<any> {
     let global = this.cookieService.get('login');
     console.log(global)
     let url = "http://localhost:3000/typeobjetrepere/{ID}"
@@ -57,7 +58,8 @@ export class FetchcreateTypeObjectService {
     let payload = {
       libelleTypeOR : libelle,
       profilModification : global,
-      posteModification : ""
+      posteModification : "",
+      actif : actif
     }
     const res : TypeObjetRepereInfo = await lastValueFrom(this.http.put<TypeObjetRepereInfo>(url, payload));
     console.log(res)
@@ -83,14 +85,15 @@ export class FetchcreateTypeObjectService {
   }
 
 
-  async createTypeO(ID: string, libelle : string): Promise<any> {
+  async createTypeO(ID: string, libelle : string, actif : boolean): Promise<any> {
     let global = this.cookieService.get('login');
     let url = "http://localhost:3000/typeobjet"
     let payload = {
       idType : ID.toUpperCase(),
       libelleType : libelle,
       profilCreation : global,
-      posteCreation : ""
+      posteCreation : "",
+      actif : actif
     }
     const res : any = await lastValueFrom(this.http.post<any>(url, payload));
     console.log(res)
@@ -101,7 +104,7 @@ export class FetchcreateTypeObjectService {
     }
   }
 
-  async updateTypeO(ID: string, libelle : string): Promise<any> {
+  async updateTypeO(ID: string, libelle : string, actif : boolean): Promise<any> {
     let global = this.cookieService.get('login');
     console.log(global)
     let url = "http://localhost:3000/typeobjet/{ID}"
@@ -109,7 +112,8 @@ export class FetchcreateTypeObjectService {
     let payload = {
       libelleType : libelle,
       profilModification : global,
-      posteModification : ""
+      posteModification : "",
+      actif : actif
     }
     const res : any = await lastValueFrom(this.http.put<any>(url, payload));
     console.log(res)

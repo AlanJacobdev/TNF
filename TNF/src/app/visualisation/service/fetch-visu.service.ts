@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { CookieService } from 'ngx-cookie-service';
 import { lastValueFrom } from 'rxjs';
 import { AtelierInfo } from 'src/structureData/Atelier';
 import { ItemInfo, ItemSave } from 'src/structureData/Item';
@@ -11,10 +12,21 @@ import { SousItemInfo, SousItemSave } from 'src/structureData/SousItem';
 })
 export class FetchVisuService {
 
-  constructor(private readonly http: HttpClient) { }
+  constructor(private readonly http: HttpClient, private cookieService : CookieService) { }
 
   async getAllAteliers(): Promise<any> {
-    let url = "http://localhost:3000/atelier"
+    const admin = this.cookieService.get('Admin');
+   
+    let url;
+    
+    
+    if (admin == "true"){
+      console.log(admin);
+      url = "http://localhost:3000/atelier"
+    } else {
+      url = "http://localhost:3000/atelier/getAll/isActif"
+    }
+    console.log(url);
     const res : AtelierInfo[] = await lastValueFrom(this.http.get<AtelierInfo[]>(url));
     if (res.length == 0) {
       return undefined;

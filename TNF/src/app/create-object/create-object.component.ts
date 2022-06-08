@@ -6,7 +6,7 @@ import { modificationTypeObject, TypeObjetInfo, TypeObjetRepereInfo, TypeObjetRe
 import { FetchcreateTypeObjectService } from '../create-type-object/service/fetchcreate-type-object.service';
 import { FetchVisuService } from '../visualisation/service/fetch-visu.service';
 import { FetchCreateObjectService } from './service/fetch-create-object.service';
-import { faXmark, faChevronRight, faMagicWandSparkles } from '@fortawesome/free-solid-svg-icons';
+import { faXmark, faChevronRight, faMagicWandSparkles, faCheck, faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import { SousItemInfo } from 'src/structureData/SousItem';
 import { FetchRecopieService } from '../recopie-object/service/fetch-recopie.service';
 
@@ -17,9 +17,10 @@ import { FetchRecopieService } from '../recopie-object/service/fetch-recopie.ser
   styleUrls: ['./create-object.component.css']
 })
 export class CreateObjectComponent implements OnInit {
-
+  public faCheck = faCheck;
   public faMagicWandSparkles = faMagicWandSparkles;
   public faChevronRight = faChevronRight;
+  public faChevronLeft = faChevronLeft;
   public faXmark = faXmark;
   @Input() public radio : typeObjet = typeObjet.Aucun;
   public listeTypeOR: TypeObjetRepereTableau[] = [];
@@ -31,8 +32,8 @@ export class CreateObjectComponent implements OnInit {
   public listeItem : ItemInfo[] = [];
   public listeSousItem : SousItemInfo[] = [];
   public listeTypeItemOfOR : modificationTypeObject[] = [];
-
-
+  public rangeSurbrillance : string[] = [];
+  public lastIndex = 0;
   public typeOfItemOR : string = "";
   public typeNow: string = "";
   public objectNow : typeObjet = typeObjet.OR;
@@ -60,7 +61,8 @@ export class CreateObjectComponent implements OnInit {
   public LibelleItem : string = "";
   public LibelleSousItem : string = "";
   public orSelectedForItem : boolean = false;
-
+  public errorReservation : boolean = false;
+  public nuSelectedRange : string = "";
   constructor(private fetchCreateTypeObject : FetchcreateTypeObjectService, private fetchVisuService : FetchVisuService, private fetchCreateObjectService: FetchCreateObjectService, private fetchRecopieService : FetchRecopieService) {
     this.getListType();
     this.getAteliers();
@@ -93,7 +95,8 @@ export class CreateObjectComponent implements OnInit {
           dateCreation: e.posteCreation ,
           profilModification: e.profilCreation ,
           posteModification: e.posteModification ,
-          dateModification: e.dateModification 
+          dateModification: e.dateModification,
+          actif : e.actif
         };
         this.listeTypeOR.push(typeOr)
       })
@@ -118,6 +121,53 @@ export class CreateObjectComponent implements OnInit {
       
     })
   }
+
+  reservationIsPossible( reserveNumber : string){
+    
+    
+    let number = Number(+reserveNumber);
+    if(isNaN(number) || reserveNumber == ""){
+      this.manageToast("Erreur de création", "Veuillez renseigner un nombre" , "red")
+    } else {
+      this.fetchCreateObjectService.reservationIsPossible(this.atelierSelect,this.nuSelect, +reserveNumber).then((res : any) => {
+        if( res == undefined) {
+          this.errorReservation = true;
+          this.rangeSurbrillance.splice(0);
+          this.nuSelectedRange = this.nuSelect;
+          this.manageToast("Erreur de création", "Il n'y a pas la place nécessaire à la création" , "red")
+        } else {  
+          this.manageToast("Création", "La création est possible dans l'intervalle en surbrillance", "#006400")
+          this.fetchCreateObjectService.getRangeToCreateOR(this.atelierSelect, +this.nuSelect.substring(1,4), +reserveNumber, true).then((res : any) => {
+            this.rangeSurbrillance = res.range;
+            this.scrollToRangeOR(this.nuSelect)
+          })
+
+          
+        }
+      }).catch((e) =>{
+        
+      })
+    }
+  }
+
+  getRangeToCreateOR(reserveNumber : string, isForward : boolean){
+    console.log(isForward);
+    
+    let number = Number(+reserveNumber);
+      if(isNaN(number) || reserveNumber == ""){
+        this.manageToast("Erreur de création", "Veuillez renseigner un nombre" , "red")
+      } else {
+      this.fetchCreateObjectService.getRangeToCreateOR(this.atelierSelect, +this.nuSelectedRange.substring(1,4), +reserveNumber, isForward).then((res : any) => {
+        this.rangeSurbrillance.splice(0)
+        this.rangeSurbrillance = res.range;
+        this.nuSelectedRange = this.rangeSurbrillance[1];
+        console.log(res)
+        this.scrollToRangeOR(this.rangeSurbrillance[0])
+      })
+    }
+  }
+
+
 
   getObjetRepereByAteliers(){
     this.fetchVisuService.getObjetRepereByAteliers(this.atelierSelect).then((list: ObjetRepereInfo[]) => {
@@ -157,7 +207,8 @@ export class CreateObjectComponent implements OnInit {
         if (libelle != undefined) {
           let item : modificationTypeObject = {
             idTypeObjet: e.idTypeObjet,
-            libelleTypeObjet: libelle.libelleType
+            libelleTypeObjet: libelle.libelleType,
+            actif : e.actif
           };
           this.listeTypeItemOfOR.push(item)
         }
@@ -195,6 +246,9 @@ export class CreateObjectComponent implements OnInit {
 
   setcheckValide() {
     this.checkValide = !this.checkValide;
+    if(!this.checkValide) {
+      this.rangeSurbrillance = []
+    }
   }
 
   setcheckSecurite(){
@@ -267,9 +321,7 @@ export class CreateObjectComponent implements OnInit {
       this.getItemByObjetRepere();
       this.selectNow = idOR;
       this.getListTypeItemsByOR();
-    }
-    console.log(this.listeItem);
-    
+    }    
   }
 
   public selectItem(idItem : string){
@@ -494,8 +546,13 @@ export class CreateObjectComponent implements OnInit {
   }
  
 
-
-
+  scrollToRangeOR(nu : string){
+    let scrollElement : string = nu;
+    const element = document.getElementById(scrollElement);
+    if (element != null){
+      element.scrollIntoView({block: 'center'});
+    }
+  }
 
 }
 

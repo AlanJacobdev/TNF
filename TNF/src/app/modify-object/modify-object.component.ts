@@ -98,7 +98,8 @@ export class ModifyObjectComponent implements OnInit {
           dateCreation: e.posteCreation ,
           profilModification: e.profilCreation ,
           posteModification: e.posteModification ,
-          dateModification: e.dateModification 
+          dateModification: e.dateModification,
+          actif : e.actif
         };
         this.listeTypeOR.push(typeOr)
       })
@@ -119,7 +120,8 @@ export class ModifyObjectComponent implements OnInit {
         if (libelle != undefined) {
           let item : modificationTypeObject = {
             idTypeObjet: e.idTypeObjet,
-            libelleTypeObjet: libelle.libelleType
+            libelleTypeObjet: libelle.libelleType,
+            actif : e.actif
           };
           this.listeTypeItemOfOR.push(item)
         }
