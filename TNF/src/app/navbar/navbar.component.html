@@ -60,14 +60,20 @@
                             <a class="nav-link dropdown-toggle" [ngClass]="{'active': PA0.isActive || PA0.isActive}" href="#"
                                 id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown"
                                 aria-expanded="false">
-                                Paramétrage
+                                <span class="position-absolute top-25 start-0 translate-middle badge rounded-pill bg-danger">
+                                    3
+                                    <span class="visually-hidden">unread messages</span>
+                                </span>
+                                  <span class="position-relative">Paramétrage</span>
+                                
                             </a>
+                            
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                                 <li><a #PA0="routerLinkActive" class="dropdown-item" routerLink="/gestionTypeObjet"
                                 routerLinkActive="active" (click)="selectPage('Gestion des types d\'objet')">Gestion des types d'objet</a></li>
                                 <li><a #PA1="routerLinkActive" class="dropdown-item" routerLink="/gestionAtelier"
                                     routerLinkActive="active" (click)="selectPage('Gestion des ateliers')">Gestion des ateliers</a></li>
-                                <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                <li><a class="dropdown-item" href="#">Demandes de suppressions </a></li>
                             </ul>
                         </li>
                     </ng-template>

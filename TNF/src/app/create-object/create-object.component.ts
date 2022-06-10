@@ -63,6 +63,8 @@ export class CreateObjectComponent implements OnInit {
   public orSelectedForItem : boolean = false;
   public errorReservation : boolean = false;
   public nuSelectedRange : string = "";
+  public intervalValidate : boolean = true;
+
   constructor(private fetchCreateTypeObject : FetchcreateTypeObjectService, private fetchVisuService : FetchVisuService, private fetchCreateObjectService: FetchCreateObjectService, private fetchRecopieService : FetchRecopieService) {
     this.getListType();
     this.getAteliers();
@@ -137,9 +139,11 @@ export class CreateObjectComponent implements OnInit {
           this.manageToast("Erreur de création", "Il n'y a pas la place nécessaire à la création" , "red")
         } else {  
           this.manageToast("Création", "La création est possible dans l'intervalle en surbrillance", "#006400")
-          this.fetchCreateObjectService.getRangeToCreateOR(this.atelierSelect, +this.nuSelect.substring(1,4), +reserveNumber, true).then((res : any) => {
+          this.fetchCreateObjectService.getRangeToCreateOR(this.atelierSelect, +this.nuSelect.substring(1,4), +reserveNumber).then((res : any) => {
             this.rangeSurbrillance = res.range;
             this.scrollToRangeOR(this.nuSelect)
+            this.nuSelectedRange = this.rangeSurbrillance[0];
+            this.intervalValidate = true;
           })
 
           
@@ -158,13 +162,28 @@ export class CreateObjectComponent implements OnInit {
         this.manageToast("Erreur de création", "Veuillez renseigner un nombre" , "red")
       } else {
       this.fetchCreateObjectService.getRangeToCreateOR(this.atelierSelect, +this.nuSelectedRange.substring(1,4), +reserveNumber, isForward).then((res : any) => {
-        this.rangeSurbrillance.splice(0)
-        this.rangeSurbrillance = res.range;
-        this.nuSelectedRange = this.rangeSurbrillance[1];
-        console.log(res)
-        this.scrollToRangeOR(this.rangeSurbrillance[0])
+        if (res == undefined){
+          this.rangeSurbrillance.splice(0);
+        } else if (typeof res === 'string') {
+          if (isForward){
+            this.manageToast("Erreur de création", "Il n'existe plus d'emplacements possible après " , "red")
+          } else {
+            this.manageToast("Erreur de création", "Il n'existe plus d'emplacements possible avant " , "red")
+          }
+        } else {
+          this.rangeSurbrillance.splice(0);
+          this.rangeSurbrillance = res.range;
+          this.nuSelectedRange = this.rangeSurbrillance[0];
+          this.scrollToRangeOR(this.rangeSurbrillance[0])
+        }
       })
     }
+  }
+
+  changeNU() {
+    this.nuSelect = this.rangeSurbrillance[0];
+    this.manageToast("Selection de création", "Le nouvel objet repère créé sera " + this.nuSelect + ". L(es) autre(s) objet(s) repère(s) seront reservés" , "#006400");
+    this.intervalValidate = true;
   }
 
 
@@ -249,6 +268,11 @@ export class CreateObjectComponent implements OnInit {
     if(!this.checkValide) {
       this.rangeSurbrillance = []
     }
+    if(this.checkValide == true){
+      this.intervalValidate = false;
+    } else {
+      this.intervalValidate = true;
+    }
   }
 
   setcheckSecurite(){
@@ -263,7 +287,8 @@ export class CreateObjectComponent implements OnInit {
   }
       
   public selectType(Type: any ) {
-    this.typeNow = Type.target.value;    
+    this.typeNow = Type.target.value;   
+    this.rangeSurbrillance.splice(0); 
     if (this.objectNow === this.TypeObject.Item) {
       this.getItemFromOrAndDispo();
     }
@@ -293,6 +318,8 @@ export class CreateObjectComponent implements OnInit {
     this.listeItem.splice(0);
     this.errorLibelle = false;
     this.deleteDataForm();
+    this.rangeSurbrillance.splice(0);
+    this.errorReservation = false;
     if( atelier == '') {   
       this.listeNUetOr.splice(0);
       this.listeOR.splice(0);
@@ -384,6 +411,9 @@ export class CreateObjectComponent implements OnInit {
   public selectNU (nu : string) {
     this.nuSelect = nu;
     this.description.splice(0);
+    this.checkValide = false;
+    this.rangeSurbrillance.splice(0);
+    this.errorReservation = false;
   }
 
   manageToast (title : string, text : string, color : string ){
@@ -422,19 +452,33 @@ export class CreateObjectComponent implements OnInit {
           }
         }
         this.refreshValidationForm();
-        this.fetchCreateObjectService.createObject(libelle, this.typeNow, this.nuSelect, this.checkValide, tabDesc).then((res: any) => {
-          if(typeof res === 'string') {
-            this.manageToast("Erreur de création", res , "red")
-          } else {  
-            this.manageToast("Création", "L'objet repère " + this.typeNow + this.nuSelect + " a été crée", "#006400")
-            this.afficherNUOR(this.atelierSelect);        
-          }
-        }).catch((e) => {
-        })
+        if ( this.checkValide === false ) {
+          this.fetchCreateObjectService.createObject(libelle, this.typeNow, this.nuSelect, this.checkValide, tabDesc).then((res: any) => {
+            if(typeof res === 'string') {
+              this.manageToast("Erreur de création", res , "red")
+            } else {  
+              this.manageToast("Création", "L'objet repère " + this.typeNow + this.nuSelect + " a été crée", "#006400")
+              this.afficherNUOR(this.atelierSelect);        
+            }
+          }).catch((e) => {
+          })
+        } else {
+          this.fetchCreateObjectService.createMultipleObject(libelle, this.typeNow, this.nuSelect, this.rangeSurbrillance, this.checkValide, tabDesc).then((res: any) => {
+            if(typeof res === 'string') {
+              this.manageToast("Erreur de création", res , "red")
+            } else {  
+              this.manageToast("Création", res.message, "#006400")
+              this.afficherNUOR(this.atelierSelect);        
+            }
+          }).catch((e) => {
+          })
+        }
+        
     } else {
       this.formValidate = true;
     }
   }
+
 
   createItem( digit : string){
     if (this.LibelleItem != '' && digit != '' && this.etat != this.etatNow.Aucun ) {

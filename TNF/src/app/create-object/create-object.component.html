@@ -148,7 +148,7 @@
                                         <button class="btn btn-outline-secondary" type="button" (click)="getRangeToCreateOR(NumberObjet.value, false)">
                                             <fa-icon class=" text-right px-2" [icon]="faChevronLeft"></fa-icon>
                                         </button>
-                                        <button class="btn btn-outline-secondary px-4" type="button">
+                                        <button class="btn btn-outline-secondary px-4" type="button" (click)="changeNU()">
                                             <fa-icon class=" text-right validate" [icon]="faCheck"></fa-icon> 
                                             <span class="ps-2 fs-5">Valider </span>
                                         </button>
@@ -162,7 +162,7 @@
                            
                             
                         </div>
-                        <button *ngIf="this.atelierSelect != '' && this.nuSelect != '' && this.typeNow != ''" (click)="createObjet(Libelle.value)" type="button" class="btn btn-lg btn-light col-10 offset-1 col-lg-6 offset-lg-3 mt-2 mb-3">Créer</button>
+                        <button *ngIf="this.atelierSelect != '' && this.nuSelect != '' && this.typeNow != '' && this.intervalValidate " (click)="createObjet(Libelle.value)" type="button" class="btn btn-lg btn-light col-10 offset-1 col-lg-6 offset-lg-3 mt-2 mb-3">Créer</button>
                     </div>
                 </div>
             </ng-container>
@@ -464,7 +464,7 @@
                             </div>
                            
                         </div>
-                        <button *ngIf="this.atelierSelect != '' && this.itemSelect != '' && this.typeNow != ''" (click)="createSI()" type="button" class="btn btn-lg btn-light col-10 offset-1 col-lg-6 offset-lg-3 my-2">Créer</button>
+                        <button *ngIf="this.atelierSelect != '' && this.itemSelect != '' && this.typeNow != '' " (click)="createSI()" type="button" class="btn btn-lg btn-light col-10 offset-1 col-lg-6 offset-lg-3 my-2">Créer</button>
                     </div>
                 </div>
 

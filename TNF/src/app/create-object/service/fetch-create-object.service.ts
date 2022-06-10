@@ -83,6 +83,43 @@ export class FetchCreateObjectService {
     }
   }
 
+  async createMultipleObject(libelle : string, codeType :string, nu : string, rangeNu : string[] ,valide: boolean, description : any[]): Promise<any> {
+    let global = this.cookieService.get('login');
+    let url = "http://localhost:3000/objetrepere/create/createMultipleObject"
+    let payload = {
+      libelleObjetRepere : libelle,
+      codeType : codeType,
+      numeroUnique : nu,
+      rangeNu : rangeNu,
+      valide: valide,
+      description : description,
+      profilCreation : global,
+      posteCreation : ""
+    }
+    try {
+      const res : any = await lastValueFrom(this.http.post<any>(url, payload));
+      console.log(res);
+      
+      let returnError;
+      if (res.hasOwnProperty('error')){
+        returnError = res.error;
+      } else {
+        returnError = res;
+      }
+      return returnError;
+    } catch (e : any) {
+      let returnError;
+      if (e.hasOwnProperty('error')){
+        returnError = e.error;
+      } else {
+        returnError = e;
+      }
+      return returnError;
+    }
+  }
+
+  
+
 
   async createItem(libelle : string, idOR : string, codeObjet :string, digit : number, securite : boolean, nu : string, etat: string, description : any[]): Promise<any> {
     let global = this.cookieService.get('login');
@@ -178,21 +215,25 @@ export class FetchCreateObjectService {
     return returnError;
   }
 
-  async getRangeToCreateOR (Atelier : string, start : number , bookOr : number, isForward :boolean) {
-    let url = "http://localhost:3000/objetrepere/getRangeToCreateOR/{Atelier}/{start}/{bookOr}/{isForward}"
+  async getRangeToCreateOR (Atelier : string, start : number , bookOr : number, isForward? :boolean) {
+    let url
+    if (isForward != undefined){
+      url = "http://localhost:3000/objetrepere/getRangeToCreateOR/{Atelier}/{start}/{bookOr}/{isForward}"
+      url = url.replace("{isForward}", isForward.toString());
+    } else {
+      url = "http://localhost:3000/objetrepere/getRangeToCreateOR/{Atelier}/{start}/{bookOr}"
+    }
+
     url = url.replace("{Atelier}", Atelier);
     url = url.replace("{start}", start.toString());
     url = url.replace("{bookOr}", bookOr.toString());
-    url = url.replace("{isForward}", isForward.toString());
+    
 
     const res : any = await lastValueFrom(this.http.get<any>(url));
-    console.log(res.hasOwnProperty('error'));
     
     let returnError;
-    if(res.hasOwnProperty('error')){
-      returnError = undefined;
-    } else if (res.hasOwnProperty('message')){
-      returnError=res.message;
+    if (res.hasOwnProperty('error')){
+      returnError=res.error;
     } else {
       returnError = res;
     }
