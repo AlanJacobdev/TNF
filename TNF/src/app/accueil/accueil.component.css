@@ -1,3 +1,7 @@
 .min-vh-height {
     min-height: 75vh;
 }
+
+.buttonEditDemande:hover {
+    background-color: rgb(241, 241, 241);
+}
