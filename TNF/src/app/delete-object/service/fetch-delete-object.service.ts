@@ -129,7 +129,8 @@ export class FetchDeleteObjectService {
 
   async demandeAdmin(deleteObjects : demandeAdmin) : Promise<any> {
     let url = "http://localhost:3000/demande-admin"
-    const res : any = await lastValueFrom(this.http.post<any>(url, deleteObjects));    
+    const res : any = await lastValueFrom(this.http.post<any>(url, deleteObjects)); 
+    console.log(res)   
     return res
     
   }

@@ -39,6 +39,19 @@ export class FetchCreateObjectService {
   }
 
   async getAllTypeAvailable (idItem: string): Promise<any>{
+    const admin = this.cookieService.get('Admin');
+   
+    let url;
+    
+    
+    if (admin == "true"){
+      console.log(admin);
+      url = "http://localhost:3000/sousitem/getAllTypeAvailable/{idItem}"
+    } else {
+      url = "http://localhost:3000/sousitem/getAllTypeAvailable/{idItem}"
+    }
+   
+   
     let url = "http://localhost:3000/sousitem/getAllTypeAvailable/{idItem}"
     url = url.replace("{idItem}", idItem);
     const res : TypeObjetInfo[] = await lastValueFrom(this.http.get<TypeObjetInfo[]>(url));
@@ -50,14 +63,14 @@ export class FetchCreateObjectService {
   }
 
 
-  async createObject(libelle : string, codeType :string, nu : string, valide: boolean, description : any[]): Promise<any> {
+  async createObject(libelle : string, codeType :string, nu : string, description : any[]): Promise<any> {
     let global = this.cookieService.get('login');
     let url = "http://localhost:3000/objetrepere"
     let payload = {
       libelleObjetRepere : libelle,
       codeType : codeType,
       numeroUnique : nu,
-      valide: valide,
+      valide: 'Actif',
       description : description,
       profilCreation : global,
       posteCreation : ""

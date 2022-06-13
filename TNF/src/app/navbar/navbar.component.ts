@@ -48,7 +48,7 @@ export class NavbarComponent implements OnInit {
     await this.authService.deconnexion();
     this.navbarService.setEstConnecte(false);
     this.navbarService.setEstAdmin(false);  
-    localStorage.setItem('page', "Acceuil");
+    localStorage.setItem('page', "Accueil");
   }
 
   public selectPage(nomPage : string){

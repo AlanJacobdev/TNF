@@ -6,7 +6,7 @@
                     <label class="input-group-text " for="atelierSelect">Atelier</label>
                     <select (change)=selectAtelier($event) class="form-select" id="atelierSelect" aria-label="Default select example">
                         <option value ="" selected>Sélectionner l'atelier</option>
-                        <option *ngFor="let atelier of listeAtelier" [value]="atelier.idAtelier">
+                        <option *ngFor="let atelier of listeAtelier" [value]="atelier.idAtelier" style="--bs-bg-opacity: .25;" [ngClass]="{'bg-secondary bg-gradient' : !atelier.actif}">
                             {{atelier.idAtelier}} - {{atelier.libelleAtelier}}
                         </option>
                     </select>
@@ -90,7 +90,7 @@
                 <table class="table table-hover cursor ">
                     <thead>
                     <tr>
-                        <th class="col-4" scope="col-4">N° Séquentiel</th>
+                        <th class="col-4" scope="col-4">Identifiant</th>
                         <th class="col-8  align-middle" scope="col-8">Libellé</th>
                     </tr>
                     </thead>

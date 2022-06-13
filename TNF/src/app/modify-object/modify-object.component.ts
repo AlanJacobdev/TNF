@@ -3,7 +3,7 @@ import { faChevronRight, faMagicWandSparkles, faXmark } from '@fortawesome/free-
 import { AtelierInfo } from 'src/structureData/Atelier';
 import { Description } from 'src/structureData/Description';
 import { typeObjet, ItemInfo, ItemModification, etat } from 'src/structureData/Item';
-import { ObjetRepereInfo, ObjetRepereModification } from 'src/structureData/ObjetRepere';
+import { ObjetRepereInfo, ObjetRepereModification, valide } from 'src/structureData/ObjetRepere';
 import { SousItemInfo, SousItemModification } from 'src/structureData/SousItem';
 import { TypeObjetRepereTableau, TypeObjetInfo, TypeObjetRepereInfo, modificationTypeObject } from 'src/structureData/TypeObject';
 import { FetchcreateTypeObjectService } from '../create-type-object/service/fetchcreate-type-object.service';
@@ -44,6 +44,9 @@ export class ModifyObjectComponent implements OnInit {
   }
   public etat : etat = etat.Aucun;
   public etatNow =etat;
+  public valide : valide = valide.Aucun;
+  public valideNow =valide;
+  public valideError : boolean = false;
   public etatError : boolean = false;
   public idSISelect : string = "";
   public siSelect : SousItemModification = {
@@ -62,7 +65,7 @@ export class ModifyObjectComponent implements OnInit {
   public orSelect : ObjetRepereModification = {
     idObjetRepere: '',
     libelleObjetRepere: '',
-    valide: false,
+    valide: '',
     description: []
   } ;
 
@@ -130,6 +133,27 @@ export class ModifyObjectComponent implements OnInit {
     })
   }
 
+
+  getListTypeItemsForOR(){
+    this.fetchModifyTypeObject.getTypeOfItemsOfOR(this.atelierSelect).then((list: modificationTypeObject[]) => {
+      console.log(list);
+      this.listeTypeItemOfOR.splice(0);
+      list.forEach((e : modificationTypeObject) => {
+        const libelle = this.listeTypeOR.find(element => element.idType === e.idTypeObjet);
+        if (libelle != undefined) {
+          let item : modificationTypeObject = {
+            idTypeObjet: e.idTypeObjet,
+            libelleTypeObjet: libelle.libelleTypeOR,
+            actif : e.actif
+          };
+          this.listeTypeItemOfOR.push(item)
+        }
+      })
+    }).catch((e) => {
+    })
+    
+    
+  }
 
 
   getAteliers(){
@@ -225,7 +249,7 @@ export class ModifyObjectComponent implements OnInit {
     this.orSelect = {
       idObjetRepere : '',
       libelleObjetRepere : '',
-      valide : false,
+      valide : '',
       description : []
     }
     this.itemSelect = {
@@ -247,6 +271,7 @@ export class ModifyObjectComponent implements OnInit {
     } else {
       this.atelierSelect = atelier;
       this.getObjetRepereByAtelier();
+      this.getListTypeItemsForOR();
     }
   }
   public selectTypeObjet (TypeObjet : any) {
@@ -259,7 +284,6 @@ export class ModifyObjectComponent implements OnInit {
   
 
   public selectOR(idOR : string) {
-    let lastID = this.idORSelect
     this.idORSelect = idOR;
     this.selectedNow = idOR;
     
@@ -270,7 +294,7 @@ export class ModifyObjectComponent implements OnInit {
         this.orSelect.libelleObjetRepere = orInfo.libelleObjetRepere;
         this.orSelect.valide = orInfo.valide;
         this.orSelect.description = orInfo.description;
-        this.checkValide = orInfo.valide;
+        this.valide = orInfo.valide == 'A' ? valide.A : valide.R;
         this.descriptionObjectSelect.splice(0);
         for (const d of this.orSelect.description){
           this.descriptionObjectSelect.push(d)
@@ -328,7 +352,7 @@ export class ModifyObjectComponent implements OnInit {
         this.LibelleItem = itemInfo.libelleItem;
         this.itemSelect.etat = itemInfo.etat;
         this.itemSelect.description = itemInfo.description;
-        this.etat = itemInfo.etat == 'A' ? etat.A : itemInfo.etat == 'EA' ? etat.EA : itemInfo.etat == 'HS' ? etat.HS : etat.Aucun;
+        this.etat = itemInfo.etat == 'A' ? etat.A : itemInfo.etat == 'EA' ? etat.EA : itemInfo.etat == 'HS' ? etat.HS : etat.Aucun; 
         this.descriptionObjectSelect.splice(0);
         for (const d of this.itemSelect.description){
           this.descriptionObjectSelect.push(d)
@@ -400,7 +424,7 @@ export class ModifyObjectComponent implements OnInit {
   modifyObjet(libelle : string) {
    
     if (libelle != '') {
-        this.fetchModifyTypeObject.modifyObject(this.orSelect.idObjetRepere, libelle, this.checkValide, this.descriptionObjectSelect).then((res: any) => {
+        this.fetchModifyTypeObject.modifyObject(this.orSelect.idObjetRepere, libelle, this.valide, this.descriptionObjectSelect).then((res: any) => {
           if(typeof res === 'string') {
             this.manageToast("Erreur de modification", res , "red")
           } else {  
@@ -510,6 +534,11 @@ export class ModifyObjectComponent implements OnInit {
   selectEtat(etat : etat){
     this.etat = etat;
     this.etatError = false;
+  }
+
+  selectValide(valide : valide){
+    this.valide = valide;
+    this.valideError = false;
   }
 
 }

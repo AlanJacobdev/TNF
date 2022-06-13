@@ -25,7 +25,7 @@
                             </tr>
                             
                             <ng-template #afficheAtelier>
-                                <tr *ngFor="let atelier of listeAtelier | filterAtelier: searchText" (click)="selectAtelier(atelier.idAtelier)" [ngClass]="{'table-active': atelier.idAtelier === this.atelierSelected}">
+                                <tr *ngFor="let atelier of listeAtelier | filterAtelier: searchText" (click)="selectAtelier(atelier.idAtelier)" [ngClass]="{'table-active': atelier.idAtelier === this.atelierSelect}">
                                     <td class="col-2"> 
                                         <input (click)="selectCheckAtelier(atelier.idAtelier)" class="form-check-input"  type="checkbox" [checked]="atelier.actif" id="flexCheckDefault">
                                     </td>
@@ -38,6 +38,42 @@
                 </div>
             </div>
         </div>
+
+        <div *ngIf="!changesNow; else formType" class="col-lg-6 col-xs-12 mt-3 mt-lg-5 order-1 order-lg-2">
+            <div class="row">
+                <div class="col-lg-12 col-3 my-lg-3">
+                    <button (click)="selectCreateType()" type="button" class="btn btn-lg btn-light col-12 col-lg-6 offset-lg-3 shadow-sm ">
+                        <div class="d-none d-lg-block">Modifier</div>
+                        <div class="d-block d-lg-none"><fa-icon class="fs-3 col-12" [icon]="faPen" ></fa-icon> </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <ng-template #formType >
+            <div class="col-lg-5 col-xs-12 mt-5 offset-lg-1 order-1 order-lg-2 needs-validation" [ngClass]="{'was-validated': formValidate === true}">
+                <div class="container-fluid border rounded py-3 px-3 shadow-sm">
+                    <div class="text-center row">
+                        <span class="fs-3 col-10 offset-1 ">Modification </span>
+                        <fa-icon class="close col-1 text-right" [icon]="faXmark" (click)="close()"></fa-icon>
+                    </div>
+                    <div class="col-12 col-lg-10 offset-lg-1 my-3">
+                        <div class="form-floating mb-3">
+                            <input [value]="this.atelierSelect" #Identifiant type="text" maxlength="2" class="form-control uppercase" id="IdType" placeholder="" required disabled>
+                            <label for="IdType">Identifiant</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input [value]="this.libelleAtelier" #Libelle type="text" class="form-control" id="IdLibelle" placeholder="" required>
+                            <label for="IdLibelle">Libelle</label>
+                            <div class="invalid-tooltip">
+                                Veuillez renseigner un libellé.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button (click)="updateAtelier(Identifiant.value, Libelle.value)" type="button" class="btn btn-lg btn-light col-10 offset-1 col-lg-6 offset-lg-3 my-2">Modifier</button>
+                </div>
+            </div>
+        </ng-template>
     </div>
 </div>
 <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">

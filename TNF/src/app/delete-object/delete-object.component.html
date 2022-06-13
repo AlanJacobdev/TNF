@@ -7,19 +7,31 @@
                             <label class="input-group-text " for="atelierSelect">Atelier</label>
                             <select (change)=selectAtelier($event) class="form-select" id="atelierSelect" aria-label="Default select example">
                                 <option value ="" selected>Sélectionner l'atelier</option>
-                                <option *ngFor="let atelier of listeAtelier" [value]="atelier.idAtelier">
+                                <option *ngFor="let atelier of listeAtelier" [value]="atelier.idAtelier" style="--bs-bg-opacity: .25;" [ngClass]="{'bg-secondary bg-gradient' : !atelier.actif}">
                                     {{atelier.idAtelier}} - {{atelier.libelleAtelier}}
                                 </option>
                             </select>
                         </div> 
                 </div>
-                <div class="col-lg-3 col-12 mt-1">
+
+                <div class="col-lg-2 col-12 mt-1">
                         <div class="input-group">
                             <label class="input-group-text " for="atelierSelect">Recherche</label>
                             <input class="form-control" type="text" placeholder="Identifiant" id="search" [(ngModel)]="searchText">
                         </div> 
                 </div>
 
+                <div class="col-12 col-lg-3  mt-3 mt-lg-1 ">
+                  <div class="input-group">
+                    <label class="input-group-text " for="TypeObjetSelect">Type Objet</label>
+                    <select (change)=selectTypeObjet($event) class="form-select" id="TypeObjetSelect" aria-label="Default select example" [(ngModel)]="typeNow">
+                      <option value ="" selected>Sélectionner un objet repère</option>
+                      <option *ngFor="let typeObjet of listeTypeItemOfOR" [value]="typeObjet.idTypeObjet">
+                          {{typeObjet.idTypeObjet}} - {{typeObjet.libelleTypeObjet}}
+                      </option>
+                    </select>
+                  </div>
+                </div>
                 <div class="col-lg-2 col-6 mt-1 align-self-center">
                     <div class="form-check">
                       <input class="form-check-input" type="checkbox" value="" id="checkValide" [(ngModel)]="this.isValide" (click)="CheckIfORSelectedValide()">
@@ -47,7 +59,7 @@
                             <thead>
                             <tr>
                                 <th class="col-1 text-center" scope="col-1"></th>
-                                <th class="col-4 text-center" scope="col-4">N° Séquentiel</th>
+                                <th class="col-4 text-center" scope="col-4">Identifiant</th>
                                 <th class="col-7 text-center align-middle" scope="col-7">Libellé</th>
                             </tr>
                             </thead>
@@ -56,7 +68,7 @@
                                 <td class="text-center" colspan="3">Aucun Objet repère</td>
                             </tr>
                             <ng-template #afficheOR>
-                                <tr (dblclick)="selectCheckOr(OR.idObjetRepere)" *ngFor="let OR of listeOR | filterSuppression : searchText | filterType : typeNow:'OR' | actifVisualisation : isValide" (click)="selectOR(OR.idObjetRepere)" [ngClass]="{'table-active' : OR.idObjetRepere === this.idORSelect,  'actifNow' : OR.idObjetRepere === this.selectedNow  }" >
+                                <tr (dblclick)="selectCheckOr(OR.idObjetRepere)" *ngFor="let OR of listeOR | filterSuppression : searchText | actifVisualisation : isValide" (click)="selectOR(OR.idObjetRepere)" [ngClass]="{'table-active' : OR.idObjetRepere === this.idORSelect,  'actifNow' : OR.idObjetRepere === this.selectedNow  }" >
                                     <td class="col-1">
                                         <input (click)="selectCheckOr(OR.idObjetRepere)" class="form-check-input"  type="checkbox"  [checked]="OR.isPaste" id="flexCheckDefault">
                                     </td>
@@ -80,7 +92,7 @@
                                 <th class="col-1 text-center" scope="col-1">
                                   <input *ngIf="this.listeItem.length !== 0" class="form-check-input" type="checkbox" (change)="allSelectItem()" [checked]="this.checkAllItem" [disabled]="Ornow.isPaste == true" id="flexCheckDefault">
                                 </th>
-                                <th class="col-4 text-center" scope="col-4">N° Séquentiel</th>
+                                <th class="col-4 text-center" scope="col-4">Identifiant</th>
                                 <th class="col-7 text-center align-middle" scope="col-7">Libellé</th>
                             </tr>
                             </thead>
@@ -113,7 +125,7 @@
                                 <th class="col-1 text-center" scope="col-1">
                                     <input *ngIf="this.listeSousItem.length !== 0" class="form-check-input text-center" type="checkbox" (change)="allSelectSI()" [checked]="this.checkAllSi" [disabled]="ItemNow.isPaste == true" id="flexCheckDefault">
                                 </th>
-                                <th class="col-4 text-center" scope="col-4">N° Séquentiel</th>
+                                <th class="col-4 text-center" scope="col-4">Identifiant</th>
                                 <th class="col-7 text-center align-middle" scope="col-7">Libellé</th>
                             </tr>
                           </thead>
@@ -293,7 +305,7 @@
             </div>
           </div>
           <div *ngIf="suppWithDmdAdmin && suppExecEnd" class="row border-top pt-1 pb-2">
-            <div class="col-1 text-end pt-1">
+            <div class="col-1 text-end align-self-center pt-1">
               <fa-icon class=" fs-3 text-danger" [icon]="faCircleXmark"></fa-icon> 
             </div>
             <div class="col-11">
@@ -301,7 +313,7 @@
                 <div class=" col-12 fw-bold fs-6">
                   Néccessite l'intervention d'un administrateur
                 </div>
-                <div class=" col-12 fs-6">
+                <div class=" col-12 fs-6 pe-lg-5">
                   Veuillez faire une demande pour qu'un administrateur puisse effectuer ces suppressions (Problème de droits)
                 </div>
               </div> 

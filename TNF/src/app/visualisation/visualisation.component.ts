@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AtelierInfo } from 'src/structureData/Atelier';
-import { ItemAffichage, ItemInfo, ItemSave, typeObjet } from 'src/structureData/Item';
-import { ObjetRepereAffichage, ObjetRepereInfo, ObjetRepereSave } from 'src/structureData/ObjetRepere';
+import { etat, ItemAffichage, ItemInfo, ItemSave, typeObjet } from 'src/structureData/Item';
+import { ObjetRepereAffichage, ObjetRepereInfo, ObjetRepereSave, valide } from 'src/structureData/ObjetRepere';
 import { SousItemAffichage, SousItemInfo, SousItemSave } from 'src/structureData/SousItem';
 import { FetchVisuService } from './service/fetch-visu.service';
 import { faHistory, faCalendar, faUser, faClock, faEye } from '@fortawesome/free-solid-svg-icons';
@@ -34,13 +34,17 @@ export class VisualisationComponent implements OnInit {
   public searchText : string = "";
   public objectTypeNow: typeObjet = typeObjet.Aucun;
   public TypeObjet = typeObjet;
-  public isValide : boolean = false;
+  public etatItem : etat = etat.Aucun;
+  public etatSI : etat = etat.Aucun;
+  public valideOR : valide = valide.Aucun;
+  public valideNow =valide;
+  public etatNow =etat;
   public descriptionFromHistory : boolean = false;
   public descriptionHistory : Description[] = [];
   public Ornow : ObjetRepereAffichage = {
     idObjetRepere: '',
     libelleObjetRepere: '',
-    valide: "",
+    valide: '',
     profilCreation: '',
     dateCreation: '',
     profilModification: '',
@@ -114,8 +118,7 @@ export class VisualisationComponent implements OnInit {
       const datem = new Date(res.dateModification).toISOString().split('T')[0] + " " + new Date(res.dateModification).toTimeString().split(' ')[0]
       this.Ornow.dateModification = (res.dateModification != null) ? datem : "Inconnue"; 
       this.Ornow.description = res.description ;
-      this.Ornow.valide = (res.valide) ? "Oui" : "Non";
-
+      this.Ornow.valide = res.valide == 'A' ? "Actif" : 'Reservé';
     }
     this.selectedNow = idOr;
     this.selectedItem = "";
@@ -183,6 +186,19 @@ export class VisualisationComponent implements OnInit {
 
     }
     this.selectedNow = idSousItem;
+  }
+
+
+  selectEtatItem(etat : etat){
+    this.etatItem = etat;
+  }
+
+  selectEtatSI(etat : etat){
+    this.etatSI = etat;
+  }
+
+  selectValideOR(valide : valide){
+    this.valideOR = valide
   }
 
 
@@ -255,17 +271,7 @@ export class VisualisationComponent implements OnInit {
     }
   }
 
-  public CheckIfORSelectedValide(){
-    if(this.isValide = true) {
-      if(this.Ornow.valide == 'Non') {
-        this.selectedOr = "";
-        this.selectedNow = "";
-        this.listeItem.splice(0);
-        this.listeSousItem.splice(0);
-      }
-
-    }
-  }
+  
 
 }
 

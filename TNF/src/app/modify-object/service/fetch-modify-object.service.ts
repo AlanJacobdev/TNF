@@ -6,6 +6,7 @@ import { Description } from 'src/structureData/Description';
 import { ItemInfo } from 'src/structureData/Item';
 import { ObjetRepereInfo } from 'src/structureData/ObjetRepere';
 import { SousItemInfo } from 'src/structureData/SousItem';
+import { modificationTypeObject } from 'src/structureData/TypeObject';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,7 @@ export class FetchModifyObjectService {
 
 
 
-  async modifyObject(idOR : string, libelle : string, valide: boolean, description : Description[]): Promise<any> {
+  async modifyObject(idOR : string, libelle : string, valide: string, description : Description[]): Promise<any> {
     let global = this.cookieService.get('login');
     let url = "http://localhost:3000/objetrepere/{ID}"
     url = url.replace("{ID}", idOR)
@@ -114,6 +115,18 @@ export class FetchModifyObjectService {
     }
 
 
+  }
+
+
+  async getTypeOfItemsOfOR(Atelier : string) : Promise<any> {
+    let url = "http://localhost:3000/objetrepere/getTypeOfItemsForOR/{Atelier}"
+    url = url.replace("{Atelier}", Atelier)
+    const res : modificationTypeObject[] = await lastValueFrom(this.http.get<modificationTypeObject[]>(url));
+    if (res.length == 0) {
+      return undefined;
+    } else {
+      return res;
+    }
   }
 
 }

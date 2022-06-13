@@ -29,7 +29,7 @@
                                 <label class="input-group-text col-3 col-lg-2" for="atelierSelect">Atelier</label>
                                 <select (change)=selectAtelier($event) class="form-select" id="atelierSelect" aria-label="Default select example">
                                     <option value ="" selected>Sélectionner l'atelier</option>
-                                    <option *ngFor="let atelier of listeAtelier" [value]="atelier.idAtelier">
+                                    <option *ngFor="let atelier of listeAtelier" [value]="atelier.idAtelier" style="--bs-bg-opacity: .25;" [ngClass]="{'bg-secondary bg-gradient' : !atelier.actif}">
                                         {{atelier.idAtelier}} - {{atelier.libelleAtelier}}
                                     </option>
                                 </select>
@@ -70,7 +70,7 @@
                         <table class="table table-hover cursor ">
                             <thead>
                             <tr>
-                                <th class="col-4" scope="col-4">N° Séquentiel</th>
+                                <th class="col-4" scope="col-4">N° Unique</th>
                                 <th class="col-8" scope="col-8">Libellé</th>
                             </tr>
                             </thead>
@@ -143,14 +143,14 @@
                                     <button class="input-group-text px-2 bg-white" (click)="reservationIsPossible(NumberObjet.value)"><fa-icon class=" text-right validate" [icon]="faCheck"></fa-icon></button>
                                 </div>
                                 <ng-container *ngIf="this.errorReservation">
-                                    <div class="text-center mb-2">Choisir un emplacement</div>
+                                    <div class="text-center mb-2 text-danger">Il n'y a pas la place nécessaire à la création. Veuillez choisir un emplacement</div>
                                     <div  class="input-group mb-3 justify-content-center" >
                                         <button class="btn btn-outline-secondary" type="button" (click)="getRangeToCreateOR(NumberObjet.value, false)">
                                             <fa-icon class=" text-right px-2" [icon]="faChevronLeft"></fa-icon>
                                         </button>
                                         <button class="btn btn-outline-secondary px-4" type="button" (click)="changeNU()">
                                             <fa-icon class=" text-right validate" [icon]="faCheck"></fa-icon> 
-                                            <span class="ps-2 fs-5">Valider </span>
+                                            <span class="ps-2 fs-6">Valider l'emplacement</span>
                                         </button>
                                         <button class="btn btn-outline-secondary" type="button" (click)="getRangeToCreateOR(NumberObjet.value, true)">
                                             <fa-icon class=" text-right px-2" [icon]="faChevronRight"></fa-icon>
@@ -176,7 +176,7 @@
                         <table class="table table-hover cursor ">
                             <thead>
                             <tr>
-                                <th class="col-4 text-center" scope="col-4">N° Séquentiel</th>
+                                <th class="col-4 text-center" scope="col-4">Identifiant</th>
                                 <th class="col-8 text-center align-middle" scope="col-8">Libellé</th>
                             </tr>
                             </thead>
@@ -203,7 +203,7 @@
                         <table class="table table-hover cursor ">
                             <thead>
                             <tr>
-                                <th class="col-4 text-center" scope="col-4">N° Séquentiel</th>
+                                <th class="col-4 text-center" scope="col-4">Identifiant</th>
                                 <th class="col-8 text-center align-middle" scope="col-8">Libellé</th>
                             </tr>
                             </thead>
@@ -312,7 +312,7 @@
                             <tr>
                                 <ng-container *ngIf="!this.orSelectedForItem; else ReturnToOR ">
                                     <th (click)="setOrSelectedForItem(true)" class="col-4 text-center"  scope="col-4">
-                                        <span [ngClass]="{'displayNameColumn' : !this.orSelectedForItem && this.orSelect !='', 'nowrapColumn' : !this.orSelectedForItem && this.orSelect !=''}">N° Séquentiel</span>
+                                        <span [ngClass]="{'displayNameColumn' : !this.orSelectedForItem && this.orSelect !='', 'nowrapColumn' : !this.orSelectedForItem && this.orSelect !=''}">Identifiant</span>
                                     </th>
                                     <th (click)="setOrSelectedForItem(true)" class="col-8 text-center align-middle transitionOr" scope="col-8">
                                         <span [ngClass]="{'displayNameColumn' : !this.orSelectedForItem && this.orSelect !='', 'nowrapColumn' : !this.orSelectedForItem && this.orSelect !=''}">Libellé</span>
@@ -347,7 +347,7 @@
                         <table class="table table-hover cursor ">
                             <thead>
                             <tr>
-                                <th class="col-4 text-center" scope="col-4">N° Séquentiel</th>
+                                <th class="col-4 text-center" scope="col-4">Identifiant</th>
                                 <th class="col-8 text-center align-middle" scope="col-8">Libellé</th>
                             </tr>
                             </thead>
@@ -375,7 +375,7 @@
                         <table class="table table-hover cursor ">
                             <thead>
                             <tr>
-                                <th class="col-4 text-center nowrapColumn" scope="col-4">N° Séquentiel</th>
+                                <th class="col-4 text-center nowrapColumn" scope="col-4">Identifiant</th>
                                 <th class="col-8 text-center align-middle nowrapColumn" scope="col-8" >Libellé</th>
                             </tr>
                             </thead>
@@ -406,14 +406,14 @@
                         
                         <div class="col-12 col-lg-10 offset-lg-1 my-3">
                             <div class="form-floating mb-3">
-                                <input #Identifiant type="text" maxlength="6" class="form-control uppercase" id="IdType" placeholder="" required [value]="(checkPrefixe ? (this.checkSecurite ? this.typeNow + this.itemSelect + 'Z': this.typeNow + this.itemSelect)  : (this.checkSecurite ?  this.itemSelect + this.typeNow + 'Z' :  this.itemSelect + this.typeNow))" disabled readonly>
+                                <input #Identifiant type="text" maxlength="6" class="form-control uppercase" id="IdType" placeholder="" required [value]="(checkPrefixe ? (this.itemSelect.charAt(this.itemSelect.length-1) == 'Z' ? this.typeNow + this.itemSelect: this.typeNow + this.itemSelect)  : (this.itemSelect.charAt(this.itemSelect.length-1) == 'Z' ?  this.itemSelect.substring(0,this.itemSelect.length-1) + this.typeNow + 'Z' :  this.itemSelect + this.typeNow))" disabled readonly>
                                 <label for="IdType">Identifiant</label>
                             </div>
                             <div class="form-floating mb-3">
                                     <select (change)=selectType($event) [(ngModel)] ="this.typeNow" class="form-select" id="atelierSelect" aria-label="Default select example">
                                         <option value ="" selected>Sélectionner le type </option>
-                                        <option *ngFor="let type of listeTypeOAvailableSI" [value]="type.idType">
-                                            {{type.idType}} - {{type.libelleType}}
+                                        <option *ngFor="let type of listeTypeOAvailableSI" [value]="type.idType" style="--bs-bg-opacity: .25;" [ngClass]="{'bg-secondary bg-gradient' : !type.actif}">
+                                            {{type.idType}} - {{type.libelleType}} 
                                         </option>
                                     </select>
                                     <label  for="atelierSelect"> Type </label>
@@ -443,13 +443,7 @@
                                 Préfixer le type
                                 </label>
                             </div>
-                            <div class="form-check ms-2 mb-3">
-                                <input #SecuriteItem class="form-check-input" type="checkbox" [checked] ="this.checkSecurite" (change)="setcheckSecurite()" id="IdSecurite"  >
-                                <label class="form-check-label" for="IdSecurite">
-                                Securité
-                                </label>
-                            </div>
-                            
+                                                        
                             <div class="form-check form-check-inline ms-2">
                                 <input [(ngModel)]="etat" (click)="selectEtat(this.etatNow.A)" [ngClass]="{'border-danger' : etatError}" class="form-check-input" type="radio" name="radioEtat" id="inlineRadio1" value="A" required>
                                 <label [ngClass]="{'text-danger' : etatError}" class="form-check-label" for="inlineRadio1">Actif</label>

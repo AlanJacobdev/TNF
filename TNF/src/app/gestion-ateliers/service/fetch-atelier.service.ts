@@ -38,5 +38,24 @@ export class FetchAtelierService {
       return res;
     }
   }
+
+  async updateAtelier(id : string, libelle : string ) : Promise<any>{
+    let global = this.cookieService.get('login');
+    let url = "http://localhost:3000/atelier/{idAtelier}"
+    url = url.replace("{idAtelier}", id)
+    let payload = {
+      libelleAtelier : libelle,
+      profilModification : global,
+      posteModification : ''
+    }
+    const res : Atelier = await lastValueFrom(this.http.put<Atelier>(url, payload));
+    if (res.hasOwnProperty('error')) {
+      return undefined
+    } else {
+      return res;
+    }
+
+    
+  }
   
 }

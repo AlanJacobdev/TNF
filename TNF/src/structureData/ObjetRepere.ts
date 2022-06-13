@@ -5,7 +5,7 @@ export interface ObjetRepereInfo {
     libelleObjetRepere: string,
     codeType: string,
     numeroUnique: string,
-    valide: boolean,
+    valide: string,
     profilCreation: string,
     posteCreation: string,
     dateCreation: Date,
@@ -34,7 +34,7 @@ export interface NUetOR {
 export interface ObjetRepereModification {
     idObjetRepere: string,
     libelleObjetRepere: string,
-    valide: boolean,
+    valide: string,
     description: Description[]
 }
 
@@ -43,7 +43,7 @@ export interface ObjetRepereSave {
     libelleObjetRepere  : string,
     codeType : string,
     numeroUnique : string,
-    valide : boolean,
+    valide : string,
     description: Description[],
     etat : string,
     date : string,
@@ -60,6 +60,12 @@ export interface ObjetRepereSuppression {
     idObjetRepere: string,
     libelleObjetRepere: string,
     codeType: string,
-    valide: boolean,
+    valide: string,
     isPaste? : boolean
+}
+
+export enum valide {
+    A = "A",
+    R = "R",
+    Aucun = "Aucun"
 }

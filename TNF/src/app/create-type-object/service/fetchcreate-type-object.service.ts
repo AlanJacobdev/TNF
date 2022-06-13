@@ -138,6 +138,24 @@ export class FetchcreateTypeObjectService {
     }
   }
 
+  
+  
+  async updateActifTypeO(idTypeO : string, actif : boolean) : Promise<any>{
+    let global = this.cookieService.get('login');
+    let url = "http://localhost:3000/typeobjet/{idTypeO}"
+    url = url.replace("{idTypeO}", idTypeO)
+    let payload = {
+      profilModification : global,
+      actif : actif,
+      posteModification : ''
+    }
+    const res : TypeObjetInfo = await lastValueFrom(this.http.put<TypeObjetInfo>(url, payload));
+    if (res.hasOwnProperty('error')) {
+      return undefined
+    } else {
+      return res;
+    }
+  }
 
 
 }

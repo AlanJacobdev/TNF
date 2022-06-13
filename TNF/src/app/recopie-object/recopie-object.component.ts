@@ -24,7 +24,6 @@ export class RecopieObjectComponent implements OnInit {
   public selectedOr: string = "";
   public typeNow: string = "";
   public checkAll : boolean = false;
-   
   public atelier : string = "";
   public atelierCible : string = "";
   public nuCible : string = "";
@@ -101,6 +100,10 @@ export class RecopieObjectComponent implements OnInit {
   public selectOR(idOr : string) {
     this.selectedOr = idOr;
     this.listeItem.splice(0);
+    this.ORCibleExist = -1
+    if(this.atelierCible != '' && this.nuCible.length == 3){
+      this.getORByNU();
+    }
     this.checkAll = false;
     this.fetchVisuService.getItemByObjetRepere(idOr).then((list: ItemRecopie[]) => {
       if(list == undefined) {
@@ -227,8 +230,14 @@ export class RecopieObjectComponent implements OnInit {
         this.ORCible = "Aucun objet repère correspondant";
         this.ORCibleExist = 0;
       } else {  
-        this.ORCible = res.idObjetRepere + " - " + res.libelleObjetRepere;
-        this.ORCibleExist = 1;
+        if(this.selectedOr.substring(0,2) != res.idObjetRepere.substring(0,2)){
+          this.ORCible = "Impossible de recopier des items d'objets repères de types différents";
+          this.ORCibleExist = 0;
+        } else {
+          this.ORCible = res.idObjetRepere + " - " + res.libelleObjetRepere;
+          this.ORCibleExist = 1;
+        }
+
       }
     }).catch((e) => {
     })

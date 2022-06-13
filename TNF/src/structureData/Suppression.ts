@@ -20,7 +20,7 @@ export interface demandeAdmin {
     orDelete : Objetrepere[];
     itemDelete : Item[];
     sousItemDelete : Sousitem[];
-    profilCréation : string;
+    profilCreation : string;
 }
 
 export interface Objetrepere{

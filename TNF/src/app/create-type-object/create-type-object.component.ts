@@ -2,7 +2,6 @@ import { Component, Input, OnInit } from '@angular/core';
 import {  createTypeObject, modificationTypeObject, TypeObjetInfo, TypeObjetRepereInfo, TypeObjetRepereTableau } from 'src/structureData/TypeObject';
 import { FetchcreateTypeObjectService } from './service/fetchcreate-type-object.service';
 import { faXmark, faCalendar, faUser, faClock, faInfo, faPen, faTrashCan, faPlus} from '@fortawesome/free-solid-svg-icons';
-import { typeObjet } from 'src/structureData/Item';
 
 @Component({
   selector: 'app-create-type-object',
@@ -92,6 +91,25 @@ export class CreateTypeObjectComponent implements OnInit {
     this.type = type;
     this.typeError = false;
   }
+
+  selectCheckType(idType : string){
+    const targetAtelier = this.listeTypeO.find((element) => element.idType === idType)
+
+    if ( targetAtelier != undefined) {  
+      this.fetchCreateTypeObject.updateActifTypeO(idType, !targetAtelier.actif).then((res : TypeObjetInfo) =>{
+        if (res != undefined) {
+          const targetAtelierIndex = this.listeTypeO.findIndex((element) => element.idType === idType);
+          this.listeTypeO[targetAtelierIndex].actif = !this.listeTypeO[targetAtelierIndex].actif;
+          this.manageToast("Changement d'état", res.actif ? "Le type d'objet " + idType + " est actif" : "Le type d'objet " + idType  + " est inactif", "#006400" );
+        } else {
+          this.manageToast("Changement d'état", "Problème dû au changement d'état", "red" );
+        }
+      }).catch((e : any)=>{
+
+      })
+    }
+  }
+
   
   refreshListes(){
 
@@ -250,7 +268,6 @@ export class CreateTypeObjectComponent implements OnInit {
 
 
   updateTypeObjet(identifiant : string, libelle : string) {
-    console.log(this.checkValide);
     
     if ( identifiant != '' && libelle != '') {
       if ( this.selectedType == this.TypeObject.OR){
@@ -283,7 +300,6 @@ export class CreateTypeObjectComponent implements OnInit {
   }
 
   deleteTypeObjet() {
-    console.log (this.selectedType)
     if ( this.selectedType == this.TypeObject.OR){
       this.fetchCreateTypeObject.deleteTypeOR(this.idSelected).then((res: any) => {
         console.log(res);
@@ -311,5 +327,8 @@ export class CreateTypeObjectComponent implements OnInit {
       })
     }
   }
+
+
+  
 
 }

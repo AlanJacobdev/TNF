@@ -29,7 +29,7 @@
                                     <label class="input-group-text " for="atelierSelect">Atelier</label>
                                     <select (change)=selectAtelier($event) class="form-select" id="atelierSelect" aria-label="Default select example">
                                         <option value ="" selected>Sélectionner l'atelier</option>
-                                        <option *ngFor="let atelier of listeAtelier" [value]="atelier.idAtelier">
+                                        <option *ngFor="let atelier of listeAtelier" [value]="atelier.idAtelier" style="--bs-bg-opacity: .25;" [ngClass]="{'bg-secondary bg-gradient' : !atelier.actif}">
                                             {{atelier.idAtelier}} - {{atelier.libelleAtelier}}
                                         </option>
                                     </select>
@@ -51,8 +51,8 @@
                                 <label class="input-group-text " for="TypeObjetSelect">Type Objet</label>
                                 <select (change)=selectTypeObjet($event) class="form-select" id="TypeObjetSelect" aria-label="Default select example" [(ngModel)]="typeNow">
                                     <option value="" selected>Sélectionner un type d'objet</option>
-                                    <option *ngFor="let typeObjet of listeTypeOR" [value]="typeObjet.idType">
-                                        {{typeObjet.idType}} - {{typeObjet.libelleTypeOR}}
+                                    <option *ngFor="let typeObjet of listeTypeItemOfOR" [value]="typeObjet.idTypeObjet">
+                                        {{typeObjet.idTypeObjet}} - {{typeObjet.libelleTypeObjet}}
                                     </option>
                                 </select>
                             </div>  
@@ -82,7 +82,7 @@
                         <table class="table table-hover cursor ">
                             <thead>
                             <tr>
-                                <th class="col-4 text-center" scope="col-4">N° Séquentiel</th>
+                                <th class="col-4 text-center" scope="col-4">Identifiant</th>
                                 <th class="col-8 text-center align-middle" scope="col-8">Libellé</th>
                             </tr>
                             </thead>
@@ -131,11 +131,13 @@
                             <div class="form-floating mb-3">
                                 <a class="text-dark cursor" (click)="addDescription()">Ajouter une description</a>
                             </div>
-                            <div class="form-check ms-2">
-                                <input #ValideOR class="form-check-input" type="checkbox" (change)="setcheckValide()" id="IdValide" [checked]="this.checkValide" >
-                                <label class="form-check-label" for="IdValide">
-                                Valide
-                                </label>
+                            <div class="form-check form-check-inline ms-2">
+                                <input [(ngModel)]="valide" (click)="selectValide(this.valideNow.A)" [ngClass]="{'border-danger' : valideError}" class="form-check-input" type="radio" name="radioEtat" id="inlineRadio1" value="A" required>
+                                <label [ngClass]="{'text-danger' : valideError}" class="form-check-label" for="inlineRadio1">Actif</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input [(ngModel)]="valide" (click)="selectValide(this.valideNow.R)" [ngClass]="{'border-danger' : valideError}" class="form-check-input" type="radio" name="radioEtat" id="inlineRadio2" value="R" required>
+                                <label [ngClass]="{'text-danger' : valideError}" class="form-check-label" for="inlineRadio2">En attente</label>
                             </div>
                         </div>
                         <button *ngIf="this.idORSelect != ''" (click)="modifyObjet(LibelleOR.value)" type="button" class="btn btn-lg btn-light col-10 offset-1 col-lg-6 offset-lg-3 my-2">Modifier</button>
@@ -152,7 +154,7 @@
                         <table class="table table-hover cursor ">
                             <thead>
                             <tr>
-                                <th class="col-4 text-center" scope="col-4">N° Séquentiel</th>
+                                <th class="col-4 text-center" scope="col-4">Identifiant</th>
                                 <th class="col-8 text-center align-middle" scope="col-8">Libellé</th>
                             </tr>
                             </thead>
@@ -179,7 +181,7 @@
                         <table class="table table-hover cursor ">
                             <thead>
                             <tr>
-                                <th class="col-4 text-center" scope="col-4">N° Séquentiel</th>
+                                <th class="col-4 text-center" scope="col-4">Identifiant</th>
                                 <th class="col-8 text-center align-middle" scope="col-8">Libellé</th>
                             </tr>
                             </thead>
@@ -262,7 +264,7 @@
                             <tr>
                                 <ng-container *ngIf="!this.orSelectedForItem; else ReturnToOR ">
                                     <th (click)="(this.atelierSelect != '' && this.idORSelect != '' )? setOrSelectedForItem(true) : ''" class="col-4 text-center"  scope="col-4">
-                                        <span [ngClass]="{'displayNameColumn' : !this.orSelectedForItem && this.idORSelect !='', 'nowrapColumn' : !this.orSelectedForItem && this.idORSelect !=''}">N° Séquentiel</span>
+                                        <span [ngClass]="{'displayNameColumn' : !this.orSelectedForItem && this.idORSelect !='', 'nowrapColumn' : !this.orSelectedForItem && this.idORSelect !=''}">Identifiant</span>
                                     </th>
                                     <th (click)="(this.atelierSelect != '' && this.idORSelect != '' )? setOrSelectedForItem(true) : ''" class="col-8 text-center align-middle transitionOr" scope="col-8">
                                         <span [ngClass]="{'displayNameColumn' : !this.orSelectedForItem && this.idORSelect !='', 'nowrapColumn' : !this.orSelectedForItem && this.idORSelect !=''}">Libellé</span>
@@ -297,7 +299,7 @@
                         <table class="table table-hover cursor ">
                             <thead>
                             <tr>
-                                <th class="col-4 text-center" scope="col-4">N° Séquentiel</th>
+                                <th class="col-4 text-center" scope="col-4">Identifiant</th>
                                 <th class="col-8 text-center align-middle" scope="col-8">Libellé</th>
                             </tr>
                             </thead>
@@ -325,7 +327,7 @@
                         <table class="table table-hover cursor ">
                             <thead>
                             <tr>
-                                <th class="col-4 text-center nowrapColumn" scope="col-4">N° Séquentiel</th>
+                                <th class="col-4 text-center nowrapColumn" scope="col-4">Identifiant</th>
                                 <th class="col-8 text-center align-middle nowrapColumn" scope="col-8" >Libellé</th>
                             </tr>
                             </thead>

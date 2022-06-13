@@ -6,8 +6,9 @@ import { typeObjet, ItemInfo, ItemSuppresion } from 'src/structureData/Item';
 import { ObjetRepereInfo, ObjetRepereSuppression } from 'src/structureData/ObjetRepere';
 import { SousItemInfo, SousItemSuppression } from 'src/structureData/SousItem';
 import { deleteObject, demandeAdmin, returnDeleteObject } from 'src/structureData/Suppression';
-import { TypeObjetRepereTableau, TypeObjetInfo, TypeObjetRepereInfo } from 'src/structureData/TypeObject';
+import { TypeObjetRepereTableau, TypeObjetInfo, TypeObjetRepereInfo, modificationTypeObject } from 'src/structureData/TypeObject';
 import { FetchcreateTypeObjectService } from '../create-type-object/service/fetchcreate-type-object.service';
+import { FetchRecopieService } from '../recopie-object/service/fetch-recopie.service';
 import { FetchVisuService } from '../visualisation/service/fetch-visu.service';
 import { FetchDeleteObjectService } from './service/fetch-delete-object.service';
 
@@ -42,7 +43,7 @@ export class DeleteObjectComponent implements OnInit {
     idObjetRepere: '',
     libelleObjetRepere: '',
     codeType: '',
-    valide: false,
+    valide: '',
     isPaste: false
   };
 
@@ -65,6 +66,7 @@ export class DeleteObjectComponent implements OnInit {
   }
   public isPasteSaveItem : ItemSuppresion[] = [];
   public isPasteSaveSI  : SousItemSuppression[] = [];
+  public listeTypeItemOfOR : modificationTypeObject[] = [];
   public checkAllItem : boolean = false;
   public checkAllSi : boolean = false;
   public ORDeleted : string[]= [];
@@ -93,7 +95,7 @@ export class DeleteObjectComponent implements OnInit {
   public searchText : string = "";
   public isValide : boolean = false;
   public selectMultiple : boolean = false;
-  constructor( private fetchVisuService : FetchVisuService, private fetchDeleteObjectService :FetchDeleteObjectService, private fetchCreateTypeObject: FetchcreateTypeObjectService, private cookieService : CookieService) {
+  constructor( private fetchVisuService : FetchVisuService, private fetchDeleteObjectService :FetchDeleteObjectService, private fetchCreateTypeObject: FetchcreateTypeObjectService, private fetchRecopieService : FetchRecopieService,private cookieService : CookieService) {
     this.getListType();
     this.getAteliers();
    }
@@ -217,6 +219,25 @@ export class DeleteObjectComponent implements OnInit {
       
   }
 
+  getListTypeItemsByOR(){
+    this.fetchRecopieService.getTypeOfItemsOfOR(this.idORSelect).then((list: modificationTypeObject[]) => {
+      this.listeTypeItemOfOR.splice(0);
+      list.forEach((e : modificationTypeObject) => {
+        const libelle = this.listeTypeO.find(element => element.idType === e.idTypeObjet);
+        if (libelle != undefined) {
+          let item : modificationTypeObject = {
+            idTypeObjet: e.idTypeObjet,
+            libelleTypeObjet: libelle.libelleType,
+            actif : e.actif
+          };
+          this.listeTypeItemOfOR.push(item)
+        }
+      })
+    }).catch((e) => {
+    })
+  }
+
+
   getSIfromItem(){
     this.fetchVisuService.getSousItemByItem(this.idItemSelect).then((list: SousItemInfo[]) => {
       if(list == undefined) {
@@ -283,6 +304,7 @@ export class DeleteObjectComponent implements OnInit {
       if (res != undefined){
         this.Ornow = res;
       }
+      this.getListTypeItemsByOR();
       await this.getItemFromOR();
     }
     this.listeSousItem = [];
@@ -647,13 +669,13 @@ export class DeleteObjectComponent implements OnInit {
     this.demandeAdmin = true;
   }
 
-  sendDemande(){
+  async sendDemande(){
     let demande : demandeAdmin = {
       motif: this.motifDemande,
       orDelete: [],
       itemDelete: [],
       sousItemDelete: [],
-      profilCréation: this.cookieService.get('login')
+      profilCreation: this.cookieService.get('login')
     };
 
     if (this.returnOfDeleted.listeOR.length != 0){
@@ -685,9 +707,9 @@ export class DeleteObjectComponent implements OnInit {
         }
       }
     }
-
-      this.fetchDeleteObjectService.demandeAdmin(demande).then(async (res: any) => {
-      console.log(res);
+      
+      await this.fetchDeleteObjectService.demandeAdmin(demande).then(async (res: any) => {
+    
       if(res == undefined) {
         
       } else {  

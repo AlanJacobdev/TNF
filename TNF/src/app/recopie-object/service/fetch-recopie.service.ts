@@ -24,6 +24,8 @@ export class FetchRecopieService {
     }
   }
 
+  
+
   async getORByNU(nu : string) : Promise<any> {
     let url = "http://localhost:3000/objetrepere/getORByNU/{NU}"
     url = url.replace("{NU}", nu)

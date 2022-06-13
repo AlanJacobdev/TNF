@@ -6,7 +6,7 @@
                 <label class="input-group-text col-3" for="atelierSelect">Atelier</label>
                 <select (change)=selectAtelier($event) class="form-select" id="atelierSelect" aria-label="Default select example">
                     <option value ="" selected>Selection de l'atelier</option>
-                    <option *ngFor="let atelier of listeAtelier" [value]="atelier.idAtelier">
+                    <option *ngFor="let atelier of listeAtelier" [value]="atelier.idAtelier" style="--bs-bg-opacity: .25;" [ngClass]="{'bg-secondary bg-gradient' : !atelier.actif}">
                         {{atelier.idAtelier}} - {{atelier.libelleAtelier}}
                     </option>
                 </select>
@@ -106,7 +106,7 @@
                     <div class="row col-lg-10 offset-lg-1 mb-3">
                         <div class="input-group">
                             <span class="input-group-text col-3">Numéro</span>
-                            <input #NU (input)=selectNUCible($event) type="text" oninput="this.value = this.value.replace(/\D+/g, '')" maxlength="3" min="0" max="999" length="3" class="form-control">
+                            <input #NU [(ngModel)]="nuCible" (input)=selectNUCible($event) type="text" oninput="this.value = this.value.replace(/\D+/g, '')" maxlength="3" min="0" max="999" length="3" class="form-control">
                         </div>
                     </div>
 
@@ -120,7 +120,12 @@
                     <div *ngIf="this.ORCibleExist != -1" [ngClass]="this.ORCibleExist == 1 ? 'labelValid' : 'labelInvalide'"  class="text-center">{{this.ORCible}}</div>
                     <div *ngIf="this.ORCibleExist == -1" class="py-2 mb-1 labelInvalide"> </div>
                     
-                    <button *ngIf="!recopieEnCours"(click)="recopieItem(AtelierSelect.value, NU.value)" type="button" class="btn btn-lg btn-light col-10 offset-1 col-lg-6 offset-lg-3 my-2">Recopier</button>
+                    <button *ngIf="!recopieEnCours"(click)="recopieItem(AtelierSelect.value, NU.value)" type="button" [disabled]="this.ORCibleExist != 1" class="btn btn-lg btn-light col-10 offset-1 col-lg-6 offset-lg-3 my-2">Recopier</button>
+                    <div class="row">
+                        <div class="col-10 offset-1 text-center fs-6 fst-italic">
+                            L'ensemble des sous-items des items selectionnés est recopié automatiquement
+                        </div>
+                    </div>
                 </div>
                     <div *ngIf="recopieEnCours" class="spinnerWaiting">
                         <div class="spinner-grow" role="status">

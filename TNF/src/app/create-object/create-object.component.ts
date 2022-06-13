@@ -114,6 +114,8 @@ export class CreateObjectComponent implements OnInit {
   getAllTypeAvailable(){
     this.fetchCreateObjectService.getAllTypeAvailable(this.itemSelect).then((list : TypeObjetInfo[]) => {
       if( list != undefined){
+        console.log(list);
+        
         this.listeTypeOAvailableSI = list;
       } else {
         console.log("Problème pour récupérer les types d'objets pour les SI ");
@@ -136,7 +138,7 @@ export class CreateObjectComponent implements OnInit {
           this.errorReservation = true;
           this.rangeSurbrillance.splice(0);
           this.nuSelectedRange = this.nuSelect;
-          this.manageToast("Erreur de création", "Il n'y a pas la place nécessaire à la création" , "red")
+          this.intervalValidate = false;
         } else {  
           this.manageToast("Création", "La création est possible dans l'intervalle en surbrillance", "#006400")
           this.fetchCreateObjectService.getRangeToCreateOR(this.atelierSelect, +this.nuSelect.substring(1,4), +reserveNumber).then((res : any) => {
@@ -144,6 +146,7 @@ export class CreateObjectComponent implements OnInit {
             this.scrollToRangeOR(this.nuSelect)
             this.nuSelectedRange = this.rangeSurbrillance[0];
             this.intervalValidate = true;
+            this.errorReservation = false;
           })
 
           
@@ -182,7 +185,7 @@ export class CreateObjectComponent implements OnInit {
 
   changeNU() {
     this.nuSelect = this.rangeSurbrillance[0];
-    this.manageToast("Selection de création", "Le nouvel objet repère créé sera " + this.nuSelect + ". L(es) autre(s) objet(s) repère(s) seront reservés" , "#006400");
+    // this.manageToast("Selection de création", "Le nouvel objet repère créé sera " + this.nuSelect + ". L(es) autre(s) objet(s) repère(s) seront reservés" , "#006400");
     this.intervalValidate = true;
   }
 
@@ -376,7 +379,6 @@ export class CreateObjectComponent implements OnInit {
   public selectTypeObjet (TypeObjet : any) {
     try {
       this.typeOfItemOR = TypeObjet.target.value;
-      console.log(this.typeOfItemOR)
     } catch  {
       this.typeOfItemOR = TypeObjet;
     }
@@ -453,7 +455,7 @@ export class CreateObjectComponent implements OnInit {
         }
         this.refreshValidationForm();
         if ( this.checkValide === false ) {
-          this.fetchCreateObjectService.createObject(libelle, this.typeNow, this.nuSelect, this.checkValide, tabDesc).then((res: any) => {
+          this.fetchCreateObjectService.createObject(libelle, this.typeNow, this.nuSelect, tabDesc).then((res: any) => {
             if(typeof res === 'string') {
               this.manageToast("Erreur de création", res , "red")
             } else {  
@@ -468,7 +470,8 @@ export class CreateObjectComponent implements OnInit {
               this.manageToast("Erreur de création", res , "red")
             } else {  
               this.manageToast("Création", res.message, "#006400")
-              this.afficherNUOR(this.atelierSelect);        
+              this.afficherNUOR(this.atelierSelect);    
+              this.setcheckValide();              
             }
           }).catch((e) => {
           })
@@ -527,7 +530,7 @@ export class CreateObjectComponent implements OnInit {
           }
        
         this.refreshValidationForm();
-        this.fetchCreateObjectService.createSousItem(this.LibelleSousItem.replace(this.itemSelect.toLowerCase(), this.itemSelect.toUpperCase()), this.itemSelect, this.typeNow, this.checkPrefixe, this.checkSecurite, this.etat, tabDesc).then((res: any) => {
+        this.fetchCreateObjectService.createSousItem(this.LibelleSousItem.replace(this.itemSelect.toLowerCase(), this.itemSelect.toUpperCase()), this.itemSelect, this.typeNow, this.checkPrefixe, this.itemSelect.charAt(this.itemSelect.length-1) == 'Z', this.etat, tabDesc).then((res: any) => {
           if(typeof res === 'string') {
             this.manageToast("Erreur de création", res , "red")
           } else {  

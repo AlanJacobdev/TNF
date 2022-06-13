@@ -5,7 +5,7 @@
             <label class="input-group-text" for="atelierSelect">Atelier</label>
             <select (change)=selectAtelier($event) class="form-select" id="atelierSelect" aria-label="Default select example">
                 <option value =-1 selected>Selection de l'atelier</option>
-                <option *ngFor="let atelier of listeAtelier" [value]="atelier.idAtelier">
+                <option *ngFor="let atelier of listeAtelier" [value]="atelier.idAtelier" style="--bs-bg-opacity: .25;" [ngClass]="{'bg-secondary bg-gradient' : !atelier.actif}">
                     {{atelier.idAtelier}} - {{atelier.libelleAtelier}}
                 </option>
             </select>
@@ -18,16 +18,75 @@
             </div>
         </div>
         <div class="col-lg-2 col-6 mt-4 align-self-center">
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" [(ngModel)]="this.isValide" (click)="CheckIfORSelectedValide()">
+            <!-- <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" [(ngModel)]="this.isValide" (click)="CheckIfORSelectedValide()">
             <label class="form-check-label" for="flexCheckDefault">
               Objet repère valide
-            </label>
-          </div>
+            </label> -->
+            <button class="btn btn-light" type="button" data-bs-toggle="collapse" data-bs-target="#PlusDOptions" aria-expanded="false" aria-controls="collapseExample">
+              Plus d'options de tri
+            </button>
         </div>
         <div *ngIf="this.objectTypeNow != TypeObjet.Aucun" class="col-lg-2 col-6 mt-4 text-end">
           <button data-bs-toggle="modal" data-bs-target="#History" type="button" (click)=getHistory(); class="btn btn-light"><fa-icon class="close col-1 text-right" [icon]="faHistory" ></fa-icon>  Historique</button>
         </div>
+        <div class="collapse mt-2" id="PlusDOptions">
+          <div class="card card-body">
+            <div class="col-12">
+              Objet 
+              <div class="form-check form-check-inline ms-2">
+                <input [(ngModel)]="valideOR" (click)="selectValideOR(this.valideNow.A)"  class="form-check-input" type="radio" name="radioEtatOR" id="inlineRadioOR1" value="A" required>
+                <label class="form-check-label" for="inlineRadioOR1">Actif</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input [(ngModel)]="valideOR" (click)="selectValideOR(this.valideNow.R)"  class="form-check-input" type="radio" name="radioEtatOR" id="inlineRadioOR2" value="R" required>
+                <label class="form-check-label" for="inlineRadioOR2">En attente</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input [(ngModel)]="valideOR" (click)="selectValideOR(this.valideNow.Aucun)"  class="form-check-input" type="radio" name="radioEtatOR" id="inlineRadioOR3" value="Aucun" required checked>
+                <label class="form-check-label" for="inlineRadioOR3">Tous</label>
+              </div>
+            </div>
+            <div class="col-12">
+              Item 
+              <div class="form-check form-check-inline ms-2">
+                <input [(ngModel)]="etatItem" (click)="selectEtatItem(this.etatNow.A)"  class="form-check-input" type="radio" name="radioEtatItem" id="inlineRadioItem1" value="A" required>
+                <label class="form-check-label" for="inlineRadioItem1">Actif</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input [(ngModel)]="etatItem" (click)="selectEtatItem(this.etatNow.EA)"  class="form-check-input" type="radio" name="radioEtatItem" id="inlineRadioItem2" value="EA" required>
+                <label class="form-check-label" for="inlineRadioItem2">En attente</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input [(ngModel)]="etatItem" (click)="selectEtatItem(this.etatNow.HS)"  class="form-check-input" type="radio" name="radioEtatItem" id="inlineRadioItem3" value="HS" required>
+                <label class="form-check-label" for="inlineRadioItem3">Hors service</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input [(ngModel)]="etatItem" (click)="selectEtatItem(this.etatNow.Aucun)"  class="form-check-input" type="radio" name="radioEtatItem" id="inlineRadioItem4" value="Aucun" required checked> 
+                <label class="form-check-label" for="inlineRadioItem4">Tous</label>
+              </div>
+            </div>
+            <div class="col-12">
+              Sous-Item
+              <div class="form-check form-check-inline ms-2">
+                <input [(ngModel)]="etatSI" (click)="selectEtatSI(this.etatNow.A)" class="form-check-input" type="radio" name="radioEtatSI" id="inlineRadioSI1" value="A" required>
+                <label class="form-check-label" for="inlineRadioSI1">Actif</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input [(ngModel)]="etatSI" (click)="selectEtatSI(this.etatNow.EA)" class="form-check-input" type="radio" name="radioEtatSI" id="inlineRadioSI2" value="EA" required>
+                <label class="form-check-label" for="inlineRadioSI2">En attente</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input [(ngModel)]="etatSI" (click)="selectEtatSI(this.etatNow.HS)" class="form-check-input" type="radio" name="radioEtatSI" id="inlineRadioSI3" value="HS" required>
+                <label class="form-check-label" for="inlineRadioSI3">Hors service</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input [(ngModel)]="etatSI" (click)="selectEtatSI(this.etatNow.Aucun)" class="form-check-input" type="radio" name="radioEtatSI" id="inlineRadioSI4" value="Aucun" required checked>
+                <label class="form-check-label" for="inlineRadioSI4">Tous</label>
+              </div>
+            </div>
+          </div>
+        </div>
+        
         
         
     </div>
@@ -49,7 +108,7 @@
                             <td class="text-center" colspan="2">Aucun Objet Repère</td>
                         </tr>
                         <ng-template #afficheOR>
-                            <tr *ngFor="let objetRepere of listeObjetRepere | filterVisualisation : searchText | actifVisualisation : isValide" (click)="selectOR(objetRepere.idObjetRepere)" [ngClass]="{'table-active': objetRepere.idObjetRepere === this.selectedOr , 'actifNow' : objetRepere.idObjetRepere === this.selectedNow }">
+                            <tr *ngFor="let objetRepere of listeObjetRepere | filterVisualisation : searchText | actifVisualisation : valideOR : 'OR'" (click)="selectOR(objetRepere.idObjetRepere)" [ngClass]="{'table-active': objetRepere.idObjetRepere === this.selectedOr , 'actifNow' : objetRepere.idObjetRepere === this.selectedNow }">
                                 <td class="col-5">{{objetRepere.idObjetRepere}}</td>
                                 <td class="col-7">{{objetRepere.libelleObjetRepere}}</td>
                             </tr>
@@ -76,7 +135,7 @@
                       <td class="text-center" colspan="2">Aucun Item</td>
                     </tr>
                     <ng-template #afficheItem>
-                      <tr *ngFor="let item of listeItem | filterVisualisation : searchText"  (click)="selectItem(item.idItem)" [ngClass]="{'table-active': item.idItem === this.selectedItem , 'actifNow' : item.idItem === this.selectedNow }" >
+                      <tr *ngFor="let item of listeItem | filterVisualisation : searchText | actifVisualisation : etatItem : 'Item'"  (click)="selectItem(item.idItem)" [ngClass]="{'table-active': item.idItem === this.selectedItem , 'actifNow' : item.idItem === this.selectedNow }" >
                           <td class="col-5">{{item.idItem}}</td>
                           <td class="col-7">{{item.libelleItem}}</td>
                       </tr>
@@ -104,7 +163,7 @@
                       <td class="text-center" colspan="2">Aucun Sous Item</td>
                     </tr>
                     <ng-template #afficheSousItem>
-                      <tr *ngFor="let sousItem of listeSousItem | filterVisualisation : searchText "  (click)="selectSO(sousItem.idSousItem)" [ngClass]="{'table-active': sousItem.idSousItem === this.selectedSousItem, 'actifNow' : sousItem.idSousItem === this.selectedNow }">
+                      <tr *ngFor="let sousItem of listeSousItem | filterVisualisation : searchText | actifVisualisation : etatSI : 'SI'"  (click)="selectSO(sousItem.idSousItem)" [ngClass]="{'table-active': sousItem.idSousItem === this.selectedSousItem, 'actifNow' : sousItem.idSousItem === this.selectedNow }">
                           <td class="col-5">{{sousItem.idSousItem}}</td>
                           <td class="col-7">{{sousItem.libelleSousItem}}</td>
                       </tr>
@@ -347,7 +406,7 @@
                         <div class="col-12 col-lg-5 col-xl-6 mb-3 ">
                           <div class=" input-group">
                             <label for="IdentifiantHistory" class="input-group-text col-4 col-lg-6">Valide</label>
-                            <input type="text" readonly disabled class="form-control bg-light" id="IdentifiantHistory" [value]="(or.valide)? 'Oui' : 'Non'">
+                            <input type="text" readonly disabled class="form-control bg-light" id="IdentifiantHistory" [value]="or.valide">
                           </div>
                         </div>
                  
