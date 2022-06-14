@@ -33,17 +33,72 @@
                   </div>
                 </div>
                 <div class="col-lg-2 col-6 mt-1 align-self-center">
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="checkValide" [(ngModel)]="this.isValide" (click)="CheckIfORSelectedValide()">
-                      <label class="form-check-label" for="checkValide">
-                        Objet repère valide
-                      </label>
-                    </div>
+                      <button class="btn btn-light" type="button" data-bs-toggle="collapse" data-bs-target="#PlusDOptions" aria-expanded="false" aria-controls="collapseExample">
+                        Plus d'options de tri
+                      </button>
                 </div>
 
                 <div class="col-lg-2 col-6 mt-1 align-self-center">
                     <button (click)="delete()" type="button" data-bs-toggle="modal" data-bs-target="#Suppression" data-backdrop="static" data-keyboard="false" class="btn btn-light">Supprimer</button>
                 </div> 
+
+                <div class="collapse mt-2" id="PlusDOptions">
+                  <div class="card card-body">
+                    <div class="col-12">
+                      Objet 
+                      <div class="form-check form-check-inline ms-2">
+                        <input [(ngModel)]="valideOR" (click)="selectValideOR(this.valideNow.A)"  class="form-check-input" type="radio" name="radioEtatOR" id="inlineRadioOR1" value="A" required>
+                        <label class="form-check-label" for="inlineRadioOR1">Actif</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input [(ngModel)]="valideOR" (click)="selectValideOR(this.valideNow.R)"  class="form-check-input" type="radio" name="radioEtatOR" id="inlineRadioOR2" value="R" required>
+                        <label class="form-check-label" for="inlineRadioOR2">En attente</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input [(ngModel)]="valideOR" (click)="selectValideOR(this.valideNow.Aucun)"  class="form-check-input" type="radio" name="radioEtatOR" id="inlineRadioOR3" value="Aucun" required checked>
+                        <label class="form-check-label" for="inlineRadioOR3">Tous</label>
+                      </div>
+                    </div>
+                    <div class="col-12">
+                      Item 
+                      <div class="form-check form-check-inline ms-2">
+                        <input [(ngModel)]="etatItem" (click)="selectEtatItem(this.etatNow.A)"  class="form-check-input" type="radio" name="radioEtatItem" id="inlineRadioItem1" value="A" required>
+                        <label class="form-check-label" for="inlineRadioItem1">Actif</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input [(ngModel)]="etatItem" (click)="selectEtatItem(this.etatNow.EA)"  class="form-check-input" type="radio" name="radioEtatItem" id="inlineRadioItem2" value="EA" required>
+                        <label class="form-check-label" for="inlineRadioItem2">En attente</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input [(ngModel)]="etatItem" (click)="selectEtatItem(this.etatNow.HS)"  class="form-check-input" type="radio" name="radioEtatItem" id="inlineRadioItem3" value="HS" required>
+                        <label class="form-check-label" for="inlineRadioItem3">Hors service</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input [(ngModel)]="etatItem" (click)="selectEtatItem(this.etatNow.Aucun)"  class="form-check-input" type="radio" name="radioEtatItem" id="inlineRadioItem4" value="Aucun" required checked> 
+                        <label class="form-check-label" for="inlineRadioItem4">Tous</label>
+                      </div>
+                    </div>
+                    <div class="col-12">
+                      Sous-Item
+                      <div class="form-check form-check-inline ms-2">
+                        <input [(ngModel)]="etatSI" (click)="selectEtatSI(this.etatNow.A)" class="form-check-input" type="radio" name="radioEtatSI" id="inlineRadioSI1" value="A" required>
+                        <label class="form-check-label" for="inlineRadioSI1">Actif</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input [(ngModel)]="etatSI" (click)="selectEtatSI(this.etatNow.EA)" class="form-check-input" type="radio" name="radioEtatSI" id="inlineRadioSI2" value="EA" required>
+                        <label class="form-check-label" for="inlineRadioSI2">En attente</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input [(ngModel)]="etatSI" (click)="selectEtatSI(this.etatNow.HS)" class="form-check-input" type="radio" name="radioEtatSI" id="inlineRadioSI3" value="HS" required>
+                        <label class="form-check-label" for="inlineRadioSI3">Hors service</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input [(ngModel)]="etatSI" (click)="selectEtatSI(this.etatNow.Aucun)" class="form-check-input" type="radio" name="radioEtatSI" id="inlineRadioSI4" value="Aucun" required checked>
+                        <label class="form-check-label" for="inlineRadioSI4">Tous</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
                 
                 
             </div>
@@ -68,7 +123,7 @@
                                 <td class="text-center" colspan="3">Aucun Objet repère</td>
                             </tr>
                             <ng-template #afficheOR>
-                                <tr (dblclick)="selectCheckOr(OR.idObjetRepere)" *ngFor="let OR of listeOR | filterSuppression : searchText | actifVisualisation : isValide" (click)="selectOR(OR.idObjetRepere)" [ngClass]="{'table-active' : OR.idObjetRepere === this.idORSelect,  'actifNow' : OR.idObjetRepere === this.selectedNow  }" >
+                                <tr (dblclick)="selectCheckOr(OR.idObjetRepere)" *ngFor="let OR of listeOR | filterSuppression : searchText | actifVisualisation : valideOR : 'OR'" (click)="selectOR(OR.idObjetRepere)" [ngClass]="{'table-active' : OR.idObjetRepere === this.idORSelect,  'actifNow' : OR.idObjetRepere === this.selectedNow  }" >
                                     <td class="col-1">
                                         <input (click)="selectCheckOr(OR.idObjetRepere)" class="form-check-input"  type="checkbox"  [checked]="OR.isPaste" id="flexCheckDefault">
                                     </td>
@@ -101,7 +156,7 @@
                                 <td class="text-center" colspan="3">Aucun Item</td>
                             </tr>
                             <ng-template #afficheItem>
-                                <tr (dblclick)="selectCheckItem(item.idItem)" *ngFor="let item of listeItem | filterSuppression : searchText | filterType : typeNow:'Item'"  (click)="selectItem(item.idItem)" [ngClass]="{'table-active' : item.idItem === this.idItemSelect, 'actifNow' : item.idItem === this.selectedNow }" >
+                                <tr (dblclick)="selectCheckItem(item.idItem)" *ngFor="let item of listeItem | filterSuppression : searchText | filterType : typeNow:'Item' | actifVisualisation : etatItem : 'Item'"  (click)="selectItem(item.idItem)" [ngClass]="{'table-active' : item.idItem === this.idItemSelect, 'actifNow' : item.idItem === this.selectedNow }" >
                                     <td class="col-1 text-center">
                                         <input (click)="selectCheckItem(item.idItem)" class="form-check-input"  type="checkbox" [disabled]="Ornow.isPaste == true" [checked]="item.isPaste" id="flexCheckitem">
                                     </td>
@@ -134,7 +189,7 @@
                               <td class="text-center" colspan="3">Aucun Sous Item</td>
                             </tr>
                             <ng-template #afficheSousItem>
-                              <tr (dblclick)="selectCheckSi(sousItem.idSousItem)" *ngFor="let sousItem of listeSousItem | filterVisualisation : searchText" (click)="selectSO(sousItem.idSousItem)" [ngClass]="{'table-active': sousItem.idSousItem === this.idSousItemSelect, 'actifNow' : sousItem.idSousItem === this.selectedNow }">
+                              <tr (dblclick)="selectCheckSi(sousItem.idSousItem)" *ngFor="let sousItem of listeSousItem | filterVisualisation : searchText | actifVisualisation : etatSI : 'SI'" (click)="selectSO(sousItem.idSousItem)" [ngClass]="{'table-active': sousItem.idSousItem === this.idSousItemSelect, 'actifNow' : sousItem.idSousItem === this.selectedNow }">
                                 <td class="col-1 text-center">
                                     <input (click)="selectCheckSi(sousItem.idSousItem)" class="form-check-input"  type="checkbox" [disabled]="ItemNow.isPaste == true" [checked]="sousItem.isPaste" id="flexCheckDefault">
                                 </td>  

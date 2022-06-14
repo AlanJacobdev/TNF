@@ -17,52 +17,51 @@
         </div>
 
         
-        <div class="col-12 col-lg-3 min-vh-height border rounded shadow-sm" [ngClass] ="{'d-none' : !this.isAdmin}">
-            <div class="row justify-content-center fs-4 py-2 fst-italic border-bottom  shadow-sm mb-1">
+        <div class="col-12 col-lg-3 min-vh-height border rounded shadow-sm scrolltable" [ngClass] ="{'d-none' : !this.isAdmin}">
+            <div class="row justify-content-center fs-4 py-2 fst-italic border-bottom shadow-sm mb-1 stickyheader">
                 Demande de suppressions
             </div>
-
-            <div class="row" *ngIf="this.listeDemandeAdmin.length === 0; else afficheDemandeAdmin">
-                <div class="col">Aucune demande</div>
-                </div>
-            <ng-template #afficheDemandeAdmin>
-                <div class="row border-bottom border-2" *ngFor="let dmdAdmin of listeDemandeAdmin" >
-                    <div class="row my-1">
-                        <div class="col-5">
-                            <div class="row">
-                                <fa-icon class="fs-5 col-12 text-center " [icon]="faUser" ></fa-icon> 
-                            </div>
-                            <div class="row text-center">
-                                <span class="col-12  ">{{dmdAdmin.profilCreation}}</span>
-                            </div>
-                        </div>
-                        <div class="col-5">
-                            <div class="row">
-                                <fa-icon class="fs-5 col-12 text-center" [icon]="faCalendar" ></fa-icon>
-                            </div>
-                            <div class="row text-center">
-                                <span class="col-12">{{dmdAdmin.dateCreation| date: 'dd/MM/yyyy HH:MM'}}</span>
-                            </div>
-                        </div>
-                        <div class="col-2 pt-2 pb-1">
-                            <button type="button" class="btn btn-light h-100 buttonEditDemande">
-                                <fa-icon class="fs-5 col-12 text-center " [icon]="faRightLong" ></fa-icon> 
-                            </button>
-                        </div>
-                        
+            <div >
+                <div class="row" *ngIf="this.listeDemandeAdmin.length === 0; else afficheDemandeAdmin">
+                    <div class="col">Aucune demande</div>
                     </div>
-                    <div class="row mt-1 mb-3  mx-0">
-                        <div class="col-1 align-self-center text-start px-0">
-                            <fa-icon class="fs-5 col-12  " [icon]="faComment" ></fa-icon> 
+                <ng-template #afficheDemandeAdmin>
+                    <div class="row border-bottom border-2 " *ngFor="let dmdAdmin of listeDemandeAdmin" >
+                        <div class="row my-1">
+                            <div class="col-5">
+                                <div class="row">
+                                    <fa-icon class="fs-5 col-12 text-center " [icon]="faUser" ></fa-icon> 
+                                </div>
+                                <div class="row text-center">
+                                    <span class="col-12  ">{{dmdAdmin.profilCreation}}</span>
+                                </div>
+                            </div>
+                            <div class="col-5">
+                                <div class="row">
+                                    <fa-icon class="fs-5 col-12 text-center" [icon]="faCalendar" ></fa-icon>
+                                </div>
+                                <div class="row text-center">
+                                    <span class="col-12">{{dmdAdmin.dateCreation| date: 'dd/MM/yyyy HH:MM'}}</span>
+                                </div>
+                            </div>
+                            <div class="col-2 pt-2 pb-1">
+                                <button type="button" class="btn btn-light h-100 buttonEditDemande">
+                                    <fa-icon class="fs-5 col-12 text-center " [icon]="faRightLong" ></fa-icon> 
+                                </button>
+                            </div>
+                            
                         </div>
-                        <div class="col-11 border border-2 rounded-3 px-2 ">
-                                <span class="col-12  lh-lg">{{dmdAdmin.motif}}</span>
+                        <div class="row mt-1 mb-3  mx-0">
+                            <div class="col-1 align-self-center text-start px-0">
+                                <fa-icon class="fs-5 col-12  " [icon]="faComment" ></fa-icon> 
+                            </div>
+                            <div class="col-11 border border-2 rounded-3 px-2 ">
+                                    <span class="col-12  lh-lg">{{dmdAdmin.motif}}</span>
+                            </div>
                         </div>
                     </div>
-                    
-                    
-                </div>
-            </ng-template>
+                </ng-template>
+            </div>
         </div>
     </div>
 </div>

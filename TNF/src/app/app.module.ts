@@ -26,6 +26,7 @@ import { FilterTypePipe } from './modify-object/pipe/filter-type.pipe';
 import { FilterNUPipe } from './create-object/pipe/filter-nu.pipe';
 import { GestionAteliersComponent } from './gestion-ateliers/gestion-ateliers.component';
 import { FilterAtelierPipe } from './gestion-ateliers/pipe/filter-atelier.pipe';
+import { DemandeAdminComponent } from './demande-admin/demande-admin.component';
 
 
 @NgModule({
@@ -51,14 +52,15 @@ import { FilterAtelierPipe } from './gestion-ateliers/pipe/filter-atelier.pipe';
     FilterTypePipe,
     FilterNUPipe,
     GestionAteliersComponent,
-    FilterAtelierPipe
+    FilterAtelierPipe,
+    DemandeAdminComponent 
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
-    FontAwesomeModule
+    FontAwesomeModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

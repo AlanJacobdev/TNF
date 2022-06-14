@@ -1,0 +1,76 @@
+<div class="container">
+    <div class="row">
+        <div class="col-lg-3 col-xs-12 mt-4">
+            <div class="input-group">
+            <label class="input-group-text" for="searchObject" >Recherche</label>
+            <input class="form-control" type="text" placeholder="Informations" id="searchObject" [(ngModel)]="searchText">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6 col-xs-12 mt-lg-5 mt-3 order-2 order-lg-1">
+            <ul class="list-group list-group-horizontal cursor-pointer">
+                <li class="list-group-item col-6 text-center border rounded-top-left border-bottom-0" (click)="selectTableDemande(this.DemandeTypeNow.A)" [ngClass]="{'bg-light': this.DemandeType === this.DemandeTypeNow.A}" >En attente</li>
+                <li class="list-group-item col-6 text-center border rounded-top-right border-bottom-0" (click)="selectTableDemande(this.DemandeTypeNow.T)" [ngClass]="{'bg-light': this.DemandeType === this.DemandeTypeNow.T}" >Traitée</li>
+            </ul>
+            <div class="col-12 py-3 bg-light border border-top-0  shadow-sm px-0">
+                <div class="scrolltable cursor-pointer col-12 px-3"> 
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th scope="col">Demandeur</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Motif</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                                <ng-container *ngIf="this.DemandeType === this.DemandeTypeNow.A; else afficheDmdTraitee" >
+                                    <tr *ngIf="this.listeDemandeAdmin.length === 0">
+                                        <td class="text-center" colspan="3">Aucune demande</td>
+                                    </tr>
+                                    <tr *ngFor="let demande of listeDemandeAdmin"  (click)="selectDemande(demande.idDemande)" [ngClass]="{'table-active': demande.idDemande === this.selectedDemande }">
+                                        <td class="col-2 align-middle">{{demande.profilCreation}}</td>
+                                        <td class="col-2 text-center align-middle">{{demande.dateCreation | date: 'dd/MM/yyyy HH:MM'}}</td>
+                                        <td class="col-8 align-middle">{{demande.motif}}</td>
+                                    </tr>
+                                </ng-container>
+                            <ng-template #afficheDmdTraitee>
+                                    <tr *ngIf="this.listeDemandeAdminTraitee.length === 0">
+                                        <td class="text-center" colspan="3">Aucune demande</td>
+                                    </tr>
+                                    <tr *ngFor="let demande of listeDemandeAdminTraitee"  (click)="selectDemande(demande.idDemande)" [ngClass]="{'table-active': demande.idDemande === this.selectedDemande }">
+                                        <td class="col-2 align-middle">{{demande.profilCreation}}</td>
+                                        <td class="col-2 text-center align-middle">{{demande.dateCreation | date: 'dd/MM/yyyy HH:MM'}}</td>
+                                        <td class="col-8 align-middle">{{demande.motif}}</td>
+                                    </tr>
+                            </ng-template>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-xs-12 mt-lg-5 mt-3 order-1 order-lg-2">
+            <div class="col-12 py-3 border shadow-sm px-0">
+                <ul class="list-group list-group-horizontal cursor-pointer">
+                    <li class="list-group-item col text-center border rounded-top-left border-bottom-0" (click)="selectObject(this.objectTypeNow.OR)" [ngClass]="{'bg-light': this.objectType === this.objectTypeNow.OR}" >Objet Repère</li>
+                    <li class="list-group-item col text-center border-0 border-top" (click)="selectObject(this.objectTypeNow.Item)" [ngClass]="{'bg-light': this.objectType === this.objectTypeNow.Item}" >Item</li>
+                    <li class="list-group-item col text-center border rounded-top-right border-bottom-0" (click)="selectObject(this.objectTypeNow.SI)" [ngClass]="{'bg-light': this.objectType === this.objectTypeNow.SI}" >Sous Item</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+ 
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+    <div id="liveToast" class="toast hide"  data-bs-autohide="false" role="alert" data-bs-delay="10000" aria-live="assertive" aria-atomic="true" [ngClass]="ToastAffiche ? 'show' : 'hide'">
+    <div class="toast-header">
+        <svg class="bd-placeholder-img rounded me-2" width="20" height="20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" attr.fill="{{colorToast}}"></rect></svg>
+        <strong class="me-auto">{{typeToast}}</strong>
+        <button (click)="closeToast()" type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body">
+        {{messageToast}}
+    </div>
+    </div>
+</div>

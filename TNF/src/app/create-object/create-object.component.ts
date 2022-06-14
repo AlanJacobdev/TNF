@@ -6,10 +6,9 @@ import { modificationTypeObject, TypeObjetInfo, TypeObjetRepereInfo, TypeObjetRe
 import { FetchcreateTypeObjectService } from '../create-type-object/service/fetchcreate-type-object.service';
 import { FetchVisuService } from '../visualisation/service/fetch-visu.service';
 import { FetchCreateObjectService } from './service/fetch-create-object.service';
-import { faXmark, faChevronRight, faMagicWandSparkles, faCheck, faChevronLeft } from '@fortawesome/free-solid-svg-icons';
+import { faXmark, faChevronRight, faMagicWandSparkles, faCheck, faChevronLeft, faInfo } from '@fortawesome/free-solid-svg-icons';
 import { SousItemInfo } from 'src/structureData/SousItem';
 import { FetchRecopieService } from '../recopie-object/service/fetch-recopie.service';
-
 
 @Component({
   selector: 'app-create-object',
@@ -17,6 +16,7 @@ import { FetchRecopieService } from '../recopie-object/service/fetch-recopie.ser
   styleUrls: ['./create-object.component.css']
 })
 export class CreateObjectComponent implements OnInit {
+  public faInfo = faInfo;
   public faCheck = faCheck;
   public faMagicWandSparkles = faMagicWandSparkles;
   public faChevronRight = faChevronRight;
@@ -65,12 +65,13 @@ export class CreateObjectComponent implements OnInit {
   public nuSelectedRange : string = "";
   public intervalValidate : boolean = true;
 
+  
   constructor(private fetchCreateTypeObject : FetchcreateTypeObjectService, private fetchVisuService : FetchVisuService, private fetchCreateObjectService: FetchCreateObjectService, private fetchRecopieService : FetchRecopieService) {
     this.getListType();
     this.getAteliers();
    }
   ngOnInit(): void {
-   
+
   }
 
   getAteliers(){

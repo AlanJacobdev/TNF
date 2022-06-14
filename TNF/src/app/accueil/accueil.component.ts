@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { DemandeAdmin } from 'src/structureData/DemandeAdmin';
-import { FetchDemandeAdminService } from './service/fetch-demande-admin.service';
 import { faComment, faCalendar, faUser, faArrowRightFromBracket} from '@fortawesome/free-solid-svg-icons';
+import { FetchDemandeAdminService } from '../demande-admin/service/fetch-demande-admin.service';
 
 @Component({
   selector: 'app-accueil',

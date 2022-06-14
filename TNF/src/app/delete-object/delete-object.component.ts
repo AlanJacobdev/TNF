@@ -2,8 +2,8 @@ import { Component, Input, OnInit } from '@angular/core';
 import { faXmark, faCircleCheck, faCircleXmark, faCircleInfo} from '@fortawesome/free-solid-svg-icons';
 import { CookieService } from 'ngx-cookie-service';
 import { AtelierInfo } from 'src/structureData/Atelier';
-import { typeObjet, ItemInfo, ItemSuppresion } from 'src/structureData/Item';
-import { ObjetRepereInfo, ObjetRepereSuppression } from 'src/structureData/ObjetRepere';
+import { typeObjet, ItemInfo, ItemSuppresion, etat } from 'src/structureData/Item';
+import { ObjetRepereInfo, ObjetRepereSuppression, valide } from 'src/structureData/ObjetRepere';
 import { SousItemInfo, SousItemSuppression } from 'src/structureData/SousItem';
 import { deleteObject, demandeAdmin, returnDeleteObject } from 'src/structureData/Suppression';
 import { TypeObjetRepereTableau, TypeObjetInfo, TypeObjetRepereInfo, modificationTypeObject } from 'src/structureData/TypeObject';
@@ -82,6 +82,12 @@ export class DeleteObjectComponent implements OnInit {
   public suppWithDmdAdmin : boolean = false;
   public demandeAdmin : boolean = false;
   public motifDemande : string = ""; 
+  public etatItem : etat = etat.Aucun;
+  public etatSI : etat = etat.Aucun;
+  public valideOR : valide = valide.Aucun;
+  public valideNow =valide;
+  public etatNow =etat;
+  
   
   public selectedNow : string = "";
   public formValidate : boolean = false;
@@ -327,6 +333,19 @@ export class DeleteObjectComponent implements OnInit {
     this.selectedNow = idItem;
   }
 
+  selectEtatItem(etat : etat){
+    this.etatItem = etat;
+  }
+
+  selectEtatSI(etat : etat){
+    this.etatSI = etat;
+  }
+
+  selectValideOR(valide : valide){
+    this.valideOR = valide
+  }
+
+  
   public selectSO(idSousItem : string) {
     this.idSousItemSelect = idSousItem;
     this.selectedNow = idSousItem;
@@ -625,7 +644,7 @@ export class DeleteObjectComponent implements OnInit {
   }
 
   async verifyIfDmdAdmin(){
-    
+    this.setDemandeAdmin(false);
     if(this.returnOfDeleted != undefined){
       if (this.returnOfDeleted.listeOR.length != 0)
       for ( const objet of this.returnOfDeleted.listeOR ){

@@ -40,19 +40,13 @@ export class FetchCreateObjectService {
 
   async getAllTypeAvailable (idItem: string): Promise<any>{
     const admin = this.cookieService.get('Admin');
-   
     let url;
-    
-    
     if (admin == "true"){
       console.log(admin);
       url = "http://localhost:3000/sousitem/getAllTypeAvailable/{idItem}"
     } else {
-      url = "http://localhost:3000/sousitem/getAllTypeAvailable/{idItem}"
+      url = "http://localhost:3000/sousitem/getAllTypeAvailableAndActif/{idItem}"
     }
-   
-   
-    let url = "http://localhost:3000/sousitem/getAllTypeAvailable/{idItem}"
     url = url.replace("{idItem}", idItem);
     const res : TypeObjetInfo[] = await lastValueFrom(this.http.get<TypeObjetInfo[]>(url));
     if (res.length == 0) {

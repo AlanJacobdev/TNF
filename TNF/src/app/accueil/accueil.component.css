@@ -5,3 +5,16 @@
 .buttonEditDemande:hover {
     background-color: rgb(241, 241, 241);
 }
+
+.scrolltable {
+    max-height: 600px;
+    overflow: scroll;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.stickyheader {
+    position: sticky;
+    top: 0;
+    background-color: rgb(255, 255, 255);  
+}

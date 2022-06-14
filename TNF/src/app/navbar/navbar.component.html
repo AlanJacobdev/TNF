@@ -57,7 +57,7 @@
                     </li>
                     <ng-template [ngIf]="estAdmin">
                         <li class="nav-item dropdown" [ngClass]="{'active': PA0.isActive}"> 
-                            <a class="nav-link dropdown-toggle" [ngClass]="{'active': PA0.isActive || PA0.isActive}" href="#"
+                            <a class="nav-link dropdown-toggle" [ngClass]="{'active': PA0.isActive || PA0.isActive || PA2.isActive}" href="#"
                                 id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown"
                                 aria-expanded="false">
                                 <span class="position-absolute top-25 start-0 translate-middle badge rounded-pill bg-danger">
@@ -73,7 +73,8 @@
                                 routerLinkActive="active" (click)="selectPage('Gestion des types d\'objet')">Gestion des types d'objet</a></li>
                                 <li><a #PA1="routerLinkActive" class="dropdown-item" routerLink="/gestionAtelier"
                                     routerLinkActive="active" (click)="selectPage('Gestion des ateliers')">Gestion des ateliers</a></li>
-                                <li><a class="dropdown-item" href="#">Demandes de suppressions </a></li>
+                                <li><a #PA2="routerLinkActive" class="dropdown-item" routerLink="/demandeAdmin"
+                                    routerLinkActive="active" (click)="selectPage('Demandes de suppressions')" >Demandes de suppressions </a></li>
                             </ul>
                         </li>
                     </ng-template>
