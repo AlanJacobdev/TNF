@@ -29,11 +29,13 @@ export class AuthService {
   async connexion(login : string, pwd:string): Promise<any> {
     try {
     let url = "http://localhost:3000/utilisateur/connexion/exist/{login}/{pwd}"
+    // let url = "http://localhost:3000/utilisateur/existUser/{login}/{pwd}"
     url = url.replace("{login}", login)
     url = url.replace("{pwd}", pwd)
     
     const res : connexion[] = await lastValueFrom(this.http.get<connexion[]>(url));
- 
+      console.log(res);
+      
     if (res != undefined){
       this.UserName=res[0].PRENOMUT.trim();
       this.UserLastName=res[0].NOMUTILI.trim();

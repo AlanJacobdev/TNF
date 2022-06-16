@@ -8,6 +8,12 @@ table {
     overflow-x: hidden;
     overflow-y: auto;
 }
+.scrolltableDemande {
+    max-height: 275px;
+    overflow: scroll;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
 
 table th {
     position: sticky;
@@ -32,6 +38,31 @@ table {
     border-right: none !important;
 }
 
+.border-not-rounded {
+    border-bottom-left-radius: 0rem !important ;  
+    border-bottom-right-radius: 0rem;
+}
+
 .cursor-pointer {
     cursor: pointer;
 }
+
+.btn-green{
+    background-color: #e8f7e2 !important;
+    border-color: #e8f7e2 !important;
+}
+.btn-green:hover{
+    background-color: #d6e9ce !important;
+    border-color: #d6e9ce !important;
+}
+
+.btn-red{
+    background-color: #f7e3e2 !important;
+    border-color: #f7e3e2 !important;
+}
+.btn-red:hover{
+    background-color: #e9cece !important;
+    border-color: #e9cece !important;
+}
+
+

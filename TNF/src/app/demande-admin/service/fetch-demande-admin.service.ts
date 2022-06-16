@@ -44,6 +44,25 @@ export class FetchDemandeAdminService {
    
   }
 
+
+  async updateDemandeAdmin(ID: number, isDelete: boolean ): Promise<any> {
+    let global = this.cookieService.get('login');
+    console.log(global)
+    let url = "http://localhost:3000/demande-admin/{ID}"
+    url = url.replace("{ID}", ID.toString())
+    let payload = {
+      isDelete : isDelete,
+      profilModification : global,
+      posteModification : "",
+    }
+    const res : DemandeAdminInfo = await lastValueFrom(this.http.put<DemandeAdminInfo>(url, payload));
+    if (res.hasOwnProperty('error')) {
+      return undefined
+    } else {
+      return res;
+    }
+  }
+
   
 
 }

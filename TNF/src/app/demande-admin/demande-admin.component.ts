@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DemandeAdmin, DemandeAdminInfo, typeTableauDemande } from 'src/structureData/DemandeAdmin';
 import { typeObjet } from 'src/structureData/Item';
 import { FetchDemandeAdminService } from './service/fetch-demande-admin.service';
-
+import { faInfoCircle} from '@fortawesome/free-solid-svg-icons';
 @Component({
   selector: 'app-demande-admin',
   templateUrl: './demande-admin.component.html',
@@ -10,7 +10,7 @@ import { FetchDemandeAdminService } from './service/fetch-demande-admin.service'
 })
 export class DemandeAdminComponent implements OnInit {
 
-  
+  public faCircleInfo = faInfoCircle
   public listeDemandeAdmin : DemandeAdmin[] = []
   public listeDemandeAdminTraitee : DemandeAdmin[] = []
   public searchText : string = "";
@@ -20,9 +20,11 @@ export class DemandeAdminComponent implements OnInit {
   public objectType: typeObjet = typeObjet.Aucun;
   public objectTypeNow = typeObjet;
   
+  
   public DescriptifDemandeNow : DemandeAdminInfo = {
-    idDemande: 0,
+    idDemande: -1,
     motif: '',
+    isDelete: false,
     etat: false,
     profilCreation: '',
     dateCreation: new Date(0),
@@ -47,7 +49,7 @@ export class DemandeAdminComponent implements OnInit {
   }
 
 
-  getAllDemandeAdmin(){
+  async getAllDemandeAdmin(){
     this.fetchDemandeAdminService.getAllDemandeAdmin().then((list: DemandeAdmin[]) => {
       if (list != undefined) {
         this.listeDemandeAdmin = list
@@ -79,11 +81,42 @@ export class DemandeAdminComponent implements OnInit {
   getAllObjetFromDemandeAdmin(idDmd: number){
     this.fetchDemandeAdminService.getAllObjetFromDemandeAdmin(idDmd).then((res: DemandeAdminInfo) => {
       if (res != undefined) {
+        this.DescriptifDemandeNow = {
+          idDemande: -1,
+          motif: '',
+          isDelete: false,
+          etat: false,
+          profilCreation: '',
+          dateCreation: new Date(0),
+          profilModification: '',
+          dateModification: new Date(0),
+          itemDelete: [],
+          sousItemDelete: [],
+          orDelete: []
+        };
         this.DescriptifDemandeNow = res;
-        console.log(this.DescriptifDemandeNow);
-        
+        if (this.DescriptifDemandeNow.orDelete.length != 0 ){
+          this.selectObject(this.objectTypeNow.OR);
+        } else if (this.DescriptifDemandeNow.itemDelete.length != 0 ){
+          this.selectObject(this.objectTypeNow.Item);
+        } else {
+          this.selectObject(this.objectTypeNow.SI);
+        }     
+        console.log(this.DescriptifDemandeNow)
       } else {
-        this.listeDemandeAdminTraitee.splice(0);
+        this.DescriptifDemandeNow = {
+          idDemande: -1,
+          motif: '',
+          etat: false,
+          isDelete: false,
+          profilCreation: '',
+          dateCreation: new Date(0),
+          profilModification: '',
+          dateModification: new Date(0),
+          itemDelete: [],
+          sousItemDelete: [],
+          orDelete: []
+        };
         this.manageToast("Erreur de récupération", "La demande n'existe pas", "red")
       }
     }).catch((e) => {
@@ -117,5 +150,69 @@ export class DemandeAdminComponent implements OnInit {
 
   public selectObject (object : typeObjet) {
     this.objectType = object;
+  }
+
+  async acceptDeleteAdmin(){
+    if(!this.DescriptifDemandeNow.etat){
+      this.fetchDemandeAdminService.updateDemandeAdmin(this.DescriptifDemandeNow.idDemande, true).then( async (res:DemandeAdminInfo) => {
+        console.log(res);
+        if (typeof res == 'string'){
+          this.manageToast("Demande de suppression", "Problème lié à la suppression", "red")
+        } else {
+          await this.getAllDemandeAdmin();
+          this.DescriptifDemandeNow = {
+            idDemande: -1,
+            motif: '',
+            etat: false,
+            isDelete: false,
+            profilCreation: '',
+            dateCreation: new Date(0),
+            profilModification: '',
+            dateModification: new Date(0),
+            itemDelete: [],
+            sousItemDelete: [],
+            orDelete: []
+          };
+          this.manageToast("Demande de suppression", "La suppression a été effectuée", "#006400")
+        }
+        
+      }).catch ((e) => {
+
+      })
+    } else {
+      this.manageToast("Demande de suppression", "Impossible d'accepter une demande déjà traitée", "red")
+    }
+  }
+  
+  
+  async refuseDeleteAdmin(){
+    if(!this.DescriptifDemandeNow.etat){
+      this.fetchDemandeAdminService.updateDemandeAdmin(this.DescriptifDemandeNow.idDemande, false).then( async (res:DemandeAdminInfo) => {
+        console.log(res);
+        if (typeof res == 'string'){
+          this.manageToast("Demande de suppression", "Problème lié à la suppression", "red")
+        } else {
+          await this.getAllDemandeAdmin();
+          this.DescriptifDemandeNow = {
+            idDemande: -1,
+            motif: '',
+            etat: false,
+            isDelete: false,
+            profilCreation: '',
+            dateCreation: new Date(0),
+            profilModification: '',
+            dateModification: new Date(0),
+            itemDelete: [],
+            sousItemDelete: [],
+            orDelete: []
+          };
+          this.manageToast("Demande de suppression", "La suppression a été effectuée", "#006400")
+        }
+      }).catch ((e) => {
+
+      })
+    } else {
+      this.manageToast("Demande de suppression", "Impossible de refuser une demande déjà traitée", "red")
+    }
   }
 }

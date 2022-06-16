@@ -16,46 +16,171 @@
             <div class="col-12 py-3 bg-light border border-top-0  shadow-sm px-0">
                 <div class="scrolltable cursor-pointer col-12 px-3"> 
                     <table class="table table-hover">
-                        <thead>
-                        <tr>
-                            <th scope="col">Demandeur</th>
-                            <th scope="col">Date</th>
-                            <th scope="col">Motif</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                                <ng-container *ngIf="this.DemandeType === this.DemandeTypeNow.A; else afficheDmdTraitee" >
-                                    <tr *ngIf="this.listeDemandeAdmin.length === 0">
-                                        <td class="text-center" colspan="3">Aucune demande</td>
-                                    </tr>
-                                    <tr *ngFor="let demande of listeDemandeAdmin"  (click)="selectDemande(demande.idDemande)" [ngClass]="{'table-active': demande.idDemande === this.selectedDemande }">
-                                        <td class="col-2 align-middle">{{demande.profilCreation}}</td>
-                                        <td class="col-2 text-center align-middle">{{demande.dateCreation | date: 'dd/MM/yyyy HH:MM'}}</td>
-                                        <td class="col-8 align-middle">{{demande.motif}}</td>
-                                    </tr>
-                                </ng-container>
-                            <ng-template #afficheDmdTraitee>
-                                    <tr *ngIf="this.listeDemandeAdminTraitee.length === 0">
-                                        <td class="text-center" colspan="3">Aucune demande</td>
-                                    </tr>
-                                    <tr *ngFor="let demande of listeDemandeAdminTraitee"  (click)="selectDemande(demande.idDemande)" [ngClass]="{'table-active': demande.idDemande === this.selectedDemande }">
-                                        <td class="col-2 align-middle">{{demande.profilCreation}}</td>
-                                        <td class="col-2 text-center align-middle">{{demande.dateCreation | date: 'dd/MM/yyyy HH:MM'}}</td>
-                                        <td class="col-8 align-middle">{{demande.motif}}</td>
-                                    </tr>
-                            </ng-template>
+                        <ng-container *ngIf="this.DemandeType === this.DemandeTypeNow.A; else afficheDmdTraitee" >
+                            <thead>
+                            <tr>
+                                <th scope="col">Demandeur</th>
+                                <th scope="col">Date</th>
+                                <th scope="col">Motif</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr *ngIf="this.listeDemandeAdmin.length === 0">
+                                <td class="text-center" colspan="3">Aucune demande</td>
+                            </tr>
+                            <tr *ngFor="let demande of listeDemandeAdmin"  (click)="selectDemande(demande.idDemande)" [ngClass]="{'table-active': demande.idDemande === this.selectedDemande }">
+                                <td class="col-2 align-middle">{{demande.profilCreation}}</td>
+                                <td class="col-2 text-center align-middle">{{demande.dateCreation | date: 'dd/MM/yyyy HH:mm'}}</td>
+                                <td class="col-8 align-middle">{{demande.motif}}</td>
+                            </tr>
                         </tbody>
+                        </ng-container>
+                            <ng-template #afficheDmdTraitee>
+                                <thead>
+                                    <tr>
+                                        <th scope="col-3">Demandeur</th>
+                                        <th scope="col-2">Date</th>
+                                        <th scope="col-3">Administrateur</th>
+                                        <th scope="col-2">Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>    
+                                <tr *ngIf="this.listeDemandeAdminTraitee.length === 0">
+                                    <td class="text-center" colspan="4">Aucune demande</td>
+                                </tr>
+                                <tr *ngFor="let demande of listeDemandeAdminTraitee"  (click)="selectDemande(demande.idDemande)" [ngClass]="{'table-active': demande.idDemande === this.selectedDemande }">
+                                    <td class="col-3 align-middle">{{demande.profilCreation}}</td>
+                                    <td class="col-2 text-center align-middle">{{demande.dateCreation | date: 'dd/MM/yyyy HH:mm'}}</td>
+                                    <td class="col-3 align-middle">{{demande.profilModification}}</td>
+                                    <td class="col-2 text-center align-middle">{{demande.dateModification | date: 'dd/MM/yyyy HH:mm'}}</td>
+
+                                </tr>
+                            </tbody>
+                            </ng-template>
                     </table>
                 </div>
             </div>
         </div>
-        <div class="col-lg-6 col-xs-12 mt-lg-5 mt-3 order-1 order-lg-2">
-            <div class="col-12 py-3 border shadow-sm px-0">
-                <ul class="list-group list-group-horizontal cursor-pointer">
-                    <li class="list-group-item col text-center border rounded-top-left border-bottom-0" (click)="selectObject(this.objectTypeNow.OR)" [ngClass]="{'bg-light': this.objectType === this.objectTypeNow.OR}" >Objet Repère</li>
-                    <li class="list-group-item col text-center border-0 border-top" (click)="selectObject(this.objectTypeNow.Item)" [ngClass]="{'bg-light': this.objectType === this.objectTypeNow.Item}" >Item</li>
-                    <li class="list-group-item col text-center border rounded-top-right border-bottom-0" (click)="selectObject(this.objectTypeNow.SI)" [ngClass]="{'bg-light': this.objectType === this.objectTypeNow.SI}" >Sous Item</li>
-                </ul>
+        <div *ngIf="this.DescriptifDemandeNow.idDemande != -1" class="col-lg-6 col-xs-12 mt-lg-5 mt-2 order-2 order-lg-1">
+            <div class="row border rounded py-3 px-3 shadow-sm">
+                <div class="row">
+                    <div class="col-2"></div>
+                    <div class="col-8 fs-3 mb-3 text-center">
+                        Objets à supprimer
+                    </div>
+                    <div class="col-2">
+                        <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapseInformations" aria-expanded="true" aria-controls="collapseInformations">
+                            <div class="d-none d-xl-block">Informations</div>
+                            <div class="d-block d-xl-none text-warning"><fa-icon class="fs-3 col-12" [icon]="faCircleInfo" ></fa-icon> </div>
+                            
+                        </button>
+                    </div>
+                </div>
+                <div class="collapse mb-3" id="collapseInformations">
+                    <div class="row ">
+                        <div class="col-10 offset-1 border py-1 border-2 rounded">
+                            <span class="fs-6 fst-italic text-justify">Les objets de la catégorie <strong>Objet repère</strong> concernent le parent ainsi que ses items et sous items.</span>
+                            <p class="fs-6 fst-italic mb-0 text-justify">Les objets de la catégorie <strong>Item</strong> concernent le parent ainsi que ses sous items.</p>
+                            <span class="fs-6 fst-italic text-justify">Les objets de la catégorie <strong>Sous Item</strong> concernent l'unique sous item.</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <ul class="list-group list-group-horizontal cursor-pointer">
+                        <li *ngIf="this.DescriptifDemandeNow.orDelete.length != 0" class="list-group-item col text-center border  border-bottom-0" (click)="selectObject(this.objectTypeNow.OR)" 
+                        [ngClass]="{'bg-light': this.objectType === this.objectTypeNow.OR, 'rounded-top-left' : this.DescriptifDemandeNow.itemDelete.length != 0 || this.DescriptifDemandeNow.sousItemDelete.length != 0,
+                                    'border-not-rounded' : this.DescriptifDemandeNow.itemDelete.length == 0 && this.DescriptifDemandeNow.sousItemDelete.length == 0}" 
+                        >Objet Repère</li>
+                        <li *ngIf="this.DescriptifDemandeNow.itemDelete.length != 0" class="list-group-item col text-center border-not-rounded border border-bottom-0" (click)="selectObject(this.objectTypeNow.Item)" 
+                        [ngClass]="{'bg-light': this.objectType === this.objectTypeNow.Item, 
+                                    'rounded-top-right' : this.DescriptifDemandeNow.sousItemDelete.length === 0 && this.DescriptifDemandeNow.orDelete.length !== 0, 
+                                    'rounded-top-left' : this.DescriptifDemandeNow.sousItemDelete.length !== 0 && this.DescriptifDemandeNow.orDelete.length === 0 ,
+                                    'border-0 border-top' : this.DescriptifDemandeNow.orDelete.length !== 0 && this.DescriptifDemandeNow.sousItemDelete.length !== 0}" 
+                        >Item </li>
+                        <li *ngIf="this.DescriptifDemandeNow.sousItemDelete.length != 0" class="list-group-item col text-center border border-bottom-0" (click)="selectObject(this.objectTypeNow.SI)" 
+                        [ngClass]="{'bg-light': this.objectType === this.objectTypeNow.SI, 'rounded-top-right' : this.DescriptifDemandeNow.orDelete.length != 0 || this.DescriptifDemandeNow.itemDelete.length != 0,
+                                    'border-not-rounded' : this.DescriptifDemandeNow.orDelete.length == 0 && this.DescriptifDemandeNow.itemDelete.length == 0}" 
+                        >Sous Item</li>
+                    </ul>
+                    <div *ngIf=" ''; else demandeNotEmpty" class="row">
+                        <div class="col text-center py-3">
+                            Aucun objet lié à la demande.
+                        </div>
+                    </div>
+                    <ng-template #demandeNotEmpty>
+                        <div class="col-12 py-3 bg-light border border-top-0  shadow-sm px-0">
+                            <div class="scrolltableDemande cursor-pointer col-12 px-3"> 
+                                <table class="table table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">Identifiant</th>
+                                        <th scope="col">Libelle</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                        <ng-container *ngIf="this.objectType === this.objectTypeNow.OR; else afficheItem" >
+                                            <tr *ngFor="let desc of this.DescriptifDemandeNow.orDelete" >
+                                                <td class="col-3 align-middle">{{desc.idObjetRepere}}</td>
+                                                <td class="col-9 align-middle">{{desc.libelleObjetRepere}}</td>
+                                            </tr>
+                                        </ng-container>
+                                        <ng-template #afficheItem>
+                                            <ng-container *ngIf="this.objectType === this.objectTypeNow.Item; else afficheSI" >
+                                                <tr *ngFor="let desc of this.DescriptifDemandeNow.itemDelete" >
+                                                    <td class="col-3 align-middle">{{desc.idItem}}</td>
+                                                    <td class="col-9 align-middle">{{desc.libelleItem}}</td>
+                                                </tr>
+                                            </ng-container>
+                                        </ng-template>
+                                        <ng-template #afficheSI>
+                                            <tr *ngFor="let desc of this.DescriptifDemandeNow.sousItemDelete" >
+                                                <td class="col-3 align-middle">{{desc.idSousItem}}</td>
+                                                <td class="col-9 align-middle">{{desc.libelleSousItem}}</td>
+                                            </tr>
+                                        </ng-template>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-6">
+                                <label for="demandeur" class="col col-form-label">Demandeur</label>
+                                <div class="col">
+                                    <input type="text" class="form-control" id="demandeur" disabled [value]="this.DescriptifDemandeNow.profilCreation">
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <label for="Date" class="col col-form-label">Date</label>
+                                <div class="col">
+                                    <input type="datetime" class="form-control" id="Date" disabled [value]="this.DescriptifDemandeNow.dateCreation | date :'dd/MM/yyyy HH:mm' " >
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-3">
+                            <div class="col">
+                                <div>
+                                    <label for="motifText" class="form-label">Motif</label>
+                                    <textarea ng-trim="true" class="form-control" id="motifText" rows="2" disabled>{{this.DescriptifDemandeNow.motif}}</textarea>
+                                </div>
+                                
+                                
+                            </div>
+                        </div>
+                       
+                        <div  class="row mt-3">
+                            <div class="col d-flex justify-content-evenly">
+                                <button *ngIf="!this.DescriptifDemandeNow.etat || this.DescriptifDemandeNow.isDelete === true" (click)="acceptDeleteAdmin()" type="button" class="btn btn-lg btn-green" [disabled]="this.DemandeTypeNow.T == this.DemandeType">Accepter</button>
+                                <button *ngIf="!this.DescriptifDemandeNow.etat || this.DescriptifDemandeNow.isDelete === false" (click)="refuseDeleteAdmin()" type="button" class="btn btn-lg btn-red" [disabled]="this.DemandeTypeNow.T == this.DemandeType">Refuser</button>
+                            </div>
+                        </div>
+
+
+                        
+
+
+                    </ng-template>
+                </div>
             </div>
         </div>
     </div>
