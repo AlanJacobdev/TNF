@@ -65,4 +65,28 @@ table {
     border-color: #e9cece !important;
 }
 
+.tableEyeHover > tbody> tr > .isHover{
+    display: none;
+    color: black;
+}
+
+.tableEyeHover > tbody> tr:hover > .isHover {
+    display: table-cell;
+}
+
+.tableEyeHover > tbody> tr > .isNotHover{
+    display: table-cell;
+}
+
+.tableEyeHover > tbody> tr:hover > .isNotHover {
+    display: none;  
+}
+
+.eye {
+    color : #5900ff;
+}
+
+.blur{
+    filter :blur(1px)
+}
 

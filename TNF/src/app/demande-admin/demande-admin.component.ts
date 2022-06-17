@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { DemandeAdmin, DemandeAdminInfo, typeTableauDemande } from 'src/structureData/DemandeAdmin';
+import { ArborescenceItem, ArborescenceOR, DemandeAdmin, DemandeAdminInfo, etatCaretItem, typeTableauDemande } from 'src/structureData/DemandeAdmin';
 import { typeObjet } from 'src/structureData/Item';
 import { FetchDemandeAdminService } from './service/fetch-demande-admin.service';
-import { faInfoCircle} from '@fortawesome/free-solid-svg-icons';
+import { faInfoCircle, faEye, faCaretDown, faCaretRight} from '@fortawesome/free-solid-svg-icons';
 @Component({
   selector: 'app-demande-admin',
   templateUrl: './demande-admin.component.html',
@@ -10,9 +10,29 @@ import { faInfoCircle} from '@fortawesome/free-solid-svg-icons';
 })
 export class DemandeAdminComponent implements OnInit {
 
+  public faCaretDown = faCaretDown
+  public faCaretRight = faCaretRight
+  public orArboSelect: boolean = false; 
+  public CaretItem = new Map();
+  public faEye = faEye
   public faCircleInfo = faInfoCircle
   public listeDemandeAdmin : DemandeAdmin[] = []
   public listeDemandeAdminTraitee : DemandeAdmin[] = []
+  public arborescenceOR : ArborescenceOR = {
+    OR: {
+      idObjetRepere : '',
+      libelleObjetRepere  : ''
+    },
+    Item: []
+  }
+  public arborescenceItem : ArborescenceItem = {
+    Item: {
+      idItem: '',
+      libelle: ''
+    },
+    SI: []
+  }
+
   public searchText : string = "";
   public selectedDemande : number = -1;
   public DemandeType: typeTableauDemande = typeTableauDemande.A;
@@ -20,6 +40,7 @@ export class DemandeAdminComponent implements OnInit {
   public objectType: typeObjet = typeObjet.Aucun;
   public objectTypeNow = typeObjet;
   
+  public objectSelect : string ="";
   
   public DescriptifDemandeNow : DemandeAdminInfo = {
     idDemande: -1,
@@ -53,7 +74,6 @@ export class DemandeAdminComponent implements OnInit {
     this.fetchDemandeAdminService.getAllDemandeAdmin().then((list: DemandeAdmin[]) => {
       if (list != undefined) {
         this.listeDemandeAdmin = list
-        console.log(this.listeDemandeAdmin);
         
       } else {
         console.log("Demande Admin : aucune ")
@@ -64,11 +84,10 @@ export class DemandeAdminComponent implements OnInit {
   }
 
 
-  getAllDemandeAdminTraitee(){
+  async getAllDemandeAdminTraitee(){
     this.fetchDemandeAdminService.getAllDemandeAdminTraitee().then((list: DemandeAdmin[]) => {
       if (list != undefined) {
         this.listeDemandeAdminTraitee = list
-        console.log(this.listeDemandeAdmin);
         
       } else {
         console.log("Demande Admin : aucune ")
@@ -102,7 +121,7 @@ export class DemandeAdminComponent implements OnInit {
         } else {
           this.selectObject(this.objectTypeNow.SI);
         }     
-        console.log(this.DescriptifDemandeNow)
+
       } else {
         this.DescriptifDemandeNow = {
           idDemande: -1,
@@ -144,12 +163,47 @@ export class DemandeAdminComponent implements OnInit {
     this.getAllObjetFromDemandeAdmin(idDemande);
   }
 
+  selectOrArbo(){
+    this.orArboSelect = !this.orArboSelect;
+  }
+
+  selectItemInOrArbo(idItem : string ) {
+    let value = this.CaretItem.get(idItem)
+    if (value != undefined){
+      this.CaretItem.set(idItem, !value)
+    }
+   
+  }
+
+
   selectTableDemande(type : typeTableauDemande){
     this.DemandeType = type;
+    this.DescriptifDemandeNow = {
+      idDemande: -1,
+      motif: '',
+      etat: false,
+      isDelete: false,
+      profilCreation: '',
+      dateCreation: new Date(0),
+      profilModification: '',
+      dateModification: new Date(0),
+      itemDelete: [],
+      sousItemDelete: [],
+      orDelete: []
+    };
   }
 
   public selectObject (object : typeObjet) {
     this.objectType = object;
+  }
+
+  public selectObjetOnDemand(idObjet : string ) {
+    this.objectSelect = idObjet;
+    if ( this.objectType = this.objectTypeNow.OR){
+      this.getArborescenceOfOR(idObjet);
+    } else if ( this.objectType = this.objectTypeNow.Item) {
+      this.getArborescenceOfItem(idObjet);
+    }
   }
 
   async acceptDeleteAdmin(){
@@ -160,6 +214,7 @@ export class DemandeAdminComponent implements OnInit {
           this.manageToast("Demande de suppression", "Problème lié à la suppression", "red")
         } else {
           await this.getAllDemandeAdmin();
+          await this.getAllDemandeAdminTraitee();
           this.DescriptifDemandeNow = {
             idDemande: -1,
             motif: '',
@@ -214,5 +269,50 @@ export class DemandeAdminComponent implements OnInit {
     } else {
       this.manageToast("Demande de suppression", "Impossible de refuser une demande déjà traitée", "red")
     }
+  }
+
+  getArborescenceOfOR (idOR : string) {
+    this.fetchDemandeAdminService.getArborescenceOfOR(idOR).then((list: ArborescenceOR) => {
+      if (list != undefined) {
+        this.arborescenceOR = list
+        console.log(this.arborescenceOR);
+        
+        for( const item of this.arborescenceOR.Item){
+          this.CaretItem.set(item.Item.idItem ,false)
+          
+        }
+
+      } else {
+        console.log("Problème")
+        this.arborescenceOR = {
+          OR: {
+            idObjetRepere : '',
+            libelleObjetRepere  : ''
+          },
+          Item: []
+        }
+      }
+    }).catch((e) => {
+    })
+  }
+
+  getArborescenceOfItem(idItem : string) {
+    this.fetchDemandeAdminService.getArborescenceOfItem(idItem).then((list: ArborescenceItem) => {
+      if (list != undefined) {
+        this.arborescenceItem = list
+        console.log(this.arborescenceItem);
+        
+      } else {
+        console.log("Problème")
+        this.arborescenceItem = {
+          Item: {
+            idItem: '',
+            libelle: ''
+          },
+          SI: []
+        }
+      }
+    }).catch((e) => {
+    })
   }
 }

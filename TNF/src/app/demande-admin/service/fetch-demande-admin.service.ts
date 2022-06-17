@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { lastValueFrom } from 'rxjs';
-import { DemandeAdmin, DemandeAdminInfo } from 'src/structureData/DemandeAdmin';
+import { ArborescenceItem, ArborescenceOR, DemandeAdmin, DemandeAdminInfo } from 'src/structureData/DemandeAdmin';
 
 @Injectable({
   providedIn: 'root'
@@ -63,6 +63,32 @@ export class FetchDemandeAdminService {
     }
   }
 
+
+
+
+  async getArborescenceOfOR(idObjetRepere : string) {
+    let url = "http://localhost:3000/demande-admin/getArborescenceOfOR/{idObjetRepere}";
+    url = url.replace("{idObjetRepere}", idObjetRepere)
+    const res : ArborescenceOR = await lastValueFrom(this.http.get<ArborescenceOR>(url));
+    if (res.hasOwnProperty('error')) {
+      const resAny : any = res;
+      return resAny.error;
+    } else {
+      return res;
+    }
+  }
+
+  async getArborescenceOfItem (idItem : string) {
+    let url = "http://localhost:3000/demande-admin/getArborescenceOfItem/{idItem}";
+    url = url.replace("{idItem}", idItem)
+    const res : ArborescenceItem = await lastValueFrom(this.http.get<ArborescenceItem>(url));
+    if (res.hasOwnProperty('error')) {
+      const resAny : any = res;
+      return resAny.error;
+    } else {
+      return res;
+    }
+  }
   
 
 }
