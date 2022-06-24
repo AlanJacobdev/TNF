@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
+import { Socket } from 'ngx-socket-io';
 import { lastValueFrom } from 'rxjs';
 import { ArborescenceItem, ArborescenceOR, DemandeAdmin, DemandeAdminInfo } from 'src/structureData/DemandeAdmin';
 
@@ -9,7 +10,7 @@ import { ArborescenceItem, ArborescenceOR, DemandeAdmin, DemandeAdminInfo } from
 })
 export class FetchDemandeAdminService {
 
-  constructor(private readonly http: HttpClient, private cookieService : CookieService) { }
+  constructor(private readonly http: HttpClient, private cookieService : CookieService, private socket: Socket) { }
 
   async getAllDemandeAdmin(): Promise<any> {
     let url = "http://localhost:3000/demande-admin";
@@ -91,4 +92,7 @@ export class FetchDemandeAdminService {
   }
   
 
+ 
+
+ 
 }

@@ -16,6 +16,7 @@ export class NavbarComponent implements OnInit {
   public Nom : string ="";
   public Prenom : string = "";
   public Page : string = "";
+  public nbDemande : string = "-1";
 
   constructor(private navbarService : NavBarService, private authService : AuthService, private cookieService: CookieService) { 
     this.navbarService.isUserLoggedIn.subscribe( value => {
@@ -29,7 +30,7 @@ export class NavbarComponent implements OnInit {
   
   
 
-  ngOnInit(): void {    
+  ngOnInit(): void { 
     this.estAdmin = this.navbarService.getEstAdmin();
     //this.estConnecte = this.navbarService.getEstConnecte();
     this.Prenom = this.cookieService.get('UserName');
@@ -37,6 +38,15 @@ export class NavbarComponent implements OnInit {
     this.estAdmin = this.cookieService.get('Admin') === "true" ? true : false;
     const nomPage = localStorage.getItem('page');
     this.Page = (nomPage) != null ? nomPage : "";
+    if (this.estAdmin) {
+      console.log("admin");
+      
+      this.navbarService.sendChat(); 
+    }
+    this.navbarService.receiveChat().subscribe( payload => {
+      const nbDemandePayload = payload as number;
+      this.nbDemande =  (nbDemandePayload > 9 ? "9+" : nbDemandePayload.toString());
+    }); 
   }
 
   printMenu() {

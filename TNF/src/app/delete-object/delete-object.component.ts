@@ -418,6 +418,7 @@ export class DeleteObjectComponent implements OnInit {
       ////            ////
 
     }
+    
   }
 
   public async selectCheckOr( id : string){
@@ -735,6 +736,7 @@ export class DeleteObjectComponent implements OnInit {
         this.manageToast("Demande de suppression", "La demande a été transmises aux administrateurs", "#006400");
         this.demandeAdmin = false;
         await this.endOfDelete();
+        this.fetchDeleteObjectService.sendChat();
       }
       
     }).catch((e) => {

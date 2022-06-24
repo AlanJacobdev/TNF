@@ -28,7 +28,7 @@
                             <tr *ngIf="this.listeDemandeAdmin.length === 0">
                                 <td class="text-center" colspan="3">Aucune demande</td>
                             </tr>
-                            <tr *ngFor="let demande of listeDemandeAdmin"  (click)="selectDemande(demande.idDemande)" [ngClass]="{'table-active': demande.idDemande === this.selectedDemande }">
+                            <tr #demandes id="{{demande.idDemande}}" *ngFor="let demande of listeDemandeAdmin"  (click)="selectDemande(demande.idDemande)" [ngClass]="{'table-active': demande.idDemande === this.selectedDemande }">
                                 <td class="col-2 align-middle">{{demande.profilCreation}}</td>
                                 <td class="col-2 text-center align-middle">{{demande.dateCreation | date: 'dd/MM/yyyy HH:mm'}}</td>
                                 <td class="col-8 align-middle">{{demande.motif}}</td>
@@ -226,58 +226,136 @@
     <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="descriptionModal"> Arborescence de l'objet {{this.objectSelect}}</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <h5 class="modal-title" id="descriptionModal"> Arborescence de l'objet {{this.objectSelect}} {{this.objectType}}</h5>
+          <button type="button" (click)="resetArbo()" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
             
-            <ng-container *ngIf="this.objectType === this.objectTypeNow.OR; else ItemModal">
-                <div class="row">
-                    <div (click)="selectOrArbo()" class="col-4 cursor-pointer">
-                        {{this.arborescenceOR.OR.idObjetRepere}} - {{this.arborescenceOR.OR.libelleObjetRepere }}
-                    </div>
-                    <div (click)="selectOrArbo()" class="col-1 cursor-pointer">
-                        <fa-icon class="fs-4 col-12 eye text-black" [icon]="this.orArboSelect ? faCaretRight : faCaretDown" ></fa-icon>
-                    </div>
+            <div *ngIf="Loading; else data" class="spinnerWaiting">
+                <div class="spinner-grow" role="status">
+                  <span class="visually-hidden ">Loading...</span>
                 </div>
-                <div class="row" id="collapseItem">
-                    <div *ngFor="let item of this.arborescenceOR.Item" class="col-8 offset-3">
-                        <div (click)="selectItemInOrArbo(item.Item.idItem)" class="col-4 cursor-pointer">
-                            {{item.Item.idItem}} - {{item.Item.libelle}}
-                        </div>
-                        <div (click)="selectItemInOrArbo(item.Item.idItem)" class="col-1 cursor-pointer">
-                            <fa-icon class="fs-4 col-12 eye text-black" [icon]="this.CaretItem.get(item.Item.idItem) ? faCaretRight : faCaretDown" ></fa-icon>
-                        </div>
-                        <div class="row">
-                            <div class="col-8 offset-4">
-                                <div *ngFor="let si of item.SI">
-                                    {{si.idSousItem}} - {{si.libelleSousItem}}
+                <div class="spinner-grow" role="status">
+                  <span class="visually-hidden ">Loading...</span>
+                </div>
+                <div class="spinner-grow" role="status">
+                  <span class="visually-hidden ">Loading...</span>
+                </div>
+                <div class="fs-4">
+                  En attente
+                </div>
+              </div>
+
+
+
+
+            <ng-template #data>
+                <ng-container *ngIf="this.objectType === this.objectTypeNow.OR; else ItemModal">
+                    
+                    <div class="text-center my-2" *ngIf="this.arborescenceOR.Item.length == 0; else HaveItem">
+                        L'objet repère {{this.arborescenceOR.OR.idObjetRepere}} ( {{this.arborescenceOR.OR.libelleObjetRepere }} ) ne possède pas d'items et de sous items.
+                    </div>
+                    <ng-template #HaveItem >
+                        <div class="col-4 cursor-pointer">
+                            <div (click)="selectOrArbo()" class=" row align-items-center hoverObject me-lg-5" data-bs-toggle="collapse" data-bs-target="#collapseItem" aria-expanded="true" aria-controls="collapseItem">
+                                <div class="col-10">
+                                    {{this.arborescenceOR.OR.idObjetRepere}} - {{this.arborescenceOR.OR.libelleObjetRepere }}
+                                </div>
+                                <div class="col-2 ">
+                                    <fa-icon class="fs-4 col-12 eye text-black" [icon]="this.orArboSelect ? faCaretRight : faCaretDown" ></fa-icon>
                                 </div>
                             </div>
                         </div>
-                        
-                    </div>
+                    </ng-template>
                     <div class="row">
-                        
-                    </div>
-                </div>
+                        <div id="collapseItem"  aria-expanded="true" *ngFor="let item of this.arborescenceOR.Item; let last = last;" class="col-9 offset-3 collapse show " >
+                                <div class="row">
+                                    <div class="col-7">
+                                        <div class="row align-items-center hoverObject">
+                                            <div class="col-1 text-end me-0 pe-0">
+                                                <fa-icon class="fs-6 col-12 text-black" [icon]="faMinus" ></fa-icon>
+                                            </div>
+                                            <div class="col-11">
+                                                <div class="row align-items-center me-lg-4 border-bottom" (click)="selectItemInOrArbo(item.Item.idItem)" [ngClass]="{'cursor-pointer' : item.SI.length !== 0, 'py-1' : item.SI.length === 0, 'border-bottom' : !last}" data-bs-toggle="collapse" [attr.data-bs-target]="'#collapseSI'+item.Item.idItem" data-bs-target="#collapseSI" aria-expanded="true" [attr.aria-controls]="'#collapseSI'+item.Item.idItem">
+                                                    <div class="col-10">
+                                                        {{item.Item.idItem}} - {{item.Item.libelle}} 
+                                                    </div>
+                                                    <div *ngIf="item.SI.length != 0" class="col-2">
+                                                        <fa-icon class="fs-4 col-12 eye text-black" [icon]="this.CaretItem.get(item.Item.idItem) ? faCaretRight : faCaretDown" ></fa-icon>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                                <div class="row">
+                                    <div class="col-1 offset-5 me-lg-0 pe-lg-0">
+                                    </div>
+                                    <div class="col-6 ms-lg-0 ps-lg-0">
+                                        <div class="row ">
+                                            <div id="collapseSI{{item.Item.idItem}}" class="collapse show " *ngFor="let si of item.SI; let index = index; let last = last">
+                                                <div class="row align-items-center hoverObject">
+                                                    <div class="col-1 text-end me-0 pe-0">
+                                                        <fa-icon class="fs-6 col-12 text-black" [icon]="faMinus" ></fa-icon>
+                                                    </div>
+                                                    <div class="col-11 py-1 " [ngClass]="{'border-bottom' : !last}">
+                                                        {{si.idSousItem}} - {{si.libelleSousItem}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>        
 
 
-
-
-
-            </ng-container>
-            <ng-template #ItemModal>
-                <ng-container *ngIf="this.objectType === this.objectTypeNow.Item; else SiModal">
-                    item
                 </ng-container>
-            </ng-template>
-            <ng-template #SiModal>
-                si
+                <ng-template #ItemModal>
+                    <div class="text-center my-2" *ngIf="this.arborescenceItem.SI.length == 0; else HaveSousItem">
+                        L'item {{this.arborescenceItem.Item.idItem}} - {{this.arborescenceItem.Item.libelle }} ne possède pas de sous items.
+                    </div>
+                    <ng-template #HaveSousItem >
+                        <div class=" d-flex  justify-content-center">
+                            <div class="col-4 cursor-pointer">
+                                <div (click)="selectItemArbo()" class=" row align-items-center hoverObject me-lg-5" data-bs-toggle="collapse" data-bs-target="#collapseSousItem" aria-expanded="true" aria-controls="collapseSousItem">
+                                    <div class="col-10">
+                                        {{this.arborescenceItem.Item.idItem}} - {{this.arborescenceItem.Item.libelle }}
+                                    </div>
+                                    <div class="col-2 ">
+                                        <fa-icon class="fs-4 col-12 eye text-black" [icon]="this.itemArboSelect ? faCaretRight : faCaretDown" ></fa-icon>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div id="collapseSousItem"  aria-expanded="true" *ngFor="let sousitem of this.arborescenceItem.SI; let last = last;" class="col-12 collapse show " >
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="row align-items-center hoverObject">
+                                                    <div class="col-1 text-end me-0 pe-0">
+                                                        <fa-icon class="fs-6 col-12 text-black" [icon]="faMinus" ></fa-icon>
+                                                    </div>
+                                                    <div class="col-11">
+                                                        <div class="row align-items-center me-lg-4 border-bottom py-1" [ngClass]="{'border-bottom' : !last}" >
+                                                            <div class="col-10">
+                                                                {{sousitem.idSousItem}} - {{sousitem.libelleSousItem}} 
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                </div>
+                            </div> 
+                        </div>
+                    </ng-template>
+                </ng-template>
             </ng-template>
         </div>
         <div  class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#History" data-bs-dismiss="modal">Retour</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Retour</button>
         </div>
       </div>
     </div>

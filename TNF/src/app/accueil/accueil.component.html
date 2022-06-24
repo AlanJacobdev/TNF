@@ -3,16 +3,85 @@
         <div [ngClass] ="{'col-12 col-lg-3' : this.isAdmin, 'col-12 col-lg-4' : !this.isAdmin}">
             <div class="border rounded shadow-sm min-vh-height">
                 <div class="col-12 text-center fs-4 py-2 fst-italic border-bottom  shadow-sm mb-1">
-                    Changelog 
+                    Informations
                 </div>
             </div>
         </div>
         
-        <div class="px-4" [ngClass] ="{'col-12 col-lg-6' : this.isAdmin, 'col-12 col-lg-8' : !this.isAdmin}">
+        <div class="px-lg-4" [ngClass] ="{'col-12 col-lg-6' : this.isAdmin, 'col-12 col-lg-8' : !this.isAdmin}">
             <div class="border rounded shadow-sm min-vh-height ">
                 <div class="col-12 text-center fs-4 py-2 fst-italic border-bottom  shadow-sm mb-1">
-                    Modifications
+                    Activités
                 </div>
+                <div [ngClass]="{'showDay' : dayIsSelect, 'd-none' :!dayIsSelect}">
+                    <div class="row border-bottom px-0 mx-0 pb-2 cursor-pointer" (click)="showCalendar()">
+                        <div class="col-3 text-center">
+                            <fa-icon class="fs-4 col-12" [icon]="faChevronDown" ></fa-icon> 
+                        </div>
+                        <div class="col-6 fs-4 fw-bolder justify-content-center d-flex align-items-center ">
+                            {{selectedDay}} {{selectedMonth}} {{selectedYear}}
+                        </div>
+                        <div class="col-3 text-center" >
+                            <fa-icon class="fs-4 col-12" [icon]="faChevronDown" ></fa-icon> 
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dayIsSelected" [ngClass]="{'disabledCalendar' : dayIsSelect}">
+                    <div class="row mt-2">
+                        <div class="col-3 text-center">
+                            <button class="btn btn-light" (click)="changeMonth(false)">
+                                <fa-icon class="fs-5 col-12 " [icon]="faArrowLeft" ></fa-icon> 
+                            </button>
+                        </div>
+                        <div class="col-6 fs-4 fw-bolder justify-content-center d-flex align-items-center">
+                            {{selectedMonth}} {{selectedYear}}
+                        </div>
+                        <div class="col-3 text-center" (click)="changeMonth(true)">
+                            <button class="btn btn-light">
+                                <fa-icon class="fs-5 col-12" [icon]="faArrowRight" ></fa-icon> 
+                            </button>
+                        </div>
+                        <!-- <div class="col-2 text-center" (click)="today()">
+                            <button class="btn btn-primary"> 
+                                <fa-icon class="fs-5 col-12" [icon]="faCalendarCheck" ></fa-icon> 
+                            </button>
+                        </div> -->
+
+                    </div>  
+                    <div class="row mt-3">
+                        <div class="col">
+                            <table  class="table cursor-pointer">
+                                <thead>
+                                    <tr>
+                                    <th scope="col">Lun</th>
+                                    <th scope="col">Mar</th>
+                                    <th scope="col">Mer</th>
+                                    <th scope="col">Jeu</th>
+                                    <th scope="col">Ven</th>
+                                    <th scope="col">Sam</th>
+                                    <th scope="col">Dim</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let week of weekOfCurrentMonth; let first = first; let last = last">
+                                        <td [ngClass]="{'today' : this.currentDay == day && this.currentMonth == selectedMonth && selectedYear == currentYear,
+                                                    'disabled' : (day >20 && first) || (day <10 && last) , 'selectedDay' : day === selectedDay}" *ngFor="let day of week"
+                                                    (click)="selectDay(day, (day >20 && first) || (day <10 && last), (day >20 && first) ? true : false )"> 
+                                            <div >
+                                                {{day}}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+
+
+                    </div>
+                </div>
+            
             </div>
         </div>
 
@@ -45,7 +114,7 @@
                                 </div>
                             </div>
                             <div class="col-2 pt-2 pb-1">
-                                <button type="button" class="btn btn-light h-100 buttonEditDemande">
+                                <button routerLink="/demandeAdmin" [state]="{ id: dmdAdmin.idDemande}" type="button" class="btn btn-light h-100 buttonEditDemande">
                                     <fa-icon class="fs-5 col-12 text-center " [icon]="faRightLong" ></fa-icon> 
                                 </button>
                             </div>

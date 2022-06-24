@@ -90,3 +90,29 @@ table {
     filter :blur(1px)
 }
 
+.hoverObject:hover {
+    background-color: rgb(240, 240, 240);
+}
+
+.lh-xl{
+    line-height: 2.5rem;
+}
+
+.spinnerWaiting{
+    position: relative;
+    text-align: center;
+}
+
+.spinnerWaiting .spinner-grow:nth-child(1){
+    animation-delay: 0.1s;
+}
+.spinnerWaiting .spinner-grow:nth-child(2){
+    animation-delay: 0.2s;
+}
+.spinnerWaiting .spinner-grow:nth-child(3){
+    animation-delay: 0.3s;
+} 
+
+.spinner-grow {
+    margin : 0 .5rem 0 .5rem;
+}

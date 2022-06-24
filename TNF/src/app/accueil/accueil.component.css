@@ -18,3 +18,86 @@
     top: 0;
     background-color: rgb(255, 255, 255);  
 }
+
+td:hover {
+    background-color: rgb(233, 235, 236);
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.today{
+    background-color: rgb(80, 101, 218);
+    color: #fff;
+}
+
+.today:hover{
+    background-color: rgb(128, 143, 228);
+    color: #fff;
+}
+
+.selectedDay:not(.disabled){
+    border : 3px solid rgb(128, 143, 228) !important;
+}
+
+.today.selectedDay:not(.disabled){
+    border : 3px solid #A8B5FF !important;
+    background-color: rgb(135, 151, 238);
+}
+
+
+.disabled {
+    color : rgb(197, 197, 197);
+}
+
+
+.dayIsSelected{
+    transition-duration: 0.65s;
+}
+
+.disabledCalendar{
+    transform: translateY(-170px) scaleY(0);
+    animation: 1s fadeOut;
+    animation-fill-mode: both; 
+    visibility: hidden;
+}
+
+.showDay {
+    visibility: hidden;
+    animation: 1.5s fadeIn;
+    animation-fill-mode: forwards; 
+    height: 0px;
+    
+}
+
+@keyframes fadeOut {
+    1% {
+      visibility: visible;
+    }
+    50% {
+      visibility: hidden;
+      opacity: 0
+    }
+}
+
+@keyframes fadeIn {
+    
+    50% {
+        visibility: hidden;
+        display: none !important
+    }
+    51%{
+        visibility: visible;
+        display: block !important;
+        opacity: 0;
+        margin-top : 0.5rem;
+    }
+    99% {
+    }
+    100% {
+      display: block !important;
+      visibility: visible;
+      
+    }
+}

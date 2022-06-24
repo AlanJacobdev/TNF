@@ -2,28 +2,29 @@
     <div class="row my-3 px-lg-5">
         <div class="col-12 col-lg-12">
             <div class="row">
-                <div class=" row col-lg-3 ofset-lg-1 col-11 mt-4 ">
-                    <legend class="col-form-label col-3 col-lg-4 pt-0 align-self-center text-center">Objet</legend>
-                    <div class ="col-9 col-lg-6">
-                        <div class="form-check form-check">
-                            <input (change)="selectObject(this.TypeObject.OR)" class="form-check-input" type="radio" name="radioType" id="trueActif" required checked>
-                            <label class="form-check-label" for="trueActif">Objet repère</label>
+                <div class="col-lg-6 col-xxl-2 col-xl-3 offset-lg-1 col-12">
+                    <div class="input-group">
+                        <div class="input-group-text col-3">Type</div>
+                        <div class="btn-group-vertical col-9 margin-top1 d-none d-lg-block" aria-label="Type d'objet">
+                            <input (change)="selectObject(this.TypeObject.OR)" type="radio" class="btn-check " name="typeObjetRadio" id="TypeOR" checked>
+                            <label class="btn btn-outline-perso no-rounded-top-left" for="TypeOR">Objet repère</label>
+                            <input (change)="selectObject(this.TypeObject.Item)" type="radio" class="btn-check" name="typeObjetRadio" id="TypeItem" >
+                            <label class="btn btn-outline-perso" for="TypeItem">Item</label>
+                            <input (change)="selectObject(this.TypeObject.SI)" type="radio" class="btn-check " name="typeObjetRadio" id="TypeSI" >
+                            <label class="btn btn-outline-perso no-rounded-bottom-left" for="TypeSI"> Sous Item</label>
                         </div>
-                        <div class="form-check form-check">
-                            <input (change)="selectObject(this.TypeObject.Item)" class="form-check-input" type="radio" name="radioType" id="falseActif" required>
-                            <label class="form-check-label" for="falseActif">Item</label>
-                        </div>
-                        <div class="form-check form-check">
-                            <input (change)="selectObject(this.TypeObject.SI)" class="form-check-input" type="radio" name="radioType" id="ignoredActif" required>
-                            <label class="form-check-label" for="ignoredActif">Sous Item</label>
-                        </div>
-                        <div class="invalid-tooltip">
-                            Veuillez renseigner un Type d'Objet.
+                        <div class="btn-group col-9 margin-top1 d-lg-none" aria-label="Type d'objet">
+                            <input (change)="selectObject(this.TypeObject.OR)" type="radio" class="btn-check " name="typeObjetRadio" id="TypeOR" checked>
+                            <label class="btn btn-outline-perso no-rounded-top-left" for="TypeOR">Objet repère</label>
+                            <input (change)="selectObject(this.TypeObject.Item)" type="radio" class="btn-check" name="typeObjetRadio" id="TypeItem" >
+                            <label class="btn btn-outline-perso" for="TypeItem">Item</label>
+                            <input (change)="selectObject(this.TypeObject.SI)" type="radio" class="btn-check " name="typeObjetRadio" id="TypeSI" >
+                            <label class="btn btn-outline-perso no-rounded-bottom-left" for="TypeSI"> Sous Item</label>
                         </div>
                     </div>
                 </div>
-                <div class=" col-lg-3 col-12">
-                    <div class="col-12 mt-2">
+                <div class=" offset-xl-1 col-xl-6 col-lg-6 col-xxl-3 col-12">
+                    <div class="col-12 mt-3 mt-lg-2 ">
                         <div class="row ">
                             <div class="input-group">
                                 <label class="input-group-text col-3 col-lg-2" for="atelierSelect">Atelier</label>
@@ -38,16 +39,16 @@
                     </div>
                     <div class="col-12 mt-3">
                         <div class="input-group">
-                            <label class="input-group-text " for="atelierSelect">Recherche</label>
+                            <label class="input-group-text col-3" for="atelierSelect">Recherche</label>
                             <input class="form-control" type="text" placeholder="Identifiant" id="search" [(ngModel)]="searchText">
                         </div> 
                     </div>
                 </div>
-                <div class=" col-lg-3 col-12 ps-lg-4 ">
+                <div class=" col-lg-6 col-xl-3 col-12 ps-lg-4 ">
                     <div class="row">
-                        <div class="col-12 mt-3 mt-lg-1">
+                        <div class="col-12 mt-3 mt-lg-2">
                             <div *ngIf="this.objectNow == this.TypeObject.SI" class="input-group">
-                                <label class="input-group-text " for="TypeObjetSelect">Type Objet</label>
+                                <label class="input-group-text col-3" for="TypeObjetSelect">Type Objet</label>
                                 <select (change)=selectTypeObjet($event) class="form-select" id="TypeObjetSelect" aria-label="Default select example" [(ngModel)]="typeOfItemOR">
                                     <option value ="" selected>Sélectionner un objet repère</option>
                                     <option *ngFor="let typeObjet of listeTypeItemOfOR" [value]="typeObjet.idTypeObjet">

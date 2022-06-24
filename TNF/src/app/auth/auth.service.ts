@@ -34,7 +34,6 @@ export class AuthService {
     url = url.replace("{pwd}", pwd)
     
     const res : connexion[] = await lastValueFrom(this.http.get<connexion[]>(url));
-      console.log(res);
       
     if (res != undefined){
       this.UserName=res[0].PRENOMUT.trim();
@@ -42,10 +41,9 @@ export class AuthService {
       this.connection = true;
       this.cookieService.set('UserName', res[0].PRENOMUT.trim());
       this.cookieService.set('UserLastName', res[0].NOMUTILI.trim());
-      this.cookieService.set('Admin', "true");
+      this.cookieService.set('Admin', "false");
       this.cookieService.set('login', login);
     }
-   
     
     return res;
     }catch{

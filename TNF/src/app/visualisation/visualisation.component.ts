@@ -217,7 +217,12 @@ export class VisualisationComponent implements OnInit {
       if(list == undefined) {
         this.ORHistory = [];
       } else {
-        this.ORHistory = list;
+        this.ORHistory.splice(0);
+        for (const or of list) {
+          let newOr : ObjetRepereSave = or;
+          newOr.valide = or.valide == 'A' ? "Actif" : 'Reservé';
+          this.ORHistory.push(newOr);
+        }
       }
       console.log(this.listeItem)
     }).catch((e) => {
@@ -229,7 +234,12 @@ export class VisualisationComponent implements OnInit {
       if(list == undefined) {
         this.ItemHistory = [];
       } else {
-        this.ItemHistory = list;
+        this.ItemHistory.splice(0)
+        for (const item of list) {
+          let newItem : ItemSave = item;
+          newItem.etat = item.etat == 'A' ? "Actif" : item.etat == 'EA' ? 'En attente' : item.etat == 'HS' ? 'Hors Service' : 'Non défini';
+          this.ItemHistory.push(newItem);
+        }
       }
       console.log(this.listeItem)
     }).catch((e) => {
@@ -241,7 +251,12 @@ export class VisualisationComponent implements OnInit {
       if(list == undefined) {
         this.SIHistory = [];
       } else {
-        this.SIHistory = list;
+        this.SIHistory.splice(0);
+        for (const si of list) {
+          let newSI : SousItemSave = si;
+          si.etat = si.etat == 'A' ? "Actif" : si.etat == 'EA' ? 'En attente' : si.etat == 'HS' ? 'Hors Service' : 'Non défini';
+          this.SIHistory.push(newSI);
+        }
       }
       console.log(this.listeItem)
     }).catch((e) => {

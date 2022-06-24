@@ -27,7 +27,9 @@ import { FilterNUPipe } from './create-object/pipe/filter-nu.pipe';
 import { GestionAteliersComponent } from './gestion-ateliers/gestion-ateliers.component';
 import { FilterAtelierPipe } from './gestion-ateliers/pipe/filter-atelier.pipe';
 import { DemandeAdminComponent } from './demande-admin/demande-admin.component';
+import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 
+const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
 @NgModule({
   declarations: [
@@ -61,8 +63,13 @@ import { DemandeAdminComponent } from './demande-admin/demande-admin.component';
     HttpClientModule,
     FormsModule,
     FontAwesomeModule,
+    SocketIoModule.forRoot(config)
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent], 
+  
 })
-export class AppModule { }
+export class AppModule { 
+
+  
+}

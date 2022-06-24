@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
+import { Socket } from 'ngx-socket-io';
 import { lastValueFrom } from 'rxjs';
 import { deleteObject, demandeAdmin, returnDeleteObject } from 'src/structureData/Suppression';
 
@@ -9,7 +10,7 @@ import { deleteObject, demandeAdmin, returnDeleteObject } from 'src/structureDat
 })
 export class FetchDeleteObjectService {
 
-  constructor(private readonly http: HttpClient, private cookieService : CookieService) { }
+  constructor(private readonly http: HttpClient, private cookieService : CookieService, private socket: Socket) { }
 
   async supprimerObject(idOR : string): Promise<any> {
     let user = this.cookieService.get('login');
@@ -133,6 +134,11 @@ export class FetchDeleteObjectService {
     console.log(res)   
     return res
     
+  }
+
+
+  sendChat(){
+    this.socket.emit('testsend', "");
   }
 
 

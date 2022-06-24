@@ -14,17 +14,6 @@
                     <li class="nav-item position-relative" routerLinkActive="active">
                         <a class="nav-link " routerLink="/visualisation" routerLinkActive="active" (click)="selectPage('Visualisation')">Visualisation</a>
                     </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            Importation
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <li><a class="dropdown-item" href="#">Action</a></li>
-                            <li><a class="dropdown-item" href="#">Another action</a></li>
-                            <li><a class="dropdown-item" href="#">Something else here</a></li>
-                        </ul>
-                    </li>
                     <li class="nav-item dropdown " [ngClass]="{'active': GO0.isActive || GO1.isActive || GO2.isActive || GO3.isActive}" >
                         <a class="nav-link dropdown-toggle"
                             [ngClass]="{'active': GO0.isActive || GO1.isActive || GO2.isActive || GO3.isActive}"
@@ -61,7 +50,7 @@
                                 id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown"
                                 aria-expanded="false">
                                 <span class="position-absolute top-25 start-0 translate-middle badge rounded-pill bg-danger">
-                                    3
+                                    {{nbDemande}}
                                     <span class="visually-hidden">unread messages</span>
                                 </span>
                                   <span class="position-relative">Paramétrage</span>
