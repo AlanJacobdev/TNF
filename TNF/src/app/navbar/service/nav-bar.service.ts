@@ -35,7 +35,7 @@ export class NavBarService {
   }
 
   sendChat(){
-    this.socket.emit('testsend', "");
+    this.socket.emit('testsend', "ceci est un test");
   }
   
 }

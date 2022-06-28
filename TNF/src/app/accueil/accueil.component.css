@@ -91,7 +91,6 @@ td:hover {
         visibility: visible;
         display: block !important;
         opacity: 0;
-        margin-top : 0.5rem;
     }
     99% {
     }
@@ -100,4 +99,41 @@ td:hover {
       visibility: visible;
       
     }
+}
+
+.hover-day:hover{
+    background-color: #fcfafa;
+}
+
+                                                
+.dixsept {
+    width: 14.28%;
+}                                       
+
+
+.spinner-grow {
+    margin : 0 .5rem 0 .5rem;
+}
+
+.spinnerWaiting{
+    position: relative;
+    text-align: center;
+}
+
+.spinnerWaiting .spinner-grow:nth-child(1){
+    animation-delay: 0.1s;
+}
+.spinnerWaiting .spinner-grow:nth-child(2){
+    animation-delay: 0.2s;
+}
+.spinnerWaiting .spinner-grow:nth-child(3){
+    animation-delay: 0.3s;
+}
+
+
+.showArrow {
+    visibility: hidden;
+    animation: 0.75s fadeIn;
+    animation-fill-mode: both; 
+    
 }

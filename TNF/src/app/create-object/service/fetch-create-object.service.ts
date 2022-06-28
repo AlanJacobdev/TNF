@@ -2,10 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { lastValueFrom } from 'rxjs';
-import { ItemEtDispo, ItemInfo } from 'src/structureData/Item';
+import { ItemInfo } from 'src/structureData/Item';
 import { NUetOR, ObjetRepereInfo } from 'src/structureData/ObjetRepere';
 import { SousItemInfo } from 'src/structureData/SousItem';
-import { Sousitem } from 'src/structureData/Suppression';
 import { TypeObjetInfo } from 'src/structureData/TypeObject';
 
 @Injectable({

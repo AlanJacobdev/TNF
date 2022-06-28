@@ -92,7 +92,9 @@ export class DemandeAdminComponent implements OnInit {
       this.demandes.changes.subscribe(() => this.scrollToDemande());
   }
 
-
+  test(){
+    console.log("test")
+  }
 
   async getAllDemandeAdmin(){
     this.fetchDemandeAdminService.getAllDemandeAdmin().then((list: DemandeAdmin[]) => {

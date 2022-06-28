@@ -10,7 +10,7 @@ import { ArborescenceItem, ArborescenceOR, DemandeAdmin, DemandeAdminInfo } from
 })
 export class FetchDemandeAdminService {
 
-  constructor(private readonly http: HttpClient, private cookieService : CookieService, private socket: Socket) { }
+  constructor(private readonly http: HttpClient, private cookieService : CookieService) { }
 
   async getAllDemandeAdmin(): Promise<any> {
     let url = "http://localhost:3000/demande-admin";

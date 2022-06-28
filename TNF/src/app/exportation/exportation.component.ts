@@ -130,6 +130,7 @@ export class ExportationComponent implements OnInit {
       this.dateFin = "";
     } else {
       this.dateFin = date.target.value;
+      
     }
    
   }
