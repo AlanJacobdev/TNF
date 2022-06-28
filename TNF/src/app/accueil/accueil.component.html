@@ -1,6 +1,6 @@
 <div class="container-fluid">
     <div class="row mt-4 px-4 ">
-        <div [ngClass] ="{'col-12 col-lg-3' : this.isAdmin, 'col-12 col-lg-4' : !this.isAdmin}">
+        <div class="mx-0 px-0" [ngClass] ="{'col-12 col-lg-3' : this.isAdmin, 'col-12 col-lg-4' : !this.isAdmin}">
             <div class="border rounded shadow-sm min-vh-height">
                 <div class="col-12 text-center fs-4 py-2 fst-italic border-bottom  shadow-sm mb-1">
                     Informations
@@ -8,8 +8,8 @@
             </div>
         </div>
         
-        <div class="px-lg-4" [ngClass] ="{'col-12 col-lg-6' : this.isAdmin, 'col-12 col-lg-8' : !this.isAdmin}">
-            <div class="border rounded shadow-sm min-vh-height ">
+        <div class="px-lg-4 " [ngClass] ="{'col-12 col-lg-6' : this.isAdmin, 'col-12 col-lg-8' : !this.isAdmin}">
+            <div class="border rounded shadow-sm min-vh-height">
                 <div class="col-12 text-center fs-4 py-2 fst-italic border-bottom  shadow-sm mb-1">
                     Activités
                 </div>
@@ -25,13 +25,18 @@
                             <fa-icon class="fs-4 col-12" [icon]="faChevronDown" ></fa-icon> 
                         </div>
                     </div>
-                    <div class="row my-5">
+                    <div class="row px-0 mx-0 scrolltable">
+                        <div class="col-10 my-3 offset-1">
 
-                        <div class="col">
-                            a
+                                <div *ngFor="let activity of listeActiviteParJour.objectCreated" class="row">
+                                    <div class="col border">
+                                        {{activity.id}}
+                                    </div>
+                                </div>
+
                         </div>
-
                     </div>
+                    
                 </div>
 
                 <div class="dayIsSelected" [ngClass]="{'disabledCalendar' : dayIsSelect}">
@@ -85,7 +90,7 @@
                                 <tbody>
                                     <tr *ngFor="let week of weekOfCurrentMonth ; let first = first; let last = last; let j = index">
                                         <td class="dixsept" [ngClass]="{'today' : this.currentDay == day && this.currentMonth == selectedMonth && selectedYear == currentYear,
-                                                    'disabled' : (day >20 && first) || (day <10 && last) , 'selectedDay' : day === selectedDay}" *ngFor="let day of week, let i = index"
+                                                    'disabled' : (day >20 && first) || (day <10 && last) , 'selectedDay' : day === selectedDay, 'border-end' : !lastOfWeek}" *ngFor="let day of week, let i = index, let lastOfWeek = last"
                                                     (click)="selectDay(day, (day >20 && first) || (day <10 && last))"> 
                                             
                                             <div class="row">
@@ -97,13 +102,13 @@
                                             this.calendarAndActivity[(j !== 0 ? (i === 0) ? j *7 : j*7+i : i )][1].CountM == -1 && 
                                             this.calendarAndActivity[(j !== 0 ? (i === 0) ? j *7 : j*7+i : i )][1].CountD == -1}">
                                                 <div class="col">
-                                                    <span class="text-success px-1" *ngIf="this.calendarAndActivity[(j !== 0 ? (i === 0) ? j *7 : j*7+i : i )][1].CountC != -1">
-                                                        {{this.calendarAndActivity[(j !== 0 ? (i === 0) ? j *7 : j*7+i : i )][1].CountC > 100 ? '99+' : this.calendarAndActivity[(j !== 0 ? (i === 0) ? j *7 : j*7+i : i )][1].CountC}}
+                                                    <span class="badge bg-success mx-1" *ngIf="this.calendarAndActivity[(j !== 0 ? (i === 0) ? j *7 : j*7+i : i )][1].CountC != -1">
+                                                         {{this.calendarAndActivity[(j !== 0 ? (i === 0) ? j *7 : j*7+i : i )][1].CountC > 100 ? '99+' : this.calendarAndActivity[(j !== 0 ? (i === 0) ? j *7 : j*7+i : i )][1].CountC}}
                                                     </span>
-                                                    <span class="text-warning px-1" *ngIf="this.calendarAndActivity[(j !== 0 ? (i === 0) ? j *7 : j*7+i : i )][1].CountM != -1">
+                                                    <span class="badge bg-warning mx-1" *ngIf="this.calendarAndActivity[(j !== 0 ? (i === 0) ? j *7 : j*7+i : i )][1].CountM != -1">
                                                         {{this.calendarAndActivity[(j !== 0 ? (i === 0) ? j *7 : j*7+i : i )][1].CountM > 100 ? '99+' : this.calendarAndActivity[(j !== 0 ? (i === 0) ? j *7 : j*7+i : i )][1].CountM}} 
                                                     </span>
-                                                    <span class="text-danger px-1" *ngIf="this.calendarAndActivity[(j !== 0 ? (i === 0) ? j *7 : j*7+i : i )][1].CountD != -1">
+                                                    <span class="badge bg-danger mx-1" *ngIf="this.calendarAndActivity[(j !== 0 ? (i === 0) ? j *7 : j*7+i : i )][1].CountD != -1">
                                                         {{this.calendarAndActivity[(j !== 0 ? (i === 0) ? j *7 : j*7+i : i )][1].CountD > 100 ? '99+' : this.calendarAndActivity[(j !== 0 ? (i === 0) ? j *7 : j*7+i : i )][1].CountD}} 
                                                     </span>
                                                 </div>
@@ -126,7 +131,7 @@
             </div>
             <div >
                 <div class="row" *ngIf="this.listeDemandeAdmin.length === 0; else afficheDemandeAdmin">
-                    <div class="col">Aucune demande</div>
+                    <div class="col my-3 text-center">Aucune demande</div>
                     </div>
                 <ng-template #afficheDemandeAdmin>
                     <div class="row border-bottom border-2 " *ngFor="let dmdAdmin of listeDemandeAdmin" >

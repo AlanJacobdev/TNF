@@ -3,7 +3,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { DemandeAdmin } from 'src/structureData/DemandeAdmin';
 import { faComment, faCalendar, faUser, faArrowRightFromBracket, faArrowLeft, faArrowRight, faCalendarCheck, faChevronDown} from '@fortawesome/free-solid-svg-icons';
 import { FetchDemandeAdminService } from '../demande-admin/service/fetch-demande-admin.service';
-import { typeInfoPerMounth } from 'src/structureData/Accueil';
+import { typeInfoPerDay, typeInfoPerMounth } from 'src/structureData/Accueil';
 import { FetchAccueilService } from './service/fetch-accueil/fetch-accueil.service';
 
 @Component({
@@ -60,6 +60,11 @@ export class AccueilComponent implements OnInit {
       objectModified: [],
       objectDeleted: []
     };
+    public listeActiviteParJour : typeInfoPerDay = {
+      objectCreated: [],
+      objectModified: [],
+      objectDeleted: []
+    }
 
   ngOnInit(){
     
@@ -191,10 +196,11 @@ export class AccueilComponent implements OnInit {
         }
         
       });     
-      tabOfWeeks.push(range(week.start,week.end, week.lastMonthDays, week.CurrentMonthDays));
+      tabOfWeeks.push(range(week.start,week.end, week.lastMonthDays, week.CurrentMonthDays));      
     }
     
     if (listeActiviteParMois != undefined ) {
+      console.log(listeActiviteParMois.objectCreated);
       this.calendarWithActivity.clear();
       let valueC = -1;
       let valueM = -1;
@@ -209,16 +215,17 @@ export class AccueilComponent implements OnInit {
           valueM = -1;
           valueD = -1;
           if(firstweek) {
-            //console.log(dayModify+ "-" + (day > 10 ? (this.selectedNumberMonth -1 < 10 ? '0'+ (this.selectedNumberMonth -1) : this.selectedNumberMonth -1) : (this.selectedNumberMonth < 10 ? '0'+ this.selectedNumberMonth : this.selectedNumberMonth)) +'-'+ this.selectedYear);
-            let responseC = listeActiviteParMois.objectCreated.find((element)=> element.date === dayModify+ "-" + (day > 10 ? (this.selectedNumberMonth -1 < 10 ? '0'+ (this.selectedNumberMonth -1) : this.selectedNumberMonth -1) : (this.selectedNumberMonth < 10 ? '0'+ (this.selectedNumberMonth) : this.selectedNumberMonth) +'-'+ this.selectedYear));
+            // console.log(dayModify+ "-" + (day > 10 ? (this.selectedNumberMonth -1 < 10 ? '0'+ (this.selectedNumberMonth -1) : this.selectedNumberMonth -1) : (this.selectedNumberMonth < 10 ? '0'+ this.selectedNumberMonth : this.selectedNumberMonth)) +'-'+ this.selectedYear);
+            let responseC = listeActiviteParMois.objectCreated.find((element)=> element.date === dayModify+ "-" + (day > 10 ? (this.selectedNumberMonth -1 < 10 ? '0'+ (this.selectedNumberMonth -1) : this.selectedNumberMonth -1) : (this.selectedNumberMonth < 10 ? '0'+ this.selectedNumberMonth : this.selectedNumberMonth)) +'-'+ this.selectedYear);
+            
             if (responseC != undefined){
               valueC = responseC.count;
             }
-            let responseM = listeActiviteParMois.objectModified.find((element)=> element.date === dayModify+ "-" + (day > 10 ? (this.selectedNumberMonth -1 < 10 ? '0'+ (this.selectedNumberMonth -1) : this.selectedNumberMonth -1) : (this.selectedNumberMonth < 10 ? '0'+ (this.selectedNumberMonth) : this.selectedNumberMonth)+'-'+ this.selectedYear));
+            let responseM = listeActiviteParMois.objectModified.find((element)=> element.date === dayModify+ "-" + (day > 10 ? (this.selectedNumberMonth -1 < 10 ? '0'+ (this.selectedNumberMonth -1) : this.selectedNumberMonth -1) : (this.selectedNumberMonth < 10 ? '0'+ this.selectedNumberMonth : this.selectedNumberMonth)) +'-'+ this.selectedYear);
             if (responseM != undefined) {
               valueM = responseM.count
             }
-            let responseD = listeActiviteParMois.objectDeleted.find((element)=> element.date === dayModify+ "-" + (day > 10 ? (this.selectedNumberMonth -1 < 10 ? '0'+ (this.selectedNumberMonth -1) : this.selectedNumberMonth -1) : (this.selectedNumberMonth < 10 ? '0'+ (this.selectedNumberMonth) : this.selectedNumberMonth)+'-'+ this.selectedYear));
+            let responseD = listeActiviteParMois.objectDeleted.find((element)=> element.date === dayModify+ "-" + (day > 10 ? (this.selectedNumberMonth -1 < 10 ? '0'+ (this.selectedNumberMonth -1) : this.selectedNumberMonth -1) : (this.selectedNumberMonth < 10 ? '0'+ this.selectedNumberMonth : this.selectedNumberMonth)) +'-'+ this.selectedYear);
             if (responseD != undefined){
               valueD = responseD.count
             }
@@ -278,7 +285,6 @@ export class AccueilComponent implements OnInit {
     }
     this.calendarAndActivity.splice(0);
     this.calendarAndActivity = this.getKeys();    
-   
     
     return tabOfWeeks;
 
@@ -313,6 +319,8 @@ export class AccueilComponent implements OnInit {
       this.selectedDay = day;
       this.monthOfSelectedDay = this.selectedDate.toLocaleString('default', { month: 'long' });
       this.monthOfSelectedDay = this.monthOfSelectedDay.charAt(0).toUpperCase() + this.selectedMonth.slice(1);
+      this.selectedDate = new Date(this.selectedYear, this.selectedDate.getMonth(), day)
+      this.getHistoryOfOneDay();
     }
     
   }
@@ -325,7 +333,7 @@ export class AccueilComponent implements OnInit {
   getNumberOfActivityForEachDay(){
 
     this.waitingMonth = true
-    this.fetchAccueilService.getNumberOfActivityForEachDay(this.startOfMonth.toLocaleDateString("en-CA").substring(0, 10).replace('/','-'), this.endOfMonth.toLocaleDateString("en-CA").substring(0, 10).replace('/','-')).then((list: typeInfoPerMounth) => {
+    this.fetchAccueilService.getNumberOfActivityForEachDay(this.startOfMonth.toLocaleDateString("en-CA").substring(0, 10), this.endOfMonth.toLocaleDateString("en-CA").substring(0, 10).replace('/','-')).then((list: typeInfoPerMounth) => {
       if (list != undefined) {
         this.listeActiviteParMois = list
         this.weekOfCurrentMonth = this.getAllDaysOfWeek(this.templateOfCurrentMonth)
@@ -340,6 +348,26 @@ export class AccueilComponent implements OnInit {
 
   getKeys(){
     return Array.from(this.calendarWithActivity);
+  }
+
+  getHistoryOfOneDay(){
+    this.fetchAccueilService.getHistoryOfOneDay(this.selectedDate.toLocaleDateString("en-CA").substring(0, 10)).then((list: typeInfoPerDay) => {
+      if (list != undefined) {
+        this.listeActiviteParJour = list;
+        console.log(list);
+        
+      } else {
+        console.log("Demande Admin : aucune ")
+        this.listeActiviteParJour = {
+          objectCreated: [],
+          objectModified: [],
+          objectDeleted: []
+        }
+      }
+    }).catch((e) => {
+    })
+
+
   }
 
 }

@@ -63,7 +63,7 @@ export class FetchCreateObjectService {
       libelleObjetRepere : libelle,
       codeType : codeType,
       numeroUnique : nu,
-      valide: 'Actif',
+      etat: 'A',
       description : description,
       profilCreation : global,
       posteCreation : ""
@@ -89,7 +89,7 @@ export class FetchCreateObjectService {
     }
   }
 
-  async createMultipleObject(libelle : string, codeType :string, nu : string, rangeNu : string[] ,valide: boolean, description : any[]): Promise<any> {
+  async createMultipleObject(libelle : string, codeType :string, nu : string, rangeNu : string[] ,etat: boolean, description : any[]): Promise<any> {
     let global = this.cookieService.get('login');
     let url = "http://localhost:3000/objetrepere/create/createMultipleObject"
     let payload = {
@@ -97,7 +97,7 @@ export class FetchCreateObjectService {
       codeType : codeType,
       numeroUnique : nu,
       rangeNu : rangeNu,
-      valide: valide,
+      etat: etat,
       description : description,
       profilCreation : global,
       posteCreation : ""

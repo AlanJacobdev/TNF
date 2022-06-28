@@ -43,7 +43,7 @@ export class DeleteObjectComponent implements OnInit {
     idObjetRepere: '',
     libelleObjetRepere: '',
     codeType: '',
-    valide: '',
+    etat: '',
     isPaste: false
   };
 
@@ -173,7 +173,7 @@ export class DeleteObjectComponent implements OnInit {
           let OR : ObjetRepereSuppression = {
             idObjetRepere : e.idObjetRepere,
             libelleObjetRepere : e.libelleObjetRepere,
-            valide : e.valide,
+            etat : e.etat,
             codeType : e.codeType,
             isPaste: false
           };
@@ -366,7 +366,7 @@ export class DeleteObjectComponent implements OnInit {
   
   public CheckIfORSelectedValide(){
     if(this.isValide = true) {
-      if(!this.Ornow.valide) {
+      if(!this.Ornow.etat) {
         this.idORSelect = "";
         this.selectedNow = "";
         this.listeItem.splice(0);

@@ -17,13 +17,13 @@ export class FetchModifyObjectService {
 
 
 
-  async modifyObject(idOR : string, libelle : string, valide: string, description : Description[]): Promise<any> {
+  async modifyObject(idOR : string, libelle : string, etat: string, description : Description[]): Promise<any> {
     let global = this.cookieService.get('login');
     let url = "http://localhost:3000/objetrepere/{ID}"
     url = url.replace("{ID}", idOR)
     let payload = {
       libelleObjetRepere : libelle,
-      valide: valide,
+      etat: etat,
       description : description,
       profilModification : global,
       posteModification : ""

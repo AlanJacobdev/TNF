@@ -44,7 +44,7 @@ export class VisualisationComponent implements OnInit {
   public Ornow : ObjetRepereAffichage = {
     idObjetRepere: '',
     libelleObjetRepere: '',
-    valide: '',
+    etat: '',
     profilCreation: '',
     dateCreation: '',
     profilModification: '',
@@ -118,7 +118,7 @@ export class VisualisationComponent implements OnInit {
       const datem = new Date(res.dateModification).toISOString().split('T')[0] + " " + new Date(res.dateModification).toTimeString().split(' ')[0]
       this.Ornow.dateModification = (res.dateModification != null) ? datem : "Inconnue"; 
       this.Ornow.description = res.description ;
-      this.Ornow.valide = res.valide == 'A' ? "Actif" : 'Reservé';
+      this.Ornow.etat = res.etat == 'A' ? "Actif" : 'Reservé';
     }
     this.selectedNow = idOr;
     this.selectedItem = "";
@@ -220,7 +220,7 @@ export class VisualisationComponent implements OnInit {
         this.ORHistory.splice(0);
         for (const or of list) {
           let newOr : ObjetRepereSave = or;
-          newOr.valide = or.valide == 'A' ? "Actif" : 'Reservé';
+          newOr.etat = or.etat == 'A' ? "Actif" : 'Reservé';
           this.ORHistory.push(newOr);
         }
       }

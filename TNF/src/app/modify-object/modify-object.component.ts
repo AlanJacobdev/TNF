@@ -65,7 +65,7 @@ export class ModifyObjectComponent implements OnInit {
   public orSelect : ObjetRepereModification = {
     idObjetRepere: '',
     libelleObjetRepere: '',
-    valide: '',
+    etat: '',
     description: []
   } ;
 
@@ -249,7 +249,7 @@ export class ModifyObjectComponent implements OnInit {
     this.orSelect = {
       idObjetRepere : '',
       libelleObjetRepere : '',
-      valide : '',
+      etat : '',
       description : []
     }
     this.itemSelect = {
@@ -292,9 +292,9 @@ export class ModifyObjectComponent implements OnInit {
       if (orInfo != undefined) {
         this.orSelect.idObjetRepere = orInfo.idObjetRepere ;
         this.orSelect.libelleObjetRepere = orInfo.libelleObjetRepere;
-        this.orSelect.valide = orInfo.valide;
+        this.orSelect.etat = orInfo.etat;
         this.orSelect.description = orInfo.description;
-        this.valide = orInfo.valide == 'A' ? valide.A : valide.R;
+        this.valide = orInfo.etat == 'A' ? valide.A : valide.R;
         this.descriptionObjectSelect.splice(0);
         for (const d of this.orSelect.description){
           this.descriptionObjectSelect.push(d)

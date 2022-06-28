@@ -65,7 +65,7 @@ td:hover {
 
 .showDay {
     visibility: hidden;
-    animation: 1.5s fadeIn;
+    animation: 1.1s fadeIn;
     animation-fill-mode: forwards; 
     height: 0px;
     
