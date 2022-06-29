@@ -26,12 +26,64 @@
                         </div>
                     </div>
                     <div class="row px-0 mx-0 scrolltable">
-                        <div class="col-10 my-3 offset-1">
+                        <div class="col-10 my-3 offset-1 border rounded">
 
-                                <div *ngFor="let activity of listeActiviteParJour.objectCreated" class="row">
-                                    <div class="col border">
-                                        {{activity.id}}
+                                <div *ngFor="let activity of listeActiviteParJour.objectCreated; let last = last" class="row" [ngClass]="{'border-bottom': !last}">
+                                    <div class="col-2 p-3 d-flex flex-column align-items-center align-self-center bgTypeCreation">
+                                        <div class="row">
+                                            <div class="col">
+                                                 <fa-icon class="fs-5 " [icon]="faClock" ></fa-icon> 
+                                                <strong>  {{ activity.dateCreation | date : 'HH:mm'}}</strong>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="col">
+                                               {{activity.typeObjet}}
+                                           </div>
+                                        </div>
                                     </div>
+                                    <div class="col-10 bgCreation">
+                                        <div class="row ">
+                                            <div class="col-6">
+                                                {{activity.id}}
+                                            </div>
+                                            <div class="col-6">
+                                                {{activity.libelle}}
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                {{
+                                                    activity.typeObjet == 'OR' ?
+                                                    (activity.etat == 'A' ? 'Actif' 
+                                                    : activity.etat == 'R' ? 'Reservé'
+                                                    : 'Non défini')
+                                                    :
+                                                    activity.typeObjet == 'Item'  || activity.typeObjet == 'SI'?
+                                                    (activity.etat == 'A' ? 'Actif' 
+                                                    : activity.etat == 'EA' ? 'En attente'
+                                                    : activity.etat == 'HS' ? 'Hors service'
+                                                    : 'Non défini'
+                                                    )
+                                                    :
+                                                    'Non défini'
+                                                }}
+                                            </div>
+                                            <div class="col-6">
+                                                {{activity.profilCreation}}
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <div class=" input-group">
+                                                        <label class="col-4 col-form-label">Description</label>
+                                                        <input class="form-control border-0 zindexZero" type="text" [value]="(activity.description.length === 0) ? 'Aucune description' : ((activity.description.length > 1)? activity.description.length + ' descriptions': activity.description.length + ' description' ) "  >
+                                                        <button (click)="selectObjectFromActivity(activity.id, activity.dateCreation)" *ngIf="activity.description.length !== 0" class="input-group-text px-2 py-0 fs-4 border-0 bg-white" data-bs-toggle="modal" data-bs-target="#descriptionModal"><fa-icon class=" text-right close" [icon]="faEye"></fa-icon></button>
+                                                      </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
                                 </div>
 
                         </div>
@@ -173,3 +225,24 @@
         </div>
     </div>
 </div>
+
+
+
+<div class="modal fade" id="descriptionModal" tabindex="-1" aria-labelledby="descriptionModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="descriptionModal">Description(s) de {{this.selectedIdOfObject}}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <ul class="list-group">
+                <li *ngFor="let desc of this.selectedObjet.description" class="list-group-item">{{desc.lien}}</li>
+            </ul>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary"  data-bs-dismiss="modal">Retour</button>
+        </div>
+      </div>
+    </div>
+  </div>

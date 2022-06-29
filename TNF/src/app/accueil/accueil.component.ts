@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { DemandeAdmin } from 'src/structureData/DemandeAdmin';
-import { faComment, faCalendar, faUser, faArrowRightFromBracket, faArrowLeft, faArrowRight, faCalendarCheck, faChevronDown} from '@fortawesome/free-solid-svg-icons';
+import { faComment, faCalendar, faUser, faArrowRightFromBracket, faArrowLeft, faArrowRight, faCalendarCheck, faChevronDown, faClock, faEye} from '@fortawesome/free-solid-svg-icons';
 import { FetchDemandeAdminService } from '../demande-admin/service/fetch-demande-admin.service';
-import { typeInfoPerDay, typeInfoPerMounth } from 'src/structureData/Accueil';
+import { infoPerDay, typeInfoPerDay, typeInfoPerMounth } from 'src/structureData/Accueil';
 import { FetchAccueilService } from './service/fetch-accueil/fetch-accueil.service';
 
 @Component({
@@ -13,10 +13,12 @@ import { FetchAccueilService } from './service/fetch-accueil/fetch-accueil.servi
 })
 export class AccueilComponent implements OnInit {
   public faChevronDown = faChevronDown;
+  public faEye = faEye;
   public faCalendarCheck = faCalendarCheck;
   public faArrowLeft = faArrowLeft;
   public faArrowRight = faArrowRight;
   public faRightLong = faArrowRightFromBracket;
+  public faClock = faClock;
   public faComment = faComment;
   public faCalendar = faCalendar;
   public faUser = faUser;
@@ -34,6 +36,16 @@ export class AccueilComponent implements OnInit {
     this.getAllDemandeAdmin();
     this.initCalendarToday();
   }
+    public selectedIdOfObject : string = ""; 
+    public selectedObjet : infoPerDay = {
+      id: '',
+      libelle: '',
+      etat: '',
+      profilCreation: '',
+      dateCreation: new Date(),
+      description: [],
+      typeObjet: ''
+    } 
     public startOfMonth : Date = new Date();
     public endOfMonth : Date = new Date();
     public dayIsSelect : boolean = false;
@@ -325,6 +337,7 @@ export class AccueilComponent implements OnInit {
     
   }
 
+  
   showCalendar(){
     this.dayIsSelect = false;
     this.selectedDay = -1;
@@ -353,8 +366,11 @@ export class AccueilComponent implements OnInit {
   getHistoryOfOneDay(){
     this.fetchAccueilService.getHistoryOfOneDay(this.selectedDate.toLocaleDateString("en-CA").substring(0, 10)).then((list: typeInfoPerDay) => {
       if (list != undefined) {
+
         this.listeActiviteParJour = list;
         console.log(list);
+        console.log(this.listeActiviteParJour);
+        
         
       } else {
         console.log("Demande Admin : aucune ")
@@ -370,4 +386,32 @@ export class AccueilComponent implements OnInit {
 
   }
 
+  selectObjectFromActivity(id : string, date : Date) {
+    this.selectedIdOfObject = id;
+    let objetCreated = this.listeActiviteParJour.objectCreated.find((element) => (element.dateCreation == date) && element.id == id);
+    let objetModified = this.listeActiviteParJour.objectModified.find((element) => (element.dateCreation == date)&& element.id == id );
+    let objetDeleted = this.listeActiviteParJour.objectDeleted.find((element) => (element.dateCreation == date) && element.id == id);
+
+    if(objetCreated == undefined && objetModified == undefined && objetDeleted == undefined){
+      this.selectedObjet = {
+        id: '',
+        libelle: '',
+        etat: '',
+        profilCreation: '',
+        dateCreation: new Date(),
+        description: [],
+        typeObjet: ''
+      }
+    }
+    else {
+      if (objetCreated != undefined){
+        this.selectedObjet = objetCreated;
+        console.log(objetCreated.description);
+      } else if (objetModified != undefined){
+        this.selectedObjet = objetModified;
+      } else if (objetDeleted != undefined){
+        this.selectedObjet = objetDeleted;
+      }
+    }
+  }
 }

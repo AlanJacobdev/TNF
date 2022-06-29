@@ -1,3 +1,5 @@
+import { Description } from "./Description";
+
 export interface infoPerMonth {
     date : string;
     count : number
@@ -21,5 +23,6 @@ export interface infoPerDay {
     etat: string,
     profilCreation : string
     dateCreation : Date,
+    description : Description[],
     typeObjet : string
 }
