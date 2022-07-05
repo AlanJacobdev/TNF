@@ -46,3 +46,11 @@ export interface modificationTypeObject{
     libelleTypeObjet : string,
     actif : boolean
 }
+
+export interface TypeObjet {
+    idtypeobjet : string,
+}
+
+export interface TypeObjetRepere {
+    idtypeobjet : string
+}

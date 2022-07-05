@@ -10,7 +10,7 @@
         
         <div class="px-lg-4 " [ngClass] ="{'col-12 col-lg-6' : this.isAdmin, 'col-12 col-lg-8' : !this.isAdmin}">
             <div class="border rounded shadow-sm min-vh-height">
-                <div class="col-12 text-center fs-4 py-2 fst-italic border-bottom  shadow-sm mb-1">
+                <div class="col-12 text-center fs-4 py-2 fst-italic border-bottom  shadow-sm mb-1  stickyheader">
                     Activités
                 </div>
                 <div [ngClass]="{'showDay' : dayIsSelect, 'd-none' :!dayIsSelect}">
@@ -25,67 +25,555 @@
                             <fa-icon class="fs-4 col-12" [icon]="faChevronDown" ></fa-icon> 
                         </div>
                     </div>
-                    <div class="row px-0 mx-0 scrolltable">
-                        <div class="col-10 my-3 offset-1 border rounded">
 
-                                <div *ngFor="let activity of listeActiviteParJour.objectCreated; let last = last" class="row" [ngClass]="{'border-bottom': !last}">
-                                    <div class="col-2 p-3 d-flex flex-column align-items-center align-self-center bgTypeCreation">
-                                        <div class="row">
-                                            <div class="col">
-                                                 <fa-icon class="fs-5 " [icon]="faClock" ></fa-icon> 
-                                                <strong>  {{ activity.dateCreation | date : 'HH:mm'}}</strong>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <div class="col">
-                                               {{activity.typeObjet}}
-                                           </div>
-                                        </div>
+                    <div class="row px-4 mx-0 mt-2">
+                        <div class="btn-group" role="group" aria-label="Basic example">
+                            <button (click)="selectTypeActivity(TypeActivity.All)" type="button" class="btn btn-light" [ngClass]="{'activeActivity': this.typeActivityNow == TypeActivity.All }">Tout</button>
+                            <button (click)="selectTypeActivity(TypeActivity.Create)" type="button" class="btn btn-light" [ngClass]="{'activeActivity': this.typeActivityNow == TypeActivity.Create }">Création</button>
+                            <button (click)="selectTypeActivity(TypeActivity.Edit)" type="button" class="btn btn-light" [ngClass]="{'activeActivity': this.typeActivityNow == TypeActivity.Edit }">Modification</button>
+                            <button (click)="selectTypeActivity(TypeActivity.Delete)" type="button" class="btn btn-light" [ngClass]="{'activeActivity': this.typeActivityNow == TypeActivity.Delete }">Suppression</button>
+                          </div>
+                    </div>
+
+                    <div id="scrolltableActivity" class="row my-3 px-4 mx-0 mini-vh-height scrolltableActivity">
+                        
+                        <div *ngIf="waitingActivityOfDay" class="mt-5 pt-5 spinnerWaiting">
+                            <div class="spinner-grow" role="status">
+                              <span class="visually-hidden ">Loading...</span>
+                            </div>
+                            <div class="spinner-grow" role="status">
+                              <span class="visually-hidden ">Loading...</span>
+                            </div>
+                            <div class="spinner-grow" role="status">
+                              <span class="visually-hidden ">Loading...</span>
+                            </div>
+                        </div> 
+                        
+                        <div *ngIf="!waitingActivityOfDay" class="col-12 border rounded">
+ 
+                                <ng-template #zeroActivity>
+                                    <div class="my-5 fs-5 text-center">
+                                        Aucune activité
                                     </div>
-                                    <div class="col-10 bgCreation">
-                                        <div class="row ">
-                                            <div class="col-6">
-                                                {{activity.id}}
+                                </ng-template>
+
+                                <div *ngIf="this.typeActivityNow == TypeActivity.All; else createActivity">
+                                    <ng-container *ngIf="allActivityOfDay.length != 0; else zeroActivity">
+                                        <div  *ngFor="let activity of allActivityOfDay; let i = index ;let last = last" class="row" [ngClass]="{'border-bottom': !last}">
+                                            <div class="col-2 px-3 d-flex align-self-stretch" [ngClass]="{'bgTypeCreation': activity.typeActivity == TypeActivity.Create, 'bgTypeModification': activity.typeActivity == TypeActivity.Edit, 'bgTypeSuppression' :activity.typeActivity == TypeActivity.Delete}">
+                                                <div class="d-flex flex-column justify-content-center w-100 text-center">
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <fa-icon class="fs-5 " [icon]="faClock" ></fa-icon> 
+                                                            <strong>  {{ activity.date | date : 'HH:mm'}}</strong>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col">
+                                                        {{activity.typeObjet == 'OR'? 'Objet repère'
+                                                        :
+                                                        activity.typeObjet == 'SI' ? 'Sous Item'
+                                                        :
+                                                        'Item'
+                                                        }}
+                                                    </div>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div class="col-6">
-                                                {{activity.libelle}}
+                                            <div class="col-10" [ngClass]="{'bgCreation': activity.typeActivity == TypeActivity.Create, 'bgModification': activity.typeActivity == TypeActivity.Edit, 'bgSuppression' :activity.typeActivity == TypeActivity.Delete}">
+                                                <div class="row mb-1 mt-1">
+                                                    <div class="col-12 col-lg-6">
+                                                        <div class="row">
+                                                            <label for="IdentifiantAll{{i}}" class="col-4 col-form-label">Identifiant</label>
+                                                            <div class="col-8">
+                                                            <input type="text" readonly class="form-control-plaintext" id="IdentifiantAll{{i}}" [value]="activity.id">
+                                                            </div>
+                                                        </div>
+                                                        
+                                                    </div>
+                                                    <div class="col-12 col-lg-6">
+                                                        <div class="row">
+                                                            <label for="ProfilAll{{i}}" class="col-4 col-form-label">Profil</label>
+                                                            <div class="col-8">
+                                                            <input type="text" readonly class="form-control-plaintext" id="ProfilAll{{i}}" [value]="activity.profil">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                </div>
+                                                
+                                                
+                                                <ng-container *ngIf="activity.typeActivity == TypeActivity.Edit; else noEditDisplay">
+                                                    <div class="row mb-1" >
+                                                        <div class="col-12 col-lg-6" >
+                                                            <div class="row">
+                                                                <label for="EtatModif{{i}}" class="col-4 col-form-label">Etat</label>
+                                                                <div class="col-8">
+                                                                <input type="text" readonly class="form-control-plaintext" id="EtatModif{{i}}" 
+                                                                [value]="activity.typeObjet == 'OR' ?
+                                                                (activity.etat == 'A' ? 'Actif' 
+                                                                : activity.etat == 'R' ? 'Reservé'
+                                                                : 'Non défini')
+                                                                :
+                                                                activity.typeObjet == 'Item'  || activity.typeObjet == 'SI'?
+                                                                (activity.etat == 'A' ? 'Actif' 
+                                                                : activity.etat == 'EA' ? 'En attente'
+                                                                : activity.etat == 'HS' ? 'Hors service'
+                                                                : 'Non défini'
+                                                                )
+                                                                :
+                                                                'Non défini'">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div *ngIf="activity.etat != activity.newEtat" class="col-12 col-lg-6" >
+                                                            <div class="row">
+                                                                <label for="EtatModif{{i}}" class="col-1 col-form-label"><fa-icon class="newValue text-right close" [icon]="faArrowRightLong"></fa-icon></label>
+                                                                <div class="col-11">
+                                                                <input type="text" readonly class=" newValue fw-bold form-control-plaintext" id="EtatModif{{i}}" 
+                                                                [value]="activity.typeObjet == 'OR' ?
+                                                                (activity.newEtat == 'A' ? 'Actif' 
+                                                                : activity.newEtat == 'R' ? 'Reservé'
+                                                                : 'Non défini')
+                                                                :
+                                                                activity.typeObjet == 'Item'  || activity.typeObjet == 'SI'?
+                                                                (activity.newEtat == 'A' ? 'Actif' 
+                                                                : activity.newEtat == 'EA' ? 'En attente'
+                                                                : activity.newEtat == 'HS' ? 'Hors service'
+                                                                : 'Non défini'
+                                                                )
+                                                                :
+                                                                'Non défini'">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    <div class="row mx-0">
+                                                        <div class="col-12 col-lg-6">
+                                                            <div class="row">
+                                                                <label for="LibelleModif{{i}}" class="col-4 col-form-label">Libellé</label>
+                                                                <div class="col-8">
+                                                                <input type="text" readonly class="form-control-plaintext" id="LibelleModif{{i}}" [value]="activity.libelle">
+                        
+                                                                </div>
+                                                            </div>
+                                                        </div> 
+            
+                                                        <div *ngIf="activity.libelle != activity.newlibelle" class="col-12 col-lg-6">
+                                                            <div class="row">
+                                                                <label for="LibelleModif{{i}}" class="col-1 col-form-label"><fa-icon class="newValue text-right close" [icon]="faArrowRightLong"></fa-icon></label>
+                                                                <div class="col-11">
+                                                                <input type="text" readonly class="newValue fw-bold form-control-plaintext" id="LibelleModif{{i}}" [value]="activity.newlibelle">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                        
+                                                        
+                                                    </div>
+                                                    <div class="row mb-2">
+                                                        <div class="col-12 col-lg-6">
+                                                            <div class="row">
+                                                                <div class="input-group">
+                                                                    <label class="col-4 col-form-label">Description</label>
+                                                                    <input class="form-control border-0 zindexZero bgModification" type="text" [value]="(activity.description.length === 0) ? 'Aucune description' : ((activity.description.length > 1)? activity.description.length + ' descriptions': activity.description.length + ' description' ) "  >
+                                                                    <button (click)="selectObjectFromAllActivity(activity.id, activity.date, false)" *ngIf="activity.description.length !== 0" class="bgModification input-group-text px-2 py-0 fs-4 border-0 " data-bs-toggle="modal" data-bs-target="#descriptionModal"><fa-icon class="text-right close" [icon]="faEye"></fa-icon></button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+            
+                                                        <div *ngIf="!equals(activity.description, activity.newDescription!)" class="col-12 col-lg-6">
+                                                            <div class="row">
+                                                                <div class="input-group">
+                                                                    <label class="newValue col-1 col-form-label"><fa-icon class="text-right fs-6 fw-bold close" [icon]="faArrowRightLong"></fa-icon></label>
+                                                                    <input class="newValue form-control fw-bold border-0 zindexZero bgModification" type="text" [value]="(activity.newDescription!.length === 0) ? 'Aucune description' : ((activity.newDescription!.length > 1)? activity.newDescription!.length + ' descriptions': activity.newDescription!.length + ' description' ) "  >
+                                                                    <button (click)="selectObjectFromAllActivity(activity.id, activity.date,true)" *ngIf="activity.newDescription!.length !== 0" class="bgModification input-group-text px-2 py-0 fs-4 border-0 " data-bs-toggle="modal" data-bs-target="#descriptionModal"><fa-icon class="newValue text-right close" [icon]="faEye"></fa-icon></button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </ng-container>        
+
+
+
+                                                <ng-template #noEditDisplay>
+                                                    <div class="row mt-1 mb-2">
+                                                        <div class="col-12 col-lg-6" >
+                                                            <div class="row">
+                                                                <label for="EtatAll{{i}}" class="col-4 col-form-label">Etat</label>
+                                                                <div class="col-8">
+                                                                <input type="text" readonly class="form-control-plaintext" id="EtatAll{{i}}" 
+                                                                [value]="activity.typeObjet == 'OR' ?
+                                                                (activity.etat == 'A' ? 'Actif' 
+                                                                : activity.etat == 'R' ? 'Reservé'
+                                                                : 'Non défini')
+                                                                :
+                                                                activity.typeObjet == 'Item'  || activity.typeObjet == 'SI'?
+                                                                (activity.etat == 'A' ? 'Actif' 
+                                                                : activity.etat == 'EA' ? 'En attente'
+                                                                : activity.etat == 'HS' ? 'Hors service'
+                                                                : 'Non défini'
+                                                                )
+                                                                :
+                                                                'Non défini'">
+                                                                </div>
+                                                            </div>
+                                                            
+                                                        </div>
+                                                        <div class="col-12 col-lg-6">
+                                                            <div class="row">
+                                                                <label for="LibelleAll{{i}}" class="col-4 col-form-label">Libellé</label>
+                                                                <div class="col-8">
+                                                                <input type="text" readonly class="form-control-plaintext" id="LibelleAll{{i}}" [value]="activity.libelle">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mb-2">
+                                                        <div class="col-12 col-lg-6">
+                                                            <div class="row">
+                                                                <div class=" input-group">
+                                                                    <label class="col-4 col-form-label">Description</label>
+                                                                    <input class="form-control border-0 zindexZero" [ngClass]="{'bgCreation': activity.typeActivity == TypeActivity.Create, 'bgModification': activity.typeActivity == TypeActivity.Edit, 'bgSuppression' :activity.typeActivity == TypeActivity.Delete}" 
+                                                                    type="text" [value]="(activity.description.length === 0) ? 'Aucune description' : ((activity.description.length > 1)? activity.description.length + ' descriptions': activity.description.length + ' description' ) "  >
+                                                                    <button (click)="selectObjectFromAllActivity(activity.id, activity.date, false)" *ngIf="activity.description.length !== 0" class="input-group-text px-2 py-0 fs-4 border-0"  [ngClass]="{'bgCreation': activity.typeActivity == TypeActivity.Create, 'bgModification': activity.typeActivity == TypeActivity.Edit, 'bgSuppression' :activity.typeActivity == TypeActivity.Delete}"
+                                                                    data-bs-toggle="modal" data-bs-target="#descriptionModal"><fa-icon class="text-right close" [icon]="faEye"></fa-icon></button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </ng-template>
                                             </div>
                                         </div>
-                                        <div class="row">
-                                            <div class="col-6">
-                                                {{
-                                                    activity.typeObjet == 'OR' ?
-                                                    (activity.etat == 'A' ? 'Actif' 
-                                                    : activity.etat == 'R' ? 'Reservé'
-                                                    : 'Non défini')
-                                                    :
-                                                    activity.typeObjet == 'Item'  || activity.typeObjet == 'SI'?
-                                                    (activity.etat == 'A' ? 'Actif' 
-                                                    : activity.etat == 'EA' ? 'En attente'
-                                                    : activity.etat == 'HS' ? 'Hors service'
-                                                    : 'Non défini'
-                                                    )
-                                                    :
-                                                    'Non défini'
-                                                }}
+                                    </ng-container>
+                                </div>
+                                <ng-template #createActivity>
+                                    <ng-container *ngIf="this.typeActivityNow == TypeActivity.Create; else modifyActivity"> 
+                                        <ng-container *ngIf="listeActiviteParJour.objectCreated.length != 0; else zeroActivity">
+                                            <div  *ngFor="let activity of listeActiviteParJour.objectCreated; let i = index ;let last = last" class="row" [ngClass]="{'border-bottom': !last}">
+                                                <div class="col-2 px-3 d-flex align-self-stretch bgTypeCreation">
+                                                    <div class="d-flex flex-column justify-content-center w-100 text-center">
+                                                        <div class="row">
+                                                            <div class="col">
+                                                                <fa-icon class="fs-5 " [icon]="faClock" ></fa-icon> 
+                                                                <strong>  {{ activity.dateCreation | date : 'HH:mm'}}</strong>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col">
+                                                            {{activity.typeObjet == 'OR'? 'Objet repère'
+                                                            :
+                                                            activity.typeObjet == 'SI' ? 'Sous Item'
+                                                            :
+                                                            'Item'
+                                                            }}
+                                                        </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-10 bgCreation">
+                                                    <div class="row mt-1 mb-2">
+                                                        <div class="col-12 col-lg-6">
+                                                            <div class="row">
+                                                                <label for="IdentifiantCreate{{i}}" class="col-4 col-form-label">Identifiant</label>
+                                                                <div class="col-8">
+                                                                <input type="text" readonly class="form-control-plaintext" id="IdentifiantCreate{{i}}" [value]="activity.id">
+                                                                </div>
+                                                            </div>
+                                                            
+                                                        </div>
+                                                        <div class="col-12 col-lg-6">
+                                                            <div class="row">
+                                                                <label for="ProfilCreate{{i}}" class="col-4 col-form-label">Profil</label>
+                                                                <div class="col-8">
+                                                                <input type="text" readonly class="form-control-plaintext" id="ProfilCreate{{i}}" [value]="activity.profilCreation">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                    </div>
+                                                    <div class="row mb-2">
+                                                        <div class="col-12 col-lg-6" >
+                                                            <div class="row">
+                                                                <label for="EtatCreate{{i}}" class="col-4 col-form-label">Etat</label>
+                                                                <div class="col-8">
+                                                                <input type="text" readonly class="form-control-plaintext" id="EtatCreate{{i}}" 
+                                                                [value]="activity.typeObjet == 'OR' ?
+                                                                (activity.etat == 'A' ? 'Actif' 
+                                                                : activity.etat == 'R' ? 'Reservé'
+                                                                : 'Non défini')
+                                                                :
+                                                                activity.typeObjet == 'Item'  || activity.typeObjet == 'SI'?
+                                                                (activity.etat == 'A' ? 'Actif' 
+                                                                : activity.etat == 'EA' ? 'En attente'
+                                                                : activity.etat == 'HS' ? 'Hors service'
+                                                                : 'Non défini'
+                                                                )
+                                                                :
+                                                                'Non défini'">
+                                                                </div>
+                                                            </div>
+                                                            
+                                                        </div>
+                                                        <div class="col-12 col-lg-6">
+                                                            <div class="row">
+                                                                <label for="LibelleCreate{{i}}" class="col-4 col-form-label">Libellé</label>
+                                                                <div class="col-8">
+                                                                <input type="text" readonly class="form-control-plaintext" id="LibelleCreate{{i}}" [value]="activity.libelle">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mb-1">
+                                                        <div class="col-12 col-lg-6">
+                                                            <div class="row">
+                                                                <div class=" input-group">
+                                                                    <label class="col-4 col-form-label">Description</label>
+                                                                    <input class="form-control border-0 zindexZero bgCreation" type="text" [value]="(activity.description.length === 0) ? 'Aucune description' : ((activity.description.length > 1)? activity.description.length + ' descriptions': activity.description.length + ' description' ) "  >
+                                                                    <button (click)="selectObjectFromActivity(activity.id, activity.dateCreation, false)" *ngIf="activity.description.length !== 0" class="bgCreation input-group-text px-2 py-0 fs-4 border-0 " data-bs-toggle="modal" data-bs-target="#descriptionModal"><fa-icon class="text-right close" [icon]="faEye"></fa-icon></button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                </div>
                                             </div>
-                                            <div class="col-6">
-                                                {{activity.profilCreation}}
+                                        </ng-container>
+                                    </ng-container>
+                                </ng-template>
+                                <ng-template #modifyActivity>
+                                    <ng-container *ngIf="this.typeActivityNow == TypeActivity.Edit; else deleteActivity">
+                                        <ng-container *ngIf="listeActiviteParJour.objectModified.length != 0; else zeroActivity">
+                                            <div *ngFor="let activity of listeActiviteParJour.objectModified; let i = index;let last = last" class="row" [ngClass]="{'border-bottom': !last}">
+                                                <div class="col-2 px-3 d-flex align-self-stretch bgTypeModification">
+                                                    <div class="d-flex flex-column justify-content-center w-100 text-center">
+                                                        <div class="row">
+                                                            <div class="col">
+                                                                <fa-icon class="fs-5 " [icon]="faClock" ></fa-icon> 
+                                                                <strong>  {{ activity.dateModification | date : 'HH:mm'}}</strong>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col">
+                                                            {{activity.typeObjet == 'OR'? 'Objet repère'
+                                                            :
+                                                            activity.typeObjet == 'SI' ? 'Sous Item'
+                                                            :
+                                                            'Item'
+                                                            }}
+                                                        </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-10 bgModification">
+                                                    <div class="row mt-1">
+                                                        <div class="col-12 col-lg-6">
+                                                            <div class="row">
+                                                                <label for="IdentifiantModif{{i}}" class="col-4 col-form-label">Identifiant</label>
+                                                                <div class="col-8">
+                                                                <input type="text" readonly class="form-control-plaintext" id="IdentifiantModif{{i}}" [value]="activity.id">
+                                                                </div>
+                                                            </div>
+                                                            
+                                                        </div>
+                                                        <div class="col-12 col-lg-6">
+                                                            <div class="row">
+                                                                <label for="ProfilModif{{i}}" class="col-4 col-form-label">Profil</label>
+                                                                <div class="col-8">
+                                                                <input type="text" readonly class="form-control-plaintext" id="ProfilModif{{i}}" [value]="activity.profilModification">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-12 col-lg-6" >
+                                                            <div class="row">
+                                                                <label for="EtatModif{{i}}" class="col-4 col-form-label">Etat</label>
+                                                                <div class="col-8">
+                                                                <input type="text" readonly class="form-control-plaintext" id="EtatModif{{i}}" 
+                                                                [value]="activity.typeObjet == 'OR' ?
+                                                                (activity.etat == 'A' ? 'Actif' 
+                                                                : activity.etat == 'R' ? 'Reservé'
+                                                                : 'Non défini')
+                                                                :
+                                                                activity.typeObjet == 'Item'  || activity.typeObjet == 'SI'?
+                                                                (activity.etat == 'A' ? 'Actif' 
+                                                                : activity.etat == 'EA' ? 'En attente'
+                                                                : activity.etat == 'HS' ? 'Hors service'
+                                                                : 'Non défini'
+                                                                )
+                                                                :
+                                                                'Non défini'">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div *ngIf="activity.etat != activity.newEtat" class="col-12 col-lg-6" >
+                                                            <div class="row">
+                                                                <label for="EtatModif{{i}}" class="col-1 col-form-label"><fa-icon class="newValue text-right close" [icon]="faArrowRightLong"></fa-icon></label>
+                                                                <div class="col-11">
+                                                                <input type="text" readonly class=" newValue fw-bold form-control-plaintext" id="EtatModif{{i}}" 
+                                                                [value]="activity.typeObjet == 'OR' ?
+                                                                (activity.newEtat == 'A' ? 'Actif' 
+                                                                : activity.newEtat == 'R' ? 'Reservé'
+                                                                : 'Non défini')
+                                                                :
+                                                                activity.typeObjet == 'Item'  || activity.typeObjet == 'SI'?
+                                                                (activity.newEtat == 'A' ? 'Actif' 
+                                                                : activity.newEtat == 'EA' ? 'En attente'
+                                                                : activity.newEtat == 'HS' ? 'Hors service'
+                                                                : 'Non défini'
+                                                                )
+                                                                :
+                                                                'Non défini'">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    <div class="row">
+                                                        <div class="col-12 col-lg-6">
+                                                            <div class="row">
+                                                                <label for="LibelleModif{{i}}" class="col-4 col-form-label">Libellé</label>
+                                                                <div class="col-8">
+                                                                <input type="text" readonly class="form-control-plaintext" id="LibelleModif{{i}}" [value]="activity.libelle">
+                                                                </div>
+                                                            </div>
+                                                        </div> 
+            
+                                                        <div *ngIf="activity.libelle != activity.newlibelle" class="col-12 col-lg-6">
+                                                            <div class="row">
+                                                                <label for="LibelleModif{{i}}" class="col-1 col-form-label"><fa-icon class="newValue text-right close" [icon]="faArrowRightLong"></fa-icon></label>
+                                                                <div class="col-11">
+                                                                <input type="text" readonly class="newValue fw-bold form-control-plaintext" id="LibelleModif{{i}}" [value]="activity.newlibelle">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                        
+                                                        
+                                                    </div>
+                                                    <div class="row mb-1">
+                                                        <div class="col-12 col-lg-6">
+                                                            <div class="row">
+                                                                <div class="input-group">
+                                                                    <label class="col-4 col-form-label">Description</label>
+                                                                    <input class="form-control border-0 zindexZero bgModification" type="text" [value]="(activity.description.length === 0) ? 'Aucune description' : ((activity.description.length > 1)? activity.description.length + ' descriptions': activity.description.length + ' description' ) "  >
+                                                                    <button (click)="selectObjectFromActivity(activity.id, activity.dateModification, false)" *ngIf="activity.description.length !== 0" class="bgModification input-group-text px-2 py-0 fs-4 border-0 " data-bs-toggle="modal" data-bs-target="#descriptionModal"><fa-icon class="text-right close" [icon]="faEye"></fa-icon></button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+            
+                                                        <div *ngIf="!equals(activity.description, activity.newDescription)" class="col-12 col-lg-6">
+                                                            <div class="row">
+                                                                <div class="input-group">
+                                                                    <label class="newValue col-1 col-form-label"><fa-icon class="text-right fs-6 fw-bold close" [icon]="faArrowRightLong"></fa-icon></label>
+                                                                    <input class="newValue form-control fw-bold border-0 zindexZero bgModification" type="text" [value]="(activity.newDescription.length === 0) ? 'Aucune description' : ((activity.newDescription.length > 1)? activity.newDescription.length + ' descriptions': activity.newDescription.length + ' description' ) "  >
+                                                                    <button (click)="selectObjectFromActivity(activity.id, activity.dateModification, true)" *ngIf="activity.newDescription.length !== 0" class="bgModification input-group-text px-2 py-0 fs-4 border-0 " data-bs-toggle="modal" data-bs-target="#descriptionModal"><fa-icon class="newValue text-right close" [icon]="faEye"></fa-icon></button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                    </div>
+                                                    
+                                                </div>
+                                                
+                                            </div> 
+                                        </ng-container>
+                                    </ng-container> 
+                                </ng-template>
+
+                                  
+
+                                <ng-template #deleteActivity>
+                                    <ng-container *ngIf="listeActiviteParJour.objectDeleted.length != 0; else zeroActivity">
+                                        <div *ngFor="let activity of listeActiviteParJour.objectDeleted; let i = index;let last = last" class="row" [ngClass]="{'border-bottom': !last}">
+                                            <div class="col-2 px-3 d-flex align-self-stretch bgTypeSuppression">
+                                                <div class="d-flex flex-column justify-content-center w-100 text-center">
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <fa-icon class="fs-5 " [icon]="faClock" ></fa-icon> 
+                                                            <strong>  {{ activity.dateSuppression | date : 'HH:mm'}}</strong>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col">
+                                                        {{activity.typeObjet == 'OR'? 'Objet repère'
+                                                        :
+                                                        activity.typeObjet == 'SI' ? 'Sous Item'
+                                                        :
+                                                        'Item'
+                                                        }}
+                                                    </div>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div class="row">
-                                                <div class="col-6">
-                                                    <div class=" input-group">
-                                                        <label class="col-4 col-form-label">Description</label>
-                                                        <input class="form-control border-0 zindexZero" type="text" [value]="(activity.description.length === 0) ? 'Aucune description' : ((activity.description.length > 1)? activity.description.length + ' descriptions': activity.description.length + ' description' ) "  >
-                                                        <button (click)="selectObjectFromActivity(activity.id, activity.dateCreation)" *ngIf="activity.description.length !== 0" class="input-group-text px-2 py-0 fs-4 border-0 bg-white" data-bs-toggle="modal" data-bs-target="#descriptionModal"><fa-icon class=" text-right close" [icon]="faEye"></fa-icon></button>
-                                                      </div>
+                                            <div class="col-10 bgSuppression">
+                                                <div class="row  mt-1 mb-2">
+                                                    <div class="col-12 col-lg-6">
+                                                        <div class="row">
+                                                            <label for="IdentifiantDel{{i}}" class="col-4 col-form-label">Identifiant</label>
+                                                            <div class="col-8">
+                                                            <input type="text" readonly class="form-control-plaintext" id="IdentifiantDel{{i}}" [value]="activity.id">
+                                                            </div>
+                                                        </div>
+                                                        
+                                                    </div>
+                                                    <div class="col-12 col-lg-6">
+                                                        <div class="row">
+                                                            <label for="ProfilDel{{i}}" class="col-4 col-form-label">Profil</label>
+                                                            <div class="col-8">
+                                                            <input type="text" readonly class="form-control-plaintext" id="ProfilDel{{i}}" [value]="activity.profilSuppression">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                </div>
+                                                <div class="row mb-2">
+                                                    <div class="col-12 col-lg-6" >
+                                                        <div class="row">
+                                                            <label for="EtatDel{{i}}" class="col-4 col-form-label">Etat</label>
+                                                            <div class="col-8">
+                                                            <input type="text" readonly class="form-control-plaintext" id="EtatDel{{i}}" 
+                                                            [value]="activity.typeObjet == 'OR' ?
+                                                            (activity.etat == 'A' ? 'Actif' 
+                                                            : activity.etat == 'R' ? 'Reservé'
+                                                            : 'Non défini')
+                                                            :
+                                                            activity.typeObjet == 'Item'  || activity.typeObjet == 'SI'?
+                                                            (activity.etat == 'A' ? 'Actif' 
+                                                            : activity.etat == 'EA' ? 'En attente'
+                                                            : activity.etat == 'HS' ? 'Hors service'
+                                                            : 'Non défini'
+                                                            )
+                                                            :
+                                                            'Non défini'">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-lg-6">
+                                                        <div class="row">
+                                                            <label for="LibelleDel{{i}}" class="col-4 col-form-label">Libellé</label>
+                                                            <div class="col-8">
+                                                            <input type="text" readonly class="form-control-plaintext" id="LibelleDel{{i}}" [value]="activity.libelle">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                </div>
+                                                <div class="row mb-1">
+                                                    <div class="col-12 col-lg-6">
+                                                        <div class="row">
+                                                            <div class=" input-group">
+                                                                <label class="col-4 col-form-label">Description</label>
+                                                                <input class="form-control border-0 zindexZero bgSuppression" type="text" [value]="(activity.description.length === 0) ? 'Aucune description' : ((activity.description.length > 1)? activity.description.length + ' descriptions': activity.description.length + ' description' ) "  >
+                                                                <button (click)="selectObjectFromActivity(activity.id, activity.dateSuppression, false)" *ngIf="activity.description.length !== 0" class="bgSuppression input-group-text px-2 py-0 fs-4 border-0 " data-bs-toggle="modal" data-bs-target="#descriptionModal"><fa-icon class="text-right close" [icon]="faEye"></fa-icon></button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    
-                                </div>
-
+                                    </ng-container>
+                                </ng-template>
                         </div>
                     </div>
                     
@@ -93,24 +581,27 @@
 
                 <div class="dayIsSelected" [ngClass]="{'disabledCalendar' : dayIsSelect}">
                     <div class="row mt-2">
-                        <div class="col-3 text-center">
-                            <button class="btn btn-light" (click)="changeMonth(false)" [ngClass]="{'showArrow' : !dayIsSelect}">
+                        <div class="col-2 text-center">
+                            <button class="btn btn-light" (click)="changeMonth(false)" [ngClass]="{'showArrow' : !dayIsSelect}" data-toggle="tooltip" data-placement="top" title="Mois précédent">
                                 <fa-icon class="fs-5 col-12 " [icon]="faArrowLeft" ></fa-icon> 
                             </button>
                         </div>
-                        <div class="col-6 fs-4 fw-bolder justify-content-center d-flex align-items-center">
+                        <div class="col-2"></div>
+                        <div class="col-4 fs-4 fw-bolder justify-content-center d-flex align-items-center">
                             {{selectedMonth}} {{selectedYear}}
                         </div>
-                        <div class="col-3 text-center" (click)="changeMonth(true)" [ngClass]="{'showArrow' : !dayIsSelect}">
+                        <div class="col-2 text-center" (click)="today()" [ngClass]="{'showArrow' : !dayIsSelect}" data-toggle="tooltip" data-placement="top" title="Aujourd'hui">
+                            <button class="btn btn-light"> 
+                                <fa-icon class="fs-5 col-12" [icon]="faCalendarCheck" ></fa-icon> 
+                            </button>
+                        </div>
+                        <div class="col-2 text-center" (click)="changeMonth(true)" [ngClass]="{'showArrow' : !dayIsSelect}" data-toggle="tooltip" data-placement="top" title="Mois suivant">
                             <button class="btn btn-light">
                                 <fa-icon class="fs-5 col-12" [icon]="faArrowRight" ></fa-icon> 
                             </button>
                         </div>
-                        <!-- <div class="col-2 text-center" (click)="today()">
-                            <button class="btn btn-primary"> 
-                                <fa-icon class="fs-5 col-12" [icon]="faCalendarCheck" ></fa-icon> 
-                            </button>
-                        </div> -->
+                        
+                        
 
                     </div> 
                     <div *ngIf="waitingMonth" class="mt-5 pt-5 spinnerWaiting">
@@ -141,7 +632,7 @@
                                 </thead>
                                 <tbody>
                                     <tr *ngFor="let week of weekOfCurrentMonth ; let first = first; let last = last; let j = index">
-                                        <td class="dixsept" [ngClass]="{'today' : this.currentDay == day && this.currentMonth == selectedMonth && selectedYear == currentYear,
+                                        <td class="dixsept" [ngClass]="{'today' : this.currentDay == day && this.currentMonth == selectedMonth && selectedYear == currentYear && ( first && day > 20 ? false : true) && (last && day <10 ? false : true),
                                                     'disabled' : (day >20 && first) || (day <10 && last) , 'selectedDay' : day === selectedDay, 'border-end' : !lastOfWeek}" *ngFor="let day of week, let i = index, let lastOfWeek = last"
                                                     (click)="selectDay(day, (day >20 && first) || (day <10 && last))"> 
                                             
@@ -154,13 +645,14 @@
                                             this.calendarAndActivity[(j !== 0 ? (i === 0) ? j *7 : j*7+i : i )][1].CountM == -1 && 
                                             this.calendarAndActivity[(j !== 0 ? (i === 0) ? j *7 : j*7+i : i )][1].CountD == -1}">
                                                 <div class="col">
-                                                    <span class="badge bg-success mx-1" *ngIf="this.calendarAndActivity[(j !== 0 ? (i === 0) ? j *7 : j*7+i : i )][1].CountC != -1">
+                                                  
+                                                    <span class="badge bg-success ms-1" *ngIf="this.calendarAndActivity[(j !== 0 ? (i === 0) ? j *7 : j*7+i : i )][1].CountC != -1">
                                                          {{this.calendarAndActivity[(j !== 0 ? (i === 0) ? j *7 : j*7+i : i )][1].CountC > 100 ? '99+' : this.calendarAndActivity[(j !== 0 ? (i === 0) ? j *7 : j*7+i : i )][1].CountC}}
                                                     </span>
-                                                    <span class="badge bg-warning mx-1" *ngIf="this.calendarAndActivity[(j !== 0 ? (i === 0) ? j *7 : j*7+i : i )][1].CountM != -1">
+                                                    <span class="badge bg-warning ms-1" *ngIf="this.calendarAndActivity[(j !== 0 ? (i === 0) ? j *7 : j*7+i : i )][1].CountM != -1">
                                                         {{this.calendarAndActivity[(j !== 0 ? (i === 0) ? j *7 : j*7+i : i )][1].CountM > 100 ? '99+' : this.calendarAndActivity[(j !== 0 ? (i === 0) ? j *7 : j*7+i : i )][1].CountM}} 
                                                     </span>
-                                                    <span class="badge bg-danger mx-1" *ngIf="this.calendarAndActivity[(j !== 0 ? (i === 0) ? j *7 : j*7+i : i )][1].CountD != -1">
+                                                    <span class="badge bg-danger ms-1" *ngIf="this.calendarAndActivity[(j !== 0 ? (i === 0) ? j *7 : j*7+i : i )][1].CountD != -1">
                                                         {{this.calendarAndActivity[(j !== 0 ? (i === 0) ? j *7 : j*7+i : i )][1].CountD > 100 ? '99+' : this.calendarAndActivity[(j !== 0 ? (i === 0) ? j *7 : j*7+i : i )][1].CountD}} 
                                                     </span>
                                                 </div>
@@ -236,9 +728,13 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-            <ul class="list-group">
+            <ul *ngIf="this.selectedDescriptionAreEdited == false" class="list-group">
                 <li *ngFor="let desc of this.selectedObjet.description" class="list-group-item">{{desc.lien}}</li>
             </ul>
+            <ul *ngIf="this.selectedDescriptionAreEdited == true" class="list-group">
+                <li *ngFor="let desc of this.selectedObjet.newDescription" class="list-group-item">{{desc.lien}}</li>
+            </ul>
+
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary"  data-bs-dismiss="modal">Retour</button>

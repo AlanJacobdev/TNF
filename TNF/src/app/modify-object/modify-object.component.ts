@@ -5,7 +5,7 @@ import { Description } from 'src/structureData/Description';
 import { typeObjet, ItemInfo, ItemModification, etat } from 'src/structureData/Item';
 import { ObjetRepereInfo, ObjetRepereModification, valide } from 'src/structureData/ObjetRepere';
 import { SousItemInfo, SousItemModification } from 'src/structureData/SousItem';
-import { TypeObjetRepereTableau, TypeObjetInfo, TypeObjetRepereInfo, modificationTypeObject } from 'src/structureData/TypeObject';
+import { TypeObjetRepereTableau, TypeObjetInfo, TypeObjetRepereInfo, modificationTypeObject, TypeObjet, TypeObjetRepere } from 'src/structureData/TypeObject';
 import { FetchcreateTypeObjectService } from '../create-type-object/service/fetchcreate-type-object.service';
 import { FetchRecopieService } from '../recopie-object/service/fetch-recopie.service';
 import { FetchVisuService } from '../visualisation/service/fetch-visu.service';
@@ -116,15 +116,15 @@ export class ModifyObjectComponent implements OnInit {
   }
 
   getListTypeItemsByOR(){
-    this.fetchRecopieService.getTypeOfItemsOfOR(this.idORSelect).then((list: modificationTypeObject[]) => {
+    this.fetchRecopieService.getTypeOfItemsOfOR(this.idORSelect).then((list: TypeObjet[]) => {
       this.listeTypeItemOfOR.splice(0);
-      list.forEach((e : modificationTypeObject) => {
-        const libelle = this.listeTypeO.find(element => element.idType === e.idTypeObjet);
+      list.forEach((e : TypeObjet) => {
+        const libelle = this.listeTypeO.find(element => element.idType === e.idtypeobjet);
         if (libelle != undefined) {
           let item : modificationTypeObject = {
-            idTypeObjet: e.idTypeObjet,
+            idTypeObjet: e.idtypeobjet,
             libelleTypeObjet: libelle.libelleType,
-            actif : e.actif
+            actif : true
           };
           this.listeTypeItemOfOR.push(item)
         }
@@ -135,16 +135,16 @@ export class ModifyObjectComponent implements OnInit {
 
 
   getListTypeItemsForOR(){
-    this.fetchModifyTypeObject.getTypeOfItemsOfOR(this.atelierSelect).then((list: modificationTypeObject[]) => {
+    this.fetchModifyTypeObject.getTypeOfItemsOfOR(this.atelierSelect).then((list: TypeObjetRepere[]) => {
       console.log(list);
       this.listeTypeItemOfOR.splice(0);
-      list.forEach((e : modificationTypeObject) => {
-        const libelle = this.listeTypeOR.find(element => element.idType === e.idTypeObjet);
+      list.forEach((e : TypeObjetRepere) => {
+        const libelle = this.listeTypeOR.find(element => element.idType === e.idtypeobjet);
         if (libelle != undefined) {
           let item : modificationTypeObject = {
-            idTypeObjet: e.idTypeObjet,
+            idTypeObjet: e.idtypeobjet,
             libelleTypeObjet: libelle.libelleTypeOR,
-            actif : e.actif
+            actif : true
           };
           this.listeTypeItemOfOR.push(item)
         }
@@ -271,7 +271,9 @@ export class ModifyObjectComponent implements OnInit {
     } else {
       this.atelierSelect = atelier;
       this.getObjetRepereByAtelier();
-      this.getListTypeItemsForOR();
+      if (this.objectNow == this.TypeObject.OR){
+        this.getListTypeItemsForOR();
+      }
     }
   }
   public selectTypeObjet (TypeObjet : any) {
@@ -399,6 +401,7 @@ export class ModifyObjectComponent implements OnInit {
     this.descriptionObjectSelect.splice(0);
     this.selectAtelier(this.atelierSelect);
     this.typeNow = "";
+    this.listeTypeItemOfOR.splice(0)
   }
 
 

@@ -26,7 +26,6 @@ export class FetchVisuService {
     } else {
       url = "http://localhost:3000/atelier/getAll/isActif"
     }
-    console.log(url);
     const res : AtelierInfo[] = await lastValueFrom(this.http.get<AtelierInfo[]>(url));
     if (res.length == 0) {
       return undefined;

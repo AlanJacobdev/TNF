@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { AtelierInfo } from 'src/structureData/Atelier';
 import { etat, ItemInfo, typeObjet } from 'src/structureData/Item';
 import { NUetOR, ObjetRepereInfo } from 'src/structureData/ObjetRepere';
-import { modificationTypeObject, TypeObjetInfo, TypeObjetRepereInfo, TypeObjetRepereTableau } from 'src/structureData/TypeObject';
+import { modificationTypeObject, TypeObjet, TypeObjetInfo, TypeObjetRepereInfo, TypeObjetRepereTableau } from 'src/structureData/TypeObject';
 import { FetchcreateTypeObjectService } from '../create-type-object/service/fetchcreate-type-object.service';
 import { FetchVisuService } from '../visualisation/service/fetch-visu.service';
 import { FetchCreateObjectService } from './service/fetch-create-object.service';
@@ -223,19 +223,22 @@ export class CreateObjectComponent implements OnInit {
   }
 
   getListTypeItemsByOR(){
-    this.fetchRecopieService.getTypeOfItemsOfOR(this.orSelect).then((list: modificationTypeObject[]) => {
+    this.fetchRecopieService.getTypeOfItemsOfOR(this.orSelect).then((list: TypeObjet[]) => {
       this.listeTypeItemOfOR.splice(0);
-      list.forEach((e : modificationTypeObject) => {
-        const libelle = this.listeTypeO.find(element => element.idType === e.idTypeObjet);
+
+      for (const type of list) {
+              
+        const libelle = this.listeTypeO.find((element) => element.idType == type.idtypeobjet);
         if (libelle != undefined) {
           let item : modificationTypeObject = {
-            idTypeObjet: e.idTypeObjet,
+            idTypeObjet: type.idtypeobjet,
             libelleTypeObjet: libelle.libelleType,
-            actif : e.actif
+            actif : true
           };
           this.listeTypeItemOfOR.push(item)
         }
-      })
+      }
+      
     }).catch((e) => {
     })
   }
@@ -244,8 +247,6 @@ export class CreateObjectComponent implements OnInit {
   getItemByObjetRepere(){
     if ( this.orSelect != ''){
       this.fetchVisuService.getItemByObjetRepere(this.orSelect).then((list: ItemInfo[]) => {
-        console.log(list);
-        
         if(list == undefined) {
           this.listeItem = [];
         } else {

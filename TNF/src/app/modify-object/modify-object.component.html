@@ -15,11 +15,11 @@
                         </div>
                         <div class="btn-group col-9 margin-top1 d-lg-none" aria-label="Type d'objet">
                             <input (change)="selectObject(this.TypeObject.OR)" type="radio" class="btn-check " name="typeObjetRadio" id="TypeOR" checked>
-                            <label class="btn btn-outline-perso no-rounded-top-left" for="TypeOR">Objet repère</label>
+                            <label class="btn btn-outline-perso no-rounded-top-left no-rounded-bottom-left" for="TypeOR">Objet repère</label>
                             <input (change)="selectObject(this.TypeObject.Item)" type="radio" class="btn-check" name="typeObjetRadio" id="TypeItem" >
                             <label class="btn btn-outline-perso" for="TypeItem">Item</label>
                             <input (change)="selectObject(this.TypeObject.SI)" type="radio" class="btn-check " name="typeObjetRadio" id="TypeSI" >
-                            <label class="btn btn-outline-perso no-rounded-bottom-left" for="TypeSI"> Sous Item</label>
+                            <label class="btn btn-outline-perso" for="TypeSI"> Sous Item</label>
                         </div>
                     </div>
                 </div>
@@ -138,7 +138,7 @@
                             </div>
                             <div class="form-check form-check-inline">
                                 <input [(ngModel)]="valide" (click)="selectValide(this.valideNow.R)" [ngClass]="{'border-danger' : valideError}" class="form-check-input" type="radio" name="radioEtat" id="inlineRadio2" value="R" required>
-                                <label [ngClass]="{'text-danger' : valideError}" class="form-check-label" for="inlineRadio2">En attente</label>
+                                <label [ngClass]="{'text-danger' : valideError}" class="form-check-label" for="inlineRadio2">Reservé</label>
                             </div>
                         </div>
                         <button *ngIf="this.idORSelect != ''" (click)="modifyObjet(LibelleOR.value)" type="button" class="btn btn-lg btn-light col-10 offset-1 col-lg-6 offset-lg-3 my-2">Modifier</button>

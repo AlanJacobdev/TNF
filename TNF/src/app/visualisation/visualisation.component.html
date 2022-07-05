@@ -27,57 +27,59 @@
         </div>
         <div class="collapse mt-2" id="PlusDOptions">
           <div class="card card-body">
-            <div class="col-12">
-              Objet 
-              <div class="form-check form-check-inline ms-2">
-                <input [(ngModel)]="valideOR" (click)="selectValideOR(this.valideNow.A)"  class="form-check-input" type="radio" name="radioEtatOR" id="inlineRadioOR1" value="A" required>
-                <label class="form-check-label" for="inlineRadioOR1">Actif</label>
-              </div>
-              <div class="form-check form-check-inline">
-                <input [(ngModel)]="valideOR" (click)="selectValideOR(this.valideNow.R)"  class="form-check-input" type="radio" name="radioEtatOR" id="inlineRadioOR2" value="R" required>
-                <label class="form-check-label" for="inlineRadioOR2">En attente</label>
-              </div>
-              <div class="form-check form-check-inline">
-                <input [(ngModel)]="valideOR" (click)="selectValideOR(this.valideNow.Aucun)"  class="form-check-input" type="radio" name="radioEtatOR" id="inlineRadioOR3" value="Aucun" required checked>
-                <label class="form-check-label" for="inlineRadioOR3">Tous</label>
-              </div>
-            </div>
-            <div class="col-12">
-              Item 
-              <div class="form-check form-check-inline ms-2">
-                <input [(ngModel)]="etatItem" (click)="selectEtatItem(this.etatNow.A)"  class="form-check-input" type="radio" name="radioEtatItem" id="inlineRadioItem1" value="A" required>
-                <label class="form-check-label" for="inlineRadioItem1">Actif</label>
-              </div>
-              <div class="form-check form-check-inline">
-                <input [(ngModel)]="etatItem" (click)="selectEtatItem(this.etatNow.EA)"  class="form-check-input" type="radio" name="radioEtatItem" id="inlineRadioItem2" value="EA" required>
-                <label class="form-check-label" for="inlineRadioItem2">En attente</label>
-              </div>
-              <div class="form-check form-check-inline">
-                <input [(ngModel)]="etatItem" (click)="selectEtatItem(this.etatNow.HS)"  class="form-check-input" type="radio" name="radioEtatItem" id="inlineRadioItem3" value="HS" required>
-                <label class="form-check-label" for="inlineRadioItem3">Hors service</label>
-              </div>
-              <div class="form-check form-check-inline">
-                <input [(ngModel)]="etatItem" (click)="selectEtatItem(this.etatNow.Aucun)"  class="form-check-input" type="radio" name="radioEtatItem" id="inlineRadioItem4" value="Aucun" required checked> 
-                <label class="form-check-label" for="inlineRadioItem4">Tous</label>
+            <div class="row input-group mb-3">
+              <div class="col">
+                <div class="input-group">
+                  <div class="col-3 col-lg-2 input-group-text border-end-0"> Objet </div>
+                  <div class="col-9">
+                    <div class="btn-group">
+                      <input [(ngModel)]="etatOR" (click)="selectEtatOR(this.etatOrNow.A)"  class="btn-check " type="radio" name="radioEtatOR" id="inlineRadioOR1" value="A" required>
+                      <label class="btn btn-outline-perso no-rounded-top-left no-rounded-bottom-left" for="inlineRadioOR1">Actif</label>
+                      <input [(ngModel)]="etatOR" (click)="selectEtatOR(this.etatOrNow.R)"  class="btn-check" type="radio" name="radioEtatOR" id="inlineRadioOR2" value="R" required>
+                      <label class="btn btn-outline-perso" for="inlineRadioOR2">Reservé</label>
+                      <input [(ngModel)]="etatOR" (click)="selectEtatOR(this.etatOrNow.Aucun)"  class="btn-check" type="radio" name="radioEtatOR" id="inlineRadioOR3" value="Aucun" required checked>
+                      <label class="btn btn-outline-perso" for="inlineRadioOR3">Tous</label>
+                    </div> 
+                  </div>
+                </div>
               </div>
             </div>
-            <div class="col-12">
-              Sous-Item
-              <div class="form-check form-check-inline ms-2">
-                <input [(ngModel)]="etatSI" (click)="selectEtatSI(this.etatNow.A)" class="form-check-input" type="radio" name="radioEtatSI" id="inlineRadioSI1" value="A" required>
-                <label class="form-check-label" for="inlineRadioSI1">Actif</label>
+            <div class="row input-group mb-3">
+              <div class="col">
+                <div class="input-group">
+                  <div class="col-3 col-lg-2 input-group-text border-end-0">  Item  </div>
+                  <div class="col-9">
+                    <div class="btn-group">
+                      <input [(ngModel)]="etatItem" (click)="selectEtatItem(this.etatNow.A)"  class="btn-check" type="radio" name="radioEtatItem" id="inlineRadioItem1" value="A" required>
+                      <label class="btn btn-outline-perso no-rounded-top-left no-rounded-bottom-left d-flex align-items-center" for="inlineRadioItem1">Actif</label>
+                      <input [(ngModel)]="etatItem" (click)="selectEtatItem(this.etatNow.EA)"  class="btn-check" type="radio" name="radioEtatItem" id="inlineRadioItem2" value="EA" required>
+                      <label class="btn btn-outline-perso" for="inlineRadioItem2">En attente</label>
+                      <input [(ngModel)]="etatItem" (click)="selectEtatItem(this.etatNow.HS)"  class="btn-check" type="radio" name="radioEtatItem" id="inlineRadioItem3" value="HS" required>
+                      <label class="btn btn-outline-perso" for="inlineRadioItem3">Hors service</label>
+                      <input [(ngModel)]="etatItem" (click)="selectEtatItem(this.etatNow.Aucun)"  class="btn-check" type="radio" name="radioEtatItem" id="inlineRadioItem4" value="Aucun" required checked> 
+                      <label class="btn btn-outline-perso" for="inlineRadioItem4">Tous</label>
+                    </div> 
+                  </div>
+                </div>
               </div>
-              <div class="form-check form-check-inline">
-                <input [(ngModel)]="etatSI" (click)="selectEtatSI(this.etatNow.EA)" class="form-check-input" type="radio" name="radioEtatSI" id="inlineRadioSI2" value="EA" required>
-                <label class="form-check-label" for="inlineRadioSI2">En attente</label>
-              </div>
-              <div class="form-check form-check-inline">
-                <input [(ngModel)]="etatSI" (click)="selectEtatSI(this.etatNow.HS)" class="form-check-input" type="radio" name="radioEtatSI" id="inlineRadioSI3" value="HS" required>
-                <label class="form-check-label" for="inlineRadioSI3">Hors service</label>
-              </div>
-              <div class="form-check form-check-inline">
-                <input [(ngModel)]="etatSI" (click)="selectEtatSI(this.etatNow.Aucun)" class="form-check-input" type="radio" name="radioEtatSI" id="inlineRadioSI4" value="Aucun" required checked>
-                <label class="form-check-label" for="inlineRadioSI4">Tous</label>
+            </div>
+            <div class="row input-group">
+              <div class="col">
+                <div class="input-group">
+                  <div class="col-3 col-lg-2 input-group-text border-end-0"> Sous-Item </div>
+                  <div class="col-9">
+                    <div class="btn-group">
+                      <input [(ngModel)]="etatSI" (click)="selectEtatSI(this.etatNow.A)" class="btn-check" type="radio" name="radioEtatSI" id="inlineRadioSI1" value="A" required>
+                      <label class="btn btn-outline-perso no-rounded-top-left no-rounded-bottom-left d-flex align-items-center" for="inlineRadioSI1">Actif</label>
+                      <input [(ngModel)]="etatSI" (click)="selectEtatSI(this.etatNow.EA)" class="btn-check" type="radio" name="radioEtatSI" id="inlineRadioSI2" value="EA" required>
+                      <label class="btn btn-outline-perso" for="inlineRadioSI2">En attente</label>
+                      <input [(ngModel)]="etatSI" (click)="selectEtatSI(this.etatNow.HS)" class="btn-check" type="radio" name="radioEtatSI" id="inlineRadioSI3" value="HS" required>
+                      <label class="btn btn-outline-perso" for="inlineRadioSI3">Hors service</label>
+                      <input [(ngModel)]="etatSI" (click)="selectEtatSI(this.etatNow.Aucun)" class="btn-check" type="radio" name="radioEtatSI" id="inlineRadioSI4" value="Aucun" required checked>
+                      <label class="btn btn-outline-perso" for="inlineRadioSI4">Tous</label>
+                    </div> 
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -104,7 +106,7 @@
                             <td class="text-center" colspan="2">Aucun Objet Repère</td>
                         </tr>
                         <ng-template #afficheOR>
-                            <tr *ngFor="let objetRepere of listeObjetRepere | filterVisualisation : searchText | actifVisualisation : valideOR : 'OR'" (click)="selectOR(objetRepere.idObjetRepere)" [ngClass]="{'table-active': objetRepere.idObjetRepere === this.selectedOr , 'actifNow' : objetRepere.idObjetRepere === this.selectedNow }">
+                            <tr *ngFor="let objetRepere of listeObjetRepere | filterVisualisation : searchText | actifVisualisation : etatOR : 'OR'" (click)="selectOR(objetRepere.idObjetRepere)" [ngClass]="{'table-active': objetRepere.idObjetRepere === this.selectedOr , 'actifNow' : objetRepere.idObjetRepere === this.selectedNow }">
                                 <td class="col-5">{{objetRepere.idObjetRepere}}</td>
                                 <td class="col-7">{{objetRepere.libelleObjetRepere}}</td>
                             </tr>
@@ -178,180 +180,104 @@
             </ng-container>
             <ng-template #displayInfo >
 
-              <ng-container *ngIf="objectTypeNow == 'OR'; else displayItem">
+              <ng-container>
              
                 <div class="col-lg-6 col-xs-12 px-3 ">
                   <div class="row">
-                    <label for="staticEmail" class="col-4 col-form-label">Identifiant</label>
+                    <label for="staticEmail" class="col-4 col-form-label fw-600">Identifiant</label>
                     <div class="col-8">
-                      <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="Ornow.idObjetRepere">
+                      <input type="text" readonly class="form-control-plaintext" id="staticEmail" 
+                      [value]="(objectTypeNow == 'OR' ? Ornow.idObjetRepere 
+                      : 
+                      (objectTypeNow == 'Item' ? ItemNow.idItem 
+                      : 
+                      SousItemNow.idSousItem))">
                     </div>
                   </div>
                   <div class="row">
-                    <label for="staticEmail" class="col-4 col-form-label">Libelle</label>
+                    <label for="staticEmail" class="col-4 col-form-label fw-600">Libelle</label>
                     <div class="col-8">
-                      <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="Ornow.libelleObjetRepere">
+                      <input type="text" readonly class="form-control-plaintext" id="staticEmail" 
+                      [value]="(objectTypeNow == 'OR' ? Ornow.libelleObjetRepere 
+                      : 
+                      (objectTypeNow == 'Item' ? ItemNow.libelleItem 
+                      : 
+                      SousItemNow.libelleSousItem))">
                     </div>
                   </div>
                   <div class="row">
-                    <label for="staticEmail" class="col-4 col-form-label">Etat</label>
+                    <label for="staticEmail" class="col-4 col-form-label fw-600">Etat</label>
                     <div class="col-8">
-                      <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="Ornow.etat">
+                      <input type="text" readonly class="form-control-plaintext" id="staticEmail" 
+                      [value]="(objectTypeNow == 'OR' ? Ornow.etat 
+                      : 
+                      (objectTypeNow == 'Item' ? ItemNow.etat 
+                      : 
+                      SousItemNow.etat))">
                     </div>
                   </div>
                   <div class="row">
                     <div class=" input-group">
-                      <label class="col-4 col-form-label">Description</label>
-                      <input class="form-control border-0 zindexZero" type="text" [value]="(Ornow.description.length === 0) ? 'Aucune description' : ((Ornow.description.length > 1)? Ornow.description.length + ' descriptions': Ornow.description.length + ' description' ) "  >
-                      <button (click)="setdescriptionFromHistory(false)" *ngIf="Ornow.description.length !== 0" class="input-group-text px-2 py-0 fs-4 border-0 bg-white" data-bs-toggle="modal" data-bs-target="#descriptionModal"><fa-icon class=" text-right close" [icon]="faEye"></fa-icon></button>
+                      <label class="col-4 col-form-label fw-600">Description</label>
+                      <input class="form-control border-0 zindexZero" type="text" 
+                      [value]="(objectTypeNow == 'OR' ?  (Ornow.description.length === 0) ? 'Aucune description' : ((Ornow.description.length > 1)? Ornow.description.length + ' descriptions': Ornow.description.length + ' description' ) 
+                      : 
+                      (objectTypeNow == 'Item' ? (ItemNow.description.length === 0) ? 'Aucune description' : ((ItemNow.description.length > 1)? ItemNow.description.length + ' descriptions': ItemNow.description.length + ' description' )
+                      : 
+                      (SousItemNow.description.length === 0) ? 'Aucune description' : ((SousItemNow.description.length > 1)? SousItemNow.description.length + ' descriptions': SousItemNow.description.length + ' description' )))"
+                      [value]=""  >
+                      <button (click)="setdescriptionFromHistory(false)" *ngIf="objectTypeNow == 'OR' ? Ornow.description.length !== 0 : objectTypeNow == 'Item' ? ItemNow.description.length !== 0 :SousItemNow.description.length !== 0 " class="input-group-text px-2 py-0 fs-4 border-0 bg-white" data-bs-toggle="modal" data-bs-target="#descriptionModal"><fa-icon class=" text-right close" [icon]="faEye"></fa-icon></button>
                     </div>
                   </div>
                 </div>
                 <div class="col-lg-6 col-12 px-3">
                   <div class="row">
-                    <label for="staticEmail" class="col-4 col-form-label">Profil Creation</label>
+                    <label for="staticEmail" class="col-4 col-form-label fw-600">Profil Creation</label>
                     <div class="col-8">
-                      <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="Ornow.profilCreation">
+                      <input type="text" readonly class="form-control-plaintext" id="staticEmail" 
+                      [value]="(objectTypeNow == 'OR' ? Ornow.profilCreation 
+                      : 
+                      (objectTypeNow == 'Item' ? ItemNow.profilCreation 
+                      : 
+                      SousItemNow.profilCreation))">
                     </div>
                   </div>
                   <div class="row">
-                    <label for="staticEmail" class="col-4 col-form-label">Date Creation</label>
+                    <label for="staticEmail" class="col-4 col-form-label fw-600">Date Creation</label>
                     <div class="col-8">
-                      <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="Ornow.dateCreation">
+                      <input type="text" readonly class="form-control-plaintext" id="staticEmail" 
+                      [value]="(objectTypeNow == 'OR' ? Ornow.dateCreation 
+                      : 
+                      (objectTypeNow == 'Item' ? ItemNow.dateCreation 
+                      : 
+                      SousItemNow.dateCreation))">
                     </div>
                   </div>
                   <div class="row">
-                    <label for="staticEmail" class="col-4 col-form-label">Profil Modification</label>
+                    <label for="staticEmail" class="col-4 col-form-label fw-600">Profil Modification</label>
                     <div class="col-8">
-                      <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="Ornow.profilModification">
+                      <input type="text" readonly class="form-control-plaintext" id="staticEmail" 
+                      [value]="(objectTypeNow == 'OR' ? Ornow.profilModification 
+                      : 
+                      (objectTypeNow == 'Item' ? ItemNow.profilModification 
+                      : 
+                      SousItemNow.profilModification))">
                     </div>
                   </div>
                   <div class="row">
-                    <label for="staticEmail" class="col-4 col-form-label">Date Modification</label>
+                    <label for="staticEmail" class="col-4 col-form-label fw-600">Date Modification</label>
                     <div class="col-8">
-                      <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="Ornow.dateModification">
+                      <input type="text" readonly class="form-control-plaintext" id="staticEmail" 
+                      [value]="(objectTypeNow == 'OR' ? Ornow.dateModification 
+                      : 
+                      (objectTypeNow == 'Item' ? ItemNow.dateModification 
+                      : 
+                      SousItemNow.dateModification))">
                     </div>
                   </div>
                 </div>
               </ng-container>
             </ng-template>
-
-            <ng-template #displayItem >
-
-              <ng-container *ngIf="objectTypeNow == 'Item'; else displaySI">
-             
-                <div class="col-lg-6 col-xs-12 px-3 ">
-                  <div class="row">
-                    <label for="staticEmail" class="col-4 col-form-label">Identifiant</label>
-                    <div class="col-8">
-                      <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="ItemNow.idItem">
-                    </div>
-                  </div>
-                  <div class="row">
-                    <label for="staticEmail" class="col-4 col-form-label">Libelle</label>
-                    <div class="col-8">
-                      <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="ItemNow.libelleItem">
-                    </div>
-                  </div>
-                  <div class="row">
-                    <label for="staticEmail" class="col-4 col-form-label">Etat</label>
-                    <div class="col-8">
-                      <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="ItemNow.etat">
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="input-group">
-                      <label class="col-4 col-form-label">Description</label>
-                      <input class="form-control border-0 zindexZero" type="text" [value]="(ItemNow.description.length === 0) ? 'Aucune description' : ((ItemNow.description.length > 1)? ItemNow.description.length + ' descriptions': ItemNow.description.length + ' description' ) "  >
-                      <button (click)="setdescriptionFromHistory(false)" *ngIf="ItemNow.description.length !== 0" class="input-group-text px-2 py-0 fs-4 border-0 bg-white" data-bs-toggle="modal" data-bs-target="#descriptionModal"><fa-icon class=" text-right close" [icon]="faEye"></fa-icon></button>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-lg-6 col-12 px-3">
-                  <div class="row">
-                    <label for="staticEmail" class="col-4 col-form-label">Profil Creation</label>
-                    <div class="col-8">
-                      <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="ItemNow.profilCreation">
-                    </div>
-                  </div>
-                  <div class="row">
-                    <label for="staticEmail" class="col-4 col-form-label">Date Creation</label>
-                    <div class="col-8">
-                      <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="ItemNow.dateCreation">
-                    </div>
-                  </div>
-                  <div class="row">
-                    <label for="staticEmail" class="col-4 col-form-label">Profil Modification</label>
-                    <div class="col-8">
-                      <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="ItemNow.profilModification">
-                    </div>
-                  </div>
-                  <div class="row">
-                    <label for="staticEmail" class="col-4 col-form-label">Date Modification</label>
-                    <div class="col-8">
-                      <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="ItemNow.dateModification">
-                    </div>
-                  </div>
-                </div>
-              </ng-container>
-            </ng-template>
-
-            <ng-template #displaySI >
-                <div class="col-lg-6 col-xs-12 px-3 ">
-                  <div class="row">
-                    <label for="staticEmail" class="col-4 col-form-label">Identifiant</label>
-                    <div class="col-8">
-                      <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="SousItemNow.idSousItem">
-                    </div>
-                  </div>
-                  <div class="row">
-                    <label for="staticEmail" class="col-4 col-form-label">Libelle</label>
-                    <div class="col-8">
-                      <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="SousItemNow.libelleSousItem">
-                    </div>
-                  </div>
-                  <div class="row">
-                    <label for="staticEmail" class="col-4 col-form-label">Actif</label>
-                    <div class="col-8">
-                      <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="SousItemNow.etat">
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="input-group">
-                      <label class="col-4 col-form-label">Description</label>
-                      <input class="form-control border-0 zindexZero" type="text" [value]="(SousItemNow.description.length === 0) ? 'Aucune description' : ((SousItemNow.description.length > 1)? SousItemNow.description.length + ' descriptions': SousItemNow.description.length + ' description' ) "  >
-                      <button (click)="setdescriptionFromHistory(false)" *ngIf="SousItemNow.description.length !== 0" class="input-group-text px-2 py-0 fs-4 border-0 bg-white" data-bs-toggle="modal" data-bs-target="#descriptionModal"><fa-icon class=" text-right close" [icon]="faEye"></fa-icon></button>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-lg-6 col-12 px-3">
-                  <div class="row">
-                    <label for="staticEmail" class="col-4 col-form-label">Profil Creation</label>
-                    <div class="col-8">
-                      <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="SousItemNow.profilCreation">
-                    </div>
-                  </div>
-                  <div class="row">
-                    <label for="staticEmail" class="col-4 col-form-label">Date Creation</label>
-                    <div class="col-8">
-                      <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="SousItemNow.dateCreation">
-                    </div>
-                  </div>
-                  <div class="row">
-                    <label for="staticEmail" class="col-4 col-form-label">Profil Modification</label>
-                    <div class="col-8">
-                      <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="SousItemNow.profilModification">
-                    </div>
-                  </div>
-                  <div class="row">
-                    <label for="staticEmail" class="col-4 col-form-label">Date Modification</label>
-                    <div class="col-8">
-                      <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="SousItemNow.dateModification">
-                    </div>
-                  </div>
-                </div>
-            </ng-template>
-
           </div>
         </div>
     </div>
@@ -401,7 +327,7 @@
                         </div>
                         <div class="col-12 col-lg-5 col-xl-6 mb-3 ">
                           <div class=" input-group">
-                            <label for="IdentifiantHistory" class="input-group-text col-4 col-lg-6">Valide</label>
+                            <label for="IdentifiantHistory" class="input-group-text col-4 col-lg-6">Etat</label>
                             <input type="text" readonly disabled class="form-control bg-light" id="IdentifiantHistory" [value]="or.etat">
                           </div>
                         </div>
@@ -466,7 +392,7 @@
                           </div>
                           <div class="col-12 col-lg-5 col-xl-6 mb-3 ">
                             <div class="input-group">
-                              <label for="IdentifiantHistory" class="input-group-text col-4">Actif</label>
+                              <label for="IdentifiantHistory" class="input-group-text col-4">Etat</label>
                               <input type="text" readonly disabled class="form-control bg-light" id="IdentifiantHistory" [value]="item.etat">
                             </div>
                           </div>
@@ -522,7 +448,7 @@
                           </div>
                           <div class="col-12 col-lg-5 col-xl-6 mb-3">
                             <div class="input-group">
-                              <label for="IdentifiantHistory" class="input-group-text col-4">Actif</label>
+                              <label for="IdentifiantHistory" class="input-group-text col-4">Etat</label>
                               <input type="text" readonly disabled class="form-control bg-light" id="IdentifiantHistory" [value]="si.etat">
                             </div>
                           </div>
@@ -541,7 +467,6 @@
             </ng-container>
           </ng-container>
         </ng-template>
-
       </div>
       <div class="modal-footer">
       </div>

@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { lastValueFrom } from 'rxjs';
 import { ObjetRepereUtile } from 'src/structureData/ObjetRepere';
-import { modificationTypeObject } from 'src/structureData/TypeObject';
+import { modificationTypeObject, TypeObjet } from 'src/structureData/TypeObject';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +16,7 @@ export class FetchRecopieService {
   async getTypeOfItemsOfOR(idOR : string) : Promise<any> {
     let url = "http://localhost:3000/item/getTypeOfItemsOfOR/{idOR}"
     url = url.replace("{idOR}", idOR)
-    const res : modificationTypeObject[] = await lastValueFrom(this.http.get<modificationTypeObject[]>(url));
+    const res : TypeObjet[] = await lastValueFrom(this.http.get<TypeObjet[]>(url));
     if (res.length == 0) {
       return undefined;
     } else {

@@ -36,8 +36,8 @@ export class VisualisationComponent implements OnInit {
   public TypeObjet = typeObjet;
   public etatItem : etat = etat.Aucun;
   public etatSI : etat = etat.Aucun;
-  public valideOR : valide = valide.Aucun;
-  public valideNow =valide;
+  public etatOR : valide = valide.Aucun;
+  public etatOrNow = valide;
   public etatNow =etat;
   public descriptionFromHistory : boolean = false;
   public descriptionHistory : Description[] = [];
@@ -162,7 +162,6 @@ export class VisualisationComponent implements OnInit {
       } else {
         this.listeSousItem = list;
       }
-      console.log(this.listeItem)
     }).catch((e) => {
     })
   }
@@ -171,9 +170,8 @@ export class VisualisationComponent implements OnInit {
     this.selectedSousItem = idSousItem;
     this.objectTypeNow = this.TypeObjet.SI;
     let res = this.listeSousItem.find(element => element.idSousItem === idSousItem);
-    console.log(res);
     if ( res != undefined){
-      this.SousItemNow.idSousItem = res.idItem ;
+      this.SousItemNow.idSousItem = res.idSousItem ;
       this.SousItemNow.libelleSousItem = res.libelleSousItem ;
       this.SousItemNow.profilCreation = res.profilCreation ;
       const datec = new Date(res.dateCreation).toISOString().split('T')[0] + " " + new Date(res.dateCreation).toTimeString().split(' ')[0]
@@ -197,8 +195,8 @@ export class VisualisationComponent implements OnInit {
     this.etatSI = etat;
   }
 
-  selectValideOR(valide : valide){
-    this.valideOR = valide
+  selectEtatOR(valide : valide){
+    this.etatOR = valide
   }
 
 

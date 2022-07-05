@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { DemandeAdmin } from 'src/structureData/DemandeAdmin';
-import { faComment, faCalendar, faUser, faArrowRightFromBracket, faArrowLeft, faArrowRight, faCalendarCheck, faChevronDown, faClock, faEye} from '@fortawesome/free-solid-svg-icons';
+import { faComment, faCalendar, faUser, faArrowRightFromBracket, faArrowLeft, faArrowRight, faCalendarCheck, faChevronDown, faClock, faEye, faArrowRightLong} from '@fortawesome/free-solid-svg-icons';
 import { FetchDemandeAdminService } from '../demande-admin/service/fetch-demande-admin.service';
-import { infoPerDay, typeInfoPerDay, typeInfoPerMounth } from 'src/structureData/Accueil';
+import { allActivity, infoForDescription, infoPerDay, typeActivity, typeInfoPerDay, typeInfoPerMounth } from 'src/structureData/Accueil';
 import { FetchAccueilService } from './service/fetch-accueil/fetch-accueil.service';
+import { Description } from 'src/structureData/Description';
 
 @Component({
   selector: 'app-accueil',
@@ -12,6 +13,7 @@ import { FetchAccueilService } from './service/fetch-accueil/fetch-accueil.servi
   styleUrls: ['./accueil.component.css']
 })
 export class AccueilComponent implements OnInit {
+  public faArrowRightLong = faArrowRightLong;
   public faChevronDown = faChevronDown;
   public faEye = faEye;
   public faCalendarCheck = faCalendarCheck;
@@ -25,7 +27,7 @@ export class AccueilComponent implements OnInit {
   public isAdmin : boolean = false
   public listeDemandeAdmin : DemandeAdmin[] = []
   public waitingMonth : boolean = false;
-  
+  public waitingActivityOfDay : boolean = false;
   constructor(private fetchAccueilService : FetchAccueilService,private cookieService: CookieService, private fetchDemandeAdminService : FetchDemandeAdminService) { 
     let Admin = this.cookieService.get('Admin');
     if (Admin == "true"){
@@ -37,15 +39,14 @@ export class AccueilComponent implements OnInit {
     this.initCalendarToday();
   }
     public selectedIdOfObject : string = ""; 
-    public selectedObjet : infoPerDay = {
+    public selectedObjet : infoForDescription = {
       id: '',
       libelle: '',
-      etat: '',
-      profilCreation: '',
-      dateCreation: new Date(),
       description: [],
+      newDescription : [],
       typeObjet: ''
     } 
+    public selectedDescriptionAreEdited : boolean = false;
     public startOfMonth : Date = new Date();
     public endOfMonth : Date = new Date();
     public dayIsSelect : boolean = false;
@@ -61,6 +62,8 @@ export class AccueilComponent implements OnInit {
     public dateNow : Date = new Date();
     public templateOfCurrentMonth : { start: number; end: number; lastMonthDays: number; CurrentMonthDays : number }[] = []
     public weekOfCurrentMonth : number[][] = [] ;
+    public typeActivityNow : typeActivity = typeActivity.All;
+    public TypeActivity = typeActivity;
     public calendarWithActivity = new Map<string, {'CountC': number, 'CountM': number, 'CountD': number}>();
     public calendarAndActivity : [string, {
       CountC: number;
@@ -78,12 +81,15 @@ export class AccueilComponent implements OnInit {
       objectDeleted: []
     }
 
+    public allActivityOfDay : allActivity[] = []
+
   ngOnInit(){
     
   }
 
   initCalendarToday(){
     const date = new Date();
+    this.selectedDate = date;
     this.currentDay = date.getDate();
     this.selectedNumberMonth = date.getMonth()+1;
     this.currentMonth = date.toLocaleString('default', { month: 'long' });
@@ -212,7 +218,7 @@ export class AccueilComponent implements OnInit {
     }
     
     if (listeActiviteParMois != undefined ) {
-      console.log(listeActiviteParMois.objectCreated);
+      console.log(listeActiviteParMois);
       this.calendarWithActivity.clear();
       let valueC = -1;
       let valueM = -1;
@@ -227,7 +233,7 @@ export class AccueilComponent implements OnInit {
           valueM = -1;
           valueD = -1;
           if(firstweek) {
-            // console.log(dayModify+ "-" + (day > 10 ? (this.selectedNumberMonth -1 < 10 ? '0'+ (this.selectedNumberMonth -1) : this.selectedNumberMonth -1) : (this.selectedNumberMonth < 10 ? '0'+ this.selectedNumberMonth : this.selectedNumberMonth)) +'-'+ this.selectedYear);
+            //console.log(dayModify+ "-" + (day > 10 ? (this.selectedNumberMonth -1 < 10 ? '0'+ (this.selectedNumberMonth -1) : this.selectedNumberMonth -1) : (this.selectedNumberMonth < 10 ? '0'+ this.selectedNumberMonth : this.selectedNumberMonth)) +'-'+ this.selectedYear);
             let responseC = listeActiviteParMois.objectCreated.find((element)=> element.date === dayModify+ "-" + (day > 10 ? (this.selectedNumberMonth -1 < 10 ? '0'+ (this.selectedNumberMonth -1) : this.selectedNumberMonth -1) : (this.selectedNumberMonth < 10 ? '0'+ this.selectedNumberMonth : this.selectedNumberMonth)) +'-'+ this.selectedYear);
             
             if (responseC != undefined){
@@ -295,6 +301,8 @@ export class AccueilComponent implements OnInit {
       console.log("prb acquisition activité");
       
     }
+
+    
     this.calendarAndActivity.splice(0);
     this.calendarAndActivity = this.getKeys();    
     
@@ -323,7 +331,7 @@ export class AccueilComponent implements OnInit {
     this.initCalendarToday();
   }
 
-  selectDay(day : number, specific : boolean){
+  async selectDay(day : number, specific : boolean){
     if(specific) {
       this.selectedDay = -1;
     } else {
@@ -332,7 +340,7 @@ export class AccueilComponent implements OnInit {
       this.monthOfSelectedDay = this.selectedDate.toLocaleString('default', { month: 'long' });
       this.monthOfSelectedDay = this.monthOfSelectedDay.charAt(0).toUpperCase() + this.selectedMonth.slice(1);
       this.selectedDate = new Date(this.selectedYear, this.selectedDate.getMonth(), day)
-      this.getHistoryOfOneDay();
+      await this.getHistoryOfOneDay();
     }
     
   }
@@ -341,6 +349,11 @@ export class AccueilComponent implements OnInit {
   showCalendar(){
     this.dayIsSelect = false;
     this.selectedDay = -1;
+  }
+
+  selectTypeActivity(activity : typeActivity){
+    this.typeActivityNow = activity;
+    this.scrollToStartOfActivity();
   }
 
   getNumberOfActivityForEachDay(){
@@ -363,15 +376,64 @@ export class AccueilComponent implements OnInit {
     return Array.from(this.calendarWithActivity);
   }
 
-  getHistoryOfOneDay(){
+  async getHistoryOfOneDay(){
+    this.waitingActivityOfDay = true;
     this.fetchAccueilService.getHistoryOfOneDay(this.selectedDate.toLocaleDateString("en-CA").substring(0, 10)).then((list: typeInfoPerDay) => {
       if (list != undefined) {
 
         this.listeActiviteParJour = list;
-        console.log(list);
-        console.log(this.listeActiviteParJour);
         
-        
+        this.allActivityOfDay.splice(0);
+        //Ajout liste All
+
+        for (const created of list.objectCreated){
+          this.allActivityOfDay.push({
+            id : created.id,
+            libelle: created.libelle,
+            etat: created.etat,
+            profil : created.profilCreation,
+            date : new Date(created.dateCreation),
+            description: created.description,
+            typeObjet : created.typeObjet,
+            typeActivity : this.TypeActivity.Create 
+          })
+        }
+
+        for (const edited of list.objectModified){
+          this.allActivityOfDay.push({
+            id : edited.id,
+            libelle: edited.libelle,
+            newlibelle: edited.newlibelle,
+            etat: edited.etat,
+            newEtat: edited.newEtat,
+            profil : edited.profilModification,
+            date : new Date(edited.dateModification),
+            description: edited.description,
+            newDescription : edited.newDescription,
+            typeObjet : edited.typeObjet,
+            typeActivity : typeActivity.Edit
+          })
+        }
+
+        for (const deleted of list.objectDeleted){
+          this.allActivityOfDay.push({
+            id : deleted.id,
+            libelle: deleted.libelle,
+            etat: deleted.etat,
+            profil : deleted.profilSuppression,
+            date : new Date(deleted.dateSuppression),
+            description: deleted.description,
+            typeObjet : deleted.typeObjet,
+            typeActivity : this.TypeActivity.Delete 
+          })
+        }
+
+        const sortedActivityDesc = this.allActivityOfDay.sort(
+          (objA, objB) => objB.date.getTime() - objA.date.getTime(),
+        );
+        this.allActivityOfDay = sortedActivityDesc;
+        this.waitingActivityOfDay = false;
+
       } else {
         console.log("Demande Admin : aucune ")
         this.listeActiviteParJour = {
@@ -379,27 +441,28 @@ export class AccueilComponent implements OnInit {
           objectModified: [],
           objectDeleted: []
         }
+        this.waitingActivityOfDay = false;
       }
     }).catch((e) => {
+      this.waitingActivityOfDay = false;
     })
 
-
+    
   }
 
-  selectObjectFromActivity(id : string, date : Date) {
+  selectObjectFromActivity(id : string, date : Date, edit: boolean) {
     this.selectedIdOfObject = id;
+    this.selectedDescriptionAreEdited = edit;
     let objetCreated = this.listeActiviteParJour.objectCreated.find((element) => (element.dateCreation == date) && element.id == id);
-    let objetModified = this.listeActiviteParJour.objectModified.find((element) => (element.dateCreation == date)&& element.id == id );
-    let objetDeleted = this.listeActiviteParJour.objectDeleted.find((element) => (element.dateCreation == date) && element.id == id);
-
+    let objetModified = this.listeActiviteParJour.objectModified.find((element) => (element.dateModification == date)&& element.id == id );
+    let objetDeleted = this.listeActiviteParJour.objectDeleted.find((element) => (element.dateSuppression == date) && element.id == id);
+    
     if(objetCreated == undefined && objetModified == undefined && objetDeleted == undefined){
       this.selectedObjet = {
         id: '',
         libelle: '',
-        etat: '',
-        profilCreation: '',
-        dateCreation: new Date(),
         description: [],
+        newDescription : [],
         typeObjet: ''
       }
     }
@@ -412,6 +475,39 @@ export class AccueilComponent implements OnInit {
       } else if (objetDeleted != undefined){
         this.selectedObjet = objetDeleted;
       }
+    }
+  }
+
+  selectObjectFromAllActivity(id : string, date : Date, edit: boolean) {
+    this.selectedIdOfObject = id;
+    this.selectedDescriptionAreEdited = edit;
+    let allObjetCreated = this.allActivityOfDay.find((element) => (element.date == date) && element.id == id);
+    
+    if(allObjetCreated == undefined){
+      this.selectedObjet = {
+        id: '',
+        libelle: '',
+        description: [],
+        newDescription : [],
+        typeObjet: ''
+      }
+    }
+    else {
+      this.selectedObjet = allObjetCreated;
+    }
+  }
+
+  public equals (desc1 : Description[], desc2 : Description[]){
+    if (JSON.stringify(desc1) === JSON.stringify(desc2)) {
+      return true
+    } 
+    return false
+  }
+
+  scrollToStartOfActivity(){
+   const element = document.getElementById("scrolltableActivity");
+    if (element != null){
+      element.scrollTop = 0;
     }
   }
 }

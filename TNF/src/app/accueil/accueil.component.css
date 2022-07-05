@@ -1,6 +1,7 @@
 .min-vh-height {
-    min-height: 75vh;
+    min-height: 715px;
 }
+
 
 .buttonEditDemande:hover {
     background-color: rgb(241, 241, 241);
@@ -9,6 +10,12 @@
 .scrolltable {
     max-height: 600px;
     overflow: scroll;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.scrolltableActivity {
+    max-height: 540px;
     overflow-x: hidden;
     overflow-y: auto;
 }
@@ -28,17 +35,17 @@ td:hover {
 }
 
 .today{
-    background-color: rgb(80, 101, 218);
+    background-color: #BFDBFE;
     color: #fff;
 }
 
 .today:hover{
-    background-color: rgb(128, 143, 228);
+    background-color: #93C5FD;
     color: #fff;
 }
 
 .selectedDay:not(.disabled){
-    border : 3px solid rgb(128, 143, 228) !important;
+    border : 3px solid #F3F4F6 !important;
 }
 
 .today.selectedDay:not(.disabled){
@@ -145,3 +152,39 @@ td:hover {
 .bgCreation {
     background-color: #F0FDF4;
 }
+
+.bgTypeModification{
+    background-color: #FED7AA;
+}
+
+.bgModification {
+    background-color: #FFF7ED;
+}
+
+.bgTypeSuppression{
+    background-color: #FECACA;
+}
+
+.bgSuppression {
+    background-color: #FEF2F2;
+}
+
+.newValue {
+    color :#00608F
+}
+
+.activeActivity  {
+    background-color: #E5E7EB !important;
+    border-color: #E5E7EB !important;
+}
+
+.btn-light:hover{
+    background-color: #F3F4F6 !important;
+    border-color: #F3F4F6 !important;
+}
+
+.btn-light:focus:hover{
+    background-color: #D1D5DB !important;
+    border-color: #D1D5DB !important;
+}
+

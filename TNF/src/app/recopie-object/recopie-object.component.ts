@@ -3,7 +3,7 @@ import { elementAt } from 'rxjs';
 import { AtelierInfo } from 'src/structureData/Atelier';
 import { ItemInfo, ItemRecopie } from 'src/structureData/Item';
 import { ObjetRepereInfo, ObjetRepereUtile } from 'src/structureData/ObjetRepere';
-import { modificationTypeObject, TypeObjetInfo } from 'src/structureData/TypeObject';
+import { modificationTypeObject, TypeObjet, TypeObjetInfo } from 'src/structureData/TypeObject';
 import { FetchcreateTypeObjectService } from '../create-type-object/service/fetchcreate-type-object.service';
 import { FetchVisuService } from '../visualisation/service/fetch-visu.service';
 import { FetchRecopieService } from './service/fetch-recopie.service';
@@ -60,15 +60,15 @@ export class RecopieObjectComponent implements OnInit {
   }
   
   getListTypeObject(){
-    this.fetchRecopieService.getTypeOfItemsOfOR(this.selectedOr).then((list: modificationTypeObject[]) => {
+    this.fetchRecopieService.getTypeOfItemsOfOR(this.selectedOr).then((list: TypeObjet[]) => {
       this.listeTypeOOfOR.splice(0);
-      list.forEach((e : modificationTypeObject) => {
-        const libelle = this.listeTypeO.find(element => element.idType === e.idTypeObjet);
+      list.forEach((e : TypeObjet) => {
+        const libelle = this.listeTypeO.find(element => element.idType === e.idtypeobjet);
         if (libelle != undefined) {
           let item : modificationTypeObject = {
-            idTypeObjet: e.idTypeObjet,
+            idTypeObjet: e.idtypeobjet,
             libelleTypeObjet: libelle.libelleType,
-            actif : e.actif
+            actif : true
           };
           this.listeTypeOOfOR.push(item)
         }

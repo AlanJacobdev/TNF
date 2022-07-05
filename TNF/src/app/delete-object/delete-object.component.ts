@@ -6,7 +6,7 @@ import { typeObjet, ItemInfo, ItemSuppresion, etat } from 'src/structureData/Ite
 import { ObjetRepereInfo, ObjetRepereSuppression, valide } from 'src/structureData/ObjetRepere';
 import { SousItemInfo, SousItemSuppression } from 'src/structureData/SousItem';
 import { deleteObject, demandeAdmin, returnDeleteObject } from 'src/structureData/Suppression';
-import { TypeObjetRepereTableau, TypeObjetInfo, TypeObjetRepereInfo, modificationTypeObject } from 'src/structureData/TypeObject';
+import { TypeObjetRepereTableau, TypeObjetInfo, TypeObjetRepereInfo, modificationTypeObject, TypeObjet } from 'src/structureData/TypeObject';
 import { FetchcreateTypeObjectService } from '../create-type-object/service/fetchcreate-type-object.service';
 import { FetchRecopieService } from '../recopie-object/service/fetch-recopie.service';
 import { FetchVisuService } from '../visualisation/service/fetch-visu.service';
@@ -84,8 +84,8 @@ export class DeleteObjectComponent implements OnInit {
   public motifDemande : string = ""; 
   public etatItem : etat = etat.Aucun;
   public etatSI : etat = etat.Aucun;
-  public valideOR : valide = valide.Aucun;
-  public valideNow =valide;
+  public etatOR : valide = valide.Aucun;
+  public etatOrNow =valide;
   public etatNow =etat;
   
   
@@ -226,15 +226,15 @@ export class DeleteObjectComponent implements OnInit {
   }
 
   getListTypeItemsByOR(){
-    this.fetchRecopieService.getTypeOfItemsOfOR(this.idORSelect).then((list: modificationTypeObject[]) => {
+    this.fetchRecopieService.getTypeOfItemsOfOR(this.idORSelect).then((list: TypeObjet[]) => {
       this.listeTypeItemOfOR.splice(0);
-      list.forEach((e : modificationTypeObject) => {
-        const libelle = this.listeTypeO.find(element => element.idType === e.idTypeObjet);
+      list.forEach((e : TypeObjet) => {
+        const libelle = this.listeTypeO.find(element => element.idType === e.idtypeobjet);
         if (libelle != undefined) {
           let item : modificationTypeObject = {
-            idTypeObjet: e.idTypeObjet,
+            idTypeObjet: e.idtypeobjet,
             libelleTypeObjet: libelle.libelleType,
-            actif : e.actif
+            actif : true
           };
           this.listeTypeItemOfOR.push(item)
         }
@@ -341,8 +341,8 @@ export class DeleteObjectComponent implements OnInit {
     this.etatSI = etat;
   }
 
-  selectValideOR(valide : valide){
-    this.valideOR = valide
+  selectEtatOR(valide : valide){
+    this.etatOR = valide
   }
 
   
@@ -389,37 +389,6 @@ export class DeleteObjectComponent implements OnInit {
     10000);
   }
 
-
-  deleteObject(){
-    if (this.objectNow === this.TypeObject.OR) {
-      this.fetchDeleteObjectService.supprimerObject(this.idORSelect).then((res: any) => {
-        if(typeof res === 'string') {
-          this.manageToast("Erreur de suppression", res , "red")
-        } else {  
-          this.manageToast("Suppression", res.message, "#006400");
-          this.selectAtelier(this.atelierSelect);
-        }
-      }).catch((e) => {
-      })
-    } else if (this.objectNow === this.TypeObject.Item) {
-      this.fetchDeleteObjectService.supprimerItem(this.idItemSelect).then((res: any) => {
-        if(typeof res === 'string') {
-          this.manageToast("Erreur de suppresion", res , "red")
-        } else {  
-          this.manageToast("Suppresion", res.message, "#006400");
-          this.getItemFromOR();
-        }
-      }).catch((e) => {
-      })
-    } else {
-
-        ////            ////
-       // TODO SOUS ITEM //
-      ////            ////
-
-    }
-    
-  }
 
   public async selectCheckOr( id : string){
       let index = this.listeOR.findIndex((element) => element.idObjetRepere === id)

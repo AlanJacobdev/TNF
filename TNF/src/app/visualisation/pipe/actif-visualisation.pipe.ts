@@ -10,12 +10,15 @@ export class ActifVisualisationPipe implements PipeTransform {
     if (!args) return value;
     
 
-  
+    console.log(value); 
+    console.log(args);
+    console.log(type);
+    
     if(type != null) {
       if(type =='OR'){
         if(args == "Aucun") return value; 
         return value.filter(function(item: any) {
-          return JSON.stringify(item.valide)
+          return JSON.stringify(item.etat)
             .includes(args);
         });
       } else if (type == 'Item') {
