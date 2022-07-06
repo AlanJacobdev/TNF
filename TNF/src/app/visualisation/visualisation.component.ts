@@ -5,7 +5,6 @@ import { ObjetRepereAffichage, ObjetRepereInfo, ObjetRepereSave, valide } from '
 import { SousItemAffichage, SousItemInfo, SousItemSave } from 'src/structureData/SousItem';
 import { FetchVisuService } from './service/fetch-visu.service';
 import { faHistory, faCalendar, faUser, faClock, faEye } from '@fortawesome/free-solid-svg-icons';
-import { CookieService } from 'ngx-cookie-service';
 import { Description } from 'src/structureData/Description';
 
 @Component({
@@ -74,7 +73,7 @@ export class VisualisationComponent implements OnInit {
     description: []
   }
 
-  constructor(private fetchVisuService : FetchVisuService, private cookieService : CookieService) { 
+  constructor(private fetchVisuService : FetchVisuService) { 
     this.fetchVisuService.getAllAteliers().then((list: AtelierInfo[]) => {
       this.listeAtelier = list
     }).catch((e) => {

@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { lastValueFrom } from 'rxjs';
+import { NavBarService } from 'src/app/navbar/service/nav-bar.service';
 import { Atelier, AtelierInfo } from 'src/structureData/Atelier';
 
 @Injectable({
@@ -9,7 +10,7 @@ import { Atelier, AtelierInfo } from 'src/structureData/Atelier';
 })
 export class FetchAtelierService {
 
-  constructor(private readonly http: HttpClient, private cookieService : CookieService) {}
+  constructor(private readonly http: HttpClient, private navBarService: NavBarService) {}
 
   async getAllAteliers(): Promise<any> {
     let url = "http://localhost:3000/atelier"
@@ -22,12 +23,12 @@ export class FetchAtelierService {
   }
 
   async updateActifAtelier(idAtelier : string, actif : boolean) : Promise<any>{
-    let global = this.cookieService.get('login');
+    let user = this.navBarService.getLogin();
     let url = "http://localhost:3000/atelier/{idAtelier}"
     url = url.replace("{idAtelier}", idAtelier)
     let payload = {
       actif : actif,
-      profilModification : global,
+      profilModification : user,
       posteModification : "",
       dateModification : new Date()
     }
@@ -40,12 +41,12 @@ export class FetchAtelierService {
   }
 
   async updateAtelier(id : string, libelle : string ) : Promise<any>{
-    let global = this.cookieService.get('login');
+    let user = this.navBarService.getLogin();
     let url = "http://localhost:3000/atelier/{idAtelier}"
     url = url.replace("{idAtelier}", id)
     let payload = {
       libelleAtelier : libelle,
-      profilModification : global,
+      profilModification : user,
       posteModification : ''
     }
     const res : Atelier = await lastValueFrom(this.http.put<Atelier>(url, payload));

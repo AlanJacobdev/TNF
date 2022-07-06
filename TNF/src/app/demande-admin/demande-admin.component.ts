@@ -71,7 +71,7 @@ export class DemandeAdminComponent implements OnInit {
   
   
 
-  constructor(private fetchDemandeAdminService : FetchDemandeAdminService, private router: Router, private scroller: ViewportScroller) { 
+  constructor(private fetchDemandeAdminService : FetchDemandeAdminService) { 
     this.getAllDemandeAdmin();
     this.getAllDemandeAdminTraitee();
     if(history.state.id != undefined) {

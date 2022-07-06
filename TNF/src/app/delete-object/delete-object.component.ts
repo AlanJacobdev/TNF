@@ -8,6 +8,7 @@ import { SousItemInfo, SousItemSuppression } from 'src/structureData/SousItem';
 import { deleteObject, demandeAdmin, returnDeleteObject } from 'src/structureData/Suppression';
 import { TypeObjetRepereTableau, TypeObjetInfo, TypeObjetRepereInfo, modificationTypeObject, TypeObjet } from 'src/structureData/TypeObject';
 import { FetchcreateTypeObjectService } from '../create-type-object/service/fetchcreate-type-object.service';
+import { NavBarService } from '../navbar/service/nav-bar.service';
 import { FetchRecopieService } from '../recopie-object/service/fetch-recopie.service';
 import { FetchVisuService } from '../visualisation/service/fetch-visu.service';
 import { FetchDeleteObjectService } from './service/fetch-delete-object.service';
@@ -101,7 +102,7 @@ export class DeleteObjectComponent implements OnInit {
   public searchText : string = "";
   public isValide : boolean = false;
   public selectMultiple : boolean = false;
-  constructor( private fetchVisuService : FetchVisuService, private fetchDeleteObjectService :FetchDeleteObjectService, private fetchCreateTypeObject: FetchcreateTypeObjectService, private fetchRecopieService : FetchRecopieService,private cookieService : CookieService) {
+  constructor( private fetchVisuService : FetchVisuService, private fetchDeleteObjectService :FetchDeleteObjectService, private fetchCreateTypeObject: FetchcreateTypeObjectService, private fetchRecopieService : FetchRecopieService, private navBarService: NavBarService) {
     this.getListType();
     this.getAteliers();
    }
@@ -579,8 +580,8 @@ export class DeleteObjectComponent implements OnInit {
       listeSI : this.SiDeleted
     }
 
-    const isAdmin = this.cookieService.get('Admin')
-    if (isAdmin === 'true' ){
+    const isAdmin = this.navBarService.getEstAdmin()
+    if (isAdmin){
       await this.fetchDeleteObjectService.deleteObjectsAsAdmin(res).then((res: any) => {
         if(res == undefined) {
           this.setDemandeAdmin(true);
@@ -664,7 +665,7 @@ export class DeleteObjectComponent implements OnInit {
       orDelete: [],
       itemDelete: [],
       sousItemDelete: [],
-      profilCreation: this.cookieService.get('login')
+      profilCreation: this.navBarService.getLogin()
     };
 
     if (this.returnOfDeleted.listeOR.length != 0){

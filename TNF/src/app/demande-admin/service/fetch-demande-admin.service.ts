@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { Socket } from 'ngx-socket-io';
 import { lastValueFrom } from 'rxjs';
+import { NavBarService } from 'src/app/navbar/service/nav-bar.service';
 import { ArborescenceItem, ArborescenceOR, DemandeAdmin, DemandeAdminInfo } from 'src/structureData/DemandeAdmin';
 
 @Injectable({
@@ -10,7 +11,7 @@ import { ArborescenceItem, ArborescenceOR, DemandeAdmin, DemandeAdminInfo } from
 })
 export class FetchDemandeAdminService {
 
-  constructor(private readonly http: HttpClient, private cookieService : CookieService) { }
+  constructor(private readonly http: HttpClient, private navBarService: NavBarService) { }
 
   async getAllDemandeAdmin(): Promise<any> {
     let url = "http://localhost:3000/demande-admin";
@@ -47,13 +48,12 @@ export class FetchDemandeAdminService {
 
 
   async updateDemandeAdmin(ID: number, isDelete: boolean ): Promise<any> {
-    let global = this.cookieService.get('login');
-    console.log(global)
+    let user = this.navBarService.getLogin();
     let url = "http://localhost:3000/demande-admin/{ID}"
     url = url.replace("{ID}", ID.toString())
     let payload = {
       isDelete : isDelete,
-      profilModification : global,
+      profilModification : user,
       posteModification : "",
     }
     const res : DemandeAdminInfo = await lastValueFrom(this.http.put<DemandeAdminInfo>(url, payload));
@@ -90,9 +90,4 @@ export class FetchDemandeAdminService {
       return res;
     }
   }
-  
-
- 
-
- 
 }

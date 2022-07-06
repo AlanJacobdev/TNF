@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { lastValueFrom } from 'rxjs';
+import { NavBarService } from 'src/app/navbar/service/nav-bar.service';
 import { TypeObjetInfo, TypeObjetRepereInfo } from 'src/structureData/TypeObject';
 
 @Injectable({
@@ -9,7 +10,7 @@ import { TypeObjetInfo, TypeObjetRepereInfo } from 'src/structureData/TypeObject
 })
 export class FetchcreateTypeObjectService {
 
-  constructor(private readonly http: HttpClient, private cookieService : CookieService) { }
+  constructor(private readonly http: HttpClient, private navBarService: NavBarService) { }
 
   async getTypeObjetRepere(): Promise<any> {
     let url = "http://localhost:3000/typeobjetrepere"
@@ -32,12 +33,12 @@ export class FetchcreateTypeObjectService {
   }
 
   async createTypeOR(ID: string, libelle : string, actif :boolean): Promise<any> {
-    let global = this.cookieService.get('login');
+    let user = this.navBarService.getLogin();
     let url = "http://localhost:3000/typeobjetrepere"
     let payload = {
       idTypeOR : ID.toUpperCase(),
       libelleTypeOR : libelle,
-      profilCreation : global,
+      profilCreation : user,
       posteCreation : "",
       actif : actif
     }
@@ -51,13 +52,12 @@ export class FetchcreateTypeObjectService {
   }
 
   async updateTypeOR(ID: string, libelle : string, actif : boolean): Promise<any> {
-    let global = this.cookieService.get('login');
-    console.log(global)
+    let user = this.navBarService.getLogin();
     let url = "http://localhost:3000/typeobjetrepere/{ID}"
     url = url.replace("{ID}", ID)
     let payload = {
       libelleTypeOR : libelle,
-      profilModification : global,
+      profilModification : user,
       posteModification : "",
       actif : actif
     }
@@ -71,8 +71,6 @@ export class FetchcreateTypeObjectService {
   }
 
   async deleteTypeOR(ID: string): Promise<any> {
-    let global = this.cookieService.get('login');
-    console.log(global)
     let url = "http://localhost:3000/typeobjetrepere/{ID}"
     url = url.replace("{ID}", ID)
     const res : any = await lastValueFrom(this.http.delete<any>(url));
@@ -86,12 +84,12 @@ export class FetchcreateTypeObjectService {
 
 
   async createTypeO(ID: string, libelle : string, actif : boolean): Promise<any> {
-    let global = this.cookieService.get('login');
+    let user = this.navBarService.getLogin();
     let url = "http://localhost:3000/typeobjet"
     let payload = {
       idType : ID.toUpperCase(),
       libelleType : libelle,
-      profilCreation : global,
+      profilCreation : user,
       posteCreation : "",
       actif : actif
     }
@@ -105,13 +103,12 @@ export class FetchcreateTypeObjectService {
   }
 
   async updateTypeO(ID: string, libelle : string, actif : boolean): Promise<any> {
-    let global = this.cookieService.get('login');
-    console.log(global)
+    let user = this.navBarService.getLogin();
     let url = "http://localhost:3000/typeobjet/{ID}"
     url = url.replace("{ID}", ID)
     let payload = {
       libelleType : libelle,
-      profilModification : global,
+      profilModification : user,
       posteModification : "",
       actif : actif
     }
@@ -125,8 +122,6 @@ export class FetchcreateTypeObjectService {
   }
 
   async deleteTypeO(ID: string): Promise<any> {
-    let global = this.cookieService.get('login');
-    console.log(global)
     let url = "http://localhost:3000/typeobjet/{ID}"
     url = url.replace("{ID}", ID)
     const res : any = await lastValueFrom(this.http.delete<any>(url));
@@ -141,11 +136,11 @@ export class FetchcreateTypeObjectService {
   
   
   async updateActifTypeO(idTypeO : string, actif : boolean) : Promise<any>{
-    let global = this.cookieService.get('login');
+    let user = this.navBarService.getLogin();
     let url = "http://localhost:3000/typeobjet/{idTypeO}"
     url = url.replace("{idTypeO}", idTypeO)
     let payload = {
-      profilModification : global,
+      profilModification : user,
       actif : actif,
       posteModification : ''
     }

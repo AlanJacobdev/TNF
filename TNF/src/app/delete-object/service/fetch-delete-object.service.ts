@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { Socket } from 'ngx-socket-io';
 import { lastValueFrom } from 'rxjs';
+import { NavBarService } from 'src/app/navbar/service/nav-bar.service';
 import { deleteObject, demandeAdmin, returnDeleteObject } from 'src/structureData/Suppression';
 
 @Injectable({
@@ -10,10 +11,10 @@ import { deleteObject, demandeAdmin, returnDeleteObject } from 'src/structureDat
 })
 export class FetchDeleteObjectService {
 
-  constructor(private readonly http: HttpClient, private cookieService : CookieService, private socket: Socket) { }
+  constructor(private readonly http: HttpClient, private navBarService: NavBarService, private socket: Socket) { }
 
   async supprimerObject(idOR : string): Promise<any> {
-    let user = this.cookieService.get('login');
+    let user = this.navBarService.getLogin();
     let url = "http://localhost:3000/objetrepere/{idOR}/{User}";
     url = url.replace("{idOR}", idOR)
     url = url.replace("{User}", user)
@@ -44,7 +45,7 @@ export class FetchDeleteObjectService {
   }
 
   async supprimerItem(idItem : string): Promise<any> {
-    let user = this.cookieService.get('login');
+    let user = this.navBarService.getLogin();
     let url = "http://localhost:3000/item/{idItem}/{User}";
     url = url.replace("{idItem}", idItem)
     url = url.replace("{User}", user)
@@ -77,7 +78,7 @@ export class FetchDeleteObjectService {
 
   async deleteObjects(ObjectToDelete : deleteObject){
     
-    let user = this.cookieService.get('login');
+    let user = this.navBarService.getLogin();
     let url = "http://localhost:3000/service-suppression/deleteObject/{login}";
     url = url.replace("{login}", user)
     try {
@@ -104,7 +105,7 @@ export class FetchDeleteObjectService {
   }
 
   async deleteObjectsAsAdmin(ObjectToDelete : deleteObject){
-    let user = this.cookieService.get('login');
+    let user = this.navBarService.getLogin();
     let url = "http://localhost:3000/service-suppression/deleteObjectAsAdmin/{login}";
     url = url.replace("{login}", user)
     try {

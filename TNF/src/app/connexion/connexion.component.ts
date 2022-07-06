@@ -26,6 +26,8 @@ export class ConnexionComponent implements OnInit {
 
   public async connect(id : string, pwd: string) {
     const co = await this.authService.connexion(id,pwd);
+    
+    
     if ( co != undefined) {
       this.NavBarService.setEstConnecte(true);
       this.NavBarService.isUserLoggedIn.next(true);

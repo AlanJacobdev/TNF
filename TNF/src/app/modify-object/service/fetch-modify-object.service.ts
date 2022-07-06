@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { lastValueFrom } from 'rxjs';
+import { NavBarService } from 'src/app/navbar/service/nav-bar.service';
 import { Description } from 'src/structureData/Description';
 import { ItemInfo } from 'src/structureData/Item';
 import { ObjetRepereInfo } from 'src/structureData/ObjetRepere';
@@ -13,19 +14,19 @@ import { modificationTypeObject } from 'src/structureData/TypeObject';
 })
 export class FetchModifyObjectService {
 
-  constructor(private readonly http: HttpClient, private cookieService : CookieService) { }
+  constructor(private readonly http: HttpClient, private navBarService: NavBarService) { }
 
 
 
   async modifyObject(idOR : string, libelle : string, etat: string, description : Description[]): Promise<any> {
-    let global = this.cookieService.get('login');
+    let user = this.navBarService.getLogin();
     let url = "http://localhost:3000/objetrepere/{ID}"
     url = url.replace("{ID}", idOR)
     let payload = {
       libelleObjetRepere : libelle,
       etat: etat,
       description : description,
-      profilModification : global,
+      profilModification : user,
       posteModification : ""
     }
     try {
@@ -50,14 +51,14 @@ export class FetchModifyObjectService {
   }
 
   async modifyitem(idItem : string, libelle : string, etat: string, description : Description[]): Promise<any> {
-    let global = this.cookieService.get('login');
+    let user = this.navBarService.getLogin();
     let url = "http://localhost:3000/item/{ID}"
     url = url.replace("{ID}", idItem)
     let payload = {
       libelleItem : libelle,
       etat: etat,
       description : description,
-      profilModification : global,
+      profilModification : user,
       posteModification : ""
     }
     try {
@@ -83,14 +84,14 @@ export class FetchModifyObjectService {
 
 
   async modifySI(idSousItem : string, libelle : string, etat: string, description : Description[]): Promise<any> {
-    let global = this.cookieService.get('login');
+    let user = this.navBarService.getLogin();
     let url = "http://localhost:3000/sousitem/{ID}"
     url = url.replace("{ID}", idSousItem)
     let payload = {
       libelleSousItem : libelle,
       etat : etat,
       description :description,
-      profilModification : global,
+      profilModification : user,
       posteModification : ""
     }
 
@@ -113,8 +114,6 @@ export class FetchModifyObjectService {
         }
       return returnError;
     }
-
-
   }
 
 

@@ -48,7 +48,7 @@
                             <a class="nav-link dropdown-toggle" [ngClass]="{'active': PA0.isActive || PA0.isActive || PA2.isActive}" href="#"
                                 id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown"
                                 aria-expanded="false">
-                                <span *ngIf="nbDemande != '0'" class="position-absolute top-25 start-0 translate-middle badge rounded-pill bg-danger">
+                                <span *ngIf="nbDemande != '-1' && nbDemande != '0'" class="position-absolute top-25 start-0 translate-middle badge rounded-pill bg-danger">
                                     {{nbDemande}}
                                     <span class="visually-hidden">unread messages</span>
                                 </span>

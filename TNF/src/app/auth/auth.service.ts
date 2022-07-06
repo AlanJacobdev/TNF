@@ -1,11 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
-import { connexion } from '../../structureData/connexion';
-import { CookieService } from 'ngx-cookie-service';
 import { Router } from '@angular/router';
-
-
+import { JwtHelperService } from "@auth0/angular-jwt";
 
 @Injectable({
   providedIn: 'root'
@@ -13,36 +10,59 @@ import { Router } from '@angular/router';
 export class AuthService {
   
  
-  constructor(private http : HttpClient, private cookieService: CookieService, private route : Router ) {  }
-  UserName:string ="";
-  UserLastName:string="";
+  constructor(private http : HttpClient, private route : Router ) {  }
+  UserName:string | undefined= undefined;
+  UserLastName:string | undefined= undefined;
   connection : boolean = false;
   
 
   estAuthentifie(){
-    if (this.cookieService.get('UserName') != undefined && this.cookieService.get('UserName') != ''){
+    const token = this.getInfoToken();
+    if(token != null) {
+      this.UserName = token.prenom;
+      this.UserLastName = token.nom;
+    }
+    if (this.UserName != undefined && this.UserLastName != undefined){
       return true;
     } 
     return false;
   }
 
+
+  getInfoToken(){
+    const token = localStorage.getItem("token");
+    if(token != null) {
+      const helper = new JwtHelperService();
+      const decodedToken = helper.decodeToken(token);
+      return decodedToken;
+    }
+    return null
+  }
+
   async connexion(login : string, pwd:string): Promise<any> {
     try {
-    let url = "http://localhost:3000/utilisateur/connexion/exist/{login}/{pwd}"
+    // let url = "http://localhost:3000/utilisateur/connexion/exist/{login}/{pwd}"
     // let url = "http://localhost:3000/utilisateur/existUser/{login}/{pwd}"
-    url = url.replace("{login}", login)
-    url = url.replace("{pwd}", pwd)
+
+    let url = "http://localhost:3000/auth/auth/login"
+    let payload = {
+      "login": login,
+      "password" : pwd 
+  }
     
-    const res : connexion[] = await lastValueFrom(this.http.get<connexion[]>(url));
+    const res : any = await lastValueFrom(this.http.post<any>(url, payload));
       
     if (res != undefined){
-      this.UserName=res[0].PRENOMUT.trim();
-      this.UserLastName=res[0].NOMUTILI.trim();
+      localStorage.setItem("token", res.access_token)
+      const helper = new JwtHelperService();
+      const decodedToken = helper.decodeToken(res.access_token);
+      this.UserName = decodedToken.prenom;
+      this.UserLastName = decodedToken.nom;
       this.connection = true;
-      this.cookieService.set('UserName', res[0].PRENOMUT.trim());
-      this.cookieService.set('UserLastName', res[0].NOMUTILI.trim());
-      this.cookieService.set('Admin', "false");
-      this.cookieService.set('login', login);
+      // this.cookieService.set('UserName', res[0].PRENOMUT.trim());
+      // this.cookieService.set('UserLastName', res[0].NOMUTILI.trim());
+      // this.cookieService.set('Admin', "false");
+      // this.cookieService.set('login', login);
     }
     
     return res;
@@ -53,12 +73,15 @@ export class AuthService {
   }
 
   async deconnexion() {
-    this.cookieService.delete('UserName');
-    this.cookieService.delete('UserLastName');
-    this.cookieService.delete('login');
-    this.cookieService.set('Admin', "false");
+    // this.cookieService.delete('UserName');
+    // this.cookieService.delete('UserLastName');
+    // this.cookieService.delete('login');
+    // this.cookieService.set('Admin', "false");
     this.route.navigate(['/connexion']);
-
+    this.UserName = undefined;
+    this.UserLastName = undefined;
+    this.connection = false;
+    localStorage.removeItem("token");
   }
 
 }

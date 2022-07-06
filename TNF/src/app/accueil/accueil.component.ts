@@ -6,6 +6,7 @@ import { FetchDemandeAdminService } from '../demande-admin/service/fetch-demande
 import { allActivity, infoForDescription, infoPerDay, typeActivity, typeInfoPerDay, typeInfoPerMounth } from 'src/structureData/Accueil';
 import { FetchAccueilService } from './service/fetch-accueil/fetch-accueil.service';
 import { Description } from 'src/structureData/Description';
+import { NavBarService } from '../navbar/service/nav-bar.service';
 
 @Component({
   selector: 'app-accueil',
@@ -28,9 +29,9 @@ export class AccueilComponent implements OnInit {
   public listeDemandeAdmin : DemandeAdmin[] = []
   public waitingMonth : boolean = false;
   public waitingActivityOfDay : boolean = false;
-  constructor(private fetchAccueilService : FetchAccueilService,private cookieService: CookieService, private fetchDemandeAdminService : FetchDemandeAdminService) { 
-    let Admin = this.cookieService.get('Admin');
-    if (Admin == "true"){
+  constructor(private fetchAccueilService : FetchAccueilService, private fetchDemandeAdminService : FetchDemandeAdminService, private navbarService : NavBarService) { 
+    let Admin = this.navbarService.getEstAdmin();
+    if (Admin){
       this.isAdmin = true;
     } else {
       this.isAdmin = false;

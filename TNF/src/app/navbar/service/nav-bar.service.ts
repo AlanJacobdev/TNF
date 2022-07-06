@@ -9,6 +9,7 @@ export class NavBarService {
 
   estAdmin : boolean = false;
   estConnecte : boolean = false ;
+  login : string = "";
 
   constructor( private socket: Socket) { }
 
@@ -20,12 +21,20 @@ export class NavBarService {
     return this.estConnecte;
   }
 
+  getLogin(){
+    return this.login;
+  }
+
   setEstAdmin(value : boolean) {
     this.estAdmin = value;
   }
 
   setEstConnecte(value: boolean) {
     this.estConnecte = value;
+  }
+  
+  setLogin(value : string){
+    this.login = value;
   }
 
   public isUserLoggedIn: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);

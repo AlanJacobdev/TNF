@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { lastValueFrom } from 'rxjs';
+import { NavBarService } from 'src/app/navbar/service/nav-bar.service';
 import { ObjetRepereUtile } from 'src/structureData/ObjetRepere';
 import { modificationTypeObject, TypeObjet } from 'src/structureData/TypeObject';
 
@@ -10,7 +11,7 @@ import { modificationTypeObject, TypeObjet } from 'src/structureData/TypeObject'
 })
 export class FetchRecopieService {
 
-  constructor(private readonly http: HttpClient, private cookieService : CookieService) { }
+  constructor(private readonly http: HttpClient, private navBarService: NavBarService) { }
 
 
   async getTypeOfItemsOfOR(idOR : string) : Promise<any> {
@@ -41,7 +42,7 @@ export class FetchRecopieService {
 
 
   async recopySpecificItemFromOR(listItems : any[], idOR: string, nu : string) : Promise<any> {
-    let user = this.cookieService.get('login');
+    let user = this.navBarService.getLogin();
     let url = "http://localhost:3000/service-recopie/recopySpecificItemFromOR/{idOR}/{NU}/{profil}"
     url = url.replace("{idOR}", idOR)
     url = url.replace("{NU}", nu)

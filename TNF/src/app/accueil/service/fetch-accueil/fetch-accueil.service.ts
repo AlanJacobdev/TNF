@@ -9,7 +9,7 @@ import { typeInfoPerDay, typeInfoPerMounth } from 'src/structureData/Accueil';
 })
 export class FetchAccueilService {
 
-    constructor(private readonly http: HttpClient, private cookieService : CookieService) { }
+    constructor(private readonly http: HttpClient) { }
 
     async getNumberOfActivityForEachDay(start : string, end : string) {
         let url = "http://localhost:3000/service-accueil/getNumberOfActivityForEachDay/{start}/{end}";

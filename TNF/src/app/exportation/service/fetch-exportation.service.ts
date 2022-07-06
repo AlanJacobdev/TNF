@@ -10,7 +10,7 @@ import { ObjetRepereUtile } from 'src/structureData/ObjetRepere';
 })
 export class FetchExportationService {
 
-  constructor(private readonly http: HttpClient, private cookieService : CookieService) { }
+  constructor(private readonly http: HttpClient) { }
 
 
 

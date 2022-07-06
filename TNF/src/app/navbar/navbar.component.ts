@@ -1,6 +1,4 @@
 import { Component, Input, OnInit, SimpleChange } from '@angular/core';
-import { CookieService } from 'ngx-cookie-service';
-import { async } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
 import { NavBarService } from './service/nav-bar.service';
 
@@ -18,7 +16,7 @@ export class NavbarComponent implements OnInit {
   public Page : string = "";
   public nbDemande : string = "-1";
 
-  constructor(private navbarService : NavBarService, private authService : AuthService, private cookieService: CookieService) { 
+  constructor(private navbarService : NavBarService, private authService : AuthService) { 
     this.navbarService.isUserLoggedIn.subscribe( value => {
       this.estConnecte = value;
       if(value === true) {
@@ -31,16 +29,21 @@ export class NavbarComponent implements OnInit {
   
 
   ngOnInit(): void { 
-    this.estAdmin = this.navbarService.getEstAdmin();
+    // this.estAdmin = this.navbarService.getEstAdmin();
     //this.estConnecte = this.navbarService.getEstConnecte();
-    this.Prenom = this.cookieService.get('UserName');
-    this.Nom = this.cookieService.get('UserLastName')
-    this.estAdmin = this.cookieService.get('Admin') === "true" ? true : false;
+    const decodetoken = this.authService.getInfoToken();
+    if (decodetoken != null) {
+      this.Prenom = decodetoken.prenom;
+      this.Nom = decodetoken.nom
+      this.estAdmin = String(decodetoken.estAdministrateur) === "true" ? true : false;
+      this.navbarService.setLogin(decodetoken.login);
+      if(this.estAdmin) {
+        this.navbarService.setEstAdmin(true)
+      }
+    }
     const nomPage = localStorage.getItem('page');
     this.Page = (nomPage) != null ? nomPage : "";
-    if (this.estAdmin) {
-      console.log("admin");
-      
+    if (this.estAdmin) { 
       this.navbarService.sendChat(); 
     }
     this.navbarService.receiveChat().subscribe( payload => {
@@ -58,6 +61,7 @@ export class NavbarComponent implements OnInit {
     await this.authService.deconnexion();
     this.navbarService.setEstConnecte(false);
     this.navbarService.setEstAdmin(false);  
+    this.navbarService.setLogin("");
     localStorage.setItem('page', "Accueil");
   }
 

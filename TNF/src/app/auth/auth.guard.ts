@@ -9,13 +9,14 @@ import { AuthService } from './auth.service';
 })
 export class AuthGuard implements CanActivate {
 
-  constructor(private navBarService: NavBarService,private authService :AuthService, private router : Router){}
+  constructor(private navBarService: NavBarService,private authService: AuthService, private router : Router){}
 
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     
       const auth = this.authService.estAuthentifie();
+      
       if (!auth) {
         this.router.navigate(['/connexion']);
         return false;

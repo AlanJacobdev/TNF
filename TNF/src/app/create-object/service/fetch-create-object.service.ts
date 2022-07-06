@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { lastValueFrom } from 'rxjs';
+import { NavBarService } from 'src/app/navbar/service/nav-bar.service';
 import { ItemInfo } from 'src/structureData/Item';
 import { NUetOR, ObjetRepereInfo } from 'src/structureData/ObjetRepere';
 import { SousItemInfo } from 'src/structureData/SousItem';
@@ -12,7 +13,7 @@ import { TypeObjetInfo } from 'src/structureData/TypeObject';
 })
 export class FetchCreateObjectService {
 
-  constructor(private readonly http: HttpClient, private cookieService : CookieService) { }
+  constructor(private readonly http: HttpClient, private navBarService: NavBarService) { }
 
   async getAllNUandORByAtelier(Atelier : string): Promise<any> {
     let url = "http://localhost:3000/objetrepere/getAllNUAndORByAtelier/{Atelier}";
@@ -38,9 +39,9 @@ export class FetchCreateObjectService {
   }
 
   async getAllTypeAvailable (idItem: string): Promise<any>{
-    const admin = this.cookieService.get('Admin');
+    const admin = this.navBarService.getEstAdmin();
     let url;
-    if (admin == "true"){
+    if (admin){
       console.log(admin);
       url = "http://localhost:3000/sousitem/getAllTypeAvailable/{idItem}"
     } else {
@@ -57,7 +58,7 @@ export class FetchCreateObjectService {
 
 
   async createObject(libelle : string, codeType :string, nu : string, description : any[]): Promise<any> {
-    let global = this.cookieService.get('login');
+    let user = this.navBarService.getLogin();
     let url = "http://localhost:3000/objetrepere"
     let payload = {
       libelleObjetRepere : libelle,
@@ -65,7 +66,7 @@ export class FetchCreateObjectService {
       numeroUnique : nu,
       etat: 'A',
       description : description,
-      profilCreation : global,
+      profilCreation : user,
       posteCreation : ""
     }
     try {
@@ -90,7 +91,7 @@ export class FetchCreateObjectService {
   }
 
   async createMultipleObject(libelle : string, codeType :string, nu : string, rangeNu : string[] ,etat: boolean, description : any[]): Promise<any> {
-    let global = this.cookieService.get('login');
+    let user = this.navBarService.getLogin();
     let url = "http://localhost:3000/objetrepere/create/createMultipleObject"
     let payload = {
       libelleObjetRepere : libelle,
@@ -99,7 +100,7 @@ export class FetchCreateObjectService {
       rangeNu : rangeNu,
       etat: etat,
       description : description,
-      profilCreation : global,
+      profilCreation : user,
       posteCreation : ""
     }
     try {
@@ -128,7 +129,7 @@ export class FetchCreateObjectService {
 
 
   async createItem(libelle : string, idOR : string, codeObjet :string, digit : number, securite : boolean, nu : string, etat: string, description : any[]): Promise<any> {
-    let global = this.cookieService.get('login');
+    let user = this.navBarService.getLogin();
     let url = "http://localhost:3000/item"
     let payload = {
       libelleItem : libelle,
@@ -139,7 +140,7 @@ export class FetchCreateObjectService {
       securite : securite,
       etat: etat,
       description : description,
-      profilCreation : global,
+      profilCreation : user,
       posteCreation : ""
     }
     try {
@@ -165,7 +166,7 @@ export class FetchCreateObjectService {
 
 
   async createSousItem(libelle : string, idItem : string, codeObjet :string, prefixe : boolean, securite : boolean, etat: string, description : any[]){
-    let global = this.cookieService.get('login');
+    let user = this.navBarService.getLogin();
     let url = "http://localhost:3000/sousitem"
     let payload = {
       libelleSousItem : libelle,
@@ -175,7 +176,7 @@ export class FetchCreateObjectService {
       estPrefixe : prefixe,
       etat : etat,
       description : description,
-      profilCreation : global,
+      profilCreation : user,
       posteCreation : ''
     }
     try {

@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { lastValueFrom } from 'rxjs';
+import { NavBarService } from 'src/app/navbar/service/nav-bar.service';
 import { AtelierInfo } from 'src/structureData/Atelier';
 import { ItemInfo, ItemSave } from 'src/structureData/Item';
 import { ObjetRepereInfo, ObjetRepereSave } from 'src/structureData/ObjetRepere';
@@ -12,15 +13,12 @@ import { SousItemInfo, SousItemSave } from 'src/structureData/SousItem';
 })
 export class FetchVisuService {
 
-  constructor(private readonly http: HttpClient, private cookieService : CookieService) { }
+  constructor(private readonly http: HttpClient, private navBarService: NavBarService) { }
 
   async getAllAteliers(): Promise<any> {
-    const admin = this.cookieService.get('Admin');
-   
+    const admin = this.navBarService.getEstAdmin();
     let url;
-    
-    
-    if (admin == "true"){
+    if (admin){
       console.log(admin);
       url = "http://localhost:3000/atelier"
     } else {
