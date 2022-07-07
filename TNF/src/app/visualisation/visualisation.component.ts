@@ -130,7 +130,6 @@ export class VisualisationComponent implements OnInit {
         this.listeItem = list;
         this.listeSousItem = [];
       }
-      console.log(this.listeItem)
     }).catch((e) => {
     })
   }
@@ -221,7 +220,6 @@ export class VisualisationComponent implements OnInit {
           this.ORHistory.push(newOr);
         }
       }
-      console.log(this.listeItem)
     }).catch((e) => {
     })
   }
@@ -238,7 +236,6 @@ export class VisualisationComponent implements OnInit {
           this.ItemHistory.push(newItem);
         }
       }
-      console.log(this.listeItem)
     }).catch((e) => {
     })
   }
@@ -255,7 +252,6 @@ export class VisualisationComponent implements OnInit {
           this.SIHistory.push(newSI);
         }
       }
-      console.log(this.listeItem)
     }).catch((e) => {
     })
   }

@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { CookieService } from 'ngx-cookie-service';
 import { DemandeAdmin } from 'src/structureData/DemandeAdmin';
 import { faComment, faCalendar, faUser, faArrowRightFromBracket, faArrowLeft, faArrowRight, faCalendarCheck, faChevronDown, faClock, faEye, faArrowRightLong} from '@fortawesome/free-solid-svg-icons';
 import { FetchDemandeAdminService } from '../demande-admin/service/fetch-demande-admin.service';
@@ -7,7 +6,6 @@ import { allActivity, infoForDescription, infoPerDay, typeActivity, typeInfoPerD
 import { FetchAccueilService } from './service/fetch-accueil/fetch-accueil.service';
 import { Description } from 'src/structureData/Description';
 import { NavBarService } from '../navbar/service/nav-bar.service';
-import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-accueil',
@@ -39,6 +37,9 @@ export class AccueilComponent implements OnInit {
     }
     this.getAllDemandeAdmin();
     this.initCalendarToday();
+    this.navbarService.receiveChat().subscribe( () => {
+      this.getAllDemandeAdmin();
+    }); 
   }
     public selectedIdOfObject : string = ""; 
     public selectedObjet : infoForDescription = {

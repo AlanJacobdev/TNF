@@ -136,7 +136,8 @@ export class ModifyObjectComponent implements OnInit {
 
   getListTypeItemsForOR(){
     this.fetchModifyTypeObject.getTypeOfItemsOfOR(this.atelierSelect).then((list: TypeObjetRepere[]) => {
-      console.log(list);
+      console.log(this.atelierSelect);
+      
       this.listeTypeItemOfOR.splice(0);
       list.forEach((e : TypeObjetRepere) => {
         const libelle = this.listeTypeOR.find(element => element.idType === e.idtypeobjet);
@@ -238,7 +239,7 @@ export class ModifyObjectComponent implements OnInit {
     } catch  {
       atelier = Atelier;
     }
-    this.idORSelect = "";
+    this.idORSelect = "-1";
     this.idItemSelect = "";
     this.idSISelect = "";
     this.selectedNow = "";
@@ -271,10 +272,14 @@ export class ModifyObjectComponent implements OnInit {
     } else {
       this.atelierSelect = atelier;
       this.getObjetRepereByAtelier();
-      if (this.objectNow == this.TypeObject.OR){
-        this.getListTypeItemsForOR();
-      }
     }
+
+    if (this.objectNow == this.TypeObject.OR){
+      this.getListTypeItemsForOR();
+    } else {
+      this.getListTypeItemsByOR();
+    }
+
   }
   public selectTypeObjet (TypeObjet : any) {
     try {

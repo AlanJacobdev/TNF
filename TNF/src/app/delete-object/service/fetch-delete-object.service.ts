@@ -139,7 +139,7 @@ export class FetchDeleteObjectService {
 
 
   sendChat(){
-    this.socket.emit('testsend', "");
+    this.socket.emit('demande', "Nouvelle Demande");
   }
 
 

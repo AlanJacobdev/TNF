@@ -590,13 +590,13 @@
                         <div class="col-4 fs-4 fw-bolder justify-content-center d-flex align-items-center">
                             {{selectedMonth}} {{selectedYear}}
                         </div>
-                        <div class="col-2 text-center" (click)="today()" [ngClass]="{'showArrow' : !dayIsSelect}" data-toggle="tooltip" data-placement="top" title="Aujourd'hui">
-                            <button class="btn btn-light"> 
+                        <div class="col-2 text-center"  [ngClass]="{'showArrow' : !dayIsSelect}" data-toggle="tooltip" data-placement="top" title="Aujourd'hui">
+                            <button class="btn btn-light" (click)="today()"> 
                                 <fa-icon class="fs-5 col-12" [icon]="faCalendarCheck" ></fa-icon> 
                             </button>
                         </div>
-                        <div class="col-2 text-center" (click)="changeMonth(true)" [ngClass]="{'showArrow' : !dayIsSelect}" data-toggle="tooltip" data-placement="top" title="Mois suivant">
-                            <button class="btn btn-light">
+                        <div class="col-2 text-center"  [ngClass]="{'showArrow' : !dayIsSelect}" data-toggle="tooltip" data-placement="top" title="Mois suivant">
+                            <button class="btn btn-light" (click)="changeMonth(true)">
                                 <fa-icon class="fs-5 col-12" [icon]="faArrowRight" ></fa-icon> 
                             </button>
                         </div>

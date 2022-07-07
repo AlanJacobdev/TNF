@@ -40,11 +40,11 @@ export class NavBarService {
   public isUserLoggedIn: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   receiveChat(){ 
-    return this.socket.fromEvent('testreceive') 
+    return this.socket.fromEvent('demandeResponse') 
   }
 
   sendChat(){
-    this.socket.emit('testsend', "ceci est un test");
+    this.socket.emit('demande', "NbDemandes");
   }
   
 }

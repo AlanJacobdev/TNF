@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
+import { NavBarService } from 'src/app/navbar/service/nav-bar.service';
 import { typeInfoPerDay, typeInfoPerMounth } from 'src/structureData/Accueil';
 import { environment } from '../../../../environments/environment';
 
@@ -9,10 +10,19 @@ import { environment } from '../../../../environments/environment';
 })
 export class FetchAccueilService {
 
-    constructor(private readonly http: HttpClient) { }
+    constructor(private readonly http: HttpClient, private navBarService: NavBarService) { }
 
     async getNumberOfActivityForEachDay(start : string, end : string) {
-        let url = "http://"+environment.API_URL+"/service-accueil/getNumberOfActivityForEachDay/{start}/{end}";
+        let admin = this.navBarService.getEstAdmin();
+        let login = this.navBarService.getLogin();
+        let url : string = "";
+        if (admin){
+          url = "http://"+environment.API_URL+"/service-accueil/getNumberOfActivityForEachDay/{start}/{end}";
+        } else {
+          url = "http://"+environment.API_URL+"/service-accueil/getNumberOfActivityForEachDay/{start}/{end}/{login}";
+          url = url.replace("{login}", login);
+        }
+        
         url = url.replace("{start}", start);
         url = url.replace("{end}", end);
 
@@ -38,7 +48,16 @@ export class FetchAccueilService {
     }
 
     async getHistoryOfOneDay( day : string) {
-      let url = "http://"+environment.API_URL+"/service-accueil/getHistoryOfOneDay/{day}";
+      
+      let admin = this.navBarService.getEstAdmin();
+      let login = this.navBarService.getLogin();
+      let url : string = "";
+      if (admin){
+        url = "http://"+environment.API_URL+"/service-accueil/getHistoryOfOneDay/{day}";
+      } else {
+        url = "http://"+environment.API_URL+"/service-accueil/getHistoryOfOneDay/{day}/{login}";
+        url = url.replace("{login}", login);
+      }
       url = url.replace("{day}", day);
 
       
@@ -61,10 +80,5 @@ export class FetchAccueilService {
           }
         return returnError;
       }
-
-
     }
-
-
-
 }
