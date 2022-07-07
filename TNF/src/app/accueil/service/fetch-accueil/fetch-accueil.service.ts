@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { CookieService } from 'ngx-cookie-service';
 import { lastValueFrom } from 'rxjs';
 import { typeInfoPerDay, typeInfoPerMounth } from 'src/structureData/Accueil';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
     providedIn: 'root'
@@ -12,7 +12,7 @@ export class FetchAccueilService {
     constructor(private readonly http: HttpClient) { }
 
     async getNumberOfActivityForEachDay(start : string, end : string) {
-        let url = "http://localhost:3000/service-accueil/getNumberOfActivityForEachDay/{start}/{end}";
+        let url = "http://"+environment.API_URL+"/service-accueil/getNumberOfActivityForEachDay/{start}/{end}";
         url = url.replace("{start}", start);
         url = url.replace("{end}", end);
 
@@ -38,7 +38,7 @@ export class FetchAccueilService {
     }
 
     async getHistoryOfOneDay( day : string) {
-      let url = "http://localhost:3000/service-accueil/getHistoryOfOneDay/{day}";
+      let url = "http://"+environment.API_URL+"/service-accueil/getHistoryOfOneDay/{day}";
       url = url.replace("{day}", day);
 
       

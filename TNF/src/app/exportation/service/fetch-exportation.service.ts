@@ -1,9 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { CookieService } from 'ngx-cookie-service';
 import { lastValueFrom } from 'rxjs';
-import { ItemAffichage } from 'src/structureData/Item';
 import { ObjetRepereUtile } from 'src/structureData/ObjetRepere';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +14,7 @@ export class FetchExportationService {
 
 
   async getExportItem(atelier : string, typeObjet : string, objetRepere : string, dateDebut : string, dateFin : string, estActif : number, estSecurite : number): Promise<any> {
-    let url = "http://localhost:3000/item/getItemForExport/{atelier}/{typeObjet}/{objetRepere}/{dateDebut}/{dateFin}/{estActif}/{estSecurite}"
+    let url = "http://"+environment.API_URL+"/item/getItemForExport/{atelier}/{typeObjet}/{objetRepere}/{dateDebut}/{dateFin}/{estActif}/{estSecurite}"
     url = url.replace("{atelier}", atelier)
     url = url.replace("{typeObjet}", typeObjet)
     url = url.replace("{objetRepere}", objetRepere)
@@ -50,7 +49,7 @@ export class FetchExportationService {
 
 
   async getORbyId (idOr : string) : Promise<any>{
-    let url = "http://localhost:3000/objetrepere/{idOr}"
+    let url = "http://"+environment.API_URL+"/objetrepere/{idOr}"
     url = url.replace("{idOr}", idOr)
     const res : ObjetRepereUtile = await lastValueFrom(this.http.get<ObjetRepereUtile>(url));
     if( res == null){

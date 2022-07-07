@@ -28,8 +28,9 @@ import { GestionAteliersComponent } from './gestion-ateliers/gestion-ateliers.co
 import { FilterAtelierPipe } from './gestion-ateliers/pipe/filter-atelier.pipe';
 import { DemandeAdminComponent } from './demande-admin/demande-admin.component';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+import { environment } from '../environments/environment';
 
-const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
+const config: SocketIoConfig = { url: 'http://'+environment.API_URL, options: {} };
 
 @NgModule({
   declarations: [

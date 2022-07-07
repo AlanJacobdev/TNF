@@ -1,12 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { CookieService } from 'ngx-cookie-service';
 import { lastValueFrom } from 'rxjs';
 import { NavBarService } from 'src/app/navbar/service/nav-bar.service';
 import { ItemInfo } from 'src/structureData/Item';
 import { NUetOR, ObjetRepereInfo } from 'src/structureData/ObjetRepere';
 import { SousItemInfo } from 'src/structureData/SousItem';
 import { TypeObjetInfo } from 'src/structureData/TypeObject';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +16,7 @@ export class FetchCreateObjectService {
   constructor(private readonly http: HttpClient, private navBarService: NavBarService) { }
 
   async getAllNUandORByAtelier(Atelier : string): Promise<any> {
-    let url = "http://localhost:3000/objetrepere/getAllNUAndORByAtelier/{Atelier}";
+    let url = "http://"+environment.API_URL+"/objetrepere/getAllNUAndORByAtelier/{Atelier}";
     url = url.replace("{Atelier}", Atelier)
     const res : NUetOR[] = await lastValueFrom(this.http.get<NUetOR[]>(url));
     if (res.length == 0) {
@@ -27,7 +27,7 @@ export class FetchCreateObjectService {
   }
 
   async getItemFromOrAndDispo(idOr : string, type : string): Promise<any> {
-    let url = "http://localhost:3000/item/getItemFromOrAndDispo/{idOR}/{type}";
+    let url = "http://"+environment.API_URL+"/item/getItemFromOrAndDispo/{idOR}/{type}";
     url = url.replace("{idOR}", idOr);
     url = url.replace("{type}", type);
     const res : ItemInfo[] = await lastValueFrom(this.http.get<ItemInfo[]>(url));
@@ -43,9 +43,9 @@ export class FetchCreateObjectService {
     let url;
     if (admin){
       console.log(admin);
-      url = "http://localhost:3000/sousitem/getAllTypeAvailable/{idItem}"
+      url = "http://"+environment.API_URL+"/sousitem/getAllTypeAvailable/{idItem}"
     } else {
-      url = "http://localhost:3000/sousitem/getAllTypeAvailableAndActif/{idItem}"
+      url = "http://"+environment.API_URL+"/sousitem/getAllTypeAvailableAndActif/{idItem}"
     }
     url = url.replace("{idItem}", idItem);
     const res : TypeObjetInfo[] = await lastValueFrom(this.http.get<TypeObjetInfo[]>(url));
@@ -59,7 +59,7 @@ export class FetchCreateObjectService {
 
   async createObject(libelle : string, codeType :string, nu : string, description : any[]): Promise<any> {
     let user = this.navBarService.getLogin();
-    let url = "http://localhost:3000/objetrepere"
+    let url = "http://"+environment.API_URL+"/objetrepere"
     let payload = {
       libelleObjetRepere : libelle,
       codeType : codeType,
@@ -92,7 +92,7 @@ export class FetchCreateObjectService {
 
   async createMultipleObject(libelle : string, codeType :string, nu : string, rangeNu : string[] ,etat: boolean, description : any[]): Promise<any> {
     let user = this.navBarService.getLogin();
-    let url = "http://localhost:3000/objetrepere/create/createMultipleObject"
+    let url = "http://"+environment.API_URL+"/objetrepere/create/createMultipleObject"
     let payload = {
       libelleObjetRepere : libelle,
       codeType : codeType,
@@ -130,7 +130,7 @@ export class FetchCreateObjectService {
 
   async createItem(libelle : string, idOR : string, codeObjet :string, digit : number, securite : boolean, nu : string, etat: string, description : any[]): Promise<any> {
     let user = this.navBarService.getLogin();
-    let url = "http://localhost:3000/item"
+    let url = "http://"+environment.API_URL+"/item"
     let payload = {
       libelleItem : libelle,
       idOR : idOR,
@@ -167,7 +167,7 @@ export class FetchCreateObjectService {
 
   async createSousItem(libelle : string, idItem : string, codeObjet :string, prefixe : boolean, securite : boolean, etat: string, description : any[]){
     let user = this.navBarService.getLogin();
-    let url = "http://localhost:3000/sousitem"
+    let url = "http://"+environment.API_URL+"/sousitem"
     let payload = {
       libelleSousItem : libelle,
       idItem : idItem,
@@ -203,7 +203,7 @@ export class FetchCreateObjectService {
 
 
   async reservationIsPossible (Atelier : string, startNU : string , additionalNU : number) {
-    let url = "http://localhost:3000/objetrepere/reservationIsPossible/{Atelier}/{startNU}/{additionalNU}"
+    let url = "http://"+environment.API_URL+"/objetrepere/reservationIsPossible/{Atelier}/{startNU}/{additionalNU}"
     url = url.replace("{Atelier}", Atelier);
     url = url.replace("{startNU}", startNU);
     url = url.replace("{additionalNU}", additionalNU.toString());
@@ -225,10 +225,10 @@ export class FetchCreateObjectService {
   async getRangeToCreateOR (Atelier : string, start : number , bookOr : number, isForward? :boolean) {
     let url
     if (isForward != undefined){
-      url = "http://localhost:3000/objetrepere/getRangeToCreateOR/{Atelier}/{start}/{bookOr}/{isForward}"
+      url = "http://"+environment.API_URL+"/objetrepere/getRangeToCreateOR/{Atelier}/{start}/{bookOr}/{isForward}"
       url = url.replace("{isForward}", isForward.toString());
     } else {
-      url = "http://localhost:3000/objetrepere/getRangeToCreateOR/{Atelier}/{start}/{bookOr}"
+      url = "http://"+environment.API_URL+"/objetrepere/getRangeToCreateOR/{Atelier}/{start}/{bookOr}"
     }
 
     url = url.replace("{Atelier}", Atelier);

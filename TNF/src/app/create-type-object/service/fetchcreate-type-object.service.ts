@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { CookieService } from 'ngx-cookie-service';
 import { lastValueFrom } from 'rxjs';
 import { NavBarService } from 'src/app/navbar/service/nav-bar.service';
 import { TypeObjetInfo, TypeObjetRepereInfo } from 'src/structureData/TypeObject';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +13,7 @@ export class FetchcreateTypeObjectService {
   constructor(private readonly http: HttpClient, private navBarService: NavBarService) { }
 
   async getTypeObjetRepere(): Promise<any> {
-    let url = "http://localhost:3000/typeobjetrepere"
+    let url = "http://"+environment.API_URL+"/typeobjetrepere"
     const res : TypeObjetRepereInfo[] = await lastValueFrom(this.http.get<TypeObjetRepereInfo[]>(url));
     if (res.length == 0) {
       return undefined;
@@ -23,7 +23,7 @@ export class FetchcreateTypeObjectService {
   }
 
   async getTypeObjet(): Promise<any> {
-    let url = "http://localhost:3000/typeobjet"
+    let url = "http://"+environment.API_URL+"/typeobjet"
     const res : TypeObjetInfo[] = await lastValueFrom(this.http.get<TypeObjetInfo[]>(url));
     if (res.length == 0) {
       return undefined;
@@ -34,7 +34,7 @@ export class FetchcreateTypeObjectService {
 
   async createTypeOR(ID: string, libelle : string, actif :boolean): Promise<any> {
     let user = this.navBarService.getLogin();
-    let url = "http://localhost:3000/typeobjetrepere"
+    let url = "http://"+environment.API_URL+"/typeobjetrepere"
     let payload = {
       idTypeOR : ID.toUpperCase(),
       libelleTypeOR : libelle,
@@ -53,7 +53,7 @@ export class FetchcreateTypeObjectService {
 
   async updateTypeOR(ID: string, libelle : string, actif : boolean): Promise<any> {
     let user = this.navBarService.getLogin();
-    let url = "http://localhost:3000/typeobjetrepere/{ID}"
+    let url = "http://"+environment.API_URL+"/typeobjetrepere/{ID}"
     url = url.replace("{ID}", ID)
     let payload = {
       libelleTypeOR : libelle,
@@ -71,7 +71,7 @@ export class FetchcreateTypeObjectService {
   }
 
   async deleteTypeOR(ID: string): Promise<any> {
-    let url = "http://localhost:3000/typeobjetrepere/{ID}"
+    let url = "http://"+environment.API_URL+"/typeobjetrepere/{ID}"
     url = url.replace("{ID}", ID)
     const res : any = await lastValueFrom(this.http.delete<any>(url));
     console.log(res)
@@ -85,7 +85,7 @@ export class FetchcreateTypeObjectService {
 
   async createTypeO(ID: string, libelle : string, actif : boolean): Promise<any> {
     let user = this.navBarService.getLogin();
-    let url = "http://localhost:3000/typeobjet"
+    let url = "http://"+environment.API_URL+"/typeobjet"
     let payload = {
       idType : ID.toUpperCase(),
       libelleType : libelle,
@@ -104,7 +104,7 @@ export class FetchcreateTypeObjectService {
 
   async updateTypeO(ID: string, libelle : string, actif : boolean): Promise<any> {
     let user = this.navBarService.getLogin();
-    let url = "http://localhost:3000/typeobjet/{ID}"
+    let url = "http://"+environment.API_URL+"/typeobjet/{ID}"
     url = url.replace("{ID}", ID)
     let payload = {
       libelleType : libelle,
@@ -122,7 +122,7 @@ export class FetchcreateTypeObjectService {
   }
 
   async deleteTypeO(ID: string): Promise<any> {
-    let url = "http://localhost:3000/typeobjet/{ID}"
+    let url = "http://"+environment.API_URL+"/typeobjet/{ID}"
     url = url.replace("{ID}", ID)
     const res : any = await lastValueFrom(this.http.delete<any>(url));
     console.log(res)
@@ -137,7 +137,7 @@ export class FetchcreateTypeObjectService {
   
   async updateActifTypeO(idTypeO : string, actif : boolean) : Promise<any>{
     let user = this.navBarService.getLogin();
-    let url = "http://localhost:3000/typeobjet/{idTypeO}"
+    let url = "http://"+environment.API_URL+"/typeobjet/{idTypeO}"
     url = url.replace("{idTypeO}", idTypeO)
     let payload = {
       profilModification : user,

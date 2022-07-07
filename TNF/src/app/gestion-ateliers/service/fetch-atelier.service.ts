@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { CookieService } from 'ngx-cookie-service';
 import { lastValueFrom } from 'rxjs';
 import { NavBarService } from 'src/app/navbar/service/nav-bar.service';
 import { Atelier, AtelierInfo } from 'src/structureData/Atelier';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +13,7 @@ export class FetchAtelierService {
   constructor(private readonly http: HttpClient, private navBarService: NavBarService) {}
 
   async getAllAteliers(): Promise<any> {
-    let url = "http://localhost:3000/atelier"
+    let url = "http://"+environment.API_URL+"/atelier"
     const res : AtelierInfo[] = await lastValueFrom(this.http.get<AtelierInfo[]>(url));
     if (res.length == 0) {
       return undefined;
@@ -24,7 +24,7 @@ export class FetchAtelierService {
 
   async updateActifAtelier(idAtelier : string, actif : boolean) : Promise<any>{
     let user = this.navBarService.getLogin();
-    let url = "http://localhost:3000/atelier/{idAtelier}"
+    let url = "http://"+environment.API_URL+"/atelier/{idAtelier}"
     url = url.replace("{idAtelier}", idAtelier)
     let payload = {
       actif : actif,
@@ -42,7 +42,7 @@ export class FetchAtelierService {
 
   async updateAtelier(id : string, libelle : string ) : Promise<any>{
     let user = this.navBarService.getLogin();
-    let url = "http://localhost:3000/atelier/{idAtelier}"
+    let url = "http://"+environment.API_URL+"/atelier/{idAtelier}"
     url = url.replace("{idAtelier}", id)
     let payload = {
       libelleAtelier : libelle,

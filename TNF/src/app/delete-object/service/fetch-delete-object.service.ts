@@ -1,10 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { CookieService } from 'ngx-cookie-service';
 import { Socket } from 'ngx-socket-io';
 import { lastValueFrom } from 'rxjs';
 import { NavBarService } from 'src/app/navbar/service/nav-bar.service';
 import { deleteObject, demandeAdmin, returnDeleteObject } from 'src/structureData/Suppression';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +15,7 @@ export class FetchDeleteObjectService {
 
   async supprimerObject(idOR : string): Promise<any> {
     let user = this.navBarService.getLogin();
-    let url = "http://localhost:3000/objetrepere/{idOR}/{User}";
+    let url = "http://"+environment.API_URL+"/objetrepere/{idOR}/{User}";
     url = url.replace("{idOR}", idOR)
     url = url.replace("{User}", user)
     try {
@@ -46,7 +46,7 @@ export class FetchDeleteObjectService {
 
   async supprimerItem(idItem : string): Promise<any> {
     let user = this.navBarService.getLogin();
-    let url = "http://localhost:3000/item/{idItem}/{User}";
+    let url = "http://"+environment.API_URL+"/item/{idItem}/{User}";
     url = url.replace("{idItem}", idItem)
     url = url.replace("{User}", user)
     try {
@@ -79,7 +79,7 @@ export class FetchDeleteObjectService {
   async deleteObjects(ObjectToDelete : deleteObject){
     
     let user = this.navBarService.getLogin();
-    let url = "http://localhost:3000/service-suppression/deleteObject/{login}";
+    let url = "http://"+environment.API_URL+"/service-suppression/deleteObject/{login}";
     url = url.replace("{login}", user)
     try {
       const res : any = await lastValueFrom(this.http.delete<any>(url, {body:ObjectToDelete}))
@@ -106,7 +106,7 @@ export class FetchDeleteObjectService {
 
   async deleteObjectsAsAdmin(ObjectToDelete : deleteObject){
     let user = this.navBarService.getLogin();
-    let url = "http://localhost:3000/service-suppression/deleteObjectAsAdmin/{login}";
+    let url = "http://"+environment.API_URL+"/service-suppression/deleteObjectAsAdmin/{login}";
     url = url.replace("{login}", user)
     try {
       const res : returnDeleteObject = await lastValueFrom(this.http.delete<returnDeleteObject>(url, {body:ObjectToDelete}));
@@ -130,7 +130,7 @@ export class FetchDeleteObjectService {
 
 
   async demandeAdmin(deleteObjects : demandeAdmin) : Promise<any> {
-    let url = "http://localhost:3000/demande-admin"
+    let url = "http://"+environment.API_URL+"/demande-admin"
     const res : any = await lastValueFrom(this.http.post<any>(url, deleteObjects)); 
     console.log(res)   
     return res

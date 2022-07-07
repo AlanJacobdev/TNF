@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { CookieService } from 'ngx-cookie-service';
 import { lastValueFrom } from 'rxjs';
 import { NavBarService } from 'src/app/navbar/service/nav-bar.service';
 import { Description } from 'src/structureData/Description';
@@ -8,6 +7,7 @@ import { ItemInfo } from 'src/structureData/Item';
 import { ObjetRepereInfo } from 'src/structureData/ObjetRepere';
 import { SousItemInfo } from 'src/structureData/SousItem';
 import { modificationTypeObject } from 'src/structureData/TypeObject';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +20,7 @@ export class FetchModifyObjectService {
 
   async modifyObject(idOR : string, libelle : string, etat: string, description : Description[]): Promise<any> {
     let user = this.navBarService.getLogin();
-    let url = "http://localhost:3000/objetrepere/{ID}"
+    let url = "http://"+environment.API_URL+"/objetrepere/{ID}"
     url = url.replace("{ID}", idOR)
     let payload = {
       libelleObjetRepere : libelle,
@@ -52,7 +52,7 @@ export class FetchModifyObjectService {
 
   async modifyitem(idItem : string, libelle : string, etat: string, description : Description[]): Promise<any> {
     let user = this.navBarService.getLogin();
-    let url = "http://localhost:3000/item/{ID}"
+    let url = "http://"+environment.API_URL+"/item/{ID}"
     url = url.replace("{ID}", idItem)
     let payload = {
       libelleItem : libelle,
@@ -85,7 +85,7 @@ export class FetchModifyObjectService {
 
   async modifySI(idSousItem : string, libelle : string, etat: string, description : Description[]): Promise<any> {
     let user = this.navBarService.getLogin();
-    let url = "http://localhost:3000/sousitem/{ID}"
+    let url = "http://"+environment.API_URL+"/sousitem/{ID}"
     url = url.replace("{ID}", idSousItem)
     let payload = {
       libelleSousItem : libelle,
@@ -118,7 +118,7 @@ export class FetchModifyObjectService {
 
 
   async getTypeOfItemsOfOR(Atelier : string) : Promise<any> {
-    let url = "http://localhost:3000/objetrepere/getTypeOfItemsForOR/{Atelier}"
+    let url = "http://"+environment.API_URL+"/objetrepere/getTypeOfItemsForOR/{Atelier}"
     url = url.replace("{Atelier}", Atelier)
     const res : modificationTypeObject[] = await lastValueFrom(this.http.get<modificationTypeObject[]>(url));
     if (res.length == 0) {

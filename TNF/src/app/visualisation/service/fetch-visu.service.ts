@@ -1,12 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { CookieService } from 'ngx-cookie-service';
 import { lastValueFrom } from 'rxjs';
 import { NavBarService } from 'src/app/navbar/service/nav-bar.service';
 import { AtelierInfo } from 'src/structureData/Atelier';
 import { ItemInfo, ItemSave } from 'src/structureData/Item';
 import { ObjetRepereInfo, ObjetRepereSave } from 'src/structureData/ObjetRepere';
 import { SousItemInfo, SousItemSave } from 'src/structureData/SousItem';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -20,9 +20,9 @@ export class FetchVisuService {
     let url;
     if (admin){
       console.log(admin);
-      url = "http://localhost:3000/atelier"
+      url = "http://"+environment.API_URL+"/atelier"
     } else {
-      url = "http://localhost:3000/atelier/getAll/isActif"
+      url = "http://"+environment.API_URL+"/atelier/getAll/isActif"
     }
     const res : AtelierInfo[] = await lastValueFrom(this.http.get<AtelierInfo[]>(url));
     if (res.length == 0) {
@@ -33,7 +33,7 @@ export class FetchVisuService {
   }
 
   async getObjetRepereByAteliers(Atelier : string) : Promise<any> {
-    let url = "http://localhost:3000/objetrepere/getORByAtelier/{atelier}"
+    let url = "http://"+environment.API_URL+"/objetrepere/getORByAtelier/{atelier}"
     url = url.replace("{atelier}", Atelier)
     const res : ObjetRepereInfo[] = await lastValueFrom(this.http.get<ObjetRepereInfo[]>(url));
     if (res.length == 0) {
@@ -44,7 +44,7 @@ export class FetchVisuService {
   }
 
   async getHistoryObjetRepere(idOr : string) : Promise<any> {
-    let url = "http://localhost:3000/objetrepere/history/{OR}"
+    let url = "http://"+environment.API_URL+"/objetrepere/history/{OR}"
     url = url.replace("{OR}", idOr)
     const res : ObjetRepereSave[] = await lastValueFrom(this.http.get<ObjetRepereSave[]>(url));
     if (res.length == 0) {
@@ -55,7 +55,7 @@ export class FetchVisuService {
   }
 
   async getItemByObjetRepere(objetRepere : string) : Promise<any> {
-    let url = "http://localhost:3000/item/getItemByOR/{OR}"
+    let url = "http://"+environment.API_URL+"/item/getItemByOR/{OR}"
     url = url.replace("{OR}", objetRepere)
     const res : ItemInfo[] = await lastValueFrom(this.http.get<ItemInfo[]>(url));
     if (res.length == 0) {
@@ -66,7 +66,7 @@ export class FetchVisuService {
   }
 
   async getHistoryItem(idItem : string) : Promise<any> {
-    let url = "http://localhost:3000/item/history/{Item}"
+    let url = "http://"+environment.API_URL+"/item/history/{Item}"
     url = url.replace("{Item}", idItem)
     const res : ItemSave[] = await lastValueFrom(this.http.get<ItemSave[]>(url));
     if (res.length == 0) {
@@ -77,7 +77,7 @@ export class FetchVisuService {
   }
 
   async getSousItemByItem(Item : string) : Promise<any> {
-    let url = "http://localhost:3000/sousitem/getSousItemByItem/{SI}"
+    let url = "http://"+environment.API_URL+"/sousitem/getSousItemByItem/{SI}"
     url = url.replace("{SI}", Item)
     const res : SousItemInfo[] = await lastValueFrom(this.http.get<SousItemInfo[]>(url));
     if (res.length == 0) {
@@ -88,7 +88,7 @@ export class FetchVisuService {
   }
 
   async getHistorySousItem(idSI : string) : Promise<any> {
-    let url = "http://localhost:3000/sousitem/history/{SI}"
+    let url = "http://"+environment.API_URL+"/sousitem/history/{SI}"
     url = url.replace("{SI}", idSI);
     const res : SousItemSave[] = await lastValueFrom(this.http.get<SousItemSave[]>(url));
     if (res.length == 0) {
