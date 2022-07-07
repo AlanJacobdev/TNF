@@ -44,7 +44,7 @@ export class AuthService {
     // let url = "http://localhost:3000/utilisateur/connexion/exist/{login}/{pwd}"
     // let url = "http://localhost:3000/utilisateur/existUser/{login}/{pwd}"
 
-    let url = "http://localhost:3000/auth/auth/login"
+    let url = "http://172.16.208.38:3000/auth/auth/login"
     let payload = {
       "login": login,
       "password" : pwd 
