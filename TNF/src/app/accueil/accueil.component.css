@@ -173,9 +173,10 @@ td:hover {
     color :#00608F
 }
 
-.activeActivity  {
+.btn-light.activeActivity  {
     background-color: #E5E7EB !important;
     border-color: #E5E7EB !important;
+    font-weight: 550;
 }
 
 .btn-light:hover{
@@ -188,3 +189,74 @@ td:hover {
     border-color: #D1D5DB !important;
 }
 
+
+.btn-del {
+    background-color: #FEF2F2 ;
+}
+
+.btn-del:hover {
+    background-color: #FEE2E2 !important;
+}
+
+.btn-del:active:hover {
+    background-color: #fecaca !important;
+}
+
+.btn-del.activeActivity{
+    background-color: #fee2e2 !important;
+    font-weight: 550;
+    box-shadow: 0 0 0 .15rem rgba(254, 202, 202, 0.5);
+    z-index: 9;
+}
+
+.btn-del:focus {
+    box-shadow: 0 0 0 .25rem rgba(254, 202, 202, 0.5)
+}
+
+
+.btn-edit {
+    background-color: #FFF7ED ;
+}
+
+.btn-edit:hover {
+    background-color: #FFEDD5 !important;
+}
+
+.btn-edit:active:hover {
+    background-color: #fdba74 !important;
+}
+
+.btn-edit.activeActivity{
+    background-color: #FED7AA !important;
+    font-weight: 550;
+    box-shadow: 0 0 0 .15rem rgba(253, 186, 116, 0.5);
+    z-index: 9;
+}
+
+.btn-edit:focus {
+    box-shadow: 0 0 0 .25rem rgba(253, 186, 116, 0.5);
+}
+
+
+.btn-create {
+    background-color: #F0FDF4 ;
+}
+
+.btn-create:hover {
+    background-color: #DCFCE7 !important;
+}
+
+.btn-create:active:hover {
+    background-color: #86efac !important;
+}
+
+.btn-create.activeActivity{
+    background-color: #BBF7D0 !important;
+    font-weight: 550;
+    box-shadow: 0 0 0 .15rem rgba(134, 239, 172, 0.5);
+    z-index: 9;
+}
+
+.btn-create:focus {
+    box-shadow: 0 0 0 .25rem rgba(134, 239, 172, 0.5);
+}

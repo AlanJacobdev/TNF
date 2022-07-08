@@ -29,9 +29,9 @@
                     <div class="row px-4 mx-0 mt-2">
                         <div class="btn-group" role="group" aria-label="Basic example">
                             <button (click)="selectTypeActivity(TypeActivity.All)" type="button" class="btn btn-light" [ngClass]="{'activeActivity': this.typeActivityNow == TypeActivity.All }">Tout</button>
-                            <button (click)="selectTypeActivity(TypeActivity.Create)" type="button" class="btn btn-light" [ngClass]="{'activeActivity': this.typeActivityNow == TypeActivity.Create }">Création</button>
-                            <button (click)="selectTypeActivity(TypeActivity.Edit)" type="button" class="btn btn-light" [ngClass]="{'activeActivity': this.typeActivityNow == TypeActivity.Edit }">Modification</button>
-                            <button (click)="selectTypeActivity(TypeActivity.Delete)" type="button" class="btn btn-light" [ngClass]="{'activeActivity': this.typeActivityNow == TypeActivity.Delete }">Suppression</button>
+                            <button (click)="selectTypeActivity(TypeActivity.Create)" type="button" class="btn btn-create" [ngClass]="{'activeActivity': this.typeActivityNow == TypeActivity.Create }">Création</button>
+                            <button (click)="selectTypeActivity(TypeActivity.Edit)" type="button" class="btn btn-edit" [ngClass]="{'activeActivity': this.typeActivityNow == TypeActivity.Edit }">Modification</button>
+                            <button (click)="selectTypeActivity(TypeActivity.Delete)" type="button" class="btn btn-del" [ngClass]="{'activeActivity': this.typeActivityNow == TypeActivity.Delete }">Suppression</button>
                           </div>
                     </div>
 

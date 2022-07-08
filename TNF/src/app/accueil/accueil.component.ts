@@ -352,6 +352,7 @@ export class AccueilComponent implements OnInit {
   showCalendar(){
     this.dayIsSelect = false;
     this.selectedDay = -1;
+    this.typeActivityNow = this.TypeActivity.All
   }
 
   selectTypeActivity(activity : typeActivity){
