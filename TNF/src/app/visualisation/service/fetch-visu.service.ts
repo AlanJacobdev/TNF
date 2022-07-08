@@ -19,7 +19,6 @@ export class FetchVisuService {
     const admin = this.navBarService.getEstAdmin();
     let url;
     if (admin){
-      console.log(admin);
       url = "http://"+environment.API_URL+"/atelier"
     } else {
       url = "http://"+environment.API_URL+"/atelier/getAll/isActif"

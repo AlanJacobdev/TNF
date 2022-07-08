@@ -29,6 +29,7 @@ import { FilterAtelierPipe } from './gestion-ateliers/pipe/filter-atelier.pipe';
 import { DemandeAdminComponent } from './demande-admin/demande-admin.component';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { environment } from '../environments/environment';
+import { ParametreComponent } from './parametre/parametre.component';
 
 const config: SocketIoConfig = { url: 'http://'+environment.API_URL, options: {} };
 
@@ -56,7 +57,8 @@ const config: SocketIoConfig = { url: 'http://'+environment.API_URL, options: {}
     FilterNUPipe,
     GestionAteliersComponent,
     FilterAtelierPipe,
-    DemandeAdminComponent 
+    DemandeAdminComponent,
+    ParametreComponent 
   ],
   imports: [
     BrowserModule,

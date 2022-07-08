@@ -1,0 +1,65 @@
+<div class="container">
+    <div class="row my-4">
+        <div class="col border rounded ">
+            <div class="row px-5">
+                <div class="col-12 mt-4">
+                    <div class="row ">
+                        <label for="emailDemandes" class="col-sm-2 col-form-label fw-bold d-sm-none d-block align-self-center">Email</label>
+                        <div class="input-group col-sm-10">
+                            <label for="emailDemandes" class="d-none d-sm-block col-sm-2 col-form-label fw-bold">Email</label>
+                            <input [(ngModel)]="email" type="email" class="form-control col-8" id="emailDemandes" [disabled]="!modifyEmail">
+                            <ng-container *ngIf="!modifyEmail; else modifEmail">
+                                <button class="btn btn-outline-warning col-2" type="button" id="modifEmail" (click)="editEmail()">
+                                    <fa-icon class="fs-5 pe-2" [icon]="faPen" ></fa-icon>
+                                    <span class="fs-6 d-none d-md-inline fw-bolder">Modifier</span>
+                                </button> 
+                            </ng-container>
+                            <ng-template #modifEmail>
+                                <button class="btn btn-outline-success col-1" type="button" id="modifEmailValid" (click)="sendConfirmationEditEmail()">
+                                    <fa-icon class="fs-5 pe-2" [icon]="faCheck" ></fa-icon>
+                                </button> 
+                                <button class="btn btn-outline-danger col-1" type="button" id="modifEmailCancel" (click)="cancelEditEmail()">
+                                    <fa-icon class="fs-5 pe-2" [icon]="faXmark" ></fa-icon>
+                                </button> 
+                            </ng-template>
+                        </div>
+                    </div>
+                    <div class="row my-2">
+                        <div class="col-12 text-center fst-italic">
+                            L'email qui servira à réceptionner l'ensemble des notifications par mail des demandes de suppressions.
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 mt-3 mb-3">
+                    <div class="row ">
+                        <label for="heuresSuppressions" class="col-sm-2 col-form-label fw-bold d-sm-none d-block align-self-center">Nombre d'heures</label>
+                        <div class="col-sm-10 input-group">
+                            <label for="heuresSuppressions" class="d-none d-sm-block col-sm-2 col-form-label fw-bold">Nombre d'heures</label>
+                            <input [(ngModel)]="heure" [disabled]="!modifyHeure" type="number" oninput="this.value = this.value.replace(/\D+/g, '')" min="0" max="999" class="form-control" id="heuresSuppressions">
+                            <ng-container *ngIf="!modifyHeure; else modifHeure">
+                                <button class="btn btn-outline-warning col-2" type="button" id="modifHeure" (click)="editHeure()">
+                                    <fa-icon class="fs-5 pe-2" [icon]="faPen" ></fa-icon>
+                                    <span class="fs-6 d-none d-md-inline fw-bolder">Modifier</span>
+                                </button> 
+                            </ng-container>
+                            <ng-template #modifHeure>
+                                <button class="btn btn-outline-success col-1" type="button" id="modifHeureValid" (click)="sendConfirmationEditHeure()">
+                                    <fa-icon class="fs-5 pe-2" [icon]="faCheck" ></fa-icon>
+                                </button> 
+                                <button class="btn btn-outline-danger col-1" type="button" id="modifHeureCancel" (click)="cancelEditheure()">
+                                    <fa-icon class="fs-5 pe-2" [icon]="faXmark" ></fa-icon>
+                                </button> 
+                            </ng-template>
+
+                        </div>
+                    </div>
+                    <div class="row my-2">
+                        <div class="col-12 text-center fst-italic">
+                            Nombres d'heures durant lesquelles une arborescence est autorisée à être supprimée par son créateur sans demande. 
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
