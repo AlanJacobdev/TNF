@@ -10,6 +10,7 @@ import { DemandeAdminComponent } from './demande-admin/demande-admin.component';
 import { ExportationComponent } from './exportation/exportation.component';
 import { GestionAteliersComponent } from './gestion-ateliers/gestion-ateliers.component';
 import { ModifyObjectComponent } from './modify-object/modify-object.component';
+import { ParametreUtilisateurComponent } from './parametre-utilisateur/parametre-utilisateur.component';
 import { ParametreComponent } from './parametre/parametre.component';
 import { RecopieObjectComponent } from './recopie-object/recopie-object.component';
 import { VisualisationComponent } from './visualisation/visualisation.component';
@@ -27,6 +28,7 @@ const routes: Routes = [
   { path: 'exportation', component : ExportationComponent, canActivate: [ AuthGuard ]},
   { path: 'demandeAdmin', component : DemandeAdminComponent, canActivate: [ AuthGuard ]},
   { path: 'parametres', component : ParametreComponent, canActivate: [ AuthGuard ]},
+  { path: 'parametresUtilisateur', component : ParametreUtilisateurComponent, canActivate: [ AuthGuard ]},
   { path: '**', redirectTo: ''}
 ];
 

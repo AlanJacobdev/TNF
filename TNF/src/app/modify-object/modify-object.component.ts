@@ -437,7 +437,7 @@ export class ModifyObjectComponent implements OnInit {
             this.manageToast("Erreur de modification", res , "red")
           } else {  
             let selectedOR = this.orSelect;
-            this.manageToast("Modification", "L'objet repère " + this.orSelect.idObjetRepere+ " a été modifié", "#006400");
+            this.manageToast("Modification", "L'objet repère " + this.orSelect.idObjetRepere+ " a été modifié", "#ff8c00");
             this.refreshValidationForm();
             this.getObjetRepereByAtelier();
             this.orSelect = selectedOR;
@@ -463,7 +463,7 @@ export class ModifyObjectComponent implements OnInit {
             this.manageToast("Erreur de modification", res , "red")
           } else {  
             this.refreshValidationForm();
-            this.manageToast("Création", "L'item " + this.itemSelect.idItem+ " a été modifié", "#006400");
+            this.manageToast("Modification", "L'item " + this.itemSelect.idItem+ " a été modifié", "#ff8c00");
             this.getItemFromOR();
           }
         }).catch((e) => {
@@ -489,7 +489,7 @@ export class ModifyObjectComponent implements OnInit {
             this.manageToast("Erreur de modification", res , "red")
           } else {  
             this.refreshValidationForm();
-            this.manageToast("Création", "Le sous-item " + this.itemSelect.idItem+ " a été modifié", "#006400");
+            this.manageToast("Modification", "Le sous-item " + this.itemSelect.idItem+ " a été modifié", "#ff8c00");
             this.getSousItemByItem();
           }
         }).catch((e) => {
