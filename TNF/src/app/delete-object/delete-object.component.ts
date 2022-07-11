@@ -1,6 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { faXmark, faCircleCheck, faCircleXmark, faCircleInfo} from '@fortawesome/free-solid-svg-icons';
-import { CookieService } from 'ngx-cookie-service';
+import { faXmark, faCircleCheck, faCircleXmark, faCircleInfo, faTrashCan} from '@fortawesome/free-solid-svg-icons';
 import { AtelierInfo } from 'src/structureData/Atelier';
 import { typeObjet, ItemInfo, ItemSuppresion, etat } from 'src/structureData/Item';
 import { ObjetRepereInfo, ObjetRepereSuppression, valide } from 'src/structureData/ObjetRepere';
@@ -19,7 +18,7 @@ import { FetchDeleteObjectService } from './service/fetch-delete-object.service'
   styleUrls: ['./delete-object.component.css']
 })
 export class DeleteObjectComponent implements OnInit {
-
+  public faTrashCan = faTrashCan;
   public faXmark = faXmark;
   public faCircleCheck = faCircleCheck;
   public faCircleXmark = faCircleXmark;

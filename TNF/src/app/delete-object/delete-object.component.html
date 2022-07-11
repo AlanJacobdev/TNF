@@ -39,7 +39,10 @@
                 </div>
 
                 <div class="col-lg-2 col-6 mt-1 align-self-center">
-                    <button (click)="delete()" type="button" data-bs-toggle="modal" data-bs-target="#Suppression" data-backdrop="static" data-keyboard="false" class="btn btn-light">Supprimer</button>
+                    <button (click)="delete()" type="button" data-bs-toggle="modal" data-bs-target="#Suppression" data-backdrop="static" data-keyboard="false" class="btn  btn-del">
+                      <fa-icon class="fs-5 pe-1 " [icon]="faTrashCan" ></fa-icon> 
+                      Supprimer
+                    </button>
                 </div> 
 
                 <div class="collapse mt-2" id="PlusDOptions">
@@ -233,8 +236,8 @@
           <button type="button" class="btn-close" (click)="closeRecap()" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-                <div *ngIf="this.ORDeleted.length == 0 && this.ItemDeleted.length == 0 && this.SiDeleted.length == 0; else recap" class="my-5 text-center">
-                    Aucune demande de suppresion d'objet 
+                <div *ngIf="this.ORDeleted.length == 0 && this.ItemDeleted.length == 0 && this.SiDeleted.length == 0; else recap" class=" fs-5 my-5 text-center">
+                    Aucun objet selectionné 
                 </div>
             
             <ng-template #recap>
