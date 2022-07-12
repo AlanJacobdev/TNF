@@ -56,6 +56,11 @@ export interface ObjetRepereUtile{
     libelleObjetRepere  : string
 }
 
+export interface infoORBeingChanged{
+    idObjetRepere : string,
+    login  : string
+}
+
 export interface ObjetRepereSuppression {
     idObjetRepere: string,
     libelleObjetRepere: string,

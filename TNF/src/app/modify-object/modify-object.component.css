@@ -174,3 +174,12 @@ table th {
 .margin-top1{
     margin-top: 1px;
 }
+
+
+.selectByAnother {
+    background-color: #fecaca;
+}
+
+.actifNowAndSelectByAnother{
+    background-color: #F87171;
+}

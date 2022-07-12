@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Socket } from 'ngx-socket-io';
 import { lastValueFrom } from 'rxjs';
 import { NavBarService } from 'src/app/navbar/service/nav-bar.service';
 import { Description } from 'src/structureData/Description';
@@ -14,7 +15,7 @@ import { environment } from '../../../environments/environment';
 })
 export class FetchModifyObjectService {
 
-  constructor(private readonly http: HttpClient, private navBarService: NavBarService) { }
+  constructor(private readonly http: HttpClient, private navBarService: NavBarService, private socket: Socket) { }
 
 
 
@@ -127,5 +128,26 @@ export class FetchModifyObjectService {
       return res;
     }
   }
+
+  sendChange(id: string){
+    let user = this.navBarService.getLogin();
+    let payload = {
+      idObjetRepere : id,
+      login : user
+    }
+    this.socket.emit('reservationItem', payload)
+  }
+
+  connexionSocket(){
+    return this.socket.fromEvent('sendReservationOR') 
+  }
+
+
+  receiveChangeOR(){
+    return this.socket.fromEvent('broadcastReservation') 
+  }
+  
+
+
 
 }

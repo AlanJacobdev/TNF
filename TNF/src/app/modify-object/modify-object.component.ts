@@ -3,10 +3,11 @@ import { faChevronRight, faMagicWandSparkles, faXmark } from '@fortawesome/free-
 import { AtelierInfo } from 'src/structureData/Atelier';
 import { Description } from 'src/structureData/Description';
 import { typeObjet, ItemInfo, ItemModification, etat } from 'src/structureData/Item';
-import { ObjetRepereInfo, ObjetRepereModification, valide } from 'src/structureData/ObjetRepere';
+import { infoORBeingChanged, ObjetRepereInfo, ObjetRepereModification, valide } from 'src/structureData/ObjetRepere';
 import { SousItemInfo, SousItemModification } from 'src/structureData/SousItem';
 import { TypeObjetRepereTableau, TypeObjetInfo, TypeObjetRepereInfo, modificationTypeObject, TypeObjet, TypeObjetRepere } from 'src/structureData/TypeObject';
 import { FetchcreateTypeObjectService } from '../create-type-object/service/fetchcreate-type-object.service';
+import { NavBarService } from '../navbar/service/nav-bar.service';
 import { FetchRecopieService } from '../recopie-object/service/fetch-recopie.service';
 import { FetchVisuService } from '../visualisation/service/fetch-visu.service';
 import { FetchModifyObjectService } from './service/fetch-modify-object.service';
@@ -78,15 +79,46 @@ export class ModifyObjectComponent implements OnInit {
   public errorLibelle : boolean = false;
   public descriptionObjectSelect : Description[] = [];
   public searchText : string = "";
+  public infoObjetBeingModified : infoORBeingChanged[] = []
+  public ObjetBeingModified : string[] = []
 
-
-  constructor(private fetchModifyTypeObject : FetchModifyObjectService, private fetchCreateTypeObject : FetchcreateTypeObjectService,private fetchVisuService : FetchVisuService, private fetchRecopieService : FetchRecopieService) {
+  constructor(private fetchModifyTypeObject : FetchModifyObjectService, private fetchCreateTypeObject : FetchcreateTypeObjectService,private fetchVisuService : FetchVisuService, private fetchRecopieService : FetchRecopieService,
+    private navbarService : NavBarService) {
 
     this.getAteliers();
     this.getListType();
+    this.fetchModifyTypeObject.connexionSocket().subscribe( (payload: any) => {
+      const objects = payload as infoORBeingChanged[];
+      for (const or of objects){
+        this.ObjetBeingModified.push(or.idObjetRepere);
+        this.infoObjetBeingModified.push({
+          idObjetRepere : or.idObjetRepere,
+          login  : or.login
+        })
+      }
+    }); 
+    
+    this.fetchModifyTypeObject.receiveChangeOR().subscribe( (payload: any) => {
+      const objects = payload as infoORBeingChanged[];
+      this.ObjetBeingModified.splice(0);
+      this.infoObjetBeingModified.splice(0);
+      for (const or of objects){
+        
+        this.ObjetBeingModified.push(or.idObjetRepere);
+        this.infoObjetBeingModified.push({
+          idObjetRepere : or.idObjetRepere,
+          login  : or.login
+        })        
+      }
+      console.log(this.ObjetBeingModified);
+      
+    }); 
+
+    
+    
    }
   ngOnInit(): void {
-  
+    
   }
 
   getListType(){
@@ -184,8 +216,6 @@ export class ModifyObjectComponent implements OnInit {
   getItemFromOR() {
       this.fetchVisuService.getItemByObjetRepere(this.idORSelect).then((list: ItemInfo[]) => {
         if (list != undefined) {
-          console.log(list);
-          
           this.listeItem = list;        
         } else {
           this.listeItem.splice(0);
@@ -293,7 +323,7 @@ export class ModifyObjectComponent implements OnInit {
   public selectOR(idOR : string) {
     this.idORSelect = idOR;
     this.selectedNow = idOR;
-    
+    this.fetchModifyTypeObject.sendChange(idOR)
     if (this.objectNow === this.TypeObject.OR ) {
       let orInfo = this.listeOR.find((element) => element.idObjetRepere === idOR);
       if (orInfo != undefined) {
@@ -549,4 +579,17 @@ export class ModifyObjectComponent implements OnInit {
     this.valideError = false;
   }
 
+
+  orSelectByYou(id : string) {
+    let login = this.navbarService.getLogin()
+    let orSelect = this.infoObjetBeingModified.find((element) => element.idObjetRepere == id);
+    if (orSelect != undefined) {
+      if (orSelect.login == login){
+        return 1;
+      } else {
+        return 0;
+      }
+    } 
+    return -1
+  }
 }

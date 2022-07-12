@@ -92,7 +92,10 @@
                                 <td class="text-center" colspan="2">Aucun Objet repère</td>
                             </tr>
                             <ng-template #afficheOR>
-                                <tr *ngFor="let OR of listeOR | filterModification : searchText:'OR' | filterType : typeNow:'OR'" (click)="selectOR(OR.idObjetRepere)" [ngClass]="{'actifNow' : OR.idObjetRepere === this.idORSelect }" >
+                                <tr *ngFor="let OR of listeOR | filterModification : searchText:'OR' | filterType : typeNow:'OR'" (click)="selectOR(OR.idObjetRepere)" 
+                                [ngClass]="{'actifNow' : (OR.idObjetRepere === this.idORSelect) && this.orSelectByYou(OR.idObjetRepere) == 1, 
+                                'actifNowAndSelectByAnother' : (OR.idObjetRepere === this.idORSelect) && this.orSelectByYou(OR.idObjetRepere) == 0,
+                                'selectByAnother' : this.orSelectByYou(OR.idObjetRepere) == 0}" >
                                     <td class="col-4">{{OR.idObjetRepere}}</td>
                                     <td class="col-8">{{OR.libelleObjetRepere}}</td>
                                 </tr>
