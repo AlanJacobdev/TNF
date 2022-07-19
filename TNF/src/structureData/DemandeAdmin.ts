@@ -6,7 +6,7 @@ export interface DemandeAdmin {
     idDemande : number,
     motif : string,
     etat : boolean,
-    idDelete : boolean,
+    isDelete : boolean,
     profilCreation : string,
     dateCreation : Date,
     profilModification : string,

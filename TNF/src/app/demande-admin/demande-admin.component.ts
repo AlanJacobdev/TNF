@@ -217,6 +217,7 @@ export class DemandeAdminComponent implements OnInit {
         if (typeof res == 'string'){
           this.manageToast("Demande de suppression", "Problème lié à la suppression", "red")
         } else {
+          
           await this.getAllDemandeAdmin();
           await this.getAllDemandeAdminTraitee();
           this.resetDescriptifNow();

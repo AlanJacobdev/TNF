@@ -1,6 +1,6 @@
 <div class="container">
     <div class="row">
-        <div class="col-lg-3 col-xs-12 mt-4">
+        <div class="col-lg-6 col-12 mt-4">
             <div class="input-group">
             <label class="input-group-text" for="searchObject" >Recherche</label>
             <input class="form-control" type="text" placeholder="Informations" id="searchObject" [(ngModel)]="searchText">
@@ -28,7 +28,7 @@
                             <tr *ngIf="this.listeDemandeAdmin.length === 0">
                                 <td class="text-center" colspan="3">Aucune demande</td>
                             </tr>
-                            <tr #demandes id="{{demande.idDemande}}" *ngFor="let demande of listeDemandeAdmin"  (click)="selectDemande(demande.idDemande)" [ngClass]="{'table-active': demande.idDemande === this.selectedDemande }">
+                            <tr #demandes id="{{demande.idDemande}}" *ngFor="let demande of listeDemandeAdmin | filterDmdAdmin : searchText :'A'"  (click)="selectDemande(demande.idDemande)" [ngClass]="{'table-active': demande.idDemande === this.selectedDemande }">
                                 <td class="col-2 align-middle">{{demande.profilCreation}}</td>
                                 <td class="col-2 text-center align-middle">{{demande.dateCreation | date: 'dd/MM/yyyy HH:mm'}}</td>
                                 <td class="col-8 align-middle">{{demande.motif}}</td>
@@ -48,7 +48,7 @@
                                 <tr *ngIf="this.listeDemandeAdminTraitee.length === 0">
                                     <td class="text-center" colspan="4">Aucune demande</td>
                                 </tr>
-                                <tr *ngFor="let demande of listeDemandeAdminTraitee"  (click)="selectDemande(demande.idDemande)" [ngClass]="{'table-active': demande.idDemande === this.selectedDemande }">
+                                <tr *ngFor="let demande of listeDemandeAdminTraitee | filterDmdAdmin : searchText :'T'"  (click)="selectDemande(demande.idDemande)" [ngClass]="{'table-active': demande.idDemande === this.selectedDemande, 'td-red' : !demande.etat || demande.isDelete === false,'td-green' : !demande.etat || demande.isDelete === true}">
                                     <td class="col-3 align-middle">{{demande.profilCreation}}</td>
                                     <td class="col-2 text-center align-middle">{{demande.dateCreation | date: 'dd/MM/yyyy HH:mm'}}</td>
                                     <td class="col-3 align-middle">{{demande.profilModification}}</td>

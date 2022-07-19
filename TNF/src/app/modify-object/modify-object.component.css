@@ -37,6 +37,10 @@ table th {
     z-index: 0 !important;
 }
 
+.zind {
+    z-index: 15;
+}
+
 .close {
     font-size: 25px;
     color : red;
@@ -182,4 +186,12 @@ table th {
 
 .actifNowAndSelectByAnother{
     background-color: #F87171;
+}
+
+.blur{
+    filter :blur(2px) 
+}
+
+.bg-edition{
+    background: rgba(255, 255, 255, 0.60);
 }

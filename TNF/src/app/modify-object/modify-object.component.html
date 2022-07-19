@@ -93,9 +93,9 @@
                             </tr>
                             <ng-template #afficheOR>
                                 <tr *ngFor="let OR of listeOR | filterModification : searchText:'OR' | filterType : typeNow:'OR'" (click)="selectOR(OR.idObjetRepere)" 
-                                [ngClass]="{'actifNow' : (OR.idObjetRepere === this.idORSelect) && this.orSelectByYou(OR.idObjetRepere) == 1, 
-                                'actifNowAndSelectByAnother' : (OR.idObjetRepere === this.idORSelect) && this.orSelectByYou(OR.idObjetRepere) == 0,
-                                'selectByAnother' : this.orSelectByYou(OR.idObjetRepere) == 0}" >
+                                [ngClass]="{'actifNow' : (OR.idObjetRepere === this.idORSelect) && this.objetSelectByYou(OR.idObjetRepere) == 1, 
+                                'actifNowAndSelectByAnother' : (OR.idObjetRepere === this.idORSelect) && this.objetSelectByYou(OR.idObjetRepere) == 0,
+                                'selectByAnother' : this.objetSelectByYou(OR.idObjetRepere) == 0}" >
                                     <td class="col-4">{{OR.idObjetRepere}}</td>
                                     <td class="col-8">{{OR.libelleObjetRepere}}</td>
                                 </tr>
@@ -106,45 +106,52 @@
                     </div>
                 </div>
         
-
+                
                 <div class="col-12 col-lg-4 mt-5 px-lg-5 offset-lg-1 needs-validation"  [ngClass]="{'was-validated': formValidate === true}">
                     <div class="container-fluid border rounded shadow-sm py-2">
-                        <div class="text-center row">
-                            <span class="fs-3 col-10 offset-1 ">Modification </span>
-                        </div>
-                        
-                        <div class="col-12 col-lg-10 offset-lg-1 my-3">
-                            <div class="form-floating mb-3">
-                                <input #IdentifiantOR type="text" maxlength="6" class="form-control uppercase" id="IdType" placeholder="" required [value]="this.orSelect.idObjetRepere" disabled readonly>
-                                <label for="IdType">Identifiant</label>
+                        <div [ngClass]="{'position-relative h-100' : this.objetSelectByYou(this.idORSelect) == 0}">
+                            <div *ngIf="this.objetSelectByYou(this.idORSelect) == 0" class="fs-5 fw-bold bg-edition zind justify-content-center position-absolute h-100 w-100 text-center align-items-center d-flex">
+                                L'objet est actuellement modifié par {{this.objetSelectByWho(this.idORSelect)}} 
                             </div>
-                            <div class="form-floating mb-3">
-                                <input #LibelleOR type="text" maxlength="50" class="form-control" id="IdLibelle" placeholder="" required [value]="this.orSelect.libelleObjetRepere">
-                                <label for="IdLibelle">Libelle</label>
-                                <div class="invalid-tooltip">
-                                    Veuillez renseigner un libellé.
+                            <div [ngClass]="{'blur' :  this.objetSelectByYou(this.idORSelect) == 0}">
+                                <div class="text-center row">
+                                    <span class="fs-3 col-10 offset-1 ">Modification </span>
                                 </div>
-                            </div>
-                            <div *ngFor="let d of this.descriptionObjectSelect; let i = index"  > 
-                                <div class="form-floating mb-3 input-group">
-                                    <input  type="text" [(ngModel)]="this.descriptionObjectSelect[i].lien" #name="ngModel" name="lien{{i}}" class="form-control zindexZero"  placeholder="" >
-                                    <label for="IdDescription{{i}}">Description</label>
-                                    <button class="input-group-text px-2 bg-white" (click)="removeDescription(i)"><fa-icon class=" text-right close" [icon]="faXmark"></fa-icon></button>
+                                
+                                <div class="col-12 col-lg-10 offset-lg-1 my-3">
+                                    <div class="form-floating mb-3">
+                                        <input #IdentifiantOR type="text" maxlength="6" class="form-control uppercase" id="IdType" placeholder="" required [value]="this.orSelect.idObjetRepere" disabled readonly>
+                                        <label for="IdType">Identifiant</label>
+                                    </div>
+                                    <div class="form-floating mb-3">
+                                        <input [disabled]="this.objetSelectByYou(this.idORSelect) == 0" #LibelleOR type="text" maxlength="50" class="form-control" id="IdLibelle" placeholder="" required [value]="this.orSelect.libelleObjetRepere">
+                                        <label for="IdLibelle">Libelle</label>
+                                        <div class="invalid-tooltip">
+                                            Veuillez renseigner un libellé.
+                                        </div>
+                                    </div>
+                                    <div *ngFor="let d of this.descriptionObjectSelect; let i = index"  > 
+                                        <div class="form-floating mb-3 input-group">
+                                            <input [disabled]="this.objetSelectByYou(this.idORSelect) == 0" type="text" [(ngModel)]="this.descriptionObjectSelect[i].lien" #name="ngModel" name="lien{{i}}" class="form-control zindexZero"  placeholder="" >
+                                            <label for="IdDescription{{i}}">Description</label>
+                                            <button [disabled]="this.objetSelectByYou(this.idORSelect) == 0" class="input-group-text px-2 bg-white" (click)="removeDescription(i)"><fa-icon class=" text-right close" [icon]="faXmark"></fa-icon></button>
+                                        </div>
+                                    </div> 
+                                    <div class="form-floating mb-3">
+                                        <a class="text-dark cursor" (click)="this.objetSelectByYou(this.idORSelect) != 0 ? addDescription() : ''">Ajouter une description</a>
+                                    </div>
+                                    <div class="form-check form-check-inline ms-2">
+                                        <input [disabled]="this.objetSelectByYou(this.idORSelect) == 0" [(ngModel)]="valide" (click)="selectValide(this.valideNow.A)" [ngClass]="{'border-danger' : valideError}" class="form-check-input" type="radio" name="radioEtat" id="inlineRadio1" value="A" required>
+                                        <label [ngClass]="{'text-danger' : valideError}" class="form-check-label" for="inlineRadio1">Actif</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input [disabled]="this.objetSelectByYou(this.idORSelect) == 0" [(ngModel)]="valide" (click)="selectValide(this.valideNow.R)" [ngClass]="{'border-danger' : valideError}" class="form-check-input" type="radio" name="radioEtat" id="inlineRadio2" value="R" required>
+                                        <label [ngClass]="{'text-danger' : valideError}" class="form-check-label" for="inlineRadio2">Reservé</label>
+                                    </div>
                                 </div>
-                            </div> 
-                            <div class="form-floating mb-3">
-                                <a class="text-dark cursor" (click)="addDescription()">Ajouter une description</a>
-                            </div>
-                            <div class="form-check form-check-inline ms-2">
-                                <input [(ngModel)]="valide" (click)="selectValide(this.valideNow.A)" [ngClass]="{'border-danger' : valideError}" class="form-check-input" type="radio" name="radioEtat" id="inlineRadio1" value="A" required>
-                                <label [ngClass]="{'text-danger' : valideError}" class="form-check-label" for="inlineRadio1">Actif</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input [(ngModel)]="valide" (click)="selectValide(this.valideNow.R)" [ngClass]="{'border-danger' : valideError}" class="form-check-input" type="radio" name="radioEtat" id="inlineRadio2" value="R" required>
-                                <label [ngClass]="{'text-danger' : valideError}" class="form-check-label" for="inlineRadio2">Reservé</label>
+                                <button [disabled]="this.objetSelectByYou(this.idORSelect) == 0" *ngIf="this.idORSelect != ''" (click)="modifyObjet(LibelleOR.value)" type="button" class="btn btn-lg btn-light col-10 offset-1 col-lg-6 offset-lg-3 my-2">Modifier</button>
                             </div>
                         </div>
-                        <button *ngIf="this.idORSelect != ''" (click)="modifyObjet(LibelleOR.value)" type="button" class="btn btn-lg btn-light col-10 offset-1 col-lg-6 offset-lg-3 my-2">Modifier</button>
                     </div>
                 </div>
             </ng-container>
@@ -194,7 +201,10 @@
                                 <td class="text-center" colspan="2">Aucun Item</td>
                             </tr>
                             <ng-template #afficheItem>
-                                <tr *ngFor="let item of listeItem | filterModification : searchText : 'Item' | filterType : typeNow:'Item'"  (click)="selectItem(item.idItem)" [ngClass]="{'actifNow' : item.idItem === this.idItemSelect }" >
+                                <tr *ngFor="let item of listeItem | filterModification : searchText : 'Item' | filterType : typeNow:'Item'"  (click)="selectItem(item.idItem)" 
+                                [ngClass]="{'actifNow' : (item.idItem === this.idItemSelect) && this.objetSelectByYou(item.idItem) == 1, 
+                                'actifNowAndSelectByAnother' : (item.idItem === this.idItemSelect) && this.objetSelectByYou(item.idItem) == 0,
+                                'selectByAnother' : this.objetSelectByYou(item.idItem) == 0}" >
                                     <td class="col-4">{{item.idItem}}</td>
                                     <td class="col-8">{{item.libelleItem}}</td>
                                 </tr>
@@ -209,50 +219,58 @@
 
                 <div class="col-12 col-lg-4 mt-5 px-lg-5 needs-validation"  [ngClass]="{'was-validated': formValidate === true}">
                     <div class="container-fluid border rounded shadow-sm py-2">
-                        <div class="text-center row">
-                            <span class="fs-3 col-10 offset-1">Modification</span>
-                        </div>
-                        
-                        <div class="col-12 col-lg-10 offset-lg-1 my-3">
-                            <div class="form-floating mb-3">
-                                <input #Identifiant type="text" maxlength="6" class="form-control uppercase" id="IdType" placeholder="" required [value]="this.itemSelect.idItem" disabled readonly>
-                                <label for="IdType">Identifiant</label>
+                        <div [ngClass]="{'position-relative h-100' : this.objetSelectByYou(this.idItemSelect) == 0}">
+                            <div *ngIf="this.objetSelectByYou(this.idItemSelect) == 0" class="fs-5 fw-bold bg-edition zind justify-content-center position-absolute h-100 w-100 text-center align-items-center d-flex">
+                                L'objet est actuellement modifié par {{this.objetSelectByWho(this.idItemSelect)}} 
                             </div>
-                            <div class="form-floating mb-3 input-group">
-                                <input [(ngModel)]="LibelleItem" type="text" maxlength="50" class="form-control zindexZero" id="IdLibelle" placeholder="" [value]="this.itemSelect.libelleItem"  (focusout)="focusOutLibelle()" required [ngClass]="{'box-error border border-danger': errorLibelle}">
-                                <label for="IdLibelle">Libelle</label>
-                                <button *ngIf="errorLibelle" class="input-group-text px-2 bg-white rounded-end" (click)="addingParentIdToCurrentLibelle()" ><fa-icon class=" text-right magicWand" [icon]="faMagicWandSparkles"></fa-icon></button>
-                                <div class="invalid-tooltip">
-                                    Veuillez renseigner un libellé.
+                            <div [ngClass]="{'blur' :  this.objetSelectByYou(this.idItemSelect) == 0}">
+                                <div class="text-center row">
+                                    <span class="fs-3 col-10 offset-1">Modification</span>
                                 </div>
-                            </div>
-                            <p *ngIf="errorLibelle" class="text-danger text-center py-0 my-1"> Requiert l'identifiant de l'objet repère</p>
-                            <div *ngFor="let d of this.descriptionObjectSelect; let i = index"  > 
-                                <div class="form-floating mb-3 input-group">
-                                    <input  type="text" [(ngModel)]="this.descriptionObjectSelect[i].lien" #name="ngModel" name="lien{{i}}" class="form-control zindexZero"  placeholder="" >
-                                    <label for="IdDescription{{i}}">Description</label>
-                                    <button class="input-group-text px-2 bg-white" (click)="removeDescription(i)"><fa-icon class=" text-right close" [icon]="faXmark"></fa-icon></button>
+                                
+                                <div class="col-12 col-lg-10 offset-lg-1 my-3">
+                                    <div class="form-floating mb-3">
+                                        <input #Identifiant type="text" maxlength="6" class="form-control uppercase" id="IdType" placeholder="" required [value]="this.itemSelect.idItem" disabled readonly>
+                                        <label for="IdType">Identifiant</label>
+                                    </div>
+                                    <div class="form-floating mb-3 input-group">
+                                        <input [disabled]="this.objetSelectByYou(this.idItemSelect) == 0" [(ngModel)]="LibelleItem" type="text" maxlength="50" class="form-control zindexZero" id="IdLibelle" placeholder="" [value]="this.itemSelect.libelleItem"  (focusout)="focusOutLibelle()" required [ngClass]="{'box-error border border-danger': errorLibelle}">
+                                        <label for="IdLibelle">Libelle</label>
+                                        <button [disabled]="this.objetSelectByYou(this.idItemSelect) == 0"  *ngIf="errorLibelle" class="input-group-text px-2 bg-white rounded-end" (click)="addingParentIdToCurrentLibelle()" ><fa-icon class=" text-right magicWand" [icon]="faMagicWandSparkles"></fa-icon></button>
+                                        <div class="invalid-tooltip">
+                                            Veuillez renseigner un libellé.
+                                        </div>
+                                    </div>
+                                    <p *ngIf="errorLibelle" class="text-danger text-center py-0 my-1"> Requiert l'identifiant de l'objet repère</p>
+                                    <div *ngFor="let d of this.descriptionObjectSelect; let i = index"  > 
+                                        <div class="form-floating mb-3 input-group">
+                                            <input [disabled]="this.objetSelectByYou(this.idItemSelect) == 0"  type="text" [(ngModel)]="this.descriptionObjectSelect[i].lien" #name="ngModel" name="lien{{i}}" class="form-control zindexZero"  placeholder="" >
+                                            <label for="IdDescription{{i}}">Description</label>
+                                            <button class="input-group-text px-2 bg-white" (click)="removeDescription(i)"><fa-icon class=" text-right close" [icon]="faXmark"></fa-icon></button>
+                                        </div>
+                                    </div> 
+                                    <div class="form-floating mb-3">
+                                        <a class="text-dark cursor" (click)="this.objetSelectByYou(this.idItemSelect) != 0 ? addDescription() : ''">Ajouter une description</a>
+                                    </div>
+                                    <div class="form-check form-check-inline ms-2">
+                                        <input [disabled]="this.objetSelectByYou(this.idItemSelect) == 0" [(ngModel)]="etat" (click)="selectEtat(this.etatNow.A)" [ngClass]="{'border-danger' : etatError}" class="form-check-input" type="radio" name="radioEtat" id="inlineRadio1" value="A" required>
+                                        <label [ngClass]="{'text-danger' : etatError}" class="form-check-label" for="inlineRadio1">Actif</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input [disabled]="this.objetSelectByYou(this.idItemSelect) == 0" [(ngModel)]="etat" (click)="selectEtat(this.etatNow.EA)" [ngClass]="{'border-danger' : etatError}" class="form-check-input" type="radio" name="radioEtat" id="inlineRadio2" value="EA" required>
+                                        <label [ngClass]="{'text-danger' : etatError}" class="form-check-label" for="inlineRadio2">En attente</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input [disabled]="this.objetSelectByYou(this.idItemSelect) == 0" [(ngModel)]="etat" (click)="selectEtat(this.etatNow.HS)" [ngClass]="{'border-danger' : etatError}" class="form-check-input" type="radio" name="radioEtat" id="inlineRadio3" value="HS" required>
+                                        <label [ngClass]="{'text-danger' : etatError}" class="form-check-label" for="inlineRadio3">Hors service</label>
+                                    </div>
                                 </div>
-                            </div> 
-                            <div class="form-floating mb-3">
-                                <a class="text-dark cursor" (click)="addDescription()">Ajouter une description</a>
-                            </div>
-                            <div class="form-check form-check-inline ms-2">
-                                <input [(ngModel)]="etat" (click)="selectEtat(this.etatNow.A)" [ngClass]="{'border-danger' : etatError}" class="form-check-input" type="radio" name="radioEtat" id="inlineRadio1" value="A" required>
-                                <label [ngClass]="{'text-danger' : etatError}" class="form-check-label" for="inlineRadio1">Actif</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input [(ngModel)]="etat" (click)="selectEtat(this.etatNow.EA)" [ngClass]="{'border-danger' : etatError}" class="form-check-input" type="radio" name="radioEtat" id="inlineRadio2" value="EA" required>
-                                <label [ngClass]="{'text-danger' : etatError}" class="form-check-label" for="inlineRadio2">En attente</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input [(ngModel)]="etat" (click)="selectEtat(this.etatNow.HS)" [ngClass]="{'border-danger' : etatError}" class="form-check-input" type="radio" name="radioEtat" id="inlineRadio3" value="HS" required>
-                                <label [ngClass]="{'text-danger' : etatError}" class="form-check-label" for="inlineRadio3">Hors service</label>
+                                <button [disabled]="this.objetSelectByYou(this.idItemSelect) == 0" *ngIf="this.idItemSelect != ''" (click)="modifyItem()" type="button" class="btn btn-lg btn-light col-10 offset-1 col-lg-6 offset-lg-3 my-2"> Modifier </button>
                             </div>
                         </div>
-                        <button *ngIf="this.idItemSelect != ''" (click)="modifyItem()" type="button" class="btn btn-lg btn-light col-10 offset-1 col-lg-6 offset-lg-3 my-2"> Modifier </button>
                     </div>
                 </div>
+                
             </ng-container>
 
 
@@ -268,10 +286,10 @@
                             <tr>
                                 <ng-container *ngIf="!this.orSelectedForItem; else ReturnToOR ">
                                     <th (click)="(this.atelierSelect != '' && this.idORSelect != '' )? setOrSelectedForItem(true) : ''" class="col-4 text-center"  scope="col-4">
-                                        <span [ngClass]="{'displayNameColumn' : !this.orSelectedForItem && this.idORSelect !='', 'nowrapColumn' : !this.orSelectedForItem && this.idORSelect !=''}">Identifiant</span>
+                                        <span [ngClass]="{'displayNameColumn' : !this.orSelectedForItem && this.idORSelect !='' && !this.hiddenSi, 'nowrapColumn' : !this.orSelectedForItem && this.idORSelect !=''}">Identifiant</span>
                                     </th>
                                     <th (click)="(this.atelierSelect != '' && this.idORSelect != '' )? setOrSelectedForItem(true) : ''" class="col-8 text-center align-middle transitionOr" scope="col-8">
-                                        <span [ngClass]="{'displayNameColumn' : !this.orSelectedForItem && this.idORSelect !='', 'nowrapColumn' : !this.orSelectedForItem && this.idORSelect !=''}">Libellé</span>
+                                        <span [ngClass]="{'displayNameColumn' : !this.orSelectedForItem && this.idORSelect !='' && !this.hiddenSi, 'nowrapColumn' : !this.orSelectedForItem && this.idORSelect !=''}">Libellé</span>
                                     </th>
                                 </ng-container>
                                 <ng-template #ReturnToOR>
@@ -325,9 +343,9 @@
 
                 <div class="col-lg-4 col-12 mt-lg-3 transitionOr" [ngClass]="{'col-lg-4' : this.orSelectedForItem , 'col-lg-0' : !this.orSelectedForItem }">
                     <div class="row ">
-                        <caption class="col-12 text-center nowrapColumn" [ngClass]="{'notDisplayNameColumn' : !this.orSelectedForItem && this.idORSelect !='', 'displayNameColumnShorter' : this.orSelectedForItem ,invisible : idORSelect == ''}">Sous Item</caption>
+                        <caption class="col-12 text-center nowrapColumn" [ngClass]="{ 'd-none' : this.hiddenSi, 'notDisplayNameColumn' : !this.orSelectedForItem && this.idORSelect !='', 'displayNameColumnShorter' : this.orSelectedForItem ,invisible : idORSelect == ''}">Sous Item</caption>
                     </div>
-                    <div class="scrolltable"> 
+                    <div class="scrolltable">  
                         <table class="table table-hover cursor ">
                             <thead>
                             <tr>
@@ -340,7 +358,10 @@
                                 <td class="text-center" colspan="2">Aucun Sous Item</td>
                             </tr>
                             <ng-template #afficheSISI>
-                                <tr *ngFor="let sousItem of listeSousItem | filterModification : searchText : 'SI'"  (click)="selectSI(sousItem.idSousItem)" [ngClass]="{'selectObject': sousItem.idSousItem === this.idSISelect, 'actifNow' : sousItem.idSousItem === this.selectedNow }">
+                                <tr *ngFor="let sousItem of listeSousItem | filterModification : searchText : 'SI'"  (click)="selectSI(sousItem.idSousItem)" 
+                                [ngClass]="{'actifNow' : (sousItem.idSousItem === this.idSISelect) && this.objetSelectByYou(sousItem.idSousItem) == 1, 
+                                'actifNowAndSelectByAnother' : (sousItem.idSousItem === this.idSISelect) && this.objetSelectByYou(sousItem.idSousItem) == 0,
+                                'selectByAnother' : this.objetSelectByYou(sousItem.idSousItem) == 0}">
                                     <td class="col-5" [ngClass] ="{'nowrapColumn' : !this.orSelectedForItem && this.idORSelect !=''}">{{sousItem.idSousItem}}</td>
                                     <td class="col-7" [ngClass] ="{'nowrapColumn' : !this.orSelectedForItem && this.idORSelect !=''}">{{sousItem.libelleSousItem}}</td>
                                 </tr>
@@ -353,50 +374,58 @@
 
                 <div class="col-12 col-lg-3 needs-validation mt-5"  [ngClass]="{'was-validated': formValidate === true}">
                     <div class="container-fluid border rounded shadow-sm py-2">
-                        <div class="text-center row">
-                            <span class="fs-3 col-10 offset-1 ">Modification </span>
-                        </div>
+                        <div [ngClass]="{'position-relative h-100' : this.objetSelectByYou(this.idSISelect) == 0}">
+                            <div *ngIf="this.objetSelectByYou(this.idSISelect) == 0" class="fs-5 fw-bold bg-edition zind justify-content-center position-absolute h-100 w-100 text-center align-items-center d-flex">
+                                L'objet est actuellement modifié par {{this.objetSelectByWho(this.idSISelect)}} 
+                            </div>
+                            <div [ngClass]="{'blur' :  this.objetSelectByYou(this.idSISelect) == 0}">
                         
-                        <div class="col-12 col-lg-10 offset-lg-1 my-3">
-                            <div class="form-floating mb-3">
-                                <input #Identifiant type="text" maxlength="6" class="form-control uppercase" id="IdType" placeholder="" required [value]="this.idSISelect" disabled readonly>
-                                <label for="IdType">Identifiant</label>
-                            </div>
-                            <div class="form-floating mb-3 input-group" [ngClass]="{'mb-3': !errorLibelle}">
-                                <input [(ngModel)]="LibelleSousItem" type="text" maxlength="50" class="form-control zindexZero" id="IdLibelle" placeholder="" [value]="this.siSelect.libelleSousItem" required (focusout)="focusOutLibelle()" [ngClass]="{'box-error border border-danger': errorLibelle}">
-                                <label for="IdLibelle">Libelle</label>
-                                <button *ngIf="errorLibelle" class="input-group-text px-2 bg-white rounded-end" (click)="addingParentIdToCurrentLibelle()" ><fa-icon class=" text-right magicWand" [icon]="faMagicWandSparkles"></fa-icon></button>
-                                <div class="invalid-tooltip">
-                                    Veuillez renseigner un libellé.
+                                <div class="text-center row">
+                                    <span class="fs-3 col-10 offset-1 ">Modification </span>
                                 </div>
-                            </div>
-                             <p *ngIf="errorLibelle" class="text-danger text-center py-0 my-1"> Requiert l'identifiant de l'item</p>
-                            <div *ngFor="let d of this.descriptionObjectSelect; let i = index"  > 
-                                <div class="form-floating mb-3 input-group">
-                                    <input  type="text" [(ngModel)]="this.descriptionObjectSelect[i].lien" #name="ngModel" name="lien{{i}}" class="form-control zindexZero"  placeholder="" >
-                                    <label for="IdDescription{{i}}">Description</label>
-                                    <button class="input-group-text px-2 bg-white" (click)="removeDescription(i)"><fa-icon class=" text-right close" [icon]="faXmark"></fa-icon></button>
+                                
+                                <div class="col-12 col-lg-10 offset-lg-1 my-3">
+                                    <div class="form-floating mb-3">
+                                        <input #Identifiant type="text" maxlength="6" class="form-control uppercase" id="IdType" placeholder="" required [value]="this.idSISelect" disabled readonly>
+                                        <label for="IdType">Identifiant</label>
+                                    </div>
+                                    <div class="form-floating mb-3 input-group" [ngClass]="{'mb-3': !errorLibelle}">
+                                        <input [disabled]="this.objetSelectByYou(this.idSISelect) == 0" [(ngModel)]="LibelleSousItem" type="text" maxlength="50" class="form-control zindexZero" id="IdLibelle" placeholder="" [value]="this.siSelect.libelleSousItem" required (focusout)="focusOutLibelle()" [ngClass]="{'box-error border border-danger': errorLibelle}">
+                                        <label for="IdLibelle">Libelle</label>
+                                        <button [disabled]="this.objetSelectByYou(this.idSISelect) == 0" *ngIf="errorLibelle" class="input-group-text px-2 bg-white rounded-end" (click)="addingParentIdToCurrentLibelle()" ><fa-icon class=" text-right magicWand" [icon]="faMagicWandSparkles"></fa-icon></button>
+                                        <div class="invalid-tooltip">
+                                            Veuillez renseigner un libellé.
+                                        </div>
+                                    </div>
+                                    <p *ngIf="errorLibelle" class="text-danger text-center py-0 my-1"> Requiert l'identifiant de l'item</p>
+                                    <div *ngFor="let d of this.descriptionObjectSelect; let i = index"  > 
+                                        <div class="form-floating mb-3 input-group">
+                                            <input  [disabled]="this.objetSelectByYou(this.idSISelect) == 0" type="text" [(ngModel)]="this.descriptionObjectSelect[i].lien" #name="ngModel" name="lien{{i}}" class="form-control zindexZero"  placeholder="" >
+                                            <label for="IdDescription{{i}}">Description</label>
+                                            <button [disabled]="this.objetSelectByYou(this.idSISelect) == 0" class="input-group-text px-2 bg-white" (click)="removeDescription(i)"><fa-icon class=" text-right close" [icon]="faXmark"></fa-icon></button>
+                                        </div>
+                                    </div> 
+                                    <div class="form-floating mb-3">
+                                        <a class="text-dark cursor" (click)="this.objetSelectByYou(this.idSISelect) != 0 ? addDescription() : ''">Ajouter une description</a>
+                                    </div>
+                                    
+                                    <div class="form-check form-check-inline ms-2">
+                                        <input [disabled]="this.objetSelectByYou(this.idSISelect) == 0" [(ngModel)]="etat" (click)="selectEtat(this.etatNow.A)" [ngClass]="{'border-danger' : etatError}" class="form-check-input" type="radio" name="radioEtat" id="inlineRadio1" value="A" required>
+                                        <label [ngClass]="{'text-danger' : etatError}" class="form-check-label" for="inlineRadio1">Actif</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input [disabled]="this.objetSelectByYou(this.idSISelect) == 0" [(ngModel)]="etat" (click)="selectEtat(this.etatNow.EA)" [ngClass]="{'border-danger' : etatError}" class="form-check-input" type="radio" name="radioEtat" id="inlineRadio2" value="EA" required>
+                                        <label [ngClass]="{'text-danger' : etatError}" class="form-check-label" for="inlineRadio2">En attente</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input [disabled]="this.objetSelectByYou(this.idSISelect) == 0" [(ngModel)]="etat" (click)="selectEtat(this.etatNow.HS)" [ngClass]="{'border-danger' : etatError}" class="form-check-input" type="radio" name="radioEtat" id="inlineRadio3" value="HS" required>
+                                        <label [ngClass]="{'text-danger' : etatError}" class="form-check-label" for="inlineRadio3">Hors service</label>
+                                    </div>
+                                
                                 </div>
-                            </div> 
-                            <div class="form-floating mb-3">
-                                <a class="text-dark cursor" (click)="addDescription()">Ajouter une description</a>
+                                <button [disabled]="this.objetSelectByYou(this.idSISelect) == 0" *ngIf="this.atelierSelect != '' && this.idItemSelect != '' && this.idSISelect != '' " (click)="modifySI()" type="button" class="btn btn-lg btn-light col-10 offset-1 col-lg-6 offset-lg-3 my-2">Modifier</button>
                             </div>
-                            
-                            <div class="form-check form-check-inline ms-2">
-                                <input [(ngModel)]="etat" (click)="selectEtat(this.etatNow.A)" [ngClass]="{'border-danger' : etatError}" class="form-check-input" type="radio" name="radioEtat" id="inlineRadio1" value="A" required>
-                                <label [ngClass]="{'text-danger' : etatError}" class="form-check-label" for="inlineRadio1">Actif</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input [(ngModel)]="etat" (click)="selectEtat(this.etatNow.EA)" [ngClass]="{'border-danger' : etatError}" class="form-check-input" type="radio" name="radioEtat" id="inlineRadio2" value="EA" required>
-                                <label [ngClass]="{'text-danger' : etatError}" class="form-check-label" for="inlineRadio2">En attente</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input [(ngModel)]="etat" (click)="selectEtat(this.etatNow.HS)" [ngClass]="{'border-danger' : etatError}" class="form-check-input" type="radio" name="radioEtat" id="inlineRadio3" value="HS" required>
-                                <label [ngClass]="{'text-danger' : etatError}" class="form-check-label" for="inlineRadio3">Hors service</label>
-                            </div>
-                           
                         </div>
-                        <button *ngIf="this.atelierSelect != '' && this.idItemSelect != '' && this.idSISelect != '' " (click)="modifySI()" type="button" class="btn btn-lg btn-light col-10 offset-1 col-lg-6 offset-lg-3 my-2">Modifier</button>
                     </div>
                 </div>
 

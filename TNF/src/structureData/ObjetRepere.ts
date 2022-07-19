@@ -57,8 +57,9 @@ export interface ObjetRepereUtile{
 }
 
 export interface infoORBeingChanged{
-    idObjetRepere : string,
+    id : string,
     login  : string
+    profil : string
 }
 
 export interface ObjetRepereSuppression {

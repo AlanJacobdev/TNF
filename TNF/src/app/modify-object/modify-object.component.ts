@@ -1,5 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy} from '@angular/core';
 import { faChevronRight, faMagicWandSparkles, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { elementAt } from 'rxjs';
 import { AtelierInfo } from 'src/structureData/Atelier';
 import { Description } from 'src/structureData/Description';
 import { typeObjet, ItemInfo, ItemModification, etat } from 'src/structureData/Item';
@@ -17,7 +18,7 @@ import { FetchModifyObjectService } from './service/fetch-modify-object.service'
   templateUrl: './modify-object.component.html',
   styleUrls: ['./modify-object.component.css']
 })
-export class ModifyObjectComponent implements OnInit {
+export class ModifyObjectComponent implements OnInit, OnDestroy {
 
   public faMagicWandSparkles = faMagicWandSparkles;
   public faChevronRight = faChevronRight;
@@ -81,6 +82,7 @@ export class ModifyObjectComponent implements OnInit {
   public searchText : string = "";
   public infoObjetBeingModified : infoORBeingChanged[] = []
   public ObjetBeingModified : string[] = []
+  public hiddenSi : boolean = false;
 
   constructor(private fetchModifyTypeObject : FetchModifyObjectService, private fetchCreateTypeObject : FetchcreateTypeObjectService,private fetchVisuService : FetchVisuService, private fetchRecopieService : FetchRecopieService,
     private navbarService : NavBarService) {
@@ -89,37 +91,80 @@ export class ModifyObjectComponent implements OnInit {
     this.getListType();
     this.fetchModifyTypeObject.connexionSocket().subscribe( (payload: any) => {
       const objects = payload as infoORBeingChanged[];
+      console.log(objects);
+      
       for (const or of objects){
-        this.ObjetBeingModified.push(or.idObjetRepere);
+        this.ObjetBeingModified.push(or.id);
         this.infoObjetBeingModified.push({
-          idObjetRepere : or.idObjetRepere,
-          login  : or.login
+          id : or.id,
+          login  : or.login,
+          profil : or.profil
         })
       }
+      
     }); 
     
-    this.fetchModifyTypeObject.receiveChangeOR().subscribe( (payload: any) => {
+    this.fetchModifyTypeObject.receiveChange().subscribe( (payload: any) => {
       const objects = payload as infoORBeingChanged[];
       this.ObjetBeingModified.splice(0);
       this.infoObjetBeingModified.splice(0);
       for (const or of objects){
         
-        this.ObjetBeingModified.push(or.idObjetRepere);
+        this.ObjetBeingModified.push(or.id);
         this.infoObjetBeingModified.push({
-          idObjetRepere : or.idObjetRepere,
-          login  : or.login
+          id : or.id,
+          login  : or.login,
+          profil : or.profil
         })        
+      }      
+    }); 
+
+    this.fetchModifyTypeObject.receiveUpdate().subscribe( ( payload: any ) => {
+      if (payload.hasOwnProperty('error')){
+        console.log(payload.error);
+        
+      } else {
+        let index;
+        let indexOBM : number;
+        let indexIOBM : number ;
+        if (payload.type == 'OR'){
+          index = this.listeOR.findIndex((element) => element.idObjetRepere === payload.returnObject.idObjetRepere);
+          this.listeOR[index] = payload.returnObject;
+          indexOBM = this.ObjetBeingModified.findIndex((element) => element == payload.returnObject.idObjetRepere);
+          indexIOBM = this.infoObjetBeingModified.findIndex((element) => element.id == payload.returnObject.idObjetRepere);
+        } else if (payload.type == 'Item'){
+          index = this.listeItem.findIndex((element) => element.idItem === payload.returnObject.idItem);
+          this.listeItem[index] = payload.returnObject;
+          indexOBM = this.ObjetBeingModified.findIndex((element) => element == payload.returnObject.idItem);
+          indexIOBM = this.infoObjetBeingModified.findIndex((element) => element.id == payload.returnObject.idItem);
+        } else if (payload.type == 'SI') {
+          index = this.listeSousItem.findIndex((element) => element.idSousItem === payload.returnObject.idSousItem);
+          this.listeSousItem[index] = payload.returnObject;
+          indexOBM = this.ObjetBeingModified.findIndex((element) => element == payload.returnObject.idSousItem);
+          indexIOBM = this.infoObjetBeingModified.findIndex((element) => element.id == payload.returnObject.idSousItem);
+        } else {
+          indexOBM = -1
+          indexIOBM = -1
+        }
+        if(indexIOBM != -1 && indexOBM != -1) {
+          this.ObjetBeingModified.splice(indexOBM, 1)
+          this.infoObjetBeingModified.splice(indexIOBM, 1);
+        }
       }
-      console.log(this.ObjetBeingModified);
-      
     }); 
 
     
     
    }
+  ngOnDestroy(): void {
+    this.fetchModifyTypeObject.leaveWS();
+  }
+
+
   ngOnInit(): void {
     
   }
+
 
   getListType(){
     this.listeTypeOR.splice(0);
@@ -323,8 +368,8 @@ export class ModifyObjectComponent implements OnInit {
   public selectOR(idOR : string) {
     this.idORSelect = idOR;
     this.selectedNow = idOR;
-    this.fetchModifyTypeObject.sendChange(idOR)
     if (this.objectNow === this.TypeObject.OR ) {
+      this.fetchModifyTypeObject.sendChange(idOR);
       let orInfo = this.listeOR.find((element) => element.idObjetRepere === idOR);
       if (orInfo != undefined) {
         this.orSelect.idObjetRepere = orInfo.idObjetRepere ;
@@ -358,6 +403,7 @@ export class ModifyObjectComponent implements OnInit {
         this.etat = etat.Aucun
         
     } else if (this.objectNow === this.TypeObject.SI){
+      this.hiddenSi = false;
         this.orSelectedForItem = true;
         this.getItemFromOR();
         this.selectedNow = idOR;
@@ -382,6 +428,7 @@ export class ModifyObjectComponent implements OnInit {
     this.idItemSelect = idItem;
     this.selectedNow = idItem
     if (this.objectNow === this.TypeObject.Item ) {
+      this.fetchModifyTypeObject.sendChange(idItem);
       let itemInfo = this.listeItem.find((element) => element.idItem === idItem)
       if (itemInfo != undefined) {
         this.itemSelect.idItem = itemInfo.idItem;
@@ -415,6 +462,7 @@ export class ModifyObjectComponent implements OnInit {
   selectSI(idSousItem : string){
     this.idSISelect = idSousItem;
     this.selectedNow = idSousItem;
+    this.fetchModifyTypeObject.sendChange(idSousItem);
     let siInfo = this.listeSousItem.find((element) => element.idSousItem === idSousItem);
     if (siInfo != undefined) {
       this.siSelect.idSousItem = siInfo.idSousItem;
@@ -432,11 +480,17 @@ export class ModifyObjectComponent implements OnInit {
   }
 
   public selectObject (object : typeObjet) {
-    this.objectNow = object;
-    this.descriptionObjectSelect.splice(0);
-    this.selectAtelier(this.atelierSelect);
-    this.typeNow = "";
-    this.listeTypeItemOfOR.splice(0)
+    if( this.objectNow != object) {
+      if (object == this.TypeObject.SI){
+        this.hiddenSi = true;
+      }
+      this.objectNow = object;
+      this.descriptionObjectSelect.splice(0);
+      this.selectAtelier(this.atelierSelect);
+      this.typeNow = "";
+      this.listeTypeItemOfOR.splice(0)
+      
+    }
   }
 
 
@@ -466,12 +520,11 @@ export class ModifyObjectComponent implements OnInit {
           if(typeof res === 'string') {
             this.manageToast("Erreur de modification", res , "red")
           } else {  
-            let selectedOR = this.orSelect;
+            this.fetchModifyTypeObject.freeObject('OR');
             this.manageToast("Modification", "L'objet repère " + this.orSelect.idObjetRepere+ " a été modifié", "#ff8c00");
             this.refreshValidationForm();
             this.getObjetRepereByAtelier();
-            this.orSelect = selectedOR;
-            this.idORSelect = selectedOR.idObjetRepere;
+            this.idORSelect = "";
           }
         }).catch((e) => {
         })
@@ -492,9 +545,11 @@ export class ModifyObjectComponent implements OnInit {
           if(typeof res === 'string') {
             this.manageToast("Erreur de modification", res , "red")
           } else {  
+            this.fetchModifyTypeObject.freeObject('Item');
             this.refreshValidationForm();
             this.manageToast("Modification", "L'item " + this.itemSelect.idItem+ " a été modifié", "#ff8c00");
             this.getItemFromOR();
+            this.idItemSelect= "";
           }
         }).catch((e) => {
         })
@@ -505,7 +560,7 @@ export class ModifyObjectComponent implements OnInit {
   }
 
   modifySI(){
-    
+     
     if (this.LibelleSousItem != '' ) {
       if(!this.LibelleSousItem.toUpperCase().includes(this.idItemSelect)){
         this.manageToast("Erreur de modification", "Le libellé ne contient pas l'identifiant de l'item dont il dépend" , "red")
@@ -518,9 +573,11 @@ export class ModifyObjectComponent implements OnInit {
           if(typeof res === 'string') {
             this.manageToast("Erreur de modification", res , "red")
           } else {  
+            this.fetchModifyTypeObject.freeObject('SI');
             this.refreshValidationForm();
             this.manageToast("Modification", "Le sous-item " + this.itemSelect.idItem+ " a été modifié", "#ff8c00");
             this.getSousItemByItem();
+            this.idSISelect = "";
           }
         }).catch((e) => {
         })
@@ -580,16 +637,26 @@ export class ModifyObjectComponent implements OnInit {
   }
 
 
-  orSelectByYou(id : string) {
+  objetSelectByYou(id : string) {
     let login = this.navbarService.getLogin()
-    let orSelect = this.infoObjetBeingModified.find((element) => element.idObjetRepere == id);
-    if (orSelect != undefined) {
-      if (orSelect.login == login){
+    let objetSelect = this.infoObjetBeingModified.find((element) => element.id == id);
+    
+    if (objetSelect != undefined) {
+      if (objetSelect.login == login){
         return 1;
       } else {
         return 0;
       }
     } 
+    console.log("-1")
     return -1
+  }
+
+  objetSelectByWho(id : string) {
+    let objetSelect = this.infoObjetBeingModified.find((element) => element.id == id);
+    if (objetSelect != undefined) {
+     return objetSelect.profil
+    } 
+    return "erreur" 
   }
 }

@@ -18,7 +18,7 @@
                     <table class="table table-hover">
                         <thead>
                         <tr>
-                            <th *ngIf="this.selectedType === this.TypeObject.O">Actif</th>
+                            <th *ngIf="this.selectedType === this.TypeObject.O">Actif <span class="text-danger fw-bolder ">*</span></th>
                             <th>Identifiant</th>
                             <th>Nom</th>
                         </tr>
@@ -42,6 +42,7 @@
                         </tbody>
                     </table>
                 </div>
+                <div *ngIf="this.selectedType === this.TypeObject.O" class="mt-2 fst-italic col-12 text-center"><span class="text-danger fw-bolder">*</span> : Détermine si le type pourra être utilisé ou non en tant que sous-item</div>
             </div>
         </div>
 

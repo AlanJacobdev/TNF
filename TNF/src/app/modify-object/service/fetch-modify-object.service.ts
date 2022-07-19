@@ -8,6 +8,7 @@ import { ItemInfo } from 'src/structureData/Item';
 import { ObjetRepereInfo } from 'src/structureData/ObjetRepere';
 import { SousItemInfo } from 'src/structureData/SousItem';
 import { modificationTypeObject } from 'src/structureData/TypeObject';
+import { utilisateur } from 'src/structureData/Utilisateur';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -129,25 +130,45 @@ export class FetchModifyObjectService {
     }
   }
 
+
+  async getIdentity(login : string) : Promise<any> {
+    let url = "http://"+environment.API_URL+"/utilisateur/getIdentityFromLogin/{login}"
+    url = url.replace("{login}", login)
+    const res : utilisateur = await lastValueFrom(this.http.get<utilisateur>(url));
+    return res;
+  }
+
+
   sendChange(id: string){
     let user = this.navBarService.getLogin();
     let payload = {
-      idObjetRepere : id,
+      id : id,
       login : user
     }
-    this.socket.emit('reservationItem', payload)
+    this.socket.emit('reservationObject', payload)
   }
 
   connexionSocket(){
-    return this.socket.fromEvent('sendReservationOR') 
+    this.socket.connect();
+    return this.socket.fromEvent('sendReservation') 
   }
 
 
-  receiveChangeOR(){
+  receiveChange(){
     return this.socket.fromEvent('broadcastReservation') 
   }
   
+  leaveWS(){
+    this.socket.disconnect();
+  }
+
+  freeObject(type : string){
+    this.socket.emit('modificationObjet', type)
+  }
 
 
+  receiveUpdate(){
+    return this.socket.fromEvent('updateElementEdit') 
+  }
 
 }

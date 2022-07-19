@@ -116,3 +116,49 @@ table {
 .spinner-grow {
     margin : 0 .5rem 0 .5rem;
 }
+
+
+.table-hover > tbody > .td-red > *{
+    background-color: #FEF2F2 !important;
+    border-color: #FEF2F2 !important;
+    --bs-table-accent-bg: none;
+}
+
+.table-hover > tbody > .td-red:hover > * {
+    background-color: #FEE2E2 !important;
+    --bs-table-accent-bg: none;
+}
+
+
+.table-hover > tbody > .table-active.td-red > * {
+    background-color: #FECACA !important;
+    --bs-table-accent-bg: none;
+}
+
+.table-hover > tbody > .table-active.td-red:hover > * {
+    background-color: #FCA5A5 !important;
+    --bs-table-accent-bg: none;
+}
+
+.table-hover > tbody > .td-green > *{
+    background-color: #F0FDF4 !important;
+    border-color: #F0FDF4 !important;
+    --bs-table-accent-bg: none;
+}
+
+.table-hover > tbody > .td-green:hover > * {
+    background-color: #F0FDF4 !important;
+    --bs-table-accent-bg: none;
+}
+
+
+.table-hover > tbody > .table-active.td-green > * {
+    background-color: #BBF7D0 !important;
+    --bs-table-accent-bg: none;
+}
+
+.table-hover > tbody > .table-active.td-green:hover > * {
+    background-color: #86EFAC !important;
+    --bs-table-accent-bg: none;
+}
+
