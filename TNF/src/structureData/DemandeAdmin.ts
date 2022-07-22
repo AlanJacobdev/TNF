@@ -34,8 +34,6 @@ export enum typeTableauDemande {
 export interface DemandeAdminInfo {
   idDemande: number,
   motif: string,
-  etat: boolean,
-  isDelete: boolean,
   profilCreation: string,
   dateCreation: Date,
   profilModification: string,

@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Socket } from 'ngx-socket-io';
 import { lastValueFrom } from 'rxjs';
 import { NavBarService } from 'src/app/navbar/service/nav-bar.service';
 import { ArborescenceItem, ArborescenceOR, DemandeAdmin, DemandeAdminInfo, DemandeAdminTraitee } from 'src/structureData/DemandeAdmin';
@@ -9,7 +10,7 @@ import { environment } from '../../../environments/environment';
 })
 export class FetchDemandeAdminService {
 
-  constructor(private readonly http: HttpClient, private navBarService: NavBarService) { }
+  constructor(private readonly http: HttpClient, private navBarService: NavBarService,  private socket: Socket) { }
 
   async getAllDemandeAdmin(): Promise<any> {
     let url = "http://"+environment.API_URL+"/demande-admin";
@@ -81,9 +82,10 @@ export class FetchDemandeAdminService {
     }
   }
 
-  async getArborescenceOfORTraite(idObjetRepere : string) {
-    let url = "http://"+environment.API_URL+"/demande-admin-traitee/getArborescenceOfOR/{idObjetRepere}";
+  async getArborescenceOfORTraite(idObjetRepere : string, date : Date) {
+    let url = "http://"+environment.API_URL+"/demande-admin-traitee/getArborescenceOfOR/{idObjetRepere}/{date}";
     url = url.replace("{idObjetRepere}", idObjetRepere)
+    url = url.replace("{date}", date.toISOString())
     const res : ArborescenceOR = await lastValueFrom(this.http.get<ArborescenceOR>(url));
     if (res.hasOwnProperty('error')) {
       const resAny : any = res;
@@ -106,9 +108,10 @@ export class FetchDemandeAdminService {
     }
   }
 
-  async getArborescenceOfItemTraite (idItem : string) {
-    let url = "http://"+environment.API_URL+"/demande-admin-traitee/getArborescenceOfItem/{idItem}";
+  async getArborescenceOfItemTraite (idItem : string, date : Date) {
+    let url = "http://"+environment.API_URL+"/demande-admin-traitee/getArborescenceOfItem/{idItem}/{date}";
     url = url.replace("{idItem}", idItem)
+    url = url.replace("{date}", date.toISOString())
     const res : ArborescenceItem = await lastValueFrom(this.http.get<ArborescenceItem>(url));
     if (res.hasOwnProperty('error')) {
       const resAny : any = res;
@@ -117,4 +120,10 @@ export class FetchDemandeAdminService {
       return res;
     }
   }
+
+
+  refreshDemande(){
+    this.socket.emit('demande', "Nouvelle Demande");
+  }
+
 }

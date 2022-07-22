@@ -90,8 +90,16 @@ table {
     filter :blur(1px)
 }
 
+.zind {
+    z-index: 15;
+}
+
 .hoverObject:hover {
     background-color: rgb(240, 240, 240);
+}
+
+.bg-edition{
+    background: rgba(255, 255, 255, 0.60);
 }
 
 .lh-xl{

@@ -20,6 +20,7 @@ export class DemandeAdminComponent implements OnInit {
   public CaretItem = new Map();
   public itemArboSelect: boolean = false; 
   public Loading: boolean = false;
+  public recopieEnCours : boolean = false;
   public faEye = faEye
   public faCircleInfo = faInfoCircle
   public listeDemandeAdmin : DemandeAdmin[] = []
@@ -53,8 +54,6 @@ export class DemandeAdminComponent implements OnInit {
   public DescriptifDemandeNow : DemandeAdminInfo = {
     idDemande: -1,
     motif: '',
-    isDelete: false,
-    etat: false,
     profilCreation: '',
     dateCreation: new Date(0),
     profilModification: '',
@@ -268,7 +267,7 @@ export class DemandeAdminComponent implements OnInit {
   }
 
   async acceptDeleteAdmin(){
-    if(!this.DescriptifDemandeNow.etat){
+    this.recopieEnCours = true;
       this.fetchDemandeAdminService.updateDemandeAdmin(this.DescriptifDemandeNow.idDemande, true).then( async (res:DemandeAdminInfo) => {
         console.log(res);
         if (typeof res == 'string'){
@@ -279,19 +278,18 @@ export class DemandeAdminComponent implements OnInit {
           await this.getAllDemandeAdminTraitee();
           this.resetDescriptifNow();
           this.manageToast("Demande de suppression", "La suppression a été effectuée", "#006400")
+          this.fetchDemandeAdminService.refreshDemande();
         }
+        this.recopieEnCours = false;
         
       }).catch ((e) => {
-
+        this.recopieEnCours = false;
       })
-    } else {
-      this.manageToast("Demande de suppression", "Impossible d'accepter une demande déjà traitée", "red")
-    }
   }
   
   
   async refuseDeleteAdmin(){
-    if(!this.DescriptifDemandeNow.etat){
+    this.recopieEnCours = true;
       this.fetchDemandeAdminService.updateDemandeAdmin(this.DescriptifDemandeNow.idDemande, false).then( async (res:DemandeAdminInfo) => {
         console.log(res);
         if (typeof res == 'string'){
@@ -300,13 +298,12 @@ export class DemandeAdminComponent implements OnInit {
           await this.getAllDemandeAdmin();
           this.resetDescriptifNow();
           this.manageToast("Demande de suppression", "La suppression a été effectuée", "#006400")
+          this.fetchDemandeAdminService.refreshDemande();
         }
+        this.recopieEnCours = false;
       }).catch ((e) => {
-
+        this.recopieEnCours = false;
       })
-    } else {
-      this.manageToast("Demande de suppression", "Impossible de refuser une demande déjà traitée", "red")
-    }
   }
 
   getArborescenceOfOR (idOR : string) {
@@ -334,7 +331,9 @@ export class DemandeAdminComponent implements OnInit {
 
   getArborescenceOfORTraite (idOR : string) {
     this.Loading = true;
-    this.fetchDemandeAdminService.getArborescenceOfORTraite(idOR).then((list: ArborescenceOR) => {
+    
+    let date = new Date(this.DescriptifDemandeTraiteeNow.dateModification);
+    this.fetchDemandeAdminService.getArborescenceOfORTraite(idOR, date).then((list: ArborescenceOR) => {
       if (list != undefined) {
         this.arborescenceOR = list
         console.log(this.arborescenceOR);
@@ -346,6 +345,7 @@ export class DemandeAdminComponent implements OnInit {
         this.resetArboOr();
       }
     }).catch((e) => {
+      console.log(e);
     })
     setTimeout(() => 
     {
@@ -378,7 +378,8 @@ export class DemandeAdminComponent implements OnInit {
 
   getArborescenceOfItemTraite(idItem : string){
     this.Loading = true;
-    this.fetchDemandeAdminService.getArborescenceOfItemTraite(idItem).then((list: ArborescenceItem) => {
+    let date = new Date(this.DescriptifDemandeTraiteeNow.dateModification);
+    this.fetchDemandeAdminService.getArborescenceOfItemTraite(idItem, date).then((list: ArborescenceItem) => {
       if (list != undefined) {
         this.arborescenceItem = list
         console.log(this.arborescenceItem);
@@ -419,8 +420,6 @@ export class DemandeAdminComponent implements OnInit {
     this.DescriptifDemandeNow = {
       idDemande: -1,
       motif: '',
-      etat: false,
-      isDelete: false,
       profilCreation: '',
       dateCreation: new Date(0),
       profilModification: '',
