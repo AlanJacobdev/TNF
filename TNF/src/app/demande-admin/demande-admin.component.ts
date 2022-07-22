@@ -1,10 +1,10 @@
-import { Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { ArborescenceItem, ArborescenceOR, DemandeAdmin, DemandeAdminInfo, etatCaretItem, typeTableauDemande } from 'src/structureData/DemandeAdmin';
+import { Component, ElementRef, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { ArborescenceItem, ArborescenceOR, DemandeAdmin, DemandeAdminInfo , DemandeAdminTraiteeInfo, typeTableauDemande } from 'src/structureData/DemandeAdmin';
 import { typeObjet } from 'src/structureData/Item';
 import { FetchDemandeAdminService } from './service/fetch-demande-admin.service';
 import { faInfoCircle, faEye, faCaretDown, faCaretRight, faMinus} from '@fortawesome/free-solid-svg-icons';
-import { Router } from '@angular/router';
-import { ViewportScroller } from '@angular/common';
+
+
 @Component({
   selector: 'app-demande-admin',
   templateUrl: './demande-admin.component.html',
@@ -41,12 +41,14 @@ export class DemandeAdminComponent implements OnInit {
   
   public searchText : string = "";
   public selectedDemande : number = -1;
+  public selectedDemandeTraitee : number = -1;
   public DemandeType: typeTableauDemande = typeTableauDemande.A;
   public DemandeTypeNow = typeTableauDemande;
   public objectType: typeObjet = typeObjet.Aucun;
   public objectTypeNow = typeObjet;
   
   public objectSelect : string ="";
+  public objectTraiteSelect : string ="";
   
   public DescriptifDemandeNow : DemandeAdminInfo = {
     idDemande: -1,
@@ -62,6 +64,19 @@ export class DemandeAdminComponent implements OnInit {
     orDelete: []
   } ;
  
+  public DescriptifDemandeTraiteeNow : DemandeAdminTraiteeInfo = {
+    idDemandeTraitee: -1,
+    motif: '',
+    isDelete: false,
+    profilCreation: '',
+    dateCreation: new Date(0),
+    profilModification: '',
+    dateModification: new Date(0),
+    itemDelete: [],
+    sousItemDelete: [],
+    orDelete: []
+  } ;
+
   public ToastAffiche : boolean = false; 
   public messageToast : string = "";
   public typeToast : string = ""
@@ -125,6 +140,8 @@ export class DemandeAdminComponent implements OnInit {
       if (res != undefined) {
         this.resetDescriptifNow();
         this.DescriptifDemandeNow = res;
+        console.log(this.DescriptifDemandeNow);
+        
         if (this.DescriptifDemandeNow.orDelete.length != 0 ){
           this.selectObject(this.objectTypeNow.OR);
         } else if (this.DescriptifDemandeNow.itemDelete.length != 0 ){
@@ -136,6 +153,30 @@ export class DemandeAdminComponent implements OnInit {
 
       } else {
         this.resetDescriptifNow();
+        this.manageToast("Erreur de récupération", "La demande n'existe pas", "red")
+      }
+    }).catch((e) => {
+    })
+  }
+
+  getAllObjetFromDemandeAdminTraitee(idDmd: number){
+    this.fetchDemandeAdminService.getAllObjetFromDemandeAdminTraitee(idDmd).then((res: DemandeAdminTraiteeInfo) => {
+      if (res != undefined) {
+        this.resetDescriptifTraiteeNow();
+        this.DescriptifDemandeTraiteeNow = res;
+        console.log(this.DescriptifDemandeTraiteeNow);
+        
+        if (this.DescriptifDemandeTraiteeNow.orDelete.length != 0 ){
+          this.selectObject(this.objectTypeNow.OR);
+        } else if (this.DescriptifDemandeTraiteeNow.itemDelete.length != 0 ){
+          this.selectObject(this.objectTypeNow.Item);
+        } else {
+          this.selectObject(this.objectTypeNow.SI);
+        }     
+        
+
+      } else {
+        this.resetDescriptifTraiteeNow();
         this.manageToast("Erreur de récupération", "La demande n'existe pas", "red")
       }
     }).catch((e) => {
@@ -172,6 +213,11 @@ export class DemandeAdminComponent implements OnInit {
     this.selectedDemande = idDemande;
     this.getAllObjetFromDemandeAdmin(idDemande);
   }
+  selectDemandeTraitee(idDemandeTraitee: number){
+    this.selectedDemandeTraitee = idDemandeTraitee;
+    this.getAllObjetFromDemandeAdminTraitee(idDemandeTraitee);
+  }
+
 
   selectOrArbo(){
     this.orArboSelect = !this.orArboSelect;
@@ -208,6 +254,17 @@ export class DemandeAdminComponent implements OnInit {
     } else if ( this.objectType == this.objectTypeNow.Item) {
       this.getArborescenceOfItem(idObjet);
     }
+  }
+
+  public selectObjetOnDemandTraitee (idObjet : string ) {
+    this.objectTraiteSelect = idObjet;
+    if ( this.objectType == this.objectTypeNow.OR){
+      this.getArborescenceOfORTraite(idObjet);
+    } else if ( this.objectType == this.objectTypeNow.Item) {
+      this.getArborescenceOfItemTraite(idObjet);
+    }
+
+
   }
 
   async acceptDeleteAdmin(){
@@ -275,9 +332,53 @@ export class DemandeAdminComponent implements OnInit {
     
   }
 
+  getArborescenceOfORTraite (idOR : string) {
+    this.Loading = true;
+    this.fetchDemandeAdminService.getArborescenceOfORTraite(idOR).then((list: ArborescenceOR) => {
+      if (list != undefined) {
+        this.arborescenceOR = list
+        console.log(this.arborescenceOR);
+        for( const item of this.arborescenceOR.Item){
+          this.CaretItem.set(item.Item.idItem ,false)
+        }
+      } else {
+        console.log("Problème")
+        this.resetArboOr();
+      }
+    }).catch((e) => {
+    })
+    setTimeout(() => 
+    {
+      this.Loading = false;
+    },
+    500);
+    
+  }
+
+
   getArborescenceOfItem(idItem : string) {
     this.Loading = true;
     this.fetchDemandeAdminService.getArborescenceOfItem(idItem).then((list: ArborescenceItem) => {
+      if (list != undefined) {
+        this.arborescenceItem = list
+        console.log(this.arborescenceItem);
+        
+      } else {
+        this.resetArboItem();
+      }
+    }).catch((e) => {
+    })
+    setTimeout(() => 
+    {
+      this.Loading = false;
+    },
+    500);
+  }
+
+
+  getArborescenceOfItemTraite(idItem : string){
+    this.Loading = true;
+    this.fetchDemandeAdminService.getArborescenceOfItemTraite(idItem).then((list: ArborescenceItem) => {
       if (list != undefined) {
         this.arborescenceItem = list
         console.log(this.arborescenceItem);
@@ -330,6 +431,20 @@ export class DemandeAdminComponent implements OnInit {
     };
   }
 
+  resetDescriptifTraiteeNow(){
+    this.DescriptifDemandeTraiteeNow = {
+      idDemandeTraitee: -1,
+      motif: '',
+      isDelete: false,
+      profilCreation: '',
+      dateCreation: new Date(0),
+      profilModification: '',
+      dateModification: new Date(0),
+      itemDelete: [],
+      sousItemDelete: [],
+      orDelete: []
+    };
+  }
 
   scrollToDemande(){
 

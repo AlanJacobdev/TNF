@@ -449,10 +449,12 @@ export class DeleteObjectComponent implements OnInit {
     for (const item of this.listeItem) {
       if (item.codeObjet === this.typeNow || this.typeNow === "") {
         item.isPaste = this.checkAllItem;
-        
         let index = this.listeItem.findIndex((element) => element.idItem === item.idItem)
+        let indexPaste = this.isPasteSaveItem.findIndex((element) => element.idItem == item.idItem)       
         if (this.listeItem[index].isPaste){
-          this.isPasteSaveItem.push(this.listeItem[index])
+          if(indexPaste == -1){
+            this.isPasteSaveItem.push(this.listeItem[index])
+          }
         } else {
           let index = this.isPasteSaveItem.findIndex((element) => element.idItem === item.idItem)
           this.isPasteSaveItem.splice(index,1);
@@ -488,14 +490,15 @@ export class DeleteObjectComponent implements OnInit {
       if (si.codeSousItem === this.typeNow || this.typeNow === "") {
         si.isPaste = this.checkAllSi;
         let index = this.listeSousItem.findIndex((element) => element.idSousItem === si.idSousItem)
-        
+        let indexPaste = this.isPasteSaveSI.findIndex((element) => element.idSousItem == si.idSousItem)   
         if (this.listeSousItem[index].isPaste){
-          this.isPasteSaveSI.push(this.listeSousItem[index]);
+          if(indexPaste == -1){
+            this.isPasteSaveSI.push(this.listeSousItem[index]);
+          }
         } else {
           let index = this.isPasteSaveSI.findIndex((element) => element.idSousItem === si.idSousItem)
           this.isPasteSaveSI.splice(index,1);
         }
-
       } 
     }
   }

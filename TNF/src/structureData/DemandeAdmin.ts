@@ -13,6 +13,18 @@ export interface DemandeAdmin {
     dateModification : Date
 }
 
+export interface DemandeAdminTraitee {
+    idDemandeTraitee : number;
+    motif : string;
+    isDelete : boolean
+    profilCreation : string;
+    dateCreation : Date;
+    profilModification : string;
+    dateModification : Date;
+}
+
+
+
 export enum typeTableauDemande {
     A = "Actuel",
     T = "Traite",
@@ -31,6 +43,19 @@ export interface DemandeAdminInfo {
   itemDelete: ItemAffichage[],
   sousItemDelete: SousItemAffichage[],
   orDelete: ObjetRepereAffichage[]
+}
+
+export interface DemandeAdminTraiteeInfo {
+  idDemandeTraitee : number;
+  motif : string;
+  isDelete : boolean
+  orDelete : ObjetRepereAffichage[];
+  itemDelete : ItemAffichage[];
+  sousItemDelete : SousItemAffichage[];
+  profilCreation : string;
+  dateCreation : Date;
+  profilModification : string;
+  dateModification : Date;
 }
 
 export interface ArborescenceOR {
