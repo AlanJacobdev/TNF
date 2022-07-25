@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { ExtraOptions, RouterModule, Routes } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { AccueilComponent } from './accueil/accueil.component';
 import { AuthGuard } from './auth/auth.guard';
 import { ConnexionComponent } from './connexion/connexion.component';
@@ -9,11 +9,12 @@ import { DeleteObjectComponent } from './delete-object/delete-object.component';
 import { DemandeAdminComponent } from './demande-admin/demande-admin.component';
 import { ExportationComponent } from './exportation/exportation.component';
 import { GestionAteliersComponent } from './gestion-ateliers/gestion-ateliers.component';
+import { InformationsComponent } from './informations/informations.component';
 import { ModifyObjectComponent } from './modify-object/modify-object.component';
-import { ParametreUtilisateurComponent } from './parametre-utilisateur/parametre-utilisateur.component';
 import { ParametreComponent } from './parametre/parametre.component';
 import { RecopieObjectComponent } from './recopie-object/recopie-object.component';
 import { VisualisationComponent } from './visualisation/visualisation.component';
+
 
 const routes: Routes = [
   { path: 'connexion', component : ConnexionComponent},
@@ -28,7 +29,8 @@ const routes: Routes = [
   { path: 'exportation', component : ExportationComponent, canActivate: [ AuthGuard ]},
   { path: 'demandeAdmin', component : DemandeAdminComponent, canActivate: [ AuthGuard ]},
   { path: 'parametres', component : ParametreComponent, canActivate: [ AuthGuard ]},
-  { path: 'parametresUtilisateur', component : ParametreUtilisateurComponent, canActivate: [ AuthGuard ]},
+  { path: 'information', component : InformationsComponent, canActivate: [ AuthGuard ]},
+
   { path: '**', redirectTo: ''}
 ];
 

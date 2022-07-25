@@ -30,8 +30,8 @@ import { DemandeAdminComponent } from './demande-admin/demande-admin.component';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { environment } from '../environments/environment';
 import { ParametreComponent } from './parametre/parametre.component';
-import { ParametreUtilisateurComponent } from './parametre-utilisateur/parametre-utilisateur.component';
 import { FilterDmdAdminPipe } from './demande-admin/pipe/filter-dmd-admin.pipe';
+import { InformationsComponent } from './informations/informations.component';
 
 const config: SocketIoConfig = { url: 'http://'+environment.API_URL, options: {} };
 
@@ -61,8 +61,8 @@ const config: SocketIoConfig = { url: 'http://'+environment.API_URL, options: {}
     FilterAtelierPipe,
     DemandeAdminComponent,
     ParametreComponent,
-    ParametreUtilisateurComponent,
-    FilterDmdAdminPipe 
+    FilterDmdAdminPipe,
+    InformationsComponent 
   ],
   imports: [
     BrowserModule,

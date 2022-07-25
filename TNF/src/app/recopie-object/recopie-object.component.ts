@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { elementAt } from 'rxjs';
 import { AtelierInfo } from 'src/structureData/Atelier';
-import { ItemInfo, ItemRecopie } from 'src/structureData/Item';
+import {  ItemRecopie } from 'src/structureData/Item';
 import { ObjetRepereInfo, ObjetRepereUtile } from 'src/structureData/ObjetRepere';
 import { modificationTypeObject, TypeObjet, TypeObjetInfo } from 'src/structureData/TypeObject';
 import { FetchcreateTypeObjectService } from '../create-type-object/service/fetchcreate-type-object.service';

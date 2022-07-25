@@ -1,0 +1,12 @@
+<div class="container">
+    <div class="row mt-5">
+        <div class="col-12 border rounded">
+            <div class="row px-5">
+                <input #name type="text">
+                <input type="file" (change)="handleFileInput('test' ,$event)" placeholder="Upload file" accept=".pdf,.doc,.docx">
+                <input type="file" (change)="handleFileInput('test' ,$event)" placeholder="Upload file" accept=".pdf,.doc,.docx">
+                <button (click)="sendInformations()" type="button" class="btn btn-lg btn-light col-10 offset-1 col-lg-6 offset-lg-3 my-2">Modifier</button>
+            </div>
+        </div>
+    </div>
+</div>
