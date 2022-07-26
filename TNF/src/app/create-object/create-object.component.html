@@ -114,7 +114,7 @@
                                     <label for="atelierSelect">Type</label>
                             </div>
                             <div class="form-floating mb-3">
-                                <input #Libelle type="text" maxlength="50" class="form-control" id="IdLibelle" placeholder="" required>
+                                <input #Libelle [(ngModel)]="this.libelleObjetRepere" type="text" maxlength="50" class="form-control" id="IdLibelle" placeholder="" required>
                                 <label for="IdLibelle">Libelle</label>
                                 <div class="invalid-tooltip">
                                     Veuillez renseigner un libellé.
@@ -128,7 +128,7 @@
                                 </div>
                             </div> 
                             <div class="form-floating mb-3">
-                                <a class="text-dark cursor" (click)="addDescription()">Ajouter une description</a>
+                                <span (click)="addDescription()" class="badge bg-light text-dark cursor"> <fa-icon class=" col-12" [icon]="faPlus" ></fa-icon> Ajouter une description</span>
                             </div>
                             
                             <div *ngIf="this.atelierSelect != '' && this.nuSelect != ''" class="form-check form-switch ms-1 mb-3 ">
@@ -273,7 +273,7 @@
                                 </div>
                             </div> 
                             <div class="form-floating mb-3">
-                                <a class="text-dark cursor" (click)="addDescription()">Ajouter une description</a>
+                                <span (click)="addDescription()" class="badge bg-light text-dark cursor"> <fa-icon class=" col-12" [icon]="faPlus" ></fa-icon>Ajouter une description</span>
                             </div>
                             <div class="form-check ms-2 mb-3">
                                 <input #SecuriteItem class="form-check-input" type="checkbox" [checked] ="this.checkSecurite" (change)="setcheckSecurite()" id="IdSecurite"  >
@@ -437,7 +437,7 @@
                                 </div>
                             </div> 
                             <div class="form-floating mb-3">
-                                <a class="text-dark cursor" (click)="addDescription()">Ajouter une description</a>
+                                <span (click)="addDescription()" class="badge bg-light text-dark cursor"> <fa-icon class=" col-12" [icon]="faPlus" ></fa-icon> Ajouter une description</span>
                             </div>
                             <div class="form-check ms-2 mb-3 d-flex">
                                 <input #SecuriteItem class="form-check-input align-self-center me-2 " type="checkbox" [checked] ="this.checkPrefixe" (change)="setPrefixe()" id="IdPrefixe"  >

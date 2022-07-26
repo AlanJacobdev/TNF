@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, OnDestroy} from '@angular/core';
-import { faChevronRight, faMagicWandSparkles, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faChevronRight, faMagicWandSparkles, faPlus, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { elementAt } from 'rxjs';
 import { AtelierInfo } from 'src/structureData/Atelier';
 import { Description } from 'src/structureData/Description';
@@ -20,6 +20,7 @@ import { FetchModifyObjectService } from './service/fetch-modify-object.service'
 })
 export class ModifyObjectComponent implements OnInit, OnDestroy {
 
+  public faPlus = faPlus;
   public faMagicWandSparkles = faMagicWandSparkles;
   public faChevronRight = faChevronRight;
   public faXmark = faXmark;

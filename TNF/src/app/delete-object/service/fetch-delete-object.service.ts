@@ -87,8 +87,6 @@ export class FetchDeleteObjectService {
       if (res.listeOR.length == 0 && res.listeItem.length == 0 && res.listeSI.length == 0) {        
         return undefined;
       } else {
-        
-        
         return res;
       }
     } catch (e : any){

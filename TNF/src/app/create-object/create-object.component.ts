@@ -6,7 +6,7 @@ import { modificationTypeObject, TypeObjet, TypeObjetInfo, TypeObjetRepereInfo, 
 import { FetchcreateTypeObjectService } from '../create-type-object/service/fetchcreate-type-object.service';
 import { FetchVisuService } from '../visualisation/service/fetch-visu.service';
 import { FetchCreateObjectService } from './service/fetch-create-object.service';
-import { faXmark, faChevronRight, faMagicWandSparkles, faCheck, faChevronLeft, faInfo } from '@fortawesome/free-solid-svg-icons';
+import { faXmark, faChevronRight, faMagicWandSparkles, faCheck, faChevronLeft, faInfo, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { SousItemInfo } from 'src/structureData/SousItem';
 import { FetchRecopieService } from '../recopie-object/service/fetch-recopie.service';
 
@@ -16,6 +16,7 @@ import { FetchRecopieService } from '../recopie-object/service/fetch-recopie.ser
   styleUrls: ['./create-object.component.css']
 })
 export class CreateObjectComponent implements OnInit {
+  public faPlus = faPlus;
   public faInfo = faInfo;
   public faCheck = faCheck;
   public faMagicWandSparkles = faMagicWandSparkles;
@@ -64,7 +65,7 @@ export class CreateObjectComponent implements OnInit {
   public errorReservation : boolean = false;
   public nuSelectedRange : string = "";
   public intervalValidate : boolean = true;
-
+  public libelleObjetRepere : string = "";
   
   constructor(private fetchCreateTypeObject : FetchcreateTypeObjectService, private fetchVisuService : FetchVisuService, private fetchCreateObjectService: FetchCreateObjectService, private fetchRecopieService : FetchRecopieService) {
     this.getListType();
@@ -344,15 +345,18 @@ export class CreateObjectComponent implements OnInit {
     this.orSelect = idOR;
     if (this.objectNow === this.TypeObject.Item) {
       this.getItemFromOrAndDispo();
-      if(this.LibelleItem != ''){
-        this.focusOutLibelle();
-      }
+      this.LibelleItem = ''
+      this.errorLibelle = false;
+      this.refreshValidationForm()
     }
     if(this.objectNow === this.TypeObject.SI){
       this.orSelectedForItem = true;
       this.getItemByObjetRepere();
       this.selectNow = idOR;
       this.getListTypeItemsByOR();
+      this.LibelleSousItem = ''
+      this.errorLibelle = false;
+      this.refreshValidationForm()
     }    
   }
 
@@ -369,6 +373,9 @@ export class CreateObjectComponent implements OnInit {
 
     if(this.objectNow === this.TypeObject.SI){
       this.getAllTypeAvailable();
+      this.LibelleSousItem = ''
+      this.errorLibelle = false;
+      this.refreshValidationForm()
     }
     
     

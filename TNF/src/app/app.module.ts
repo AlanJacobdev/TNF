@@ -32,6 +32,7 @@ import { environment } from '../environments/environment';
 import { ParametreComponent } from './parametre/parametre.component';
 import { FilterDmdAdminPipe } from './demande-admin/pipe/filter-dmd-admin.pipe';
 import { InformationsComponent } from './informations/informations.component';
+import { FilterInfoPipe } from './informations/pipe/filter-info.pipe';
 
 const config: SocketIoConfig = { url: 'http://'+environment.API_URL, options: {} };
 
@@ -62,7 +63,8 @@ const config: SocketIoConfig = { url: 'http://'+environment.API_URL, options: {}
     DemandeAdminComponent,
     ParametreComponent,
     FilterDmdAdminPipe,
-    InformationsComponent 
+    InformationsComponent,
+    FilterInfoPipe 
   ],
   imports: [
     BrowserModule,
