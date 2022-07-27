@@ -15,6 +15,9 @@ export interface InformationCreate {
     profilCreation : string
 }
 
+export interface ModificationInfo {
+    modify : boolean
+}
 
 
 export interface DocumentInfo {
@@ -23,12 +26,19 @@ export interface DocumentInfo {
     nomDocument : string
     path : string
     date : Date
-    profil : string
+    profil : string,
+    type : string,
+    edited : boolean;
 }
 
 export interface InformationModify {
     text : string
-    document : Document[];
     idDocument : number[];
     profilModification : string
+    
 }
+
+// export interface documentInfoModify{
+//     id : number;
+//     nom : string
+// }

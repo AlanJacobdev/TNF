@@ -1,9 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { lastValueFrom } from 'rxjs';
+import { lastValueFrom, map } from 'rxjs';
 import { NavBarService } from 'src/app/navbar/service/nav-bar.service';
 import { environment } from 'src/environments/environment';
-import {InformationCreate, InformationInfo } from 'src/structureData/Informations';
+import {InformationCreate, InformationInfo, InformationModify } from 'src/structureData/Informations';
+import { stream } from 'xlsx';
 
 @Injectable({
     providedIn: 'root'
@@ -22,6 +23,16 @@ constructor(private readonly http: HttpClient, private navBarService: NavBarServ
         } else {
         return res;
         }
+    }
+
+    async readFile(idDoc : number) {
+        let url = "http://"+environment.API_URL+"/document/readFile/{idDoc}"
+        url = url.replace("{idDoc}",idDoc.toString())
+        return this.http.get(url,{ responseType: 'blob', observe: 'response'}).pipe(
+            map((res: any) => {
+              return new Blob([res.body]);
+            })
+          );
     }
 
     
@@ -77,6 +88,33 @@ constructor(private readonly http: HttpClient, private navBarService: NavBarServ
         return returnError;
         }
     }
+
+    async updateInformation(idInformation : number, payload : InformationModify): Promise<any> {
+        let user = this.navBarService.getLogin();
+        let url = "http://"+environment.API_URL+"/informations/{idInformation}"
+        url = url.replace("{idInformation}", idInformation.toString())
+        payload.profilModification = user;
+        try {
+          const res : InformationInfo = await lastValueFrom(this.http.put<InformationInfo>(url, payload));
+          if (res.hasOwnProperty('error')) {
+            const resAny : any = res;
+            return resAny.error;
+          } else {
+            return res;
+          }
+        } catch (e : any) {
+            let returnError;
+            if(e.hasOwnProperty('error')){
+              if(e.error.hasOwnProperty('status')){
+                returnError=e.error["error"];
+              } else {
+                returnError=e.error.message[0];
+              }
+            }
+          return returnError;
+        }
+      }
+
 
     async deleteInformation(idInformation : number): Promise<any> {
         let url = "http://"+environment.API_URL+"/informations/{idInformation}";

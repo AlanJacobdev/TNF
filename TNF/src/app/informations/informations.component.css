@@ -47,6 +47,19 @@ table {
     transform: translate(0.5px, 0.5px) scale(1.05,1.05);
 }
 
+.edit{
+    font-size: 2rem;
+    justify-content: flex-start;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+    display: flex;
+    color: #FBBF24;
+    cursor: pointer;
+  
+}
+
+
 .btn-light:hover {
     background-color: #f2f2f2;
     border-color: #f2f2f2;

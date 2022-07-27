@@ -135,29 +135,62 @@
                                     <label for="TitreEdit">Titre</label>
                                 </div>
                                 <div class="form-floating mb-3"> 
-                                    <textarea #ModifLibelle type="text" class="form-control" id="TextEdit" placeholder="" [value]="infoSelect.text" required></textarea>
+                                    <textarea #ModifLibelle [(ngModel)]="text" type="text" class="form-control" id="TextEdit" placeholder="" [value]="infoSelect.text" required></textarea>
                                     <label for="TextEdit">Texte</label>
                                     <div class="invalid-tooltip">
                                         Veuillez renseigner un text.
                                     </div>
                                 </div>
-                                <div *ngFor="let d of this.infoSelect.document; let i = index"  > 
+                                <div *ngFor="let d of this.descriptionObjectSelect; let i = index"  > 
+                                    <div class="row">
+                                        <div class="col-10 me-0 pe-0"> 
+                                            <div class="form-floating input-group">
+                                                <input #Libelle type="text" [(ngModel)]="this.documentsModify[i].nom" maxlength="50" class="form-control  border-bottom-0 no-rounded-bottom-left zindexZero" id="idDocumentCrea{{i}}" placeholder="" required [value]="d.nomDocument">
+                                                <label for="idDocumentCrea{{i}}">Nom du document </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-2 ms-0 ps-0">
+                                            <button class="input-group-text border-start-0 px-2 no-rounded-top-left border-bottom-0 no-rounded-bottom-right justify-content-center no-rounded-bottom-left bg-white h-100 w-100" (click)="removeDocumentOfModification(i)"><fa-icon class=" close" [icon]="faXmark"></fa-icon></button>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                            <div class="col-10 me-0 pe-0">
+                                                <div *ngIf="descriptionObjectSelect[i].edited == false" class="input-group">
+                                                    <label class="col-4 input-group-text col-form-label no-rounded-top-left">Document</label>
+                                                    <input readonly disabled class="form-control border bg-light zindexZero" type="text" [value]="d.nomDocument + '.'+ d.type.split('/')[1]"  >
+                                                    <button (click)="readFile(d.idDoc)" class="input-group-text px-2 py-0 fs-4 bg-white no-rounded-top-right no-rounded-bottom-right"><fa-icon class=" text-right" [icon]="faEye"></fa-icon></button>
+                                                </div>
+                                                <div *ngIf="descriptionObjectSelect[i].edited == true">
+                                                    <div>
+                                                        <input class="form-control no-rounded-top-right no-rounded-top-left no-rounded-bottom-right form-control" id="formFile" type="file" (change)="handleFileInputModify(i ,$event)" placeholder="Upload file" accept=".pdf,.doc,.docx">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-2 ms-0 ps-0">
+                                                <button *ngIf="descriptionObjectSelect[i].edited == false" class="input-group-text border-start-0 px-2 no-rounded-top-left no-rounded-top-right justify-content-center no-rounded-bottom-left bg-white h-100 w-100" (click)="modifyDocument(i)"><fa-icon class="fs-5 edit" [icon]="faPen"></fa-icon></button>
+                                                <button *ngIf="descriptionObjectSelect[i].edited == true" class="input-group-text border-start-0 px-2 no-rounded-top-left no-rounded-top-right justify-content-center no-rounded-bottom-left bg-white h-100 w-100" (click)="notModifyDocument(i)"><fa-icon class="fs-5 edit" [icon]="faRotateLeft"></fa-icon></button>
+                                            </div>
+                                    </div> 
+                                </div> 
+                                <div *ngFor="let d of this.documents; let i = index"  > 
                                     <div class="row mb-3">
                                         <div class="col-10 me-0 pe-0"> 
                                             <div class="form-floating input-group">
-                                                <input #Libelle type="text" maxlength="50" class="form-control  border-bottom-0 no-rounded-bottom-left zindexZero" id="idDocumentCrea{{i}}" placeholder="" required [value]="d.nomDocument">
+                                                <input #Libelle [(ngModel)]="this.documents[i].nom" type="text" maxlength="50" class="form-control  border-bottom-0 no-rounded-bottom-left zindexZero" id="idDocumentCrea{{i}}" placeholder="" required>
                                                 <label for="idDocumentCrea{{i}}">Nom du document </label>
                                             </div>
                                             <div>
-                                                <input class="form-control no-rounded-top-right no-rounded-top-left no-rounded-bottom-right form-control-sm" id="formFile" type="file" (change)="handleFileInput('test' ,$event)" placeholder="Upload file" accept=".pdf,.doc,.docx">
+                                                <input class="form-control no-rounded-top-right no-rounded-top-left no-rounded-bottom-right form-control-sm" id="formFile" type="file" (change)="handleFileInput(i ,$event)" placeholder="Upload file" accept=".pdf,.doc,.docx">
                                             </div>
                                         </div>
                                         <div class="col-2 ms-0 ps-0">
                                             <button class="input-group-text border-start-0 px-2 no-rounded-top-left justify-content-center no-rounded-bottom-left bg-white h-100 w-100" (click)="removeDocument(i)"><fa-icon class=" close" [icon]="faXmark"></fa-icon></button>
                                         </div>
-                                    </div> 
+                                    </div>    
                                 </div> 
-
+                                <div class="form-floating mb-3">
+                                    <span (click)="addDocument()" class="badge bg-light text-dark cursor"> <fa-icon class=" col-12" [icon]="faPlus" ></fa-icon> Ajouter un document</span>
+                                </div>
                                 
                             </div>
                             <button (click)="updateInformations()" type="button" class="btn btn-lg btn-light col-10 offset-1 col-lg-6 offset-lg-3 my-2">Modifier</button>
@@ -186,9 +219,40 @@
             <ng-template #info >
                     <div class="col-lg-5 col-xs-12 mt-5 offset-lg-1 order-1 order-lg-2">
                         <div class="container-fluid border rounded py-3 px-0 shadow-sm">
-                            <div class="text-center border-bottom row pb-3 px-0 mx-0">
+                            <div class="text-center shadow-sm border-bottom row pb-3 mb-2 px-0 mx-0">
                                 <span class="fs-4 col-10 offset-1">{{infoSelect.titre}}</span>
                                 <fa-icon class="close col-1 text-right" [icon]="faXmark" (click)="close()"></fa-icon>
+                                
+                                <div class="col-12 mt-2">
+                                    <div class="row">
+                                        <div class="col-1 justify-content-center text-center">
+                                            <fa-icon class="fs-5 col-12 col-sm-2 px-2 " [icon]="faPlus" ></fa-icon> 
+                                        </div>
+                                        <div class="col-5 justify-content-center text-center">
+                                            <fa-icon class="fs-5 col-12 col-sm-2 px-2 " [icon]="faCalendar" ></fa-icon> 
+                                            <span class="col-12 col-sm-10 lh-lg">{{infoSelect.dateCreation | date: 'dd/MM/yyyy'}}</span>
+                                        </div>
+                                        <div class="col-5 justify-content-center text-center">
+                                            <fa-icon class="fs-5 col-12 col-sm-2 px-2" [icon]="faUser" ></fa-icon> 
+                                            <span class="col-12 col-sm-10 lh-lg">{{infoSelect.profilCreation}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div *ngIf="infoSelect.dateModification != undefined" class="col-12 mt-2">
+                                    <div class="row">
+                                        <div class="col-1 justify-content-center text-center">
+                                            <fa-icon class="fs-5 col-12 col-sm-2 px-2 " [icon]="faPen" ></fa-icon> 
+                                        </div>
+                                        <div class="col-5 justify-content-center text-center">
+                                            <fa-icon class="fs-5 col-12 col-sm-2 px-2 " [icon]="faCalendar" ></fa-icon> 
+                                            <span class="col-12 col-sm-10 lh-lg">{{infoSelect.dateModification | date: 'dd/MM/yyyy'}}</span>
+                                        </div>
+                                        <div class="col-5 justify-content-center text-center">
+                                            <fa-icon class="fs-5 col-12 col-sm-2 px-2" [icon]="faUser" ></fa-icon> 
+                                            <span class="col-12 col-sm-10 lh-lg">{{infoSelect.profilModification}}</span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="row px-4">
                                 <div class="col-12 my-2">
