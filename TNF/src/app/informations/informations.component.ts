@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { faInfo, faPen, faTrashCan, faPlus, faXmark, faBook, faImage, faCaretRight, faEye, faRotateLeft, faCalendar, faUser } from '@fortawesome/free-solid-svg-icons';
-import { DocumentInfo, InformationCreate, InformationInfo, InformationModify, ModificationInfo } from 'src/structureData/Informations';
+import { DocName, DocumentInfo, documentInfoModify, InformationCreate, InformationInfo, InformationModify } from 'src/structureData/Informations';
 import { FetchInformationService } from './service/fetch-information.service';
 
 
@@ -54,10 +54,8 @@ export class InformationsComponent implements OnInit {
     dateModification: new Date(0),
   };
 
-  public modifyDocumentsSelect: ModificationInfo[] = []; 
-
   public descriptionObjectSelect : DocumentInfo[] = [];
-
+  public tabDocName : DocName[] = [];
 
   constructor(private fetchInformationService : FetchInformationService) { this.getInformation(); }
 
@@ -72,7 +70,6 @@ export class InformationsComponent implements OnInit {
       this.close()
     }
     console.log(this.read);
-    
   }
 
   
@@ -86,6 +83,9 @@ export class InformationsComponent implements OnInit {
     this.read = false;
     this.refreshValidationForm();
     this.documents.splice(0);
+    this.documentsModify.splice(0);
+    this.text = "";
+    this.titre = "";
   }
 
   refreshValidationForm(){
@@ -108,10 +108,6 @@ export class InformationsComponent implements OnInit {
     this.listeInformations.splice(0)
     this.fetchInformationService.getInformations().then((list: InformationInfo[]) => {
       this.listeInformations = list
-      console.log(list)
-      
-
-      
     }).catch((e) => {
     })
   }
@@ -126,8 +122,8 @@ export class InformationsComponent implements OnInit {
   public addDocument(){
     this.documents.push({value : ""});
   }
-  public addDocumentModify(nom : string){
-    this.documentsModify.push({nom : nom});
+  public addDocumentModify(id : number, nom : string){
+    this.documentsModify.push({id: id, nom : nom});
   }
 
   public removeDocument(indice : number){
@@ -143,6 +139,11 @@ export class InformationsComponent implements OnInit {
   }
   public notModifyDocument(indice : number){
     this.descriptionObjectSelect[indice].edited=false;
+
+  }
+
+  public modifyLibelleDocument(indice : number){
+    this.descriptionObjectSelect[indice].editedLibelle=true;
   }
 
   selectCreateType(){
@@ -153,6 +154,7 @@ export class InformationsComponent implements OnInit {
   selectModifyType(){
     
     this.documents.splice(0);
+    this.documentsModify.splice(0);
     this.changesNow = true;
     let res = this.listeInformations.find(element => element.idInfo === this.idSelected);  
     if (res != undefined){
@@ -161,11 +163,12 @@ export class InformationsComponent implements OnInit {
       for (const d of this.infoSelect.document){
         let index = this.descriptionObjectSelect.push(d);
         this.descriptionObjectSelect[index-1].edited = false;
+        this.descriptionObjectSelect[index-1].editedLibelle = false;
       }
       this.text = this.infoSelect.text;
     }
     for( const doc of this.descriptionObjectSelect) {
-      this.addDocumentModify(doc.nomDocument);
+      this.addDocumentModify(doc.idDoc, doc.libelleDocument);
     }
   }
   
@@ -209,11 +212,33 @@ export class InformationsComponent implements OnInit {
             this.manageToast("Erreur de création", res , "red")
           } else {  
             this.manageToast("Création", "L'information a bien été créée", "#006400")    
-            this.refreshAfterOperation();
+            
+            let tabLibelleModify : documentInfoModify[] = [];
+            let i =0;
+            for(const doc of this.listeDocuments) {
+              
+              tabLibelleModify.push({
+                idDocument : doc,
+                libelleDocument : this.documents[i].nom
+              })
+              i++;
+            }
+
+            for (const lib of tabLibelleModify) {
+              this.fetchInformationService.updateLibelleFromDoc(lib).then((res: any) => {
+                if(typeof res === 'string') {
+                  this.manageToast("Erreur de Création", res , "red")
+                }
+                this.refreshAfterOperation();
+              }).catch((e) => {
+              })
+            }
+
 
           }
         }).catch((e) => {
         })
+
       } else {
         this.manageToast("Erreur de fichier", "Fichier manquant ou corrompu" , "red")
       }
@@ -228,15 +253,71 @@ export class InformationsComponent implements OnInit {
     this.text = "";
     this.titre = "";
     this.documents.splice(0);
+    this.documentsModify.splice(0);
   }
 
   async updateInformations(){
     let tabIdDoc = [];
+    let tabLibelleModify : documentInfoModify[] = [];
     if (this.descriptionObjectSelect.length != 0 ) {
-      for (const d of this.descriptionObjectSelect)
-        tabIdDoc.push(d.idDoc)
+      for (const d of this.descriptionObjectSelect) {
+        if (d.edited == false) {
+          tabIdDoc.push(d.idDoc);
+        }
+        if(d.editedLibelle == true && d.edited == false) {
+          let newLibelle = this.documentsModify.find((element: any) => element.id == d.idDoc)
+          tabLibelleModify.push({
+            idDocument : newLibelle.id,
+            libelleDocument : newLibelle.nom
+          })
+        }
+      }
     }
-    
+    for ( const doc of this.documentsModify){
+      console.log(doc);
+      
+    }
+    for (const lib of tabLibelleModify) {
+      this.fetchInformationService.updateLibelleFromDoc(lib).then((res: any) => {
+        if(typeof res === 'string') {
+          this.manageToast("Erreur de modification", res , "red")
+        }
+      }).catch((e) => {
+      })
+    }
+
+    let storeDocModify = await this.appendFormDataListModify();
+
+    if (storeDocModify) {
+      let getIdDocument = await this.sendInformations();
+      if (getIdDocument){
+        for (const d of this.listeDocuments) {
+          tabIdDoc.push(d);
+        }
+        let tabNewLibelle : documentInfoModify[] = [];
+        let i = 0 ;
+        for(const doc of this.listeDocuments) {
+            tabNewLibelle.push({
+              idDocument : doc,
+              libelleDocument : this.documentsModify[i].nom
+            })
+          i++;
+        }
+        for (const lib of tabNewLibelle) {
+          this.fetchInformationService.updateLibelleFromDoc(lib).then((res: any) => {
+            if(typeof res === 'string') {
+              this.manageToast("Erreur de modification", res , "red")
+            }
+          }).catch((e) => {
+          })
+        }
+
+      } else {
+        this.manageToast("Erreur de fichier", "Fichier manquant ou corrompu" , "red")
+      }
+    }
+
+
     let storeDoc = await this.appendFormDataList();
     
     if (storeDoc) {
@@ -245,11 +326,33 @@ export class InformationsComponent implements OnInit {
         for (const d of this.listeDocuments) {
           tabIdDoc.push(d);
         }
+        console.log(this.listeDocuments);
+        
+        let tabNewLibelle : documentInfoModify[] = [];
+        let i =0;
+        for(const doc of this.listeDocuments) {
+            tabNewLibelle.push({
+              idDocument : doc,
+              libelleDocument : this.documents[i].nom
+            })
+          i++;
+        }
+
+        for (const lib of tabNewLibelle) {
+          this.fetchInformationService.updateLibelleFromDoc(lib).then((res: any) => {
+            if(typeof res === 'string') {
+              this.manageToast("Erreur de modification", res , "red")
+            }
+          }).catch((e) => {
+          })
+        }
+
       } else {
         this.manageToast("Erreur de fichier", "Fichier manquant ou corrompu" , "red")
       }
     }
 
+    
     const infoModify : InformationModify ={
       text: this.text,
       idDocument: tabIdDoc,
@@ -291,7 +394,6 @@ export class InformationsComponent implements OnInit {
   handleFileInput(i: any, event: Event) {
     const element = event.currentTarget as HTMLInputElement;
     this.documents[i].doc = element.files;
-    console.log(this.documents[i].doc);
   }
 
   handleFileInputModify(i: any, event: Event) {
@@ -303,22 +405,40 @@ export class InformationsComponent implements OnInit {
 
   
 
+  async appendFormDataListModify(){
+    try {   
+
+      for (const document of this.documentsModify) {
+        let fileList: FileList | null = document.doc;
+        if (fileList) {
+          this.tabDocName.push({
+            nameDisplay:document.nom,
+            originalName: fileList[0].name
+          })
+          this.formDataList.append('document', fileList[0]);
+        }
+      }
+      return true
+    }  catch (e: any){
+      console.log(e);
+      
+      return false
+    }
+  }
+
   async appendFormDataList(){
     try {   
       this.formDataList = new FormData();
       for(const document of this.documents){
         let fileList: FileList | null = document.doc;
         if (fileList) {
-          this.formDataList.append('document', fileList[0], document.nom);
+          this.tabDocName.push({
+            nameDisplay:document.nom,
+            originalName: fileList[0].name
+          })
+          this.formDataList.append('document', fileList[0]);
         }
-      }
-      for (const document of this.documentsModify) {
-        let fileList: FileList | null = document.doc;
-        if (fileList) {
-          this.formDataList.append('document', fileList[0], document.nom);
-        }
-      }
-      
+      }      
       return true
     }  catch (e: any){
       console.log(e);

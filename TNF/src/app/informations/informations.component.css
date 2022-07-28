@@ -59,6 +59,11 @@ table {
   
 }
 
+.edit:disabled {
+    color:grey !important;
+    cursor: not-allowed;
+}
+
 
 .btn-light:hover {
     background-color: #f2f2f2;

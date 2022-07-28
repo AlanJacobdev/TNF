@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { lastValueFrom, map } from 'rxjs';
 import { NavBarService } from 'src/app/navbar/service/nav-bar.service';
 import { environment } from 'src/environments/environment';
-import {InformationCreate, InformationInfo, InformationModify } from 'src/structureData/Informations';
+import {DocName, DocumentInfo, documentInfoModify, DocumentReceive, InformationCreate, InformationInfo, InformationModify } from 'src/structureData/Informations';
 import { stream } from 'xlsx';
 
 @Injectable({
@@ -96,6 +96,30 @@ constructor(private readonly http: HttpClient, private navBarService: NavBarServ
         payload.profilModification = user;
         try {
           const res : InformationInfo = await lastValueFrom(this.http.put<InformationInfo>(url, payload));
+          if (res.hasOwnProperty('error')) {
+            const resAny : any = res;
+            return resAny.error;
+          } else {
+            return res;
+          }
+        } catch (e : any) {
+            let returnError;
+            if(e.hasOwnProperty('error')){
+              if(e.error.hasOwnProperty('status')){
+                returnError=e.error["error"];
+              } else {
+                returnError=e.error.message[0];
+              }
+            }
+          return returnError;
+        }
+      }
+
+
+      async updateLibelleFromDoc(payload : documentInfoModify): Promise<any> {
+        let url = "http://"+environment.API_URL+"/document"
+        try {
+          const res : DocumentReceive = await lastValueFrom(this.http.put<DocumentReceive>(url, payload));
           if (res.hasOwnProperty('error')) {
             const resAny : any = res;
             return resAny.error;

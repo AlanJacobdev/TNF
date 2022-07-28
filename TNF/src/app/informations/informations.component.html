@@ -1,16 +1,3 @@
-<!-- <div class="container">
-    <div class="row mt-5">
-        <div class="col-12 border rounded">
-            <div class="row px-5">
-                <input #name type="text">
-                <input type="file" (change)="handleFileInput('test' ,$event)" placeholder="Upload file" accept=".pdf,.doc,.docx">
-                <input type="file" (change)="handleFileInput('test' ,$event)" placeholder="Upload file" accept=".pdf,.doc,.docx">
-                <button (click)="sendInformations()" type="button" class="btn btn-lg btn-light col-10 offset-1 col-lg-6 offset-lg-3 my-2">Modifier</button>
-            </div>
-        </div>
-    </div>
-</div> -->
-
 <div class="container">
     <div class="row">
         <div class="col-lg-6 col-xs-12 mt-4">
@@ -104,7 +91,7 @@
                                             <label for="idDocumentCrea{{i}}">Nom du document </label>
                                         </div>
                                         <div>
-                                            <input class="form-control no-rounded-top-right no-rounded-top-left no-rounded-bottom-right form-control-sm" id="formFile" type="file" (change)="handleFileInput(i ,$event)" placeholder="Upload file" accept=".pdf,.doc,.docx">
+                                            <input class="form-control no-rounded-top-right no-rounded-top-left no-rounded-bottom-right form-control-sm" id="formFile" type="file" (change)="handleFileInput(i ,$event)" placeholder="Upload file" accept=".pdf,.doc,.docx,.png,.jpg">
                                         </div>
                                     </div>
                                     <div class="col-2 ms-0 ps-0">
@@ -145,7 +132,7 @@
                                     <div class="row">
                                         <div class="col-10 me-0 pe-0"> 
                                             <div class="form-floating input-group">
-                                                <input #Libelle type="text" [(ngModel)]="this.documentsModify[i].nom" maxlength="50" class="form-control  border-bottom-0 no-rounded-bottom-left zindexZero" id="idDocumentCrea{{i}}" placeholder="" required [value]="d.nomDocument">
+                                                <input #Libelle (change)="modifyLibelleDocument(i)" type="text" [(ngModel)]="this.documentsModify[i].nom" maxlength="50" class="form-control  border-bottom-0 no-rounded-bottom-left zindexZero" id="idDocumentCrea{{i}}" placeholder="" required [value]="d.nomDocument">
                                                 <label for="idDocumentCrea{{i}}">Nom du document </label>
                                             </div>
                                         </div>
@@ -157,18 +144,18 @@
                                             <div class="col-10 me-0 pe-0">
                                                 <div *ngIf="descriptionObjectSelect[i].edited == false" class="input-group">
                                                     <label class="col-4 input-group-text col-form-label no-rounded-top-left">Document</label>
-                                                    <input readonly disabled class="form-control border bg-light zindexZero" type="text" [value]="d.nomDocument + '.'+ d.type.split('/')[1]"  >
+                                                    <input readonly disabled class="form-control border bg-light zindexZero" type="text" [value]="d.nomDocument"  >
                                                     <button (click)="readFile(d.idDoc)" class="input-group-text px-2 py-0 fs-4 bg-white no-rounded-top-right no-rounded-bottom-right"><fa-icon class=" text-right" [icon]="faEye"></fa-icon></button>
                                                 </div>
                                                 <div *ngIf="descriptionObjectSelect[i].edited == true">
                                                     <div>
-                                                        <input class="form-control no-rounded-top-right no-rounded-top-left no-rounded-bottom-right form-control" id="formFile" type="file" (change)="handleFileInputModify(i ,$event)" placeholder="Upload file" accept=".pdf,.doc,.docx">
+                                                        <input class="form-control no-rounded-top-right no-rounded-top-left no-rounded-bottom-right form-control" id="formFile" type="file" (change)="handleFileInputModify(i ,$event)" placeholder="Upload file" accept=".pdf,.doc,.docx,.png,.jpg">
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="col-2 ms-0 ps-0">
                                                 <button *ngIf="descriptionObjectSelect[i].edited == false" class="input-group-text border-start-0 px-2 no-rounded-top-left no-rounded-top-right justify-content-center no-rounded-bottom-left bg-white h-100 w-100" (click)="modifyDocument(i)"><fa-icon class="fs-5 edit" [icon]="faPen"></fa-icon></button>
-                                                <button *ngIf="descriptionObjectSelect[i].edited == true" class="input-group-text border-start-0 px-2 no-rounded-top-left no-rounded-top-right justify-content-center no-rounded-bottom-left bg-white h-100 w-100" (click)="notModifyDocument(i)"><fa-icon class="fs-5 edit" [icon]="faRotateLeft"></fa-icon></button>
+                                                <button *ngIf="descriptionObjectSelect[i].edited == true" class="input-group-text border-start-0 px-2 no-rounded-top-left no-rounded-top-right justify-content-center no-rounded-bottom-left bg-white h-100 w-100 edit" [attr.disabled]="descriptionObjectSelect[i].edited == true" ><fa-icon class="fs-5 " [icon]="faRotateLeft"></fa-icon></button>
                                             </div>
                                     </div> 
                                 </div> 
@@ -180,7 +167,7 @@
                                                 <label for="idDocumentCrea{{i}}">Nom du document </label>
                                             </div>
                                             <div>
-                                                <input class="form-control no-rounded-top-right no-rounded-top-left no-rounded-bottom-right form-control-sm" id="formFile" type="file" (change)="handleFileInput(i ,$event)" placeholder="Upload file" accept=".pdf,.doc,.docx">
+                                                <input class="form-control no-rounded-top-right no-rounded-top-left no-rounded-bottom-right form-control-sm" id="formFile" type="file" (change)="handleFileInput(i ,$event)" placeholder="Upload file" accept=".pdf,.doc,.docx,.png,.jpg">
                                             </div>
                                         </div>
                                         <div class="col-2 ms-0 ps-0">
@@ -268,7 +255,7 @@
                                     <div *ngFor="let d of this.infoSelect.document; let i = index"  > 
                                         <div class="row mb-1">
                                             <div class="col">
-                                                <fa-icon class="pe-2" [icon]="faCaretRight"></fa-icon> <a class="text-decoration-underline cursor">{{d.nomDocument}}</a>
+                                                <fa-icon class="pe-2" [icon]="faCaretRight"></fa-icon> <a  (click)="readFile(d.idDoc)" class="text-decoration-underline cursor">{{d.libelleDocument}}</a>
                                             </div>
                                             
                                         </div> 

@@ -15,20 +15,18 @@ export interface InformationCreate {
     profilCreation : string
 }
 
-export interface ModificationInfo {
-    modify : boolean
-}
-
 
 export interface DocumentInfo {
     idDoc : number
     idDocument : string
     nomDocument : string
+    libelleDocument : string
     path : string
     date : Date
     profil : string,
     type : string,
     edited : boolean;
+    editedLibelle : boolean;
 }
 
 export interface InformationModify {
@@ -38,7 +36,23 @@ export interface InformationModify {
     
 }
 
-// export interface documentInfoModify{
-//     id : number;
-//     nom : string
-// }
+export interface documentInfoModify{
+    idDocument : number
+    libelleDocument : string
+}
+
+
+export interface DocumentReceive {
+    idDoc : number
+    idDocument : string
+    nomDocument : string
+    type : string
+    path : string
+    date : Date
+    profil : string
+}
+
+export interface DocName{
+    originalName : string,
+    nameDisplay : string,
+}

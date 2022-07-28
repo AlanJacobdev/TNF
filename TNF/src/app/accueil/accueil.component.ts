@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { DemandeAdmin } from 'src/structureData/DemandeAdmin';
-import { faComment, faCalendar, faUser, faArrowRightFromBracket, faArrowLeft, faArrowRight, faCalendarCheck, faChevronDown, faClock, faEye, faArrowRightLong} from '@fortawesome/free-solid-svg-icons';
+import { faComment, faCalendar, faUser, faArrowRightFromBracket, faArrowLeft, faArrowRight, faCalendarCheck, faChevronDown, faClock, faEye, faArrowRightLong, faBook, faCaretRight, faImage, faInfo, faPen, faPlus, faRotateLeft, faTrashCan, faXmark} from '@fortawesome/free-solid-svg-icons';
 import { FetchDemandeAdminService } from '../demande-admin/service/fetch-demande-admin.service';
-import { allActivity, infoForDescription, infoPerDay, typeActivity, typeInfoPerDay, typeInfoPerMounth } from 'src/structureData/Accueil';
+import { allActivity, infoForDescription, typeActivity, typeInfoPerDay, typeInfoPerMounth } from 'src/structureData/Accueil';
 import { FetchAccueilService } from './service/fetch-accueil/fetch-accueil.service';
 import { Description } from 'src/structureData/Description';
 import { NavBarService } from '../navbar/service/nav-bar.service';
+import { InformationInfo } from 'src/structureData/Informations';
+import { FetchInformationService } from '../informations/service/fetch-information.service';
 
 @Component({
   selector: 'app-accueil',
@@ -13,22 +15,33 @@ import { NavBarService } from '../navbar/service/nav-bar.service';
   styleUrls: ['./accueil.component.css']
 })
 export class AccueilComponent implements OnInit {
+
+  public faCalendar = faCalendar;
+  public faUser = faUser;
+  public faRotateLeft = faRotateLeft
+  public faEye = faEye;
+  public faCaretRight = faCaretRight
+  public faImage = faImage;
+  public faBook = faBook;
+  public faXmark = faXmark;
+  public faInfo = faInfo;
+  public faPen = faPen;
+  public faTrashCan = faTrashCan;
+  public faPlus = faPlus;
   public faArrowRightLong = faArrowRightLong;
   public faChevronDown = faChevronDown;
-  public faEye = faEye;
   public faCalendarCheck = faCalendarCheck;
   public faArrowLeft = faArrowLeft;
   public faArrowRight = faArrowRight;
   public faRightLong = faArrowRightFromBracket;
   public faClock = faClock;
   public faComment = faComment;
-  public faCalendar = faCalendar;
-  public faUser = faUser;
   public isAdmin : boolean = false
   public listeDemandeAdmin : DemandeAdmin[] = []
+  public listeInformations : InformationInfo[] = [];
   public waitingMonth : boolean = false;
   public waitingActivityOfDay : boolean = false;
-  constructor(private fetchAccueilService : FetchAccueilService, private fetchDemandeAdminService : FetchDemandeAdminService, private navbarService : NavBarService) { 
+  constructor(private fetchAccueilService : FetchAccueilService, private fetchDemandeAdminService : FetchDemandeAdminService, private navbarService : NavBarService, private fetchInformationService : FetchInformationService) { 
     let Admin = this.navbarService.getEstAdmin();
     if (Admin){
       this.isAdmin = true;
@@ -38,7 +51,7 @@ export class AccueilComponent implements OnInit {
     this.getAllDemandeAdmin();
     this.initCalendarToday();
     this.navbarService.receiveChat().subscribe( () => {
-      this.getAllDemandeAdmin();
+    this.getAllInformations();
     }); 
   }
     public selectedIdOfObject : string = ""; 
@@ -329,6 +342,21 @@ export class AccueilComponent implements OnInit {
     }
   }
 
+
+  getAllInformations(){
+    this.listeInformations.splice(0)
+    this.fetchInformationService.getInformations().then((list: InformationInfo[]) => {
+      this.listeInformations = list
+    }).catch((e) => {
+    })
+  }
+
+  async readFile(idDoc : number){
+    (await this.fetchInformationService.readFile(idDoc)).subscribe(res => {
+      const fileURL = URL.createObjectURL(res);
+      window.open(fileURL, '_blank');
+    });
+  }
 
   today(){
     this.initCalendarToday();
