@@ -51,8 +51,9 @@ export class AccueilComponent implements OnInit {
     this.getAllDemandeAdmin();
     this.initCalendarToday();
     this.navbarService.receiveChat().subscribe( () => {
-    this.getAllInformations();
+      this.getAllDemandeAdmin();
     }); 
+    this.getAllInformations();
   }
     public selectedIdOfObject : string = ""; 
     public selectedObjet : infoForDescription = {
