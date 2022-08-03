@@ -130,7 +130,7 @@ export class InformationsComponent implements OnInit {
     this.documents.splice(indice,1)
   }
 
-  public removeDocumentOfModification(indice : number){
+  public removeDocumentOfModification(indice : number){  
     this.descriptionObjectSelect.splice(indice,1)
   }
 
@@ -169,7 +169,9 @@ export class InformationsComponent implements OnInit {
     }
     for( const doc of this.descriptionObjectSelect) {
       this.addDocumentModify(doc.idDoc, doc.libelleDocument);
-    }
+    }    
+    console.log( this.descriptionObjectSelect);
+    
   }
   
 

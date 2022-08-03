@@ -30,7 +30,13 @@ constructor(private readonly http: HttpClient, private navBarService: NavBarServ
         url = url.replace("{idDoc}",idDoc.toString())
         return this.http.get(url,{ responseType: 'blob', observe: 'response'}).pipe(
             map((res: any) => {
-              return new Blob([res.body]);
+              if (res != undefined){
+                if (res.body.type == "application/json") {
+                  return undefined;
+                }
+                return new Blob([res.body]);
+              }
+              return res
             })
           );
     }

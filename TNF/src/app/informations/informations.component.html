@@ -70,14 +70,14 @@
                         
                         <div class="col-12 col-lg-10 offset-lg-1 my-3">
                             <div class="form-floating mb-3">
-                                <textarea #TitreCrea [(ngModel)]="titre" type="text" rows="2" class="form-control" id="TitreCrea" placeholder="" required></textarea>
+                                <textarea autosize  [maxRows]="5" #TitreCrea [(ngModel)]="titre" type="text" rows="2" class="form-control" id="TitreCrea" placeholder="" required></textarea>
                                 <label for="TitreCrea">Titre</label>
                                 <div class="invalid-tooltip">
                                     Veuillez renseigner un titre.
                                 </div>
                             </div>
                             <div class="form-floating mb-3">
-                                <textarea [(ngModel)]="text" #textCrea type="text" rows="3" class="form-control" id="textCrea" placeholder="" required></textarea>
+                                <textarea autosize [maxRows]="25" [(ngModel)]="text" #textCrea type="text" rows="3" class="form-control" id="textCrea" placeholder="" required></textarea>
                                 <label for="textCrea">Texte</label>
                                 <div class="invalid-tooltip">
                                     Veuillez renseigner un texte.
@@ -118,11 +118,11 @@
                             </div>
                             <div class="col-12 col-lg-10 offset-lg-1 my-3">
                                 <div class="form-floating mb-3">
-                                    <textarea #ModifIdentifiant type="text" class="form-control" id="TitreEdit" placeholder="" disabled readonly [value]="infoSelect.titre"></textarea>
+                                    <textarea autosize [maxRows]="5" #ModifIdentifiant type="text" class="form-control" id="TitreEdit" placeholder="" disabled readonly [value]="infoSelect.titre"></textarea>
                                     <label for="TitreEdit">Titre</label>
                                 </div>
                                 <div class="form-floating mb-3"> 
-                                    <textarea #ModifLibelle [(ngModel)]="text" type="text" class="form-control" id="TextEdit" placeholder="" [value]="infoSelect.text" required></textarea>
+                                    <textarea autosize [maxRows]="25" [onlyGrow]="true" #ModifLibelle [(ngModel)]="text" type="text" class="form-control" id="TextEdit" placeholder="" [value]="infoSelect.text" required></textarea>
                                     <label for="TextEdit">Texte</label>
                                     <div class="invalid-tooltip">
                                         Veuillez renseigner un text.
@@ -132,7 +132,7 @@
                                     <div class="row">
                                         <div class="col-10 me-0 pe-0"> 
                                             <div class="form-floating input-group">
-                                                <input #Libelle (change)="modifyLibelleDocument(i)" type="text" [(ngModel)]="this.documentsModify[i].nom" maxlength="50" class="form-control  border-bottom-0 no-rounded-bottom-left zindexZero" id="idDocumentCrea{{i}}" placeholder="" required [value]="d.nomDocument">
+                                                <input #Libelle (change)="modifyLibelleDocument(i)" type="text" [(ngModel)]="this.descriptionObjectSelect[i].libelleDocument" maxlength="50" class="form-control  border-bottom-0 no-rounded-bottom-left zindexZero" id="idDocumentCrea{{i}}" placeholder="" required [value]="d.nomDocument">
                                                 <label for="idDocumentCrea{{i}}">Nom du document </label>
                                             </div>
                                         </div>

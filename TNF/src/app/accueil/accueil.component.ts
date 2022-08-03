@@ -9,6 +9,7 @@ import { NavBarService } from '../navbar/service/nav-bar.service';
 import { InformationInfo } from 'src/structureData/Informations';
 import { FetchInformationService } from '../informations/service/fetch-information.service';
 
+
 @Component({
   selector: 'app-accueil',
   templateUrl: './accueil.component.html',
@@ -354,8 +355,12 @@ export class AccueilComponent implements OnInit {
 
   async readFile(idDoc : number){
     (await this.fetchInformationService.readFile(idDoc)).subscribe(res => {
-      const fileURL = URL.createObjectURL(res);
-      window.open(fileURL, '_blank');
+      if (res == undefined) {
+        console.log("Impossible de récupérer le document");
+      } else {
+        const fileURL = URL.createObjectURL(res);
+        window.open(fileURL, '_blank');
+      }
     });
   }
 
@@ -543,4 +548,5 @@ export class AccueilComponent implements OnInit {
       element.scrollTop = 0;
     }
   }
+
 }

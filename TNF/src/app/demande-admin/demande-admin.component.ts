@@ -296,6 +296,7 @@ export class DemandeAdminComponent implements OnInit {
           this.manageToast("Demande de suppression", "Problème lié à la suppression", "red")
         } else {
           await this.getAllDemandeAdmin();
+          await this.getAllDemandeAdminTraitee();
           this.resetDescriptifNow();
           this.manageToast("Demande de suppression", "La suppression a été effectuée", "#006400")
           this.fetchDemandeAdminService.refreshDemande();
