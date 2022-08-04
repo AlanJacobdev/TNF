@@ -69,7 +69,6 @@ export class InformationsComponent implements OnInit {
       this.idSelected = id;
       this.close()
     }
-    console.log(this.read);
   }
 
   
@@ -384,7 +383,7 @@ export class InformationsComponent implements OnInit {
       if(typeof res === 'string') {
         this.manageToast("Erreur de suppression", res , "red")
       } else {  
-        this.manageToast("Création", "L'information a bien été supprimée", "#006400")    
+        this.manageToast("Suppression", "L'information a bien été supprimée", "#006400")    
         this.getInformation();
         this.idSelected = -1;
         this.close();

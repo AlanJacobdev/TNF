@@ -1,0 +1,277 @@
+<div class="container">
+    <div class="row">
+
+    </div>
+    <div class="row">
+        <div class="col-lg-3 col-xs-12 mt-lg-5 mt-3 order-2 order-lg-1">
+            <div class="col-12 py-3 bg-light border rounded shadow-sm">
+                <div class="scrolltable cursor-pointer col-12 col-xl-10 offset-xl-1"> 
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th class="text-center">Rôle</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let role of listeRole" (click)="selectRole(role.idRole)" [ngClass]="{'table-active': role.idRole === this.selectedRole}">
+                                <td class="col-4 align-middle"> {{role.libelleRole}} </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="!changesNow; else formType" class="col-lg-8 col-xs-12 mt-3 mt-lg-5 order-1 order-lg-2">
+            <div class="row">
+                <div class="col-lg-10 offset-lg-1 col-3 my-lg-3">
+                    <button (click)="selectCreateRole()" type="button" class="btn btn-lg btn-light col-12 col-lg-6 offset-lg-3 shadow-sm ">
+                        <div class="d-none d-lg-block">Créer un nouveau rôle</div>
+                        <div class="d-block d-lg-none"><fa-icon class="fs-3 col-12" [icon]="faPlus" ></fa-icon> </div>
+                    </button>
+                </div>
+                <div *ngIf="this.selectedRole !== -1" class="col-lg-10 offset-lg-1 col-3 my-lg-3">
+                    <button (click)="selectModifyRole()"type="button" class="btn btn-lg btn-light col-12 col-lg-6 offset-lg-3 shadow-sm">
+                        <div class="d-none d-lg-block">Modifier le rôle </div>
+                        <div class="d-block d-lg-none"><fa-icon class="fs-3 col-12" [icon]="faPen" ></fa-icon> </div>
+                    </button>
+                </div>
+                <div *ngIf="this.selectedRole !== -1" class="col-lg-10 offset-lg-1 col-3 my-lg-3">
+                    <button (click)="selectDeleteRole()" type="button" class="btn btn-lg btn-light col-12 col-lg-6 offset-lg-3 shadow-sm">
+                        <div class="d-none d-lg-block">Supprimer le rôle </div>
+                        <div class="d-block d-lg-none"><fa-icon class="fs-3 col-12" [icon]="faTrashCan" ></fa-icon> </div>
+                    </button>
+                </div>
+                <div *ngIf="this.selectedRole !== -1" class="col-lg-10 offset-lg-1 col-3 my-lg-3">
+                    <button (click)="selectInfoRole()" type="button" class="btn btn-lg btn-light col-12 col-lg-6 offset-lg-3 shadow-sm">
+                        <div class="d-none d-lg-block">Informations</div>
+                        <div class="d-block d-lg-none"><fa-icon class="fs-3 col-12" [icon]="faInfo" ></fa-icon> </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    
+        
+        <ng-template #formType >
+            <ng-container *ngIf="selectedRole == -1; else modification">
+                <div class="col-lg-9 col-xs-12 mt-5 order-1 order-lg-2 needs-validation" [ngClass]="{'was-validated': formValidate === true}">
+                    <div class="container-fluid border rounded py-3 px-3 px-lg-1 shadow-sm">
+                        <div class="text-center row">
+                            <span class="fs-3 col-10 offset-1 mb-3">Création </span>
+                            <fa-icon class="close col-1 text-right" [icon]="faXmark" (click)="close()"></fa-icon>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 col-lg-10 offset-lg-1 ">
+                                <div class="form-floating mb-3">
+                                    <input [(ngModel)]="libelle" type="text"  class="form-control" id="libelleRole" placeholder="" required>
+                                    <label for="libelleRole">Nom du rôle</label>
+                                    <div class="invalid-tooltip">
+                                        Veuillez renseigner un nom.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="row">
+                                    <caption class="col-12 text-center pt-0">Atelier</caption>
+                                </div>
+                                <div class="scrolltableform cursor-pointer col-12 col-xl-10 offset-xl-1"> 
+                                    <table class="table table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th><div class="col"><input *ngIf="this.listeAtelier.length !== 0" class="form-check-input" type="checkbox" (change)="allSelectItem()" [checked]="this.checkAllAtelier" id="flexCheckDefault">Actif</div></th>
+                                            <th>Identifiant</th>
+                                            <th>Nom</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngIf="this.listeAtelier.length === 0; else afficheAtelier">
+                                                <td class="text-center" colspan="3">Aucun Atelier</td>
+                                            </tr>
+                                            
+                                            <ng-template #afficheAtelier>
+                                                <tr *ngFor="let atelier of listeAtelier">
+                                                    <td class="col-2"> 
+                                                        <input (click)="selectCheckAtelier(atelier.idAtelier)" class="form-check-input"  [checked]="atelier.isPaste" type="checkbox" id="flexCheckDefault">
+                                                    </td>
+                                                    <td class="col-2"> {{atelier.idAtelier}} </td>
+                                                    <td class="col-10"> {{atelier.libelleAtelier}} </td>
+                                                </tr>
+                                            </ng-template>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="row">
+                                    <caption class="col-12 text-center pt-0">Type d'objet repère</caption>
+                                </div>
+                                <div class="scrolltableform cursor-pointer col-12 col-xl-10 offset-xl-1"> 
+                                    <table class="table table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th><div class="col"><input *ngIf="this.listeAtelier.length !== 0" class="form-check-input" type="checkbox" (change)="allSelectTypeOR()" [checked]="this.checkAllTypeOR" id="flexCheckDefault">Actif</div></th>
+                                            <th>Identifiant</th>
+                                            <th>Nom</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngIf="this.listeTypeOR.length === 0; else afficheTypeOR">
+                                                <td class="text-center" colspan="3">Aucun Type d'objet repère</td>
+                                            </tr>
+                                            
+                                            <ng-template #afficheTypeOR>
+                                                <tr *ngFor="let typeOR of listeTypeOR">
+                                                    <td class="col-2"> 
+                                                        <input (click)="selectCheckTypeOR(typeOR.idTypeOR)" class="form-check-input"  [checked]="typeOR.isPaste" type="checkbox" id="flexCheckDefault">
+                                                    </td>
+                                                    <td class="col-2"> {{typeOR.idTypeOR}} </td>
+                                                    <td class="col-10"> {{typeOR.libelleTypeOR}} </td>
+                                                </tr>
+                                            </ng-template>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                        </div>                        
+                        <button (click)="createRole()" type="button" class="btn btn-lg btn-light col-10 offset-1 col-lg-6 offset-lg-3 my-3">Créer</button>
+                    </div>
+                </div>
+            </ng-container>
+            <ng-template #modification >
+                <ng-container *ngIf="!this.suppresion && !this.read; else supp">
+                    <div class="col-lg-9 col-xs-12 mt-5 order-1 order-lg-2 needs-validation"  [ngClass]="{'was-validated': formValidate === true}" >
+                        <div class="container-fluid border rounded py-3 px-3 shadow-sm">
+                            <div class="text-center row ">
+                                <span class="fs-3 col-10 offset-1">Modification </span>
+                                <fa-icon class="close col-1 text-right" [icon]="faXmark" (click)="close()"></fa-icon>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-12 col-lg-10 offset-lg-1 ">
+                                    <div class="form-floating mb-3">
+                                        <input [(ngModel)]="libelle" type="text"  class="form-control" id="libelleRole" placeholder="" required>
+                                        <label for="libelleRole">Nom du rôle</label>
+                                        <div class="invalid-tooltip">
+                                            Veuillez renseigner un nom.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="row">
+                                        <caption class="col-12 text-center pt-0">Atelier</caption>
+                                    </div>
+                                    <div class="scrolltableform cursor-pointer col-12 col-xl-10 offset-xl-1"> 
+                                        <table class="table table-hover">
+                                            <thead>
+                                            <tr>
+                                                <th><div class="col"><input *ngIf="this.listeAtelier.length !== 0" class="form-check-input" type="checkbox" (change)="allSelectItem()" [checked]="this.checkAllAtelier" id="flexCheckDefault">Actif</div></th>
+                                                <th>Identifiant</th>
+                                                <th>Nom</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngIf="this.listeAtelier.length === 0; else afficheAtelier">
+                                                    <td class="text-center" colspan="3">Aucun Atelier</td>
+                                                </tr>
+                                                
+                                                <ng-template #afficheAtelier>
+                                                    <tr *ngFor="let atelier of listeAtelier">
+                                                        <td class="col-2"> 
+                                                            <input (click)="selectCheckAtelier(atelier.idAtelier)" class="form-check-input"  [checked]="atelier.isPaste" type="checkbox" id="flexCheckDefault">
+                                                        </td>
+                                                        <td class="col-2"> {{atelier.idAtelier}} </td>
+                                                        <td class="col-10"> {{atelier.libelleAtelier}} </td>
+                                                    </tr>
+                                                </ng-template>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="row">
+                                        <caption class="col-12 text-center pt-0">Type d'objet repère</caption>
+                                    </div>
+                                    <div class="scrolltableform cursor-pointer col-12 col-xl-10 offset-xl-1"> 
+                                        <table class="table table-hover">
+                                            <thead>
+                                            <tr>
+                                                <th><div class="col"><input *ngIf="this.listeAtelier.length !== 0" class="form-check-input" type="checkbox" (change)="allSelectTypeOR()" [checked]="this.checkAllTypeOR" id="flexCheckDefault">Actif</div></th>
+                                                <th>Identifiant</th>
+                                                <th>Nom</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngIf="this.listeTypeOR.length === 0; else afficheTypeOR">
+                                                    <td class="text-center" colspan="3">Aucun Type d'objet repère</td>
+                                                </tr>
+                                                
+                                                <ng-template #afficheTypeOR>
+                                                    <tr *ngFor="let typeOR of listeTypeOR">
+                                                        <td class="col-2"> 
+                                                            <input (click)="selectCheckTypeOR(typeOR.idTypeOR)" class="form-check-input"  [checked]="typeOR.isPaste" type="checkbox" id="flexCheckDefault">
+                                                        </td>
+                                                        <td class="col-2"> {{typeOR.idTypeOR}} </td>
+                                                        <td class="col-10"> {{typeOR.libelleTypeOR}} </td>
+                                                    </tr>
+                                                </ng-template>
+                                            </tbody>
+                                        </table>
+                                    </div>
+    
+                                </div>
+                            </div> 
+
+                            <!-- <button (click)="updateInformations()" type="button" class="btn btn-lg btn-light col-10 offset-1 col-lg-6 offset-lg-3 my-2">Modifier</button> -->
+                        </div>
+                    </div>
+                </ng-container>
+            </ng-template> 
+            <ng-template #supp >
+                <ng-container *ngIf="!this.read; else info">
+                    <div class="col-lg-5 col-xs-12 mt-5 offset-lg-1 order-1 order-lg-2">
+                        <div class="container-fluid border rounded py-3 px-3 shadow-sm">
+                            <div class="text-center row ">
+                                <span class="fs-3 col-10 offset-1">Suppresion</span>
+                                <fa-icon class="close col-1 text-right" [icon]="faXmark" (click)="close()"></fa-icon>
+                            </div>
+                            <div class="col-12 col-lg-10 offset-lg-1 my-5">
+                                <div class="text-center fs-5">
+                                    Voulez-vous supprimer le role <b>{{roleSelected.libelleRole}}</b>?
+                                </div>
+                            </div>
+                            <button (click)="deleteRole()" type="button" class="btn btn-lg btn-light col-10 offset-1 col-lg-6 offset-lg-3 my-2">Supprimer</button>
+                        </div>
+                    </div>
+                </ng-container>
+            </ng-template> 
+            <ng-template #info >
+                    <div class="col-lg-5 col-xs-12 mt-5 offset-lg-1 order-1 order-lg-2">
+                        <div class="container-fluid border rounded py-3 px-0 shadow-sm">
+                            <div class="text-center shadow-sm border-bottom row pb-3 mb-2 px-0 mx-0">
+                                <span class="fs-4 col-10 offset-1">info</span>
+                                <fa-icon class="close col-1 text-right" [icon]="faXmark" (click)="close()"></fa-icon>
+                            </div>
+                        </div>
+                    </div>
+            </ng-template> 
+        </ng-template>
+    </div>
+</div>
+
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+    <div id="liveToast" class="toast hide"  data-bs-autohide="false" role="alert" data-bs-delay="10000" aria-live="assertive" aria-atomic="true" [ngClass]="ToastAffiche ? 'show' : 'hide'">
+    <div class="toast-header">
+        <svg class="bd-placeholder-img rounded me-2" width="20" height="20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" attr.fill="{{colorToast}}"></rect></svg>
+        <strong class="me-auto">{{typeToast}}</strong>
+        <button (click)="closeToast()" type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body">
+        {{messageToast}}
+    </div>
+    </div>
+</div>

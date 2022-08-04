@@ -19,7 +19,8 @@ export interface TypeObjetRepereInfo {
     profilModification : string,
     posteModification : string,
     dateModification : string,
-    actif : boolean
+    actif : boolean,
+    isPaste? : boolean
 }
 
 export interface TypeObjetRepereTableau {

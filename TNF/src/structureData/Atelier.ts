@@ -1,7 +1,8 @@
 export interface AtelierInfo {
     idAtelier: string
     libelleAtelier: string
-    actif : boolean
+    actif : boolean;
+    isPaste? : boolean
 }
 
 export interface Atelier{

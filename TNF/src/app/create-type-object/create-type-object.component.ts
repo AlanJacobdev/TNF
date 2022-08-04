@@ -232,7 +232,6 @@ export class CreateTypeObjectComponent implements OnInit {
     
     if ( identifiant != '' && libelle != '' && this.type != this.typeNow.Aucun) {
       if(this.type == this.typeNow.OR) {      
-        console.log("test");  
         this.fetchCreateTypeObject.createTypeOR(identifiant,libelle, this.checkValide).then((res: TypeObjetRepereInfo) => {
           if(res === undefined) {
             this.manageToast("Erreur de création", "Le type d'objet repère existe déjà", "red")

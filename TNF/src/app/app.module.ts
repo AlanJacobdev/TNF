@@ -34,6 +34,7 @@ import { FilterDmdAdminPipe } from './demande-admin/pipe/filter-dmd-admin.pipe';
 import { InformationsComponent } from './informations/informations.component';
 import { FilterInfoPipe } from './informations/pipe/filter-info.pipe';
 import { AutosizeModule } from 'ngx-autosize';
+import { RoleComponent } from './role/role.component';
 
 
 const config: SocketIoConfig = { url: 'http://'+environment.API_URL, options: {} };
@@ -66,7 +67,8 @@ const config: SocketIoConfig = { url: 'http://'+environment.API_URL, options: {}
     ParametreComponent,
     FilterDmdAdminPipe,
     InformationsComponent,
-    FilterInfoPipe
+    FilterInfoPipe,
+    RoleComponent
   ],
   imports: [
     BrowserModule,

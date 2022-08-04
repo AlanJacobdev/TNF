@@ -3,8 +3,7 @@ import { Injectable } from '@angular/core';
 import { lastValueFrom, map } from 'rxjs';
 import { NavBarService } from 'src/app/navbar/service/nav-bar.service';
 import { environment } from 'src/environments/environment';
-import {DocName, DocumentInfo, documentInfoModify, DocumentReceive, InformationCreate, InformationInfo, InformationModify } from 'src/structureData/Informations';
-import { stream } from 'xlsx';
+import {documentInfoModify, DocumentReceive, InformationCreate, InformationInfo, InformationModify } from 'src/structureData/Informations';
 
 @Injectable({
     providedIn: 'root'
