@@ -477,7 +477,6 @@ export class ModifyObjectComponent implements OnInit, OnDestroy {
           this.descriptionObjectSelect.push(d)
         }
     }
-    
   }
 
   public selectObject (object : typeObjet) {

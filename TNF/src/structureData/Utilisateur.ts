@@ -9,6 +9,7 @@ export interface UtilisateurInfo {
     prenom : string;
     login : string;
     email : string;
+    idRole : number;
     estAdministrateur : boolean;
     profilCreation : string;
     posteCreation : string;
