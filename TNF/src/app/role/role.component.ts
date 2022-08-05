@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { faInfo, faPen, faPlus, faTrashCan, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faCalendar, faClock, faInfo, faPen, faPlus, faTrashCan, faUser, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { AtelierInfo } from 'src/structureData/Atelier';
 import { roleInfo } from 'src/structureData/Role';
 import { TypeObjetRepere, TypeObjetRepereInfo } from 'src/structureData/TypeObject';
@@ -17,6 +17,9 @@ export class RoleComponent implements OnInit {
 
   constructor(private fetchRoleService : FetchRoleService, private fetchGestionAtelier: FetchAtelierService, private fetchCreateTypeObject : FetchcreateTypeObjectService) { }
 
+  public faClock = faClock;
+  public faCalendar = faCalendar;
+  public faUser = faUser;
   public faInfo = faInfo;
   public faPen = faPen;
   public faTrashCan = faTrashCan;
@@ -61,7 +64,7 @@ export class RoleComponent implements OnInit {
 
   getAllRole(){
     this.listeRole.splice(0)
-    this.fetchRoleService.getInformations().then((list: roleInfo[]) => {
+    this.fetchRoleService.getRole().then((list: roleInfo[]) => {
       if (list != undefined){
         this.listeRole = list;
       }
@@ -106,15 +109,55 @@ export class RoleComponent implements OnInit {
   selectCreateRole() {
     this.selectedRole = -1;
     this.changesNow = true;
+    for ( const tor of this.listeTypeOR){
+      tor.isPaste = false;
+    }
+    for ( const atelier of this.listeAtelier){
+      atelier.isPaste = false;
+    }
+    this.checkAllAtelier = false;
+    this.checkAllTypeOR = false;
+    this.listOfSelectedAtelier.splice(0),
+    this.listOfSelectedTypeOR.splice(0);
+
 
   }
 
   selectModifyRole(){
+    for ( const tor of this.listeTypeOR){
+      tor.isPaste = false;
+    }
+    for ( const atelier of this.listeAtelier){
+      atelier.isPaste = false;
+    }
+    this.listOfSelectedAtelier.splice(0),
+    this.listOfSelectedTypeOR.splice(0);
+
     this.changesNow = true;
     let res = this.listeRole.find(element => element.idRole === this.selectedRole);  
     if (res != undefined){
       this.roleSelected = res;
       this.libelle = res.libelleRole;
+
+      console.log(res);
+      
+      for (const atelier of res.atelier){
+        this.listOfSelectedAtelier.push(atelier.idAtelier)
+        let index = this.listeAtelier.findIndex((element) => element.idAtelier == atelier.idAtelier)
+        if (index != -1){
+          this.listeAtelier[index].isPaste = true;
+        }
+      }
+      this.verifyCheckAllAtelier();
+
+      for (const typeor of res.typeObjet){
+        this.listOfSelectedTypeOR.push(typeor.idTypeOR)
+        let index = this.listeTypeOR.findIndex((element) => element.idTypeOR == typeor.idTypeOR)
+        if (index != -1){
+          this.listeTypeOR[index].isPaste = true;
+        }
+      }
+      this.verifyCheckAllTypeOr();
     }
   }
 
@@ -130,6 +173,42 @@ export class RoleComponent implements OnInit {
   selectInfoRole(){
     this.read = true;
     this.changesNow = true;
+
+    for ( const tor of this.listeTypeOR){
+      tor.isPaste = false;
+    }
+    for ( const atelier of this.listeAtelier){
+      atelier.isPaste = false;
+    }
+    this.listOfSelectedAtelier.splice(0),
+    this.listOfSelectedTypeOR.splice(0);
+    
+    let res = this.listeRole.find(element => element.idRole === this.selectedRole);  
+    if (res != undefined){
+      this.roleSelected = res;
+      this.libelle = res.libelleRole;
+
+      console.log(res);
+      
+      for (const atelier of res.atelier){
+        this.listOfSelectedAtelier.push(atelier.idAtelier)
+        let index = this.listeAtelier.findIndex((element) => element.idAtelier == atelier.idAtelier)
+        if (index != -1){
+          this.listeAtelier[index].isPaste = true;
+        }
+      }
+      this.verifyCheckAllAtelier();
+
+      for (const typeor of res.typeObjet){
+        this.listOfSelectedTypeOR.push(typeor.idTypeOR)
+        let index = this.listeTypeOR.findIndex((element) => element.idTypeOR == typeor.idTypeOR)
+        if (index != -1){
+          this.listeTypeOR[index].isPaste = true;
+        }
+      }
+      this.verifyCheckAllTypeOr();
+    }
+
   }
 
   close(){
@@ -162,8 +241,9 @@ export class RoleComponent implements OnInit {
   }
 
   selectCheckAtelier(idAtelier : string) {
-    const targetAtelier = this.listeAtelier.find((element) => element.idAtelier === idAtelier)
-    if (targetAtelier != undefined) {  
+    const targetAtelier = this.listeAtelier.findIndex((element) => element.idAtelier === idAtelier)
+    if (targetAtelier != -1) {  
+      this.listeAtelier[targetAtelier].isPaste = !this.listeAtelier[targetAtelier].isPaste;
       const stateAtelier = this.listOfSelectedAtelier.findIndex((element) => element === idAtelier);
       if(stateAtelier != -1) {
         this.listOfSelectedAtelier.splice(stateAtelier , 1)
@@ -171,9 +251,10 @@ export class RoleComponent implements OnInit {
         this.listOfSelectedAtelier.push(idAtelier);
       }
     }   
+    this.verifyCheckAllAtelier();
   }
 
-  public allSelectItem() {
+  public allSelectAtelier() {
     this.checkAllAtelier = !this.checkAllAtelier;
     for (const atelier of this.listeAtelier) {
       atelier.isPaste = this.checkAllAtelier;
@@ -190,9 +271,29 @@ export class RoleComponent implements OnInit {
     }
   }
 
+  verifyCheckAllAtelier(){
+    let allCheck = true;
+    if (this.listeAtelier.length != 0){
+      for (const atelier of this.listeAtelier) {
+        if(atelier.isPaste === false) {
+          allCheck = false;
+        }
+      }
+      if (allCheck) {
+        this.checkAllAtelier = true;
+      } else {
+        this.checkAllAtelier = false;
+      }
+    } else {
+      this.checkAllAtelier = false;
+    }
+  }
+
+
   selectCheckTypeOR(idTypeOR : string){
-    const targetTypeOR = this.listeTypeOR.find((element) => element.idTypeOR === idTypeOR)
-    if (targetTypeOR != undefined) {  
+    const targetTypeOR = this.listeTypeOR.findIndex((element) => element.idTypeOR === idTypeOR)
+    if (targetTypeOR != -1) {  
+      this.listeTypeOR[targetTypeOR].isPaste = !this.listeTypeOR[targetTypeOR].isPaste;
       const stateTypeOR = this.listOfSelectedTypeOR.findIndex((element) => element === idTypeOR);
       if(stateTypeOR != -1) {
         this.listOfSelectedTypeOR.splice(stateTypeOR , 1)
@@ -200,6 +301,7 @@ export class RoleComponent implements OnInit {
         this.listOfSelectedTypeOR.push(idTypeOR);
       }
     }  
+    this.verifyCheckAllTypeOr();
   }
 
   allSelectTypeOR(){
@@ -217,6 +319,24 @@ export class RoleComponent implements OnInit {
         this.listOfSelectedTypeOR.splice(index,1);
       }
     }    
+  }
+
+  verifyCheckAllTypeOr(){
+    let allCheck = true;
+    if (this.listeTypeOR.length != 0){
+      for (const typeor of this.listeTypeOR) {
+        if(typeor.isPaste === false) {
+          allCheck = false;
+        }
+      }
+      if (allCheck) {
+        this.checkAllTypeOR = true;
+      } else {
+        this.checkAllTypeOR = false;
+      }
+    } else {
+      this.checkAllTypeOR = false;
+    }
   }
 
 
@@ -239,7 +359,7 @@ export class RoleComponent implements OnInit {
       payload.atelier = atelier;
       payload.typeObjet = typeOR;
 
-      this.fetchRoleService.createRole(payload).then((res: TypeObjetRepereInfo) => {
+      this.fetchRoleService.createRole(payload).then((res: roleInfo) => {
         if(typeof res === 'string') {
           this.manageToast("Erreur de création", res , "red")
         } else {  
@@ -253,6 +373,39 @@ export class RoleComponent implements OnInit {
       this.formValidate = true;
     }
 
+  }
+
+  updateRole(){
+    if (this.libelle != '' ) {
+      let payload: any = {};
+      payload.libelleRole = this.libelle;
+      let atelier : any[] = [];
+      let typeOR : any[] = [];
+
+      for ( const a of this.listOfSelectedAtelier){
+        atelier.push({"idAtelier" : a })
+      }
+      
+      for ( const t of this.listOfSelectedTypeOR){
+        typeOR.push({"idTypeOR" : t})
+      }
+
+      payload.atelier = atelier;
+      payload.typeObjet = typeOR;
+
+      this.fetchRoleService.updateRole(this.selectedRole,payload).then((res: roleInfo) => {
+        if(typeof res === 'string') {
+          this.manageToast("Erreur de Modification", res , "red")
+        } else {  
+          this.getAllRole()
+          this.manageToast("Création", "Le rôle " + this.libelle+ " a été modifié", "#006400");
+          this.close();
+        }
+      }).catch((e) => {
+      })
+    } else {
+      this.formValidate = true;
+    }
   }
 
   deleteRole(){

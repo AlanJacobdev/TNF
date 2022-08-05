@@ -1,0 +1,179 @@
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6 col-xs-12 mt-lg-5 mt-3 order-2 order-lg-1">
+            <div class="col-12 py-3 bg-light border rounded shadow-sm">
+                <div class="scrolltable cursor-pointer col-12 col-xl-10 offset-xl-1"> 
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th class="text-center">Admin</th>
+                            <th >Login</th>
+                            <th >Nom</th>
+                            <th >Prenom</th>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let user of listeUtilisateur" (click)="selectUtilisateur(user.idUtilisateur)" [ngClass]="{'table-active': user.idUtilisateur === this.selectedUser}">
+                                <td class="col-3 align-middle text-center"> 
+                                    <input disabled (click)="selectCheckAdmin(user.idUtilisateur)" class="form-check-input"  [checked]="user.estAdministrateur" type="checkbox" id="flexCheckDefault"> 
+                                </td>
+                                <td class="col-3 align-middle"> {{user.login}} </td>
+                                <td class="col-3 align-middle"> {{user.nom}} </td>
+                                <td class="col-3 align-middle"> {{user.prenom}} </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="!changesNow; else formType" class="col-lg-6 col-xs-12 mt-3 mt-lg-5 order-1 order-lg-2">
+            <div class="row">
+                <div class="col-lg-12 col-3 my-lg-3">
+                    <button (click)="selectCreateUtilisateur()" type="button" class="btn btn-lg btn-light col-12 col-lg-6 offset-lg-3 shadow-sm ">
+                        <div class="d-none d-lg-block">Créer un nouvel utilisateur</div>
+                        <div class="d-block d-lg-none"><fa-icon class="fs-3 col-12" [icon]="faPlus" ></fa-icon> </div>
+                    </button>
+                </div>
+                <div *ngIf="this.selectedUser !== -1" class="col-lg-12 col-3 my-lg-3">
+                    <button (click)="selectModifyUtilisateur()"type="button" class="btn btn-lg btn-light col-12 col-lg-6 offset-lg-3 shadow-sm">
+                        <div class="d-none d-lg-block">Modifier l'utilisateur </div>
+                        <div class="d-block d-lg-none"><fa-icon class="fs-3 col-12" [icon]="faPen" ></fa-icon> </div>
+                    </button>
+                </div>
+                <div *ngIf="this.selectedUser !== -1" class="col-lg-12 col-3 my-lg-3">
+                    <button (click)="selectDeleteUtilisateur()" type="button" class="btn btn-lg btn-light col-12 col-lg-6 offset-lg-3 shadow-sm">
+                        <div class="d-none d-lg-block">Supprimer l'utilisateur</div>
+                        <div class="d-block d-lg-none"><fa-icon class="fs-3 col-12" [icon]="faTrashCan" ></fa-icon> </div>
+                    </button>
+                </div>
+                <div *ngIf="this.selectedUser !== -1" class="col-lg-12 col-3 my-lg-3">
+                    <button (click)="selectInfoUtilisateur()" type="button" class="btn btn-lg btn-light col-12 col-lg-6 offset-lg-3 shadow-sm">
+                        <div class="d-none d-lg-block">Informations</div>
+                        <div class="d-block d-lg-none"><fa-icon class="fs-3 col-12" [icon]="faInfo" ></fa-icon> </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <ng-template #formType >
+            <ng-container *ngIf="selectedUser == -1; else modification">
+                <div class="col-lg-6 col-xs-12 mt-5 order-1 order-lg-2 needs-validation" [ngClass]="{'was-validated': formValidate === true}">
+                    <div class="container-fluid border rounded py-3 px-3 px-lg-1 shadow-sm">
+                        <div class="text-center row">
+                            <span class="fs-3 col-10 offset-1 mb-3">Création </span>
+                            <fa-icon class="close col-1 text-right" [icon]="faXmark" (click)="close()"></fa-icon>
+                        </div>
+
+                        <div class="col-12 col-lg-10 offset-lg-1 my-3">
+                            <div class="form-floating mb-3">
+                                <input [(ngModel)]="nom" #Nom type="text" class="form-control" id="Nom" placeholder="" required>
+                                <label for="Nom">Nom</label>
+                                <div class="invalid-tooltip">
+                                    Veuillez renseigner un Nom.
+                                </div>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input [(ngModel)]="prenom" #Prenom type="text" class="form-control" id="Prenom" placeholder="" required>
+                                <label for="Prenom">Prenom</label>
+                                <div class="invalid-tooltip">
+                                    Veuillez renseigner un Prenom.
+                                </div>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input [(ngModel)]="login" #Login type="text" class="form-control" id="Login" placeholder="" required>
+                                <label for="Nom">Login</label>
+                                <div class="invalid-tooltip">
+                                    Veuillez renseigner un Login.
+                                </div>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input [(ngModel)]="pwd" #Password type="password" class="form-control" id="Password" placeholder="" required>
+                                <label for="Password">Mot de passe</label>
+                                <div class="invalid-tooltip">
+                                    Veuillez renseigner un Mot de passe.
+                                </div>
+                            </div>
+                            <div class="form-floating mb-3 ">
+                                <input [(ngModel)]="email" #Email type="email" class="form-control" id="Email" placeholder="" required>
+                                <label for="Email">Email</label>
+                                <div class="invalid-tooltip">
+                                    Veuillez renseigner un Email.
+                                </div>
+                            </div>
+
+                            <div class="form-floating mb-3">
+                                <select required (change)=selectRole($event) class="form-select" id="Role" aria-label="Rôle">
+                                  <option value="" disabled selected>Sélectionnez un rôle</option>
+                                  <option *ngFor="let role of listeRole" [value]="role.idRole" style="--bs-bg-opacity: .25;">
+                                    {{role.libelleRole}} 
+                                </option>
+                                </select>
+                                <label for="Role">Rôle</label>
+                                <div class="invalid-tooltip">
+                                    Veuillez sélectionner un role
+                                </div>
+                            </div>
+                            <div class="form-check">
+                                <input [(ngModel)]="estAdministrateur" class="form-check-input" type="checkbox" id="Administrateur">
+                                <label class="form-check-label" for="Administrateur">
+                                  Administrateur
+                                </label>
+                            </div>
+                            
+                        </div>
+                                            
+                        <button (click)="createUtilisateur()" type="button" class="btn btn-lg btn-light col-10 offset-1 col-lg-6 offset-lg-3 my-3">Créer</button>
+                    </div>
+                </div>
+            </ng-container>
+            <ng-template #modification >
+                <ng-container *ngIf="!this.suppresion && !this.read; else supp">
+                    <div class="col-lg-6 col-xs-12 mt-5 order-1 order-lg-2 needs-validation"  [ngClass]="{'was-validated': formValidate === true}" >
+                        <div class="container-fluid border rounded py-3 px-3 shadow-sm">
+                            <div class="text-center row ">
+                                <span class="fs-3 col-10 offset-1 mb-3">Modification </span>
+                                <fa-icon class="close col-1 text-right" [icon]="faXmark" (click)="close()"></fa-icon>
+                            </div>
+
+
+                            
+                            
+
+                            <!-- <button (click)="updateUtilisateur()" type="button" class="btn btn-lg btn-light col-10 offset-1 col-lg-6 offset-lg-3 my-3">Modifier</button> -->
+                        </div>
+                    </div>
+                </ng-container>
+            </ng-template> 
+            <ng-template #supp >
+                <ng-container *ngIf="!this.read; else info">
+                    <div class="col-lg-5 col-xs-12 mt-5 offset-lg-1 order-1 order-lg-2">
+                        <div class="container-fluid border rounded py-3 px-3 shadow-sm">
+                            <div class="text-center row ">
+                                <span class="fs-3 col-10 offset-1 mb-3">Suppresion</span>
+                                <fa-icon class="close col-1 text-right" [icon]="faXmark" (click)="close()"></fa-icon>
+                            </div>
+                            <div class="col-12 col-lg-10 offset-lg-1 my-5">
+                                <div class="text-center fs-5">
+                                    Voulez-vous supprimer le role <b></b>?
+                                </div>
+                            </div>
+                            <!-- <button (click)="deleteUtilisateur()" type="button" class="btn btn-lg btn-light col-10 offset-1 col-lg-6 offset-lg-3 my-2">Supprimer</button> -->
+                        </div>
+                    </div>
+                </ng-container>
+            </ng-template> 
+            <ng-template #info >
+                <div class="col-lg-6 col-xs-12 mt-5 order-1 order-lg-2 " >
+                    <div class="container-fluid border rounded py-3 px-3 shadow-sm pb-4">
+                        <div class="text-center row ">
+                            <span class="fs-3 col-10 offset-1 mb-3">Information de l'utilisateur </span>
+                            <fa-icon class="close col-1 text-right" [icon]="faXmark" (click)="close()"></fa-icon>
+                        </div> 
+                    </div>
+                </div>
+            </ng-template> 
+        </ng-template>
+    </div>
+</div>

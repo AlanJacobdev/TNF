@@ -14,6 +14,7 @@ import { ModifyObjectComponent } from './modify-object/modify-object.component';
 import { ParametreComponent } from './parametre/parametre.component';
 import { RecopieObjectComponent } from './recopie-object/recopie-object.component';
 import { RoleComponent } from './role/role.component';
+import { UtilisateurComponent } from './utilisateur/utilisateur.component';
 import { VisualisationComponent } from './visualisation/visualisation.component';
 
 
@@ -32,6 +33,7 @@ const routes: Routes = [
   { path: 'parametres', component : ParametreComponent, canActivate: [ AuthGuard ]},
   { path: 'information', component : InformationsComponent, canActivate: [ AuthGuard ]},
   { path: 'role', component : RoleComponent, canActivate: [ AuthGuard ]},
+  { path: 'utilisateur', component : UtilisateurComponent, canActivate: [ AuthGuard ]},
 
   { path: '**', redirectTo: ''}
 ];

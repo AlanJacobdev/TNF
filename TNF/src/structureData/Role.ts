@@ -11,3 +11,4 @@ export interface roleInfo {
     atelier : Atelier[];
     typeObjet : TypeObjetRepereInfo[];
 }
+

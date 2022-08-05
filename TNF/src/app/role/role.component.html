@@ -1,8 +1,5 @@
 <div class="container">
     <div class="row">
-
-    </div>
-    <div class="row">
         <div class="col-lg-3 col-xs-12 mt-lg-5 mt-3 order-2 order-lg-1">
             <div class="col-12 py-3 bg-light border rounded shadow-sm">
                 <div class="scrolltable cursor-pointer col-12 col-xl-10 offset-xl-1"> 
@@ -80,7 +77,7 @@
                                     <table class="table table-hover">
                                         <thead>
                                         <tr>
-                                            <th><div class="col"><input *ngIf="this.listeAtelier.length !== 0" class="form-check-input" type="checkbox" (change)="allSelectItem()" [checked]="this.checkAllAtelier" id="flexCheckDefault">Actif</div></th>
+                                            <th><div class="col"><input *ngIf="this.listeAtelier.length !== 0" class="form-check-input" type="checkbox" (change)="allSelectAtelier()" [checked]="this.checkAllAtelier" id="flexCheckDefault">Actif</div></th>
                                             <th>Identifiant</th>
                                             <th>Nom</th>
                                         </tr>
@@ -145,7 +142,7 @@
                     <div class="col-lg-9 col-xs-12 mt-5 order-1 order-lg-2 needs-validation"  [ngClass]="{'was-validated': formValidate === true}" >
                         <div class="container-fluid border rounded py-3 px-3 shadow-sm">
                             <div class="text-center row ">
-                                <span class="fs-3 col-10 offset-1">Modification </span>
+                                <span class="fs-3 col-10 offset-1 mb-3">Modification </span>
                                 <fa-icon class="close col-1 text-right" [icon]="faXmark" (click)="close()"></fa-icon>
                             </div>
                             
@@ -169,7 +166,7 @@
                                         <table class="table table-hover">
                                             <thead>
                                             <tr>
-                                                <th><div class="col"><input *ngIf="this.listeAtelier.length !== 0" class="form-check-input" type="checkbox" (change)="allSelectItem()" [checked]="this.checkAllAtelier" id="flexCheckDefault">Actif</div></th>
+                                                <th><div class="col"><input *ngIf="this.listeAtelier.length !== 0" class="form-check-input" type="checkbox" (change)="allSelectAtelier()" [checked]="this.checkAllAtelier" id="flexCheckDefault">Actif</div></th>
                                                 <th>Identifiant</th>
                                                 <th>Nom</th>
                                             </tr>
@@ -226,7 +223,7 @@
                                 </div>
                             </div> 
 
-                            <!-- <button (click)="updateInformations()" type="button" class="btn btn-lg btn-light col-10 offset-1 col-lg-6 offset-lg-3 my-2">Modifier</button> -->
+                            <button (click)="updateRole()" type="button" class="btn btn-lg btn-light col-10 offset-1 col-lg-6 offset-lg-3 my-3">Modifier</button>
                         </div>
                     </div>
                 </ng-container>
@@ -236,7 +233,7 @@
                     <div class="col-lg-5 col-xs-12 mt-5 offset-lg-1 order-1 order-lg-2">
                         <div class="container-fluid border rounded py-3 px-3 shadow-sm">
                             <div class="text-center row ">
-                                <span class="fs-3 col-10 offset-1">Suppresion</span>
+                                <span class="fs-3 col-10 offset-1 mb-3">Suppresion</span>
                                 <fa-icon class="close col-1 text-right" [icon]="faXmark" (click)="close()"></fa-icon>
                             </div>
                             <div class="col-12 col-lg-10 offset-lg-1 my-5">
@@ -250,14 +247,130 @@
                 </ng-container>
             </ng-template> 
             <ng-template #info >
-                    <div class="col-lg-5 col-xs-12 mt-5 offset-lg-1 order-1 order-lg-2">
-                        <div class="container-fluid border rounded py-3 px-0 shadow-sm">
-                            <div class="text-center shadow-sm border-bottom row pb-3 mb-2 px-0 mx-0">
-                                <span class="fs-4 col-10 offset-1">info</span>
-                                <fa-icon class="close col-1 text-right" [icon]="faXmark" (click)="close()"></fa-icon>
+                <div class="col-lg-9 col-xs-12 mt-5 order-1 order-lg-2 " >
+                    <div class="container-fluid border rounded py-3 px-3 shadow-sm pb-4">
+                        <div class="text-center row ">
+                            <span class="fs-3 col-10 offset-1 mb-3">Information du rôle {{roleSelected.libelleRole}} </span>
+                            <fa-icon class="close col-1 text-right" [icon]="faXmark" (click)="close()"></fa-icon>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-12 col-lg-8 offset-lg-2 ">
+                                <div *ngIf="roleSelected.dateModification == undefined" class="col-12 mt-2">
+                                    <div class="row">
+                                        <div class="col-2 justify-content-center text-center">
+                                            <fa-icon class="fs-5 col-12 col-sm-2 px-2 " [icon]="faPlus" ></fa-icon> 
+                                        </div>
+                                        <div class="col-3 justify-content-center text-center">
+                                            <fa-icon class="fs-5 col-12 col-sm-2 px-2 " [icon]="faCalendar" ></fa-icon> 
+                                            <span class="col-12 col-sm-10 lh-lg">{{roleSelected.dateCreation | date: 'dd/MM/yyyy'}}</span>
+                                        </div>
+                                        <div class="col-3 justify-content-center text-center">
+                                            <fa-icon class="fs-5 col-12 col-sm-2 px-2" [icon]="faClock" ></fa-icon> 
+                                            <span class="col-12 col-sm-10 lh-lg">{{roleSelected.dateCreation | date: 'HH:mm'}}</span>
+                                        </div>
+                                        <div class="col-4 justify-content-center text-center">
+                                            <fa-icon class="fs-5 col-12 col-sm-2 px-2" [icon]="faUser" ></fa-icon> 
+                                            <span class="col-12 col-sm-10 lh-lg">{{roleSelected.profilCreation}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div *ngIf="roleSelected.dateModification != undefined" class="col-12 mt-2">
+                                    <div class="row">
+                                        <div class="col-2 justify-content-center text-center">
+                                            <fa-icon class="fs-5 col-12 col-sm-2 px-2 " [icon]="faPen" ></fa-icon> 
+                                        </div>
+                                        <div class="col-3 justify-content-center text-center">
+                                            <fa-icon class="fs-5 col-12 col-sm-2 px-2 " [icon]="faCalendar" ></fa-icon> 
+                                            <span class="col-12 col-sm-10 lh-lg">{{roleSelected.dateModification | date: 'dd/MM/yyyy'}}</span>
+                                        </div>
+                                        <div class="col-3 justify-content-center text-center">
+                                            <fa-icon class="fs-5 col-12 col-sm-2 px-2" [icon]="faClock" ></fa-icon> 
+                                            <span class="col-12 col-sm-10 lh-lg">{{roleSelected.dateModification | date: 'HH:mm'}}</span>
+                                        </div>
+
+                                        <div class="col-4 justify-content-center text-center">
+                                            <fa-icon class="fs-5 col-12 col-sm-2 px-2" [icon]="faUser" ></fa-icon> 
+                                            <span class="col-12 col-sm-10 lh-lg">{{roleSelected.profilModification}}</span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-12 col-lg-10 offset-lg-1 ">
+                                <div class="form-floating mb-3">
+                                    <input [(ngModel)]="libelle" type="text"  class="form-control" id="libelleRole" placeholder="" readonly>
+                                    <label for="libelleRole">Nom du rôle</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="row">
+                                    <caption class="col-12 text-center pt-0">Atelier</caption>
+                                </div>
+                                <div class="scrolltableform cursor-pointer col-12 col-xl-10 offset-xl-1"> 
+                                    <table class="table table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th>Actif</th>
+                                            <th>Identifiant</th>
+                                            <th>Nom</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngIf="this.listeAtelier.length === 0; else afficheAtelier">
+                                                <td class="text-center" colspan="3">Aucun Atelier</td>
+                                            </tr>
+                                            
+                                            <ng-template #afficheAtelier>
+                                                <tr *ngFor="let atelier of listeAtelier | filterActif">
+                                                    <td class="col-2"> 
+                                                        <input class="form-check-input" disabled [checked]="atelier.isPaste" type="checkbox" id="flexCheckDefault">
+                                                    </td>
+                                                    <td class="col-2"> {{atelier.idAtelier}} </td>
+                                                    <td class="col-10"> {{atelier.libelleAtelier}} </td>
+                                                </tr>
+                                            </ng-template>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="row">
+                                    <caption class="col-12 text-center pt-0">Type d'objet repère</caption>
+                                </div>
+                                <div class="scrolltableform cursor-pointer col-12 col-xl-10 offset-xl-1"> 
+                                    <table class="table table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th>Actif</th>
+                                            <th>Identifiant</th>
+                                            <th>Nom</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngIf="this.listeTypeOR.length === 0; else afficheTypeOR">
+                                                <td class="text-center" colspan="3">Aucun Type d'objet repère</td>
+                                            </tr>
+                                            
+                                            <ng-template #afficheTypeOR>
+                                                <tr *ngFor="let typeOR of listeTypeOR | filterActif">
+                                                    <td class="col-2"> 
+                                                        <input class="form-check-input"  disabled [checked]="typeOR.isPaste" type="checkbox" id="flexCheckDefault">
+                                                    </td>
+                                                    <td class="col-2"> {{typeOR.idTypeOR}} </td>
+                                                    <td class="col-10"> {{typeOR.libelleTypeOR}} </td>
+                                                </tr>
+                                            </ng-template>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                        </div> 
                     </div>
+                </div>
             </ng-template> 
         </ng-template>
     </div>

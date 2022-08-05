@@ -9,10 +9,11 @@ import { roleInfo } from 'src/structureData/Role';
   providedIn: 'root'
 })
 export class FetchRoleService {
+  
    
   constructor(private readonly http: HttpClient, private navBarService: NavBarService) { }
 
-  async getInformations() : Promise<any>{
+  async getRole() : Promise<any>{
     let url = "http://"+environment.API_URL+"/role"
     const res : roleInfo[] = await lastValueFrom(this.http.get<roleInfo[]>(url));
     if (res.length == 0) {
@@ -36,6 +37,34 @@ export class FetchRoleService {
       return res;
     }
   }
+
+  async updateRole(idRole : number ,payload: any) {
+    let user = this.navBarService.getLogin();
+    let url = "http://"+environment.API_URL+"/role/{idInformation}"
+    url = url.replace("{idInformation}", idRole.toString())
+    payload.profilModification = user;
+    try {
+      const res : roleInfo = await lastValueFrom(this.http.put<roleInfo>(url, payload));
+      if (res.hasOwnProperty('error')) {
+        const resAny : any = res;
+        return resAny.error;
+      } else {
+        return res;
+      }
+    } catch (e : any) {
+        let returnError;
+        if(e.hasOwnProperty('error')){
+          if(e.error.hasOwnProperty('status')){
+            returnError=e.error["error"];
+          } else {
+            returnError=e.error.message[0];
+          }
+        }
+      return returnError;
+    }
+  }
+
+
 
   async deleteRole(selectedRole: number) {
     let url = "http://"+environment.API_URL+"/role/{idInformation}";

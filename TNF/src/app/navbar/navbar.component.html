@@ -45,7 +45,7 @@
                     </li>
                     <ng-template [ngIf]="estAdmin">
                         <li class="nav-item dropdown" [ngClass]="{'active': PA0.isActive}"> 
-                            <a class="nav-link dropdown-toggle" [ngClass]="{'active': PA0.isActive || PA1.isActive || PA2.isActive || PA3.isActive || PA4.isActive || PA5.isActive}" href="#"
+                            <a class="nav-link dropdown-toggle" [ngClass]="{'active': PA0.isActive || PA1.isActive || PA2.isActive || PA3.isActive || PA4.isActive || PA5.isActive || PA6.isActive}" href="#"
                                 id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown"
                                 aria-expanded="false">
                                 <span *ngIf="nbDemande != '-1' && nbDemande != '0'" class="position-absolute top-25 start-0 translate-middle badge rounded-pill bg-danger">
@@ -65,9 +65,11 @@
                                     routerLinkActive="active" (click)="selectPage('Demandes de suppressions')" >Demandes de suppressions </a></li>
                                 <li><a #PA3="routerLinkActive" class="dropdown-item" routerLink="/information"
                                     routerLinkActive="active" (click)="selectPage('Information')">Information</a></li>
-                                    <li><a #PA4="routerLinkActive" class="dropdown-item" routerLink="/role"
-                                        routerLinkActive="active" (click)="selectPage('Gestion des rôles')">Gestion des rôles</a></li>
-                                <li><a #PA5="routerLinkActive" class="dropdown-item" routerLink="/parametres"
+                                <li><a #PA4="routerLinkActive" class="dropdown-item" routerLink="/role"
+                                    routerLinkActive="active" (click)="selectPage('Gestion des rôles')">Gestion des rôles</a></li>
+                                <li><a #PA5="routerLinkActive" class="dropdown-item" routerLink="/utilisateur"
+                                    routerLinkActive="active" (click)="selectPage('Gestion des utilisateurs')">Gestion des utilisateurs</a></li>
+                                <li><a #PA6="routerLinkActive" class="dropdown-item" routerLink="/parametres"
                                     routerLinkActive="active" (click)="selectPage('Autres paramètres')">Autres paramètres</a></li>
 
                             </ul>
