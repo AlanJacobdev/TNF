@@ -11,6 +11,10 @@
     cursor: pointer;
 }
 
+.flexPerso{
+   flex: 3 1 auto !important
+}
+
 .actifNow{
     background-color :#0060a081 !important;
     color : #fff !important;

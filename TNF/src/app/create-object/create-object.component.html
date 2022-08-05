@@ -248,14 +248,29 @@
                                     </select>
                                     <label  for="atelierSelect"> Type </label>
                             </div>
+
+
+                            
+
                             <div class="form-floating mb-3 input-group" [ngClass]="{'mb-3': !errorLibelle}">
+                                <input [(ngModel)]="LibelleItem" type="text" maxlength="50" class="form-control zindexZero " id="IdLibelle" placeholder="" required (focusout)="focusOutLibelle()" [ngClass]="{'box-error border border-danger': errorLibelle}">
+                                <input [(ngModel)]="LibelleItem" type="text" maxlength="50" class="form-control zindexZero flexPerso" id="IdLibelle" placeholder="" required (focusout)="focusOutLibelle()" [ngClass]="{'box-error border border-danger': errorLibelle}">
+                                <label for="IdLibelle">Libelle</label>
+                                <button *ngIf="errorLibelle" class="input-group-text px-2 bg-white rounded-end" (click)="addingParentIdToCurrentLibelle()" ><fa-icon class=" text-right magicWand" [icon]="faMagicWandSparkles"></fa-icon></button>
+                                <div class="invalid-tooltip">
+                                Veuillez renseigner un libellé.
+                                </div>
+                            </div>
+                            <!-- <div class="form-floating mb-3 input-group" [ngClass]="{'mb-3': !errorLibelle}">
                                 <input [(ngModel)]="LibelleItem" type="text" maxlength="50" class="form-control zindexZero" id="IdLibelle" placeholder="" required (focusout)="focusOutLibelle()" [ngClass]="{'box-error border border-danger': errorLibelle}">
                                 <label for="IdLibelle">Libelle</label>
                                 <button *ngIf="errorLibelle" class="input-group-text px-2 bg-white rounded-end" (click)="addingParentIdToCurrentLibelle()" ><fa-icon class=" text-right magicWand" [icon]="faMagicWandSparkles"></fa-icon></button>
                                 <div class="invalid-tooltip">
                                 Veuillez renseigner un libellé.
-                            </div>
-                            </div>
+                                </div>
+                            </div> -->
+                            
+                            
                             <p *ngIf="errorLibelle" class="text-danger text-center py-0 my-1"> Requiert l'identifiant de l'objet repère</p>
                             
                             <div class="form-floating mb-3">
