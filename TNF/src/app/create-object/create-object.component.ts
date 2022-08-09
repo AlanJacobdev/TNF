@@ -194,7 +194,7 @@ export class CreateObjectComponent implements OnInit {
 
 
   getObjetRepereByAteliers(){
-    this.fetchVisuService.getObjetRepereByAteliers(this.atelierSelect).then((list: ObjetRepereInfo[]) => {
+    this.fetchCreateObjectService.getObjetRepereByAtelierForOneUser(this.atelierSelect).then((list: ObjetRepereInfo[]) => {
       if (list != undefined) {
         this.listeOR = list;
       } else {
@@ -494,9 +494,7 @@ export class CreateObjectComponent implements OnInit {
 
   createItem( digit : string){
     if (this.LibelleItem != '' && digit != '' && this.etat != this.etatNow.Aucun ) {
-      if(!this.LibelleItem.toUpperCase().includes(this.orSelect)){
-        this.manageToast("Erreur de création", "Le libellé ne contient pas l'identifiant de l'objet repère " , "red")
-      } else {
+      
         let tabDesc = [];
           for ( const d of this.description){
             if (d.value !== ""){
@@ -505,8 +503,8 @@ export class CreateObjectComponent implements OnInit {
           }
         let digitNumber = parseInt(digit);
         this.refreshValidationForm();
-        
-        this.fetchCreateObjectService.createItem(this.LibelleItem.replace(this.orSelect.toLowerCase(), this.orSelect.toUpperCase()), this.orSelect, this.typeNow, digitNumber, this.checkSecurite, this.orSelect.substring(2,6), this.etat, tabDesc).then((res: any) => {
+        let libelle = this.orSelect +" : "+this.LibelleItem;
+        this.fetchCreateObjectService.createItem( libelle, this.orSelect, this.typeNow, digitNumber, this.checkSecurite, this.orSelect.substring(2,6), this.etat, tabDesc).then((res: any) => {
           if(typeof res === 'string') {
             this.manageToast("Erreur de création", res , "red")
           } else {  
@@ -516,7 +514,7 @@ export class CreateObjectComponent implements OnInit {
           }
         }).catch((e) => {
         })
-      }
+      
     } else {
       if(this.etat == this.etatNow.Aucun){
         this.etatError = true;
@@ -528,9 +526,6 @@ export class CreateObjectComponent implements OnInit {
   createSI(){
 
     if (this.LibelleSousItem != '' && this.typeNow != '' && this.etat != this.etatNow.Aucun ) {
-      if(!this.LibelleSousItem.toUpperCase().includes(this.itemSelect)){
-        this.manageToast("Erreur de création", "Le libellé ne contient pas l'identifiant de l'item dont il dépend " , "red")
-      } else {
         let tabDesc = [];
           for ( const d of this.description){
             if (d.value !== ""){
@@ -539,7 +534,8 @@ export class CreateObjectComponent implements OnInit {
           }
        
         this.refreshValidationForm();
-        this.fetchCreateObjectService.createSousItem(this.LibelleSousItem.replace(this.itemSelect.toLowerCase(), this.itemSelect.toUpperCase()), this.itemSelect, this.typeNow, this.checkPrefixe, this.itemSelect.charAt(this.itemSelect.length-1) == 'Z', this.etat, tabDesc).then((res: any) => {
+        let libelle = this.itemSelect +" : "+this.LibelleSousItem;
+        this.fetchCreateObjectService.createSousItem(libelle, this.itemSelect, this.typeNow, this.checkPrefixe, this.itemSelect.charAt(this.itemSelect.length-1) == 'Z', this.etat, tabDesc).then((res: any) => {
           if(typeof res === 'string') {
             this.manageToast("Erreur de création", res , "red")
           } else {  
@@ -549,7 +545,6 @@ export class CreateObjectComponent implements OnInit {
           }
         }).catch((e) => {
         })
-      }
     } else {
       if(this.etat == this.etatNow.Aucun){
         this.etatError = true;

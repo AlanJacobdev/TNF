@@ -3,6 +3,7 @@ import { AtelierInfo } from 'src/structureData/Atelier';
 import {  ItemRecopie } from 'src/structureData/Item';
 import { ObjetRepereInfo, ObjetRepereUtile } from 'src/structureData/ObjetRepere';
 import { modificationTypeObject, TypeObjet, TypeObjetInfo } from 'src/structureData/TypeObject';
+import { FetchCreateObjectService } from '../create-object/service/fetch-create-object.service';
 import { FetchcreateTypeObjectService } from '../create-type-object/service/fetchcreate-type-object.service';
 import { FetchVisuService } from '../visualisation/service/fetch-visu.service';
 import { FetchRecopieService } from './service/fetch-recopie.service';
@@ -36,7 +37,8 @@ export class RecopieObjectComponent implements OnInit {
 
   public recopieEnCours : boolean = false;
 
-  constructor(private fetchRecopieService : FetchRecopieService, private fetchVisuService : FetchVisuService, private fetchCreateTypeObject : FetchcreateTypeObjectService) { 
+  constructor(private fetchRecopieService : FetchRecopieService, private fetchVisuService : FetchVisuService, private fetchCreateTypeObject : FetchcreateTypeObjectService,
+    private fetchCreateObjectService :FetchCreateObjectService) { 
     this.getListObject();
     this.getListAtelier();
   }
@@ -86,7 +88,7 @@ export class RecopieObjectComponent implements OnInit {
     if (value == '') {
       this.listeObjetRepere.splice(0);
     } else {
-      this.fetchVisuService.getObjetRepereByAteliers(value).then((list: ObjetRepereInfo[]) => {
+      this.fetchCreateObjectService.getObjetRepereByAtelierForOneUser(value).then((list: ObjetRepereInfo[]) => {
         if(list == undefined) {
           this.listeObjetRepere.splice(0);
         } else {

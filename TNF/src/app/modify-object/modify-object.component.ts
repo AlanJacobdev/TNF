@@ -1,12 +1,12 @@
 import { Component, Input, OnInit, OnDestroy} from '@angular/core';
 import { faChevronRight, faMagicWandSparkles, faPlus, faXmark } from '@fortawesome/free-solid-svg-icons';
-import { elementAt } from 'rxjs';
 import { AtelierInfo } from 'src/structureData/Atelier';
 import { Description } from 'src/structureData/Description';
 import { typeObjet, ItemInfo, ItemModification, etat } from 'src/structureData/Item';
 import { infoORBeingChanged, ObjetRepereInfo, ObjetRepereModification, valide } from 'src/structureData/ObjetRepere';
 import { SousItemInfo, SousItemModification } from 'src/structureData/SousItem';
 import { TypeObjetRepereTableau, TypeObjetInfo, TypeObjetRepereInfo, modificationTypeObject, TypeObjet, TypeObjetRepere } from 'src/structureData/TypeObject';
+import { FetchCreateObjectService } from '../create-object/service/fetch-create-object.service';
 import { FetchcreateTypeObjectService } from '../create-type-object/service/fetchcreate-type-object.service';
 import { NavBarService } from '../navbar/service/nav-bar.service';
 import { FetchRecopieService } from '../recopie-object/service/fetch-recopie.service';
@@ -86,13 +86,12 @@ export class ModifyObjectComponent implements OnInit, OnDestroy {
   public hiddenSi : boolean = false;
 
   constructor(private fetchModifyTypeObject : FetchModifyObjectService, private fetchCreateTypeObject : FetchcreateTypeObjectService,private fetchVisuService : FetchVisuService, private fetchRecopieService : FetchRecopieService,
-    private navbarService : NavBarService) {
+    private navbarService : NavBarService, private fetchCreateObjectService : FetchCreateObjectService) {
 
     this.getAteliers();
     this.getListType();
     this.fetchModifyTypeObject.connexionSocket().subscribe( (payload: any) => {
       const objects = payload as infoORBeingChanged[];
-      console.log(objects);
       
       for (const or of objects){
         this.ObjetBeingModified.push(or.id);
@@ -248,7 +247,7 @@ export class ModifyObjectComponent implements OnInit, OnDestroy {
 
 
   getObjetRepereByAtelier(){
-    this.fetchVisuService.getObjetRepereByAteliers(this.atelierSelect).then((list: ObjetRepereInfo[]) => {
+    this.fetchCreateObjectService.getObjetRepereByAtelierForOneUser(this.atelierSelect).then((list: ObjetRepereInfo[]) => {
       if (list != undefined) {
         this.listeOR = list;
       } else {
@@ -315,7 +314,7 @@ export class ModifyObjectComponent implements OnInit, OnDestroy {
     } catch  {
       atelier = Atelier;
     }
-    this.idORSelect = "-1";
+    this.idORSelect = "";
     this.idItemSelect = "";
     this.idSISelect = "";
     this.selectedNow = "";
@@ -434,7 +433,7 @@ export class ModifyObjectComponent implements OnInit, OnDestroy {
       if (itemInfo != undefined) {
         this.itemSelect.idItem = itemInfo.idItem;
         this.itemSelect.libelleItem = itemInfo.libelleItem;
-        this.LibelleItem = itemInfo.libelleItem;
+        this.LibelleItem = itemInfo.libelleItem.split(':')[1];
         this.itemSelect.etat = itemInfo.etat;
         this.itemSelect.description = itemInfo.description;
         this.etat = itemInfo.etat == 'A' ? etat.A : itemInfo.etat == 'EA' ? etat.EA : itemInfo.etat == 'HS' ? etat.HS : etat.Aucun; 
@@ -471,7 +470,7 @@ export class ModifyObjectComponent implements OnInit, OnDestroy {
       this.siSelect.description = siInfo.description;
       this.siSelect.etat = siInfo.etat;
       this.descriptionObjectSelect.splice(0);
-      this.LibelleSousItem = siInfo.libelleSousItem;
+      this.LibelleSousItem = siInfo.libelleSousItem.split(':')[1];
       this.etat= siInfo.etat == 'A' ? etat.A : siInfo.etat == 'EA' ? etat.EA : siInfo.etat == 'HS' ? etat.HS : etat.Aucun;
         for (const d of this.siSelect.description){
           this.descriptionObjectSelect.push(d)
@@ -535,13 +534,8 @@ export class ModifyObjectComponent implements OnInit, OnDestroy {
 
   modifyItem(){
     if (this.LibelleItem != '' ) {
-      if(!this.LibelleItem.toUpperCase().includes(this.idORSelect)){
-        this.manageToast("Erreur de modification", "Le libellé ne contient pas l'identifiant de l'objet repère " , "red")
-      } else {
-        let idORUpf = this.LibelleItem.toUpperCase().indexOf(this.idORSelect)
-        let idORGetUpper = this.LibelleItem.substring(idORUpf,this.idORSelect.length).toUpperCase();
-        let idORGet = this.LibelleItem.substring(idORUpf,this.idORSelect.length);
-        this.fetchModifyTypeObject.modifyitem(this.itemSelect.idItem, this.LibelleItem.replace(idORGet, idORGetUpper), this.etat, this.descriptionObjectSelect).then((res: any) => {
+        let libelle = this.idORSelect + ' : '+ this.LibelleItem;
+        this.fetchModifyTypeObject.modifyitem(this.itemSelect.idItem, libelle, this.etat, this.descriptionObjectSelect).then((res: any) => {
           if(typeof res === 'string') {
             this.manageToast("Erreur de modification", res , "red")
           } else {  
@@ -553,7 +547,6 @@ export class ModifyObjectComponent implements OnInit, OnDestroy {
           }
         }).catch((e) => {
         })
-      }
     } else {
       this.formValidate = true;
     }
@@ -562,26 +555,19 @@ export class ModifyObjectComponent implements OnInit, OnDestroy {
   modifySI(){
      
     if (this.LibelleSousItem != '' ) {
-      if(!this.LibelleSousItem.toUpperCase().includes(this.idItemSelect)){
-        this.manageToast("Erreur de modification", "Le libellé ne contient pas l'identifiant de l'item dont il dépend" , "red")
-      } else {
-        let idItemUpf = this.LibelleSousItem.toUpperCase().indexOf(this.idItemSelect)
-        let idItemGetUpper = this.LibelleSousItem.substring(idItemUpf,this.idItemSelect.length).toUpperCase();
-        let idItemGet = this.LibelleSousItem.substring(idItemUpf,this.idItemSelect.length);
-        
-        this.fetchModifyTypeObject.modifySI(this.siSelect.idSousItem,  this.LibelleSousItem.replace(idItemGet, idItemGetUpper), this.etat, this.descriptionObjectSelect).then((res: any) => {
-          if(typeof res === 'string') {
-            this.manageToast("Erreur de modification", res , "red")
-          } else {  
-            this.fetchModifyTypeObject.freeObject('SI');
-            this.refreshValidationForm();
-            this.manageToast("Modification", "Le sous-item " + this.itemSelect.idItem+ " a été modifié", "#ff8c00");
-            this.getSousItemByItem();
-            this.idSISelect = "";
-          }
-        }).catch((e) => {
-        })
-      }
+      let libelle = this.idItemSelect + ' : '+ this.LibelleSousItem; 
+      this.fetchModifyTypeObject.modifySI(this.siSelect.idSousItem, libelle, this.etat, this.descriptionObjectSelect).then((res: any) => {
+        if(typeof res === 'string') {
+          this.manageToast("Erreur de modification", res , "red")
+        } else {  
+          this.fetchModifyTypeObject.freeObject('SI');
+          this.refreshValidationForm();
+          this.manageToast("Modification", "Le sous-item " + this.itemSelect.idItem+ " a été modifié", "#ff8c00");
+          this.getSousItemByItem();
+          this.idSISelect = "";
+        }
+      }).catch((e) => {
+      })
     } else {
       this.formValidate = true;
     }
@@ -648,7 +634,6 @@ export class ModifyObjectComponent implements OnInit, OnDestroy {
         return 0;
       }
     } 
-    console.log("-1")
     return -1
   }
 

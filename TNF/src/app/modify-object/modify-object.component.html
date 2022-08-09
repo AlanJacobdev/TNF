@@ -233,15 +233,17 @@
                                         <input #Identifiant type="text" maxlength="6" class="form-control uppercase" id="IdType" placeholder="" required [value]="this.itemSelect.idItem" disabled readonly>
                                         <label for="IdType">Identifiant</label>
                                     </div>
+
                                     <div class="form-floating mb-3 input-group">
-                                        <input [disabled]="this.objetSelectByYou(this.idItemSelect) == 0" [(ngModel)]="LibelleItem" type="text" maxlength="50" class="form-control zindexZero" id="IdLibelle" placeholder="" [value]="this.itemSelect.libelleItem"  (focusout)="focusOutLibelle()" required [ngClass]="{'box-error border border-danger': errorLibelle}">
+                                        <input [(ngModel)]="idORSelect" type="text" maxlength="50" class="form-control zindexZero " id="idOrSelect" placeholder="" readonly >
+                                        <input [(ngModel)]="LibelleItem" type="text" maxlength="50" class="form-control zindexZero flexPerso" id="IdLibelle" placeholder="" required >
                                         <label for="IdLibelle">Libelle</label>
-                                        <button [disabled]="this.objetSelectByYou(this.idItemSelect) == 0"  *ngIf="errorLibelle" class="input-group-text px-2 bg-white rounded-end" (click)="addingParentIdToCurrentLibelle()" ><fa-icon class=" text-right magicWand" [icon]="faMagicWandSparkles"></fa-icon></button>
                                         <div class="invalid-tooltip">
-                                            Veuillez renseigner un libellé.
+                                        Veuillez renseigner un libellé.
                                         </div>
                                     </div>
-                                    <p *ngIf="errorLibelle" class="text-danger text-center py-0 my-1"> Requiert l'identifiant de l'objet repère</p>
+
+                                    
                                     <div *ngFor="let d of this.descriptionObjectSelect; let i = index"  > 
                                         <div class="form-floating mb-3 input-group">
                                             <input [disabled]="this.objetSelectByYou(this.idItemSelect) == 0"  type="text" [(ngModel)]="this.descriptionObjectSelect[i].lien" #name="ngModel" name="lien{{i}}" class="form-control zindexZero"  placeholder="" >
@@ -384,20 +386,21 @@
                                     <span class="fs-3 col-10 offset-1 ">Modification </span>
                                 </div>
                                 
-                                <div class="col-12 col-lg-10 offset-lg-1 my-3">
+                                <div class="col-12 col-lg-12 my-3 px-3">
                                     <div class="form-floating mb-3">
                                         <input #Identifiant type="text" maxlength="6" class="form-control uppercase" id="IdType" placeholder="" required [value]="this.idSISelect" disabled readonly>
                                         <label for="IdType">Identifiant</label>
                                     </div>
-                                    <div class="form-floating mb-3 input-group" [ngClass]="{'mb-3': !errorLibelle}">
-                                        <input [disabled]="this.objetSelectByYou(this.idSISelect) == 0" [(ngModel)]="LibelleSousItem" type="text" maxlength="50" class="form-control zindexZero" id="IdLibelle" placeholder="" [value]="this.siSelect.libelleSousItem" required (focusout)="focusOutLibelle()" [ngClass]="{'box-error border border-danger': errorLibelle}">
+
+                                    <div class="form-floating mb-3 input-group">
+                                        <input [(ngModel)]="idItemSelect" type="text" maxlength="50" class="form-control zindexZero " id="IdItemSelect" placeholder="" readonly >
+                                        <input [(ngModel)]="LibelleSousItem" type="text" maxlength="50" class="form-control zindexZero flexPerso" id="IdLibelle" placeholder="" required >
                                         <label for="IdLibelle">Libelle</label>
-                                        <button [disabled]="this.objetSelectByYou(this.idSISelect) == 0" *ngIf="errorLibelle" class="input-group-text px-2 bg-white rounded-end" (click)="addingParentIdToCurrentLibelle()" ><fa-icon class=" text-right magicWand" [icon]="faMagicWandSparkles"></fa-icon></button>
                                         <div class="invalid-tooltip">
-                                            Veuillez renseigner un libellé.
+                                        Veuillez renseigner un libellé.
                                         </div>
                                     </div>
-                                    <p *ngIf="errorLibelle" class="text-danger text-center py-0 my-1"> Requiert l'identifiant de l'item</p>
+
                                     <div *ngFor="let d of this.descriptionObjectSelect; let i = index"  > 
                                         <div class="form-floating mb-3 input-group">
                                             <input  [disabled]="this.objetSelectByYou(this.idSISelect) == 0" type="text" [(ngModel)]="this.descriptionObjectSelect[i].lien" #name="ngModel" name="lien{{i}}" class="form-control zindexZero"  placeholder="" >

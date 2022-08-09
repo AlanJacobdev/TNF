@@ -26,6 +26,26 @@ export class FetchCreateObjectService {
     }
   }
 
+  async getObjetRepereByAtelierForOneUser(Atelier : string) : Promise<any> {
+    let user = this.navBarService.getLogin();
+    let admin = this.navBarService.getEstAdmin();
+    let url;
+    if (admin) {
+      url = "http://"+environment.API_URL+"/objetrepere/getORByAtelier/{atelier}"
+    } else {
+      url = "http://"+environment.API_URL+"/objetrepere/getORByAtelierForOneUser/{atelier}/{profil}"
+      url = url.replace("{profil}", user)
+    }
+    url = url.replace("{atelier}", Atelier)
+   
+    const res : ObjetRepereInfo[] = await lastValueFrom(this.http.get<ObjetRepereInfo[]>(url));
+    if (res.length == 0) {
+      return undefined;
+    } else {
+      return res;
+    }
+  }
+
   async getItemFromOrAndDispo(idOr : string, type : string): Promise<any> {
     let url = "http://"+environment.API_URL+"/item/getItemFromOrAndDispo/{idOR}/{type}";
     url = url.replace("{idOR}", idOr);

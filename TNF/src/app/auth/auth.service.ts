@@ -60,10 +60,7 @@ export class AuthService {
       this.UserName = decodedToken.prenom;
       this.UserLastName = decodedToken.nom;
       this.connection = true;
-      // this.cookieService.set('UserName', res[0].PRENOMUT.trim());
-      // this.cookieService.set('UserLastName', res[0].NOMUTILI.trim());
-      // this.cookieService.set('Admin', "false");
-      // this.cookieService.set('login', login);
+
     }
     
     return res;
@@ -74,10 +71,6 @@ export class AuthService {
   }
 
   async deconnexion() {
-    // this.cookieService.delete('UserName');
-    // this.cookieService.delete('UserLastName');
-    // this.cookieService.delete('login');
-    // this.cookieService.set('Admin', "false");
     this.route.navigate(['/connexion']);
     this.UserName = undefined;
     this.UserLastName = undefined;

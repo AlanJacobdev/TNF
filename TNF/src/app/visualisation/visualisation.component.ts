@@ -6,6 +6,8 @@ import { SousItemAffichage, SousItemInfo, SousItemSave } from 'src/structureData
 import { FetchVisuService } from './service/fetch-visu.service';
 import { faHistory, faCalendar, faUser, faClock, faEye } from '@fortawesome/free-solid-svg-icons';
 import { Description } from 'src/structureData/Description';
+import { TypeObjetInfo, TypeObjetRepereInfo } from 'src/structureData/TypeObject';
+import { FetchCreateObjectService } from '../create-object/service/fetch-create-object.service';
 
 @Component({
   selector: 'app-visualisation',
@@ -23,6 +25,11 @@ export class VisualisationComponent implements OnInit {
   public listeObjetRepere : ObjetRepereInfo[] = [];
   public listeItem : ItemInfo[] = [];
   public listeSousItem : SousItemInfo[] = [];
+  public listeTypeOr : TypeObjetRepereInfo[] = [];
+  public listeTypeObjet : TypeObjetInfo[] = [];
+  public selectTypeOr : number = -1;
+  public selectTypeItem : number = -1;
+  public selectTypeSousItem : number = -1;
   public ORHistory : ObjetRepereSave[] = [];
   public ItemHistory : ItemSave[] = [];
   public SIHistory : SousItemSave[] = [];
@@ -74,7 +81,8 @@ export class VisualisationComponent implements OnInit {
   }
 
   constructor(private fetchVisuService : FetchVisuService) { 
-    this.fetchVisuService.getAllAteliers().then((list: AtelierInfo[]) => {
+    this.getType();
+    this.fetchVisuService.getAteliersVisu().then((list: AtelierInfo[]) => {
       this.listeAtelier = list
     }).catch((e) => {
     })
@@ -82,6 +90,28 @@ export class VisualisationComponent implements OnInit {
 
   
   ngOnInit(): void {
+  }
+
+  getType (){
+    this.listeTypeObjet.splice(0);
+    this.fetchVisuService.getTypeObjetRepere().then((list: TypeObjetRepereInfo[]) => {
+      if( list != undefined){
+        this.listeTypeOr = list;
+      } else {
+        console.log("Problème import liste OR")
+      }
+    }).catch((e) => {
+    })
+
+    this.fetchVisuService.getTypeObjet().then((list: TypeObjetInfo[]) => {
+      if( list != undefined){
+        this.listeTypeObjet = list
+      } else {
+        console.log("Problème import liste Objet")
+      }
+    }).catch((e) => {
+    })
+
   }
 
   public selectAtelier(Atelier: any ) {

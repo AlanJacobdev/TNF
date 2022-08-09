@@ -6,6 +6,7 @@ import { AtelierInfo } from 'src/structureData/Atelier';
 import { ItemInfo, ItemSave } from 'src/structureData/Item';
 import { ObjetRepereInfo, ObjetRepereSave } from 'src/structureData/ObjetRepere';
 import { SousItemInfo, SousItemSave } from 'src/structureData/SousItem';
+import { TypeObjetRepereInfo, TypeObjetInfo } from 'src/structureData/TypeObject';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -13,16 +14,51 @@ import { environment } from '../../../environments/environment';
 })
 export class FetchVisuService {
 
+
   constructor(private readonly http: HttpClient, private navBarService: NavBarService) { }
 
-  async getAllAteliers(): Promise<any> {
-    const admin = this.navBarService.getEstAdmin();
+
+  async getAteliersVisu(): Promise<any>{
     let url;
+    const admin = this.navBarService.getEstAdmin();
     if (admin){
       url = "http://"+environment.API_URL+"/atelier"
-    } else {
+    }else {
       url = "http://"+environment.API_URL+"/atelier/getAll/isActif"
     }
+
+    const res : AtelierInfo[] = await lastValueFrom(this.http.get<AtelierInfo[]>(url));
+    if (res.length == 0) {
+      return undefined;
+    } else {
+      return res;
+    }
+  }
+
+  async getAllAteliers(){
+    const admin = this.navBarService.getEstAdmin();
+    if (admin){
+      return this.getAllAteliersForAdmin();
+    } else {
+      return this.getAtelierForOneUser();
+    }
+  }
+
+  async getAllAteliersForAdmin(): Promise<any> {
+    let url;
+    url = "http://"+environment.API_URL+"/atelier"
+    const res : AtelierInfo[] = await lastValueFrom(this.http.get<AtelierInfo[]>(url));
+    if (res.length == 0) {
+      return undefined;
+    } else {
+      return res;
+    }
+  }
+
+  async getAtelierForOneUser () {
+    let user = this.navBarService.getLogin();
+    let url = "http://"+environment.API_URL+"/atelier/findAllAteliersActifForUser/{user}"
+    url = url.replace("{user}", user )
     const res : AtelierInfo[] = await lastValueFrom(this.http.get<AtelierInfo[]>(url));
     if (res.length == 0) {
       return undefined;
@@ -74,6 +110,37 @@ export class FetchVisuService {
       return res;
     }
   }
+
+  async getTypeObjetRepere(): Promise<any> {
+    let url = "http://"+environment.API_URL+"/typeobjetrepere"
+    const res : TypeObjetRepereInfo[] = await lastValueFrom(this.http.get<TypeObjetRepereInfo[]>(url));
+    if (res.length == 0) {
+      return undefined;
+    } else {
+      return res;
+    }
+  }
+
+  async getTypeSIActif() : Promise<any>{
+    let url = "http://"+environment.API_URL+"/typeobjet/getAll/isActif"
+    const res : TypeObjetInfo[] = await lastValueFrom(this.http.get<TypeObjetInfo[]>(url));
+    if (res.length == 0) {
+      return undefined;
+    } else {
+      return res;
+    }
+  }
+
+  async getTypeObjet(): Promise<any> {
+    let url = "http://"+environment.API_URL+"/typeobjet"
+    const res : TypeObjetInfo[] = await lastValueFrom(this.http.get<TypeObjetInfo[]>(url));
+    if (res.length == 0) {
+      return undefined;
+    } else {
+      return res;
+    }
+  }
+  
 
   async getSousItemByItem(Item : string) : Promise<any> {
     let url = "http://"+environment.API_URL+"/sousitem/getSousItemByItem/{SI}"

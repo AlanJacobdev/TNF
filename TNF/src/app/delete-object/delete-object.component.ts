@@ -6,6 +6,7 @@ import { ObjetRepereInfo, ObjetRepereSuppression, valide } from 'src/structureDa
 import { SousItemInfo, SousItemSuppression } from 'src/structureData/SousItem';
 import { deleteObject, demandeAdmin, returnDeleteObject } from 'src/structureData/Suppression';
 import { TypeObjetRepereTableau, TypeObjetInfo, TypeObjetRepereInfo, modificationTypeObject, TypeObjet } from 'src/structureData/TypeObject';
+import { FetchCreateObjectService } from '../create-object/service/fetch-create-object.service';
 import { FetchcreateTypeObjectService } from '../create-type-object/service/fetchcreate-type-object.service';
 import { NavBarService } from '../navbar/service/nav-bar.service';
 import { FetchRecopieService } from '../recopie-object/service/fetch-recopie.service';
@@ -101,7 +102,8 @@ export class DeleteObjectComponent implements OnInit {
   public searchText : string = "";
   public isValide : boolean = false;
   public selectMultiple : boolean = false;
-  constructor( private fetchVisuService : FetchVisuService, private fetchDeleteObjectService :FetchDeleteObjectService, private fetchCreateTypeObject: FetchcreateTypeObjectService, private fetchRecopieService : FetchRecopieService, private navBarService: NavBarService) {
+  constructor( private fetchVisuService : FetchVisuService, private fetchDeleteObjectService :FetchDeleteObjectService, private fetchCreateTypeObject: FetchcreateTypeObjectService, 
+    private fetchRecopieService : FetchRecopieService, private navBarService: NavBarService, private fetchCreateObjectService : FetchCreateObjectService) {
     this.getListType();
     this.getAteliers();
    }
@@ -166,7 +168,7 @@ export class DeleteObjectComponent implements OnInit {
 
 
   getObjetRepereByAtelier(){
-    this.fetchVisuService.getObjetRepereByAteliers(this.atelierSelect).then((list: ObjetRepereInfo[]) => {
+    this.fetchCreateObjectService.getObjetRepereByAtelierForOneUser(this.atelierSelect).then((list: ObjetRepereInfo[]) => {
       if (list != undefined) {
         this.listeOR.splice(0);
         list.forEach((e : ObjetRepereSuppression) => {

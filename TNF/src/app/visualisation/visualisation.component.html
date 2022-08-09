@@ -32,12 +32,12 @@
                 <div class="row">
                   <caption class="col-12 text-center pt-1">Objet repère</caption>
                 </div>
-                <div class="row input-group mb-3">
+                <div class="row input-group mt-3 mb-4">
                   <div class="col">
                     <div class="input-group ">
                       <div class="col-3 col-lg-3 input-group-text border-end-0"> Etat </div>
-                      <div class="col-8">
-                        <div class="btn-group d-flex">
+                      <div class="col-8 d-flex">
+                        <div class="btn-group d-flex flex-1">
                           <input [(ngModel)]="etatOR" (click)="selectEtatOR(this.etatOrNow.A)"  class="btn-check " type="radio" name="radioEtatOR" id="inlineRadioOR1" value="A" required>
                           <label class="btn btn-outline-perso no-rounded-top-left no-rounded-bottom-left" for="inlineRadioOR1">Actif</label>
                           <input [(ngModel)]="etatOR" (click)="selectEtatOR(this.etatOrNow.R)"  class="btn-check" type="radio" name="radioEtatOR" id="inlineRadioOR2" value="R" required>
@@ -52,12 +52,12 @@
                 <div class="row">
                   <div class="col-12">
                     <div class="input-group mb-3">
-                      <label class="input-group-text" for="inputGroupSelect01">Type d'objet </label>
-                      <select class="form-select" id="inputGroupSelect01">
-                        <option selected>Choose...</option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
+                      <label class="input-group-text" for="TypeOr">Type d'objet </label>
+                      <select [(ngModel)]="selectTypeOr" required  class="form-select" id="TypeOr" aria-label="TypeOr">
+                        <option value="-1" selected>Sélectionnez un Type </option>
+                        <option *ngFor="let typeor of listeTypeOr" [value]="typeor.idTypeOR" style="--bs-bg-opacity: .25;">
+                          {{typeor.idTypeOR}} - {{typeor.libelleTypeOR}} 
+                      </option>
                       </select>
                     </div>
                   </div>
@@ -89,12 +89,12 @@
                 <div class="row">
                   <div class="col-12">
                     <div class="input-group mb-3">
-                      <label class="input-group-text" for="inputGroupSelect01">Type d'objet </label>
-                      <select class="form-select" id="inputGroupSelect01">
-                        <option selected>Choose...</option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
+                      <label class="input-group-text" for="TypeItem">Type d'objet </label>
+                      <select [(ngModel)]="selectTypeItem" required  class="form-select" id="TypeItem" aria-label="TypeItem">
+                        <option value="-1" selected>Sélectionnez un Type </option>
+                        <option *ngFor="let typeItem of listeTypeObjet" [value]="typeItem.idType" style="--bs-bg-opacity: .25;">
+                          {{typeItem.idType}} - {{typeItem.libelleType}} 
+                      </option>
                       </select>
                     </div>
                   </div>
@@ -126,12 +126,12 @@
                 <div class="row">
                   <div class="col-12">
                     <div class="input-group mb-3">
-                      <label class="input-group-text" for="inputGroupSelect01">Type d'objet </label>
-                      <select class="form-select" id="inputGroupSelect01">
-                        <option selected>Choose...</option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
+                      <label class="input-group-text" for="TypeSousItem">Type d'objet </label>
+                      <select [(ngModel)]="selectTypeSousItem" required  class="form-select" id="TypeSousItem" aria-label="TypeSousItem">
+                        <option value="-1" selected>Sélectionnez un Type </option>
+                        <option *ngFor="let typeSousItem of listeTypeObjet" [value]="typeSousItem.idType" style="--bs-bg-opacity: .25;">
+                          {{typeSousItem.idType}} - {{typeSousItem.libelleType}} 
+                      </option>
                       </select>
                     </div>
                   </div>
@@ -140,8 +140,6 @@
             </div>
           </div>
         </div>
-        
-        
         
     </div>
     <div class="row mt-3 ">
@@ -162,7 +160,7 @@
                             <td class="text-center" colspan="2">Aucun Objet Repère</td>
                         </tr>
                         <ng-template #afficheOR>
-                            <tr *ngFor="let objetRepere of listeObjetRepere | filterVisualisation : searchText | actifVisualisation : etatOR : 'OR'" (click)="selectOR(objetRepere.idObjetRepere)" [ngClass]="{'table-active': objetRepere.idObjetRepere === this.selectedOr , 'actifNow' : objetRepere.idObjetRepere === this.selectedNow }">
+                            <tr *ngFor="let objetRepere of listeObjetRepere | filterVisualisation : searchText | actifVisualisation : etatOR : 'OR' | filterByType: selectTypeOr :'OR'" (click)="selectOR(objetRepere.idObjetRepere)" [ngClass]="{'table-active': objetRepere.idObjetRepere === this.selectedOr , 'actifNow' : objetRepere.idObjetRepere === this.selectedNow }">
                                 <td class="col-5">{{objetRepere.idObjetRepere}}</td>
                                 <td class="col-7">{{objetRepere.libelleObjetRepere}}</td>
                             </tr>
@@ -189,7 +187,7 @@
                       <td class="text-center" colspan="2">Aucun Item</td>
                     </tr>
                     <ng-template #afficheItem>
-                      <tr *ngFor="let item of listeItem | filterVisualisation : searchText | actifVisualisation : etatItem : 'Item'"  (click)="selectItem(item.idItem)" [ngClass]="{'table-active': item.idItem === this.selectedItem , 'actifNow' : item.idItem === this.selectedNow }" >
+                      <tr *ngFor="let item of listeItem | filterVisualisation : searchText | actifVisualisation : etatItem : 'Item' | filterByType: selectTypeItem :'Item'"  (click)="selectItem(item.idItem)" [ngClass]="{'table-active': item.idItem === this.selectedItem , 'actifNow' : item.idItem === this.selectedNow }" >
                           <td class="col-5">{{item.idItem}}</td>
                           <td class="col-7">{{item.libelleItem}}</td>
                       </tr>
@@ -217,7 +215,7 @@
                       <td class="text-center" colspan="2">Aucun Sous Item</td>
                     </tr>
                     <ng-template #afficheSousItem>
-                      <tr *ngFor="let sousItem of listeSousItem | filterVisualisation : searchText | actifVisualisation : etatSI : 'SI'"  (click)="selectSO(sousItem.idSousItem)" [ngClass]="{'table-active': sousItem.idSousItem === this.selectedSousItem, 'actifNow' : sousItem.idSousItem === this.selectedNow }">
+                      <tr *ngFor="let sousItem of listeSousItem | filterVisualisation : searchText | actifVisualisation : etatSI : 'SI' | filterByType: selectTypeSousItem :'SI'"  (click)="selectSO(sousItem.idSousItem)" [ngClass]="{'table-active': sousItem.idSousItem === this.selectedSousItem, 'actifNow' : sousItem.idSousItem === this.selectedNow }">
                           <td class="col-5">{{sousItem.idSousItem}}</td>
                           <td class="col-7">{{sousItem.libelleSousItem}}</td>
                       </tr>

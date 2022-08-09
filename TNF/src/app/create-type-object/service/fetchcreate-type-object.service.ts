@@ -13,7 +13,15 @@ export class FetchcreateTypeObjectService {
   constructor(private readonly http: HttpClient, private navBarService: NavBarService) { }
 
   async getTypeObjetRepere(): Promise<any> {
-    let url = "http://"+environment.API_URL+"/typeobjetrepere"
+    let user = this.navBarService.getLogin();
+    let admin = this.navBarService.getEstAdmin();
+    let url
+    if (admin){
+      url = "http://"+environment.API_URL+"/typeobjetrepere"
+    }else{
+      url =  "http://"+environment.API_URL+"/typeobjetrepere/findAllTypeORForUser/{profil}"
+      url = url.replace("{profil}", user)
+    }
     const res : TypeObjetRepereInfo[] = await lastValueFrom(this.http.get<TypeObjetRepereInfo[]>(url));
     if (res.length == 0) {
       return undefined;

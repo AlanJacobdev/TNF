@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import * as FileSaver from 'file-saver';
 import { AtelierInfo } from 'src/structureData/Atelier';
-import { ItemAffichage, ItemEtDispo, ItemInfo } from 'src/structureData/Item';
+import { ItemAffichage } from 'src/structureData/Item';
 import { ObjetRepereUtile } from 'src/structureData/ObjetRepere';
 import { TypeObjetInfo } from 'src/structureData/TypeObject';
 import { FetchcreateTypeObjectService } from '../create-type-object/service/fetchcreate-type-object.service';
@@ -181,7 +181,8 @@ export class ExportationComponent implements OnInit {
   public exportExcel() {
     if (this.exportData.length > 0){
       import("xlsx").then(xlsx => {
-        const worksheet = xlsx.utils.json_to_sheet(this.exportData);
+        const worksheet = {} 
+        // xlsx.utils.json_to_sheet(this.exportData);
 
         xlsx.utils.sheet_add_aoa(worksheet, [['NEW VALUE from NODE']], {origin: 'F4'});        
         const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };

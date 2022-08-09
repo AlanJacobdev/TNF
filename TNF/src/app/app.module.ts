@@ -37,6 +37,7 @@ import { AutosizeModule } from 'ngx-autosize';
 import { RoleComponent } from './role/role.component';
 import { FilterActifPipe } from './role/pipe/filter-actif.pipe';
 import { UtilisateurComponent } from './utilisateur/utilisateur.component';
+import { FilterByTypePipe } from './visualisation/pipe/filter-by-type.pipe';
 
 
 const config: SocketIoConfig = { url: 'http://'+environment.API_URL, options: {} };
@@ -72,7 +73,8 @@ const config: SocketIoConfig = { url: 'http://'+environment.API_URL, options: {}
     FilterInfoPipe,
     RoleComponent,
     FilterActifPipe,
-    UtilisateurComponent
+    UtilisateurComponent,
+    FilterByTypePipe
   ],
   imports: [
     BrowserModule,

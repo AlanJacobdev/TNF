@@ -32,6 +32,9 @@ table th {
     letter-spacing: 0 !important;
 }
 
+.flex-1{
+    flex : 1;
+}
 
 .colorBorder{
     border-color: #0060a081 !important;
