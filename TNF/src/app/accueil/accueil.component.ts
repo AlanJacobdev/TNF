@@ -354,12 +354,15 @@ export class AccueilComponent implements OnInit {
   }
 
   async readFile(idDoc : number){
-    (await this.fetchInformationService.readFile(idDoc)).subscribe(res => {
+    let sub = (await this.fetchInformationService.readFile(idDoc)).subscribe(res => {
+      console.log(res);
+      
       if (res == undefined) {
         console.log("Impossible de récupérer le document");
       } else {
         const fileURL = URL.createObjectURL(res);
         window.open(fileURL, '_blank');
+        sub.unsubscribe();
       }
     });
   }

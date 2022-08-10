@@ -1,0 +1,244 @@
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            
+            <div *ngIf="exportEnCours; else liste" class="spinnerWaiting">
+                <div class="spinner-grow" role="status">
+                <span class="visually-hidden ">Loading...</span>
+                </div>
+                <div class="spinner-grow" role="status">
+                <span class="visually-hidden ">Loading...</span>
+                </div>
+                <div class="spinner-grow" role="status">
+                <span class="visually-hidden ">Loading...</span>
+                </div>
+                <div class="fs-4">
+                Veuillez patienter ...
+                </div>
+            </div>
+            <ng-template #liste>
+                <div class="col mt-5">
+                    <ul class="list-group list-group-horizontal cursor-pointer">
+                        <li *ngIf="listeOr.length != 0 " class="list-group-item col text-center border  border-bottom-0" (click)="selectObject(this.objectTypeNow.OR)" 
+                        [ngClass]="{'bg-light': this.objectType === this.objectTypeNow.OR, 'rounded-top-left' :listeSi.length != 0,
+                                    'border-not-rounded' : listeItem.length == 0 && listeSi.length == 0}" 
+                        >Objet Repère</li>
+                        <li *ngIf="listeItem.length != 0" class="list-group-item col text-center border-not-rounded border border-bottom-0" (click)="selectObject(this.objectTypeNow.Item)" 
+                        [ngClass]="{'bg-light': this.objectType === this.objectTypeNow.Item, 
+                                    'rounded-top-right' : listeSi.length === 0 && listeOr.length !== 0, 
+                                    'rounded-top-left' : listeSi.length !== 0 && listeOr.length === 0 ,
+                                    'border-0 border-top' : listeOr.length !== 0 && listeSi.length !== 0}" 
+                        >Item </li>
+                        <li *ngIf="listeSi.length != 0" class="list-group-item col text-center border border-bottom-0" (click)="selectObject(this.objectTypeNow.SI)" 
+                        [ngClass]="{'bg-light': this.objectType === this.objectTypeNow.SI, 'rounded-top-right' : listeOr.length != 0 || listeItem.length != 0,
+                                    'border-not-rounded' : listeOr.length == 0 && listeItem.length == 0}" 
+                        >Sous Item</li>
+                    </ul>
+                    
+                        
+                        <div *ngIf=" listeOr.length == 0 && listeItem.length == 0 && listeSi.length == 0 ; else demandeNotEmpty" class="row">
+                            <div class="border col shadow-sm text-center py-5 fs-5 fw-bold">
+                                Aucun objet à exporter
+                            </div>
+                        </div>
+                        
+                        <ng-template #demandeNotEmpty>
+                            <div class="col-12 py-3 bg-light border border-top-0  shadow-sm px-0">
+                                <div class="scrolltable cursor-pointer col-12 px-3"> 
+                                    <table class="table table-hover">
+                                        <thead>
+                                        <tr >
+                                            <th scope="col-3" class="col-1 text-center">
+                                                <input (change)="this.objectType === this.objectTypeNow.OR ? allSelectOR() : (this.objectType === this.objectTypeNow.Item ? allSelectItem() : allSelectSi() )" [checked]="this.objectType === this.objectTypeNow.OR ? checkAllOr : this.objectType === this.objectTypeNow.Item ? checkAllItem : checkAllSi " class="form-check-input" type="checkbox" id="flexCheckDefault">
+                                                <p class="mb-0">Exporter ? </p>
+                                            </th>
+                                            <th scope="col-3" class="col-2">Identifiant</th>
+                                            <th scope="col-3" class="col-3">Libelle</th>
+                                            <th scope="col-3" class="col-2">Etat</th>
+                                            <th scope="col-3" class="col-2">Date</th>
+                                            <th scope="col-3" class="col-2">Profil</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                            <ng-container *ngIf="this.objectType === this.objectTypeNow.OR; else afficheItem" >
+                                                    <tr *ngFor="let or of listeOr" [ngClass]="{'bg-selected' : or.isPaste}" >
+                                                        <td class="col-1 text-center align-middle ">
+                                                            <input (click)="selectCheckOR(or.idObjetRepere)" [checked]="or.isPaste" class="form-check-input" type="checkbox" id="flexCheckDefault">  
+                                                        </td>
+                                                        <td class="col-2 align-middle ">{{or.idObjetRepere}}</td>
+                                                        <td class="col-3 align-middle ">{{or.libelleObjetRepere}}</td>
+                                                        <td class="col-2 align-middle fw-bold" [ngClass]="or.dateModification != null ? 'text-warning' : 'text-success'">
+                                                            {{or.dateModification != null ? 'Modification' : 'Création'}}
+                                                        </td>
+                                                        <td class="col-2 align-middle ">
+                                                            {{(or.dateModification != null ? or.dateModification : or.dateCreation) | date: 'dd/MM/yyyy HH:mm'}}
+                                                        </td>
+                                                        <td class="col-2 align-middle ">
+                                                            {{or.profilModification != null ? or.profilModification : or.profilCreation}}
+                                                        </td>
+                                                    </tr>
+                                            </ng-container>
+                                            <ng-template #afficheItem>
+                                                <ng-container *ngIf="this.objectType === this.objectTypeNow.Item; else afficheSI" >
+                                                    
+                                                        <tr *ngFor="let item of listeItem" [ngClass]="{'bg-selected' : item.isPaste}">
+
+                                                            <td class="col-1 text-center align-middle ">
+                                                                <input (click)="selectCheckItem(item.idItem)" class="form-check-input" [checked]="item.isPaste" type="checkbox" id="flexCheckDefault">  
+                                                            </td>
+                                                            <td class="col-2 align-middle ">{{item.idItem}}</td>
+                                                            <td class="col-3 align-middle ">{{item.libelleItem}}</td>
+                                                            <td class="col-2 align-middle fw-bold" [ngClass]="item.dateModification != null ? 'text-warning' : 'text-success'">
+                                                                {{item.dateModification != null ? 'Modification' : 'Création'}}
+                                                            </td>
+                                                            <td class="col-2 align-middle ">
+                                                                {{(item.dateModification != null ? item.dateModification : item.dateCreation) | date: 'dd/MM/yyyy HH:mm'}}
+                                                            </td>
+                                                            <td class="col-2 align-middle ">
+                                                                {{item.profilModification != null ? item.profilModification : item.profilCreation}}
+                                                            </td>
+                                                            
+                                                        </tr>
+
+                                                </ng-container>
+                                            </ng-template>
+                                            <ng-template #afficheSI>
+                                                
+                                                    <tr *ngFor="let si of listeSi" [ngClass]="{'bg-selected' : si.isPaste}">
+                                                        <td class="col-1 text-center align-middle">
+                                                            <input (click)="selectCheckSi(si.idSousItem)" class="form-check-input" [checked]="si.isPaste" type="checkbox" id="flexCheckDefault">  
+                                                        </td>
+                                                        <td class="col-2 align-middle">{{si.idSousItem}}</td>
+                                                        <td class="col-3 align-middle">{{si.libelleSousItem}}</td>
+                                                        <td class="col-2 align-middle fw-bold" [ngClass]="si.dateModification != null ? 'text-warning' : 'text-success'">
+                                                            {{si.dateModification != null ? 'Modification' : 'Création'}}
+                                                        </td>
+                                                        <td class="col-2 align-middle ">
+                                                            {{(si.dateModification != null ? si.dateModification : si.dateCreation) | date: 'dd/MM/yyyy HH:mm'}}
+                                                        </td>
+                                                        <td class="col-2 align-middle ">
+                                                            {{si.profilModification != null ? si.profilModification : si.profilCreation}}
+                                                        </td>
+                                                    </tr>
+
+                                            </ng-template>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-12">
+                                    <button  (click)="export()" type="button" data-bs-toggle="modal" data-bs-target="#Recap" data-backdrop="static" data-keyboard="false" class="btn btn-lg btn-light col-12 col-lg-4 offset-lg-4 shadow-sm mb-2 mb-lg-0">
+                                        <div class="">Exporter</div>
+                                    </button>
+                                    <button type="button" class="btn btn-lg btn-light col-12 col-lg-3 offset-lg-1 shadow-sm ">
+                                        <div class="">Historique des exportations</div>
+                                    </button>
+                                </div>
+                            </div>
+                        </ng-template>
+                </div>
+            </ng-template>
+        </div>
+    </div>
+</div>
+
+<div #modal class="modal fade" id="Recap" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg ">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Récapitulatif d'exportation</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+                <div *ngIf="this.OrExport.length == 0 && this.ItemExport.length == 0 && this.SiExport.length == 0; else recap" class=" fs-5 my-5 text-center">
+                    Aucun objet selectionné 
+                </div>
+            
+            <ng-template #recap>
+              <div *ngIf="exportEnCours" class="spinnerWaiting">
+                <div class="spinner-grow" role="status">
+                  <span class="visually-hidden ">Loading...</span>
+                </div>
+                <div class="spinner-grow" role="status">
+                  <span class="visually-hidden ">Loading...</span>
+                </div>
+                <div class="spinner-grow" role="status">
+                  <span class="visually-hidden ">Loading...</span>
+                </div>
+                <div class="fs-4">
+                  Veuillez patienter ...
+                </div>
+              </div>
+              <div [ngClass]="{loading : exportEnCours}">
+                <div class="accordion" id="accordionExample">
+                    <div *ngIf="this.OrExport.length != 0" class="accordion-item">
+                      <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                          Objet repère
+                        </button>
+                      </h2>
+                      <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" >
+                        <div class="accordion-body">
+                            <div *ngFor="let OR of this.OrExport; last as isLast" class="row" [ngClass]="{'border-bottom' : !isLast}">
+                                <div class="col-9 align-self-center">
+                                    <b>{{OR.idObjetRepere}}</b>  - {{OR.libelleObjetRepere}}
+                                </div>
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div *ngIf="this.ItemExport.length != 0" class="accordion-item">
+                      <h2 class="accordion-header" id="headingTwo">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                          Item
+                        </button>
+                      </h2>
+                      <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo" >
+                        <div class="accordion-body">
+                            <div *ngFor="let Item of this.ItemExport; last as isLast" class="row" [ngClass]="{'border-bottom' : !isLast}">
+                                <div class="col-9 align-self-center">
+                                    <b>{{Item.idItem}}</b> - {{Item.libelleItem}}
+                                </div>
+                            </div>
+
+                        </div>
+                      </div>
+                    </div>
+                    <div *ngIf="this.SiExport.length != 0" class="accordion-item">
+                      <h2 class="accordion-header" id="headingThree">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                          Sous-Item
+                        </button>
+                      </h2>
+                      <div id="collapseThree" class="accordion-collapse collapse show" aria-labelledby="headingThree" >
+                        <div class="accordion-body">
+                            <div *ngFor="let SI of this.SiExport; last as isLast" class="row " [ngClass]="{'border-bottom' : !isLast}">
+                                <div class="col-9">
+                                    <b>{{SI.idSousItem}}</b> - {{SI.libelleSousItem}}
+                                </div>
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                  
+            </ng-template>
+        </div>
+        
+        
+        <div class="modal-footer">
+            <div *ngIf="this.OrExport.length != 0 || this.ItemExport.length != 0 || this.SiExport.length != 0" class="col needs-validation"  [ngClass]="{'was-validated': formValidate === true}" >
+                <input [(ngModel)]="nomDocument" required type="text" class="form-control" placeholder="Nom du document" aria-label="Nom du document">
+                <div class="invalid-tooltip">
+                    Veuillez renseigner un nom de fichier.
+                </div>
+            </div>
+            <button *ngIf="this.OrExport.length != 0 || this.ItemExport.length != 0 || this.SiExport.length != 0" type="button" class="btn btn-secondary" (click)="sendExport()">Valider</button>
+            <button type="button" class="btn btn-secondary"  data-bs-dismiss="modal" >Fermer</button>
+          
+        </div>
+      </div>
+    </div>
+  </div>

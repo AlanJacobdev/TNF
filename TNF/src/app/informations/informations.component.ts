@@ -260,27 +260,33 @@ export class InformationsComponent implements OnInit {
   async updateInformations(){
     let tabIdDoc = [];
     let tabLibelleModify : documentInfoModify[] = [];
+    console.log(this.descriptionObjectSelect);
+    
     if (this.descriptionObjectSelect.length != 0 ) {
       for (const d of this.descriptionObjectSelect) {
         if (d.edited == false) {
           tabIdDoc.push(d.idDoc);
         }
         if(d.editedLibelle == true && d.edited == false) {
-          let newLibelle = this.documentsModify.find((element: any) => element.id == d.idDoc)
-          tabLibelleModify.push({
-            idDocument : newLibelle.id,
-            libelleDocument : newLibelle.nom
-          })
+          let newLibelle = this.descriptionObjectSelect.find((element) => element.idDoc == d.idDoc)
+          if (newLibelle != undefined){
+            tabLibelleModify.push({
+              idDocument : newLibelle.idDoc,
+              libelleDocument : newLibelle.libelleDocument
+            })
+          }
         }
       }
     }
-    for ( const doc of this.documentsModify){
+    for ( const doc of tabLibelleModify){
       console.log(doc);
       
     }
     for (const lib of tabLibelleModify) {
       this.fetchInformationService.updateLibelleFromDoc(lib).then((res: any) => {
         if(typeof res === 'string') {
+          console.log(res);
+          
           this.manageToast("Erreur de modification", res , "red")
         }
       }).catch((e) => {
@@ -307,6 +313,8 @@ export class InformationsComponent implements OnInit {
         for (const lib of tabNewLibelle) {
           this.fetchInformationService.updateLibelleFromDoc(lib).then((res: any) => {
             if(typeof res === 'string') {
+              console.log(res);
+              
               this.manageToast("Erreur de modification", res , "red")
             }
           }).catch((e) => {
@@ -342,6 +350,8 @@ export class InformationsComponent implements OnInit {
         for (const lib of tabNewLibelle) {
           this.fetchInformationService.updateLibelleFromDoc(lib).then((res: any) => {
             if(typeof res === 'string') {
+              console.log(res);
+              
               this.manageToast("Erreur de modification", res , "red")
             }
           }).catch((e) => {
@@ -349,6 +359,7 @@ export class InformationsComponent implements OnInit {
         }
 
       } else {
+        console.log("Fichier manquant ou corrompu");
         this.manageToast("Erreur de fichier", "Fichier manquant ou corrompu" , "red")
       }
     }
@@ -363,9 +374,9 @@ export class InformationsComponent implements OnInit {
     
     this.fetchInformationService.updateInformation(this.idSelected, infoModify).then((res: any) => {
       if(typeof res === 'string') {
-        this.manageToast("Erreur de suppression", res , "red")
+        this.manageToast("Erreur de modification", res , "red")
       } else {  
-        this.manageToast("Création", "L'information a bien été modifiée", "#006400")    
+        this.manageToast("Modification", "L'information a bien été modifiée", "#ff8c00")    
         this.getInformation();
         this.idSelected = -1;
         this.close();

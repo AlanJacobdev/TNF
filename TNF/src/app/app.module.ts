@@ -38,6 +38,7 @@ import { RoleComponent } from './role/role.component';
 import { FilterActifPipe } from './role/pipe/filter-actif.pipe';
 import { UtilisateurComponent } from './utilisateur/utilisateur.component';
 import { FilterByTypePipe } from './visualisation/pipe/filter-by-type.pipe';
+import { ExportationGmaoComponent } from './exportation-gmao/exportation-gmao.component';
 
 
 const config: SocketIoConfig = { url: 'http://'+environment.API_URL, options: {} };
@@ -74,7 +75,8 @@ const config: SocketIoConfig = { url: 'http://'+environment.API_URL, options: {}
     RoleComponent,
     FilterActifPipe,
     UtilisateurComponent,
-    FilterByTypePipe
+    FilterByTypePipe,
+    ExportationGmaoComponent
   ],
   imports: [
     BrowserModule,

@@ -32,19 +32,20 @@
                                     routerLinkActive="active" (click)="selectPage('Recopie d\'objets')">Recopie d'objets</a></li>
                         </ul>
                     </li>
-                    <li class="nav-item dropdown" [ngClass]="{'active': GD0.isActive}">
-                        <a class="nav-link dropdown-toggle" [ngClass]="{'active': GD0.isActive}" href="#"
+                    <li class="nav-item dropdown" [ngClass]="{'active': GD0.isActive || GD1.isActive}">
+                        <a class="nav-link dropdown-toggle" [ngClass]="{'active': GD0.isActive || GD1.isActive}" href="#"
                             id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Gestion Données
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                             <li><a #GD0="routerLinkActive" class="dropdown-item" routerLink="/exportation"
                                     routerLinkActive="active" (click)="selectPage('Exportation')"> Exportation </a></li>
-                            <li><a class="dropdown-item" href="#">Exportation pour GMAO</a></li>
+                            <li><a #GD1="routerLinkActive" class="dropdown-item" routerLink="/exportationGmao"
+                                routerLinkActive="active" (click)="selectPage('Exportation Excel pour GMAO')"> Exportation Excel pour GMAO </a></li>
                         </ul>
                     </li>
                     <ng-template [ngIf]="estAdmin">
-                        <li class="nav-item dropdown" [ngClass]="{'active': PA0.isActive}"> 
+                        <li class="nav-item dropdown" [ngClass]="{'active': PA0.isActive || PA1.isActive || PA2.isActive || PA3.isActive || PA4.isActive || PA5.isActive || PA6.isActive}"> 
                             <a class="nav-link dropdown-toggle" [ngClass]="{'active': PA0.isActive || PA1.isActive || PA2.isActive || PA3.isActive || PA4.isActive || PA5.isActive || PA6.isActive}" href="#"
                                 id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown"
                                 aria-expanded="false">

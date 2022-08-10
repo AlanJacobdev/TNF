@@ -241,7 +241,6 @@ export class DemandeAdminComponent implements OnInit {
 
   public selectObject (object : typeObjet) {
     this.objectType = object;
-    
   }
 
   public selectObjetOnDemand(idObjet : string ) {

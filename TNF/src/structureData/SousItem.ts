@@ -14,7 +14,8 @@ export interface SousItemInfo {
     profilModification: string,
     posteModification: string,
     dateModification: Date,
-    description: Description[]
+    description: Description[],
+    isPaste?: boolean
 }
 
 export interface SousItemModification {

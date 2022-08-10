@@ -120,109 +120,120 @@
                                             'border-not-rounded' : this.DescriptifDemandeNow.orDelete.length == 0 && this.DescriptifDemandeNow.itemDelete.length == 0}" 
                                 >Sous Item</li>
                             </ul>
-                            <div *ngIf=" ''; else demandeNotEmpty" class="row">
-                                <div class="col text-center py-3">
-                                    Aucun objet lié à la demande.
-                                </div>
-                            </div>
-                            <ng-template #demandeNotEmpty>
-                                <div class="col-12 py-3 bg-light border border-top-0  shadow-sm px-0">
-                                    <div class="scrolltableDemande cursor-pointer col-12 px-3"> 
-                                        <table class="table table-hover tableEyeHover">
-                                            <thead>
-                                            <tr>
-                                                <th scope="col-3" class="col-3">Identifiant</th>
-                                                <th scope="col-9" class="col-9">Libelle</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                                <ng-container *ngIf="this.objectType === this.objectTypeNow.OR; else afficheItem" >
-                                                    <ng-container *ngIf="this.DemandeType === this.DemandeTypeNow.A; else OrTraitee" >
-                                                        <tr *ngFor="let desc of this.DescriptifDemandeNow.orDelete" >
-                                                            <td colspan="2" class="isHover position-relative align-middle">
-                                                                <div (click)="this.selectObjetOnDemand(desc.idObjetRepere)" data-bs-toggle="modal" data-bs-target="#descriptionModal" class="row">
-                                                                    <div  class="w-100 position-absolute lh-1  text-center ">
-                                                                        <fa-icon class="fs-4 col-12 eye" [icon]="faEye" ></fa-icon>
-                                                                    </div>
-                                                                    <div class="col-3 opacity-25 blur">{{desc.idObjetRepere}}</div>
-                                                                    <div class="col-9 opacity-25 blur">{{desc.libelleObjetRepere}}</div>
-                                                                </div>
-                                                            </td>
-                                                            <td class="col-3 align-middle isNotHover">{{desc.idObjetRepere}}</td>
-                                                            <td class="col-9 align-middle isNotHover">{{desc.libelleObjetRepere}}</td>
-                                                        </tr>
-                                                    </ng-container>
-                                                    <ng-template #OrTraitee>
-                                                        <tr *ngFor="let desc of this.DescriptifDemandeTraiteeNow.orDelete" >
-                                                            <td colspan="2" class="isHover position-relative align-middle">
-                                                                <div (click)="this.selectObjetOnDemandTraitee(desc.idObjetRepere)" data-bs-toggle="modal" data-bs-target="#descriptionModal" class="row">
-                                                                    <div  class="w-100 position-absolute lh-1  text-center ">
-                                                                        <fa-icon class="fs-4 col-12 eye" [icon]="faEye" ></fa-icon>
-                                                                    </div>
-                                                                    <div class="col-3 opacity-25 blur">{{desc.idObjetRepere}}</div>
-                                                                    <div class="col-9 opacity-25 blur">{{desc.libelleObjetRepere}}</div>
-                                                                </div>
-                                                            </td>
-                                                            <td class="col-3 align-middle isNotHover">{{desc.idObjetRepere}}</td>
-                                                            <td class="col-9 align-middle isNotHover">{{desc.libelleObjetRepere}}</td>
-                                                        </tr>
-                                                    </ng-template>
-
-
-                                                </ng-container>
-                                                <ng-template #afficheItem>
-                                                    <ng-container *ngIf="this.objectType === this.objectTypeNow.Item; else afficheSI" >
-                                                        <ng-container *ngIf="this.DemandeType === this.DemandeTypeNow.A; else ItemTraitee" >
-                                                            <tr *ngFor="let desc of this.DescriptifDemandeNow.itemDelete" >
+                            
+                                <ng-container *ngIf="this.DemandeType === this.DemandeTypeNow.A; else DemandeTEmpty" >
+                                    <div *ngIf=" (this.DemandeType === this.DemandeTypeNow.A && this.DescriptifDemandeNow.orDelete.length == 0 && this.DescriptifDemandeNow.itemDelete.length == 0 && this.DescriptifDemandeNow.sousItemDelete.length == 0) ; else demandeNotEmpty" class="row">
+                                        <div class="col text-center py-3">
+                                            Aucun objet lié à la demande.
+                                        </div>
+                                    </div>
+                                </ng-container>
+                                <ng-template #DemandeTEmpty>
+                                    <div *ngIf=" (this.DemandeType === this.DemandeTypeNow.T && this.DescriptifDemandeTraiteeNow.orDelete.length == 0 && this.DescriptifDemandeTraiteeNow.itemDelete.length == 0 && this.DescriptifDemandeTraiteeNow.sousItemDelete.length == 0) ; else demandeNotEmpty" class="row">
+                                        <div class="col text-center py-3">
+                                            Aucun objet lié à la demande.
+                                        </div>
+                                    </div>
+                                </ng-template>
+                                <ng-template #demandeNotEmpty>
+                                    <div class="col-12 py-3 bg-light border border-top-0  shadow-sm px-0">
+                                        <div class="scrolltableDemande cursor-pointer col-12 px-3"> 
+                                            <table class="table table-hover tableEyeHover">
+                                                <thead>
+                                                <tr>
+                                                    <th scope="col-3" class="col-3">Identifiant</th>
+                                                    <th scope="col-9" class="col-9">Libelle</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <ng-container *ngIf="this.objectType === this.objectTypeNow.OR; else afficheItem" >
+                                                        <ng-container *ngIf="this.DemandeType === this.DemandeTypeNow.A; else OrTraitee" >
+                                                            <tr *ngFor="let desc of this.DescriptifDemandeNow.orDelete" >
                                                                 <td colspan="2" class="isHover position-relative align-middle">
-                                                                    <div (click)="this.selectObjetOnDemand(desc.idItem)" data-bs-toggle="modal" data-bs-target="#descriptionModal" class="row">
+                                                                    <div (click)="this.selectObjetOnDemand(desc.idObjetRepere)" data-bs-toggle="modal" data-bs-target="#descriptionModal" class="row">
                                                                         <div  class="w-100 position-absolute lh-1  text-center ">
                                                                             <fa-icon class="fs-4 col-12 eye" [icon]="faEye" ></fa-icon>
                                                                         </div>
-                                                                        <div class="col-3 opacity-25 blur">{{desc.idItem}}</div>
-                                                                        <div class="col-9 opacity-25 blur">{{desc.libelleItem}}</div>
+                                                                        <div class="col-3 opacity-25 blur">{{desc.idObjetRepere}}</div>
+                                                                        <div class="col-9 opacity-25 blur">{{desc.libelleObjetRepere}}</div>
                                                                     </div>
                                                                 </td>
-                                                                <td class="col-3 align-middle isNotHover">{{desc.idItem}}</td>
-                                                                <td class="col-9 align-middle isNotHover">{{desc.libelleItem}}</td>
+                                                                <td class="col-3 align-middle isNotHover">{{desc.idObjetRepere}}</td>
+                                                                <td class="col-9 align-middle isNotHover">{{desc.libelleObjetRepere}}</td>
                                                             </tr>
                                                         </ng-container>
-                                                        <ng-template #ItemTraitee> 
-                                                            <tr *ngFor="let desc of this.DescriptifDemandeTraiteeNow.itemDelete" >
+                                                        <ng-template #OrTraitee>
+                                                            <tr *ngFor="let desc of this.DescriptifDemandeTraiteeNow.orDelete" >
                                                                 <td colspan="2" class="isHover position-relative align-middle">
-                                                                    <div (click)="this.selectObjetOnDemandTraitee(desc.idItem)" data-bs-toggle="modal" data-bs-target="#descriptionModal" class="row">
+                                                                    <div (click)="this.selectObjetOnDemandTraitee(desc.idObjetRepere)" data-bs-toggle="modal" data-bs-target="#descriptionModal" class="row">
                                                                         <div  class="w-100 position-absolute lh-1  text-center ">
                                                                             <fa-icon class="fs-4 col-12 eye" [icon]="faEye" ></fa-icon>
                                                                         </div>
-                                                                        <div class="col-3 opacity-25 blur">{{desc.idItem}}</div>
-                                                                        <div class="col-9 opacity-25 blur">{{desc.libelleItem}}</div>
+                                                                        <div class="col-3 opacity-25 blur">{{desc.idObjetRepere}}</div>
+                                                                        <div class="col-9 opacity-25 blur">{{desc.libelleObjetRepere}}</div>
                                                                     </div>
                                                                 </td>
-                                                                <td class="col-3 align-middle isNotHover">{{desc.idItem}}</td>
-                                                                <td class="col-9 align-middle isNotHover">{{desc.libelleItem}}</td>
+                                                                <td class="col-3 align-middle isNotHover">{{desc.idObjetRepere}}</td>
+                                                                <td class="col-9 align-middle isNotHover">{{desc.libelleObjetRepere}}</td>
                                                             </tr>
                                                         </ng-template>
+
+
                                                     </ng-container>
-                                                </ng-template>
-                                                <ng-template #afficheSI>
-                                                    <ng-container *ngIf="this.DemandeType === this.DemandeTypeNow.A; else SITraitee" >
-                                                        <tr *ngFor="let desc of this.DescriptifDemandeNow.sousItemDelete" >
-                                                            <td class="col-3 align-middle">{{desc.idSousItem}}</td>
-                                                            <td class="col-9 align-middle">{{desc.libelleSousItem}}</td>
-                                                        </tr>
-                                                    </ng-container>
-                                                    <ng-template #SITraitee>
-                                                        <tr *ngFor="let desc of this.DescriptifDemandeTraiteeNow.sousItemDelete" >
-                                                            <td class="col-3 align-middle">{{desc.idSousItem}}</td>
-                                                            <td class="col-9 align-middle">{{desc.libelleSousItem}}</td>
-                                                        </tr>
+                                                    <ng-template #afficheItem>
+                                                        <ng-container *ngIf="this.objectType === this.objectTypeNow.Item; else afficheSI" >
+                                                            <ng-container *ngIf="this.DemandeType === this.DemandeTypeNow.A; else ItemTraitee" >
+                                                                <tr *ngFor="let desc of this.DescriptifDemandeNow.itemDelete" >
+                                                                    <td colspan="2" class="isHover position-relative align-middle">
+                                                                        <div (click)="this.selectObjetOnDemand(desc.idItem)" data-bs-toggle="modal" data-bs-target="#descriptionModal" class="row">
+                                                                            <div  class="w-100 position-absolute lh-1  text-center ">
+                                                                                <fa-icon class="fs-4 col-12 eye" [icon]="faEye" ></fa-icon>
+                                                                            </div>
+                                                                            <div class="col-3 opacity-25 blur">{{desc.idItem}}</div>
+                                                                            <div class="col-9 opacity-25 blur">{{desc.libelleItem}}</div>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td class="col-3 align-middle isNotHover">{{desc.idItem}}</td>
+                                                                    <td class="col-9 align-middle isNotHover">{{desc.libelleItem}}</td>
+                                                                </tr>
+                                                            </ng-container>
+                                                            <ng-template #ItemTraitee> 
+                                                                <tr *ngFor="let desc of this.DescriptifDemandeTraiteeNow.itemDelete" >
+                                                                    <td colspan="2" class="isHover position-relative align-middle">
+                                                                        <div (click)="this.selectObjetOnDemandTraitee(desc.idItem)" data-bs-toggle="modal" data-bs-target="#descriptionModal" class="row">
+                                                                            <div  class="w-100 position-absolute lh-1  text-center ">
+                                                                                <fa-icon class="fs-4 col-12 eye" [icon]="faEye" ></fa-icon>
+                                                                            </div>
+                                                                            <div class="col-3 opacity-25 blur">{{desc.idItem}}</div>
+                                                                            <div class="col-9 opacity-25 blur">{{desc.libelleItem}}</div>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td class="col-3 align-middle isNotHover">{{desc.idItem}}</td>
+                                                                    <td class="col-9 align-middle isNotHover">{{desc.libelleItem}}</td>
+                                                                </tr>
+                                                            </ng-template>
+                                                        </ng-container>
                                                     </ng-template>
-                                                    
-                                                </ng-template>
-                                            </tbody>
-                                        </table>
+                                                    <ng-template #afficheSI>
+                                                        <ng-container *ngIf="this.DemandeType === this.DemandeTypeNow.A; else SITraitee" >
+                                                            <tr *ngFor="let desc of this.DescriptifDemandeNow.sousItemDelete" >
+                                                                <td class="col-3 align-middle">{{desc.idSousItem}}</td>
+                                                                <td class="col-9 align-middle">{{desc.libelleSousItem}}</td>
+                                                            </tr>
+                                                        </ng-container>
+                                                        <ng-template #SITraitee>
+                                                            <tr *ngFor="let desc of this.DescriptifDemandeTraiteeNow.sousItemDelete" >
+                                                                <td class="col-3 align-middle">{{desc.idSousItem}}</td>
+                                                                <td class="col-9 align-middle">{{desc.libelleSousItem}}</td>
+                                                            </tr>
+                                                        </ng-template>
+                                                        
+                                                    </ng-template>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
-                                </div>
+                                </ng-template>
                                 <div class="row mt-2">
                                     <div class="col-6">
                                         <label for="demandeur" class="col col-form-label">Demandeur</label>
@@ -255,7 +266,7 @@
                                         <button *ngIf="this.DemandeTypeNow.T == this.DemandeType? this.DescriptifDemandeTraiteeNow.isDelete === false : true" (click)="refuseDeleteAdmin()" type="button" class="btn btn-lg btn-red" [disabled]="this.DemandeTypeNow.T == this.DemandeType">{{this.DemandeType === this.DemandeTypeNow.A ? 'Refuser' : 'Refusée'}}</button>
                                     </div>
                                 </div>
-                            </ng-template>
+                            
                         </div>
                     </div>
                 </div>

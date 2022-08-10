@@ -7,6 +7,7 @@ import { CreateObjectComponent } from './create-object/create-object.component';
 import { CreateTypeObjectComponent } from './create-type-object/create-type-object.component';
 import { DeleteObjectComponent } from './delete-object/delete-object.component';
 import { DemandeAdminComponent } from './demande-admin/demande-admin.component';
+import { ExportationGmaoComponent } from './exportation-gmao/exportation-gmao.component';
 import { ExportationComponent } from './exportation/exportation.component';
 import { GestionAteliersComponent } from './gestion-ateliers/gestion-ateliers.component';
 import { InformationsComponent } from './informations/informations.component';
@@ -29,6 +30,7 @@ const routes: Routes = [
   { path: 'suppressionObjet', component : DeleteObjectComponent, canActivate: [ AuthGuard ]},
   { path: 'recopieObjet', component : RecopieObjectComponent, canActivate: [ AuthGuard ]},
   { path: 'exportation', component : ExportationComponent, canActivate: [ AuthGuard ]},
+  { path: 'exportationGmao', component : ExportationGmaoComponent, canActivate: [ AuthGuard ]},
   { path: 'demandeAdmin', component : DemandeAdminComponent, canActivate: [ AuthGuard ]},
   { path: 'parametres', component : ParametreComponent, canActivate: [ AuthGuard ]},
   { path: 'information', component : InformationsComponent, canActivate: [ AuthGuard ]},

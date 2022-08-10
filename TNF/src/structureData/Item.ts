@@ -15,7 +15,8 @@ export interface ItemInfo {
     profilModification: string,
     posteModification: string,
     dateModification:  Date,
-    description: Description[]
+    description: Description[],
+    isPaste?: boolean
 }
 
 export interface ItemAffichage {

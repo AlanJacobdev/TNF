@@ -1,4 +1,6 @@
 import { Description } from "./Description"
+import {  ItemInfo } from "./Item"
+import {  SousItemInfo } from "./SousItem"
 
 export interface ObjetRepereInfo {
     idObjetRepere: string,
@@ -12,7 +14,8 @@ export interface ObjetRepereInfo {
     profilModification: string,
     posteModification: string,
     dateModification: Date,
-    description: Description[] 
+    description: Description[],
+    isPaste? : boolean
 }
 
 export interface ObjetRepereAffichage {
@@ -74,4 +77,18 @@ export enum valide {
     A = "A",
     R = "R",
     Aucun = "Aucun"
+}
+
+export interface ObjectToExportGmao {
+    listeOR : ObjetRepereInfo[],
+    listeItem : ItemInfo[],
+    listeSI : SousItemInfo[]
+}
+
+export interface exportGMAO{
+    listeOR : ObjetRepereInfo[],
+    listeItem : ItemInfo[],
+    listeSI : SousItemInfo[],
+    user : string,
+    nomDocument :string
 }
