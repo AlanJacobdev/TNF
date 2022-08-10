@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { lastValueFrom, map } from 'rxjs';
 import { NavBarService } from 'src/app/navbar/service/nav-bar.service';
 import { environment } from 'src/environments/environment';
+import { exportInfo } from 'src/structureData/Exportations';
 import { ObjectToExportGmao } from 'src/structureData/ObjetRepere';
 
 @Injectable({
@@ -10,12 +11,19 @@ import { ObjectToExportGmao } from 'src/structureData/ObjetRepere';
 })
 export class FetchExportationGmaoService {
 
+
   constructor(private readonly http: HttpClient, private navBarService: NavBarService) { }
 
 
   async getAllObjetToExportGmao(): Promise<any> {
     let url = "http://"+environment.API_URL+"/service-exportation/export/getAllExportItem";
     const res : ObjectToExportGmao = await lastValueFrom(this.http.get<ObjectToExportGmao>(url));
+    return res
+  }
+
+  async getAllExportation(): Promise<any> {
+    let url = "http://"+environment.API_URL+"/exportation";
+    const res : exportInfo = await lastValueFrom(this.http.get<exportInfo>(url));
     return res
   }
 
@@ -43,6 +51,26 @@ export class FetchExportationGmaoService {
         })
       );
     }
+
+    async readExp(idExp: number) {
+      
+      let url = "http://"+environment.API_URL+"/exportation/readFile/{idExp}"
+      url = url.replace("{idExp}",idExp.toString())
+      return this.http.get(url,{ responseType: 'blob', observe: 'response'}).pipe(
+          map((res: any) => {
+            if (res != undefined){
+              if (res.body.type == "application/json") {
+                return undefined;
+              }
+              return new Blob([res.body]);
+            }
+            return res
+          })
+        );
+    
+    }
+
+    
 }
 
 

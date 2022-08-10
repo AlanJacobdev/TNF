@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { faCircleCheck, faCircleXmark, faEye } from '@fortawesome/free-solid-svg-icons';
 import * as FileSaver from 'file-saver';
+import { exportInfo } from 'src/structureData/Exportations';
 import { ItemInfo, typeObjet } from 'src/structureData/Item';
 import { exportGMAO, ObjectToExportGmao, ObjetRepereInfo } from 'src/structureData/ObjetRepere';
 import { SousItemInfo } from 'src/structureData/SousItem';
@@ -28,7 +30,8 @@ export class ExportationGmaoComponent implements OnInit {
   public OrExport : ObjetRepereInfo[] = [];
   public ItemExport : ItemInfo[] = [];
   public SiExport : SousItemInfo[] = [];
-
+  public listeAllExport : exportInfo[] = [];
+  
   public checkAllOr : boolean = false;
   public checkAllItem : boolean = false;
   public checkAllSi : boolean = false;
@@ -38,6 +41,11 @@ export class ExportationGmaoComponent implements OnInit {
   public nomDocument : string = "";
   public exportEnCours : boolean = false;
 
+  public exportationValide = -1;
+  public faCircleCheck = faCircleCheck;
+  public faCircleXmark = faCircleXmark;
+  public faEye = faEye;
+  
   ngOnInit(): void {
     this.getObjetToExport();
   }
@@ -59,6 +67,16 @@ export class ExportationGmaoComponent implements OnInit {
           this.selectObject(this.objectTypeNow.SI);
         } 
 
+        
+      for ( const or of this.listeOr){
+        or.isPaste = false;
+      }
+      for ( const item of this.listeItem){
+        item.isPaste = false;
+      }
+      for ( const si of this.listeSi){
+        si.isPaste = false;
+      }
 
       } else {
         console.log("Exportation : Problème de récupération des objet à exporter ")
@@ -71,9 +89,23 @@ export class ExportationGmaoComponent implements OnInit {
     }).catch((e) => {
       this.exportEnCours = false;
     })
+  }
 
-    
 
+  getAllExport(){
+    this.fetchExportationGmaoService.getAllExportation().then((list: exportInfo[]) => {
+      if (list != undefined) {
+        this.listeAllExport = list;
+        console.log(this.listeAllExport);
+        
+      } else {
+        console.log("Exportation : Problème de récupération des exportations")
+        this.listeAllExport.splice(0);
+      }
+      this.exportEnCours = false;
+    }).catch((e) => {
+      this.exportEnCours = false;
+    })
   }
 
   public selectObject (object : typeObjet) {
@@ -229,6 +261,7 @@ export class ExportationGmaoComponent implements OnInit {
 
   export(){
     this.formValidate = false;
+    this.exportationValide = -1;
     this.exportEnCours = true
     this.nomDocument = "";
     this.OrExport.splice(0); 
@@ -274,6 +307,7 @@ export class ExportationGmaoComponent implements OnInit {
       let sub =(await this.fetchExportationGmaoService.exportData(payload)).subscribe(res => {
         if (res == undefined || typeof res == 'string') {
           console.log("Impossible de récupérer le document");
+          this.exportationValide = 0;
         } else {
           const file = new File([res], payload.nomDocument+'_export_' + new Date().getTime() +'.xlsx',
         { type: 'application/vnd.ms-excel' });
@@ -281,13 +315,28 @@ export class ExportationGmaoComponent implements OnInit {
           FileSaver.saveAs(file)
           
           sub.unsubscribe();
-          
+          this.getObjetToExport();
+          this.exportationValide = 1;
       }})      
     } else {
       this.formValidate = true;
     }
 
   }
+
+  async readExp(idExp : number, nomDoc: string){
+    let sub = (await this.fetchExportationGmaoService.readExp(idExp)).subscribe(res => {     
+      if (res == undefined) {
+        console.log("Impossible de récupérer le document");
+      } else {
+        const file = new File([res], nomDoc,{ type: 'application/vnd.ms-excel' });
+        FileSaver.saveAs(file)
+          
+        sub.unsubscribe();
+      }
+    });
+  }
+
 
 }
 

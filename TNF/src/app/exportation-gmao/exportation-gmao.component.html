@@ -131,7 +131,7 @@
                                     <button  (click)="export()" type="button" data-bs-toggle="modal" data-bs-target="#Recap" data-backdrop="static" data-keyboard="false" class="btn btn-lg btn-light col-12 col-lg-4 offset-lg-4 shadow-sm mb-2 mb-lg-0">
                                         <div class="">Exporter</div>
                                     </button>
-                                    <button type="button" class="btn btn-lg btn-light col-12 col-lg-3 offset-lg-1 shadow-sm ">
+                                    <button (click)="getAllExport()" type="button" data-bs-toggle="modal" data-bs-target="#ListeExportation" data-backdrop="static" data-keyboard="false" class="btn btn-lg btn-light col-12 col-lg-3 offset-lg-1 shadow-sm ">
                                         <div class="">Historique des exportations</div>
                                     </button>
                                 </div>
@@ -229,15 +229,93 @@
         
         
         <div class="modal-footer">
-            <div *ngIf="this.OrExport.length != 0 || this.ItemExport.length != 0 || this.SiExport.length != 0" class="col needs-validation"  [ngClass]="{'was-validated': formValidate === true}" >
+            <div class="col" *ngIf="exportationValide != -1" >
+                <div class="d-flex justify-content-center" *ngIf="exportationValide == 0">
+                    <fa-icon class=" text-center fs-3 text-danger" [icon]="faCircleXmark"></fa-icon>
+                    <div class="align-self-center ps-3"> Problème lors de l'exportation </div>
+                </div>
+                <div class="d-flex justify-content-center" *ngIf="exportationValide == 1">
+                    <fa-icon class=" text-center fs-3 text-success " [icon]="faCircleCheck "></fa-icon>
+                    <div class="align-self-center ps-3"> Exportation réussie </div>
+                </div>
+            </div>
+            <div *ngIf="exportationValide == -1 && ( this.OrExport.length != 0 || this.ItemExport.length != 0 || this.SiExport.length != 0)" class="col needs-validation"  [ngClass]="{'was-validated': formValidate === true}" >
                 <input [(ngModel)]="nomDocument" required type="text" class="form-control" placeholder="Nom du document" aria-label="Nom du document">
                 <div class="invalid-tooltip">
                     Veuillez renseigner un nom de fichier.
                 </div>
             </div>
-            <button *ngIf="this.OrExport.length != 0 || this.ItemExport.length != 0 || this.SiExport.length != 0" type="button" class="btn btn-secondary" (click)="sendExport()">Valider</button>
+            <button *ngIf="exportationValide == -1 && ( this.OrExport.length != 0 || this.ItemExport.length != 0 || this.SiExport.length != 0)" type="button" class="btn btn-secondary" (click)="sendExport()">Valider</button>
             <button type="button" class="btn btn-secondary"  data-bs-dismiss="modal" >Fermer</button>
-          
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div #modal class="modal fade" id="ListeExportation" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg ">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Historique des exportations</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="text-center fs-5" *ngIf="this.listeAllExport.length == 0; else recapExp">
+                Aucun historique existant 
+            </div>
+            
+            <ng-template #recapExp>
+                <div *ngIf="exportEnCours" class="spinnerWaiting">
+                    <div class="spinner-grow" role="status">
+                        <span class="visually-hidden ">Loading...</span>
+                    </div>
+                    <div class="spinner-grow" role="status">
+                        <span class="visually-hidden ">Loading...</span>
+                    </div>
+                    <div class="spinner-grow" role="status">
+                        <span class="visually-hidden ">Loading...</span>
+                    </div>
+                    <div class="fs-4">
+                    Veuillez patienter ...
+                    </div>
+                </div>
+                <div [ngClass]="{loading : exportEnCours}">
+                    <table class="table table-hover table-fixed tableEyeHover">
+                        <thead>
+                        <tr>
+                            <th class="col-6" scope="col-6">Nom du document</th>
+                            <th class="col-3" scope="col-3">Créateur</th>
+                            <th class="col-3" scope="col-3">Date</th>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let exp of listeAllExport" (click)="readExp(exp.idExport, exp.nomDocument)">
+                                <td colspan="3" class="isHover position-relative align-middle">
+                                    <div class="row">
+                                        <div  class="w-100 position-absolute lh-1  text-center ">
+                                            <fa-icon class="fs-4 col-12 eye" [icon]="faEye" ></fa-icon>
+                                        </div>
+                                        <td class="col-6 opacity-25 blur">{{exp.nomDocument}}</td>
+                                        <td class="col-3 opacity-25 blur">{{exp.profil}}</td>
+                                        <td class="col-3 opacity-25 blur">{{exp.date | date: 'dd/MM/yyyy HH:mm'}}</td>
+                                    </div>
+                                </td>
+                                <td class="col-6 isNotHover">{{exp.nomDocument}}</td>
+                                <td class="col-3 isNotHover">{{exp.profil}}</td>
+                                <td class="col-3 isNotHover">{{exp.date | date: 'dd/MM/yyyy HH:mm'}}</td>
+
+                                
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </ng-template>
+        </div>
+        
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary"  data-bs-dismiss="modal" >Fermer</button>
         </div>
       </div>
     </div>
