@@ -5,6 +5,8 @@ import { NavBarService } from 'src/app/navbar/service/nav-bar.service';
 import { environment } from 'src/environments/environment';
 import { exportInfo } from 'src/structureData/Exportations';
 import { ObjectToExportGmao } from 'src/structureData/ObjetRepere';
+import { roleInfo } from 'src/structureData/Role';
+import { TypeObjetRepereInfo } from 'src/structureData/TypeObject';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +18,16 @@ export class FetchExportationGmaoService {
 
 
   async getAllObjetToExportGmao(): Promise<any> {
-    let url = "http://"+environment.API_URL+"/service-exportation/export/getAllExportItem";
+    let user = this.navBarService.getLogin();
+    let admin = this.navBarService.getEstAdmin()
+    let url;
+    if (admin){
+      url = "http://"+environment.API_URL+"/service-exportation/export/getAllExportItem";
+    } else {
+      url = "http://"+environment.API_URL+"/service-exportation/export/getAllExportItemForGMAOForOneUser/{user}";
+      url = url.replace("{user}", user)
+    }
+    
     const res : ObjectToExportGmao = await lastValueFrom(this.http.get<ObjectToExportGmao>(url));
     return res
   }
@@ -30,7 +41,7 @@ export class FetchExportationGmaoService {
 
   async exportData(payload: any) {
     let user = this.navBarService.getLogin();
-    payload.profilCreation = user;
+    payload.user = user;
     let url = "http://"+environment.API_URL+"/service-exportation/export/exportationData"
     
     return this.http.post(url, payload,{ responseType: 'blob', observe: 'response'}).pipe(
@@ -69,6 +80,18 @@ export class FetchExportationGmaoService {
         );
     
     }
+
+
+    
+  async getAllTypeOrForOneUser(): Promise<any> {
+    let user = this.navBarService.getLogin();
+    let url = "http://"+environment.API_URL+"/utilisateur/getTypeORFromUser/{user}";
+    url = url.replace("{user}", user)
+    const res : roleInfo = await lastValueFrom(this.http.get<roleInfo>(url));
+    return res.typeObjet
+  }
+
+    
 
     
 }

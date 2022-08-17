@@ -1,10 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { faCircleCheck, faCircleXmark, faEye } from '@fortawesome/free-solid-svg-icons';
 import * as FileSaver from 'file-saver';
+import { AtelierInfo } from 'src/structureData/Atelier';
 import { exportInfo } from 'src/structureData/Exportations';
-import { ItemInfo, typeObjet } from 'src/structureData/Item';
+import { etat, etatExport, ItemInfo, typeObjet } from 'src/structureData/Item';
 import { exportGMAO, ObjectToExportGmao, ObjetRepereInfo } from 'src/structureData/ObjetRepere';
 import { SousItemInfo } from 'src/structureData/SousItem';
+import { TypeObjetInfo, TypeObjetRepereInfo } from 'src/structureData/TypeObject';
+import { FetchCreateObjectService } from '../create-object/service/fetch-create-object.service';
+import { FetchcreateTypeObjectService } from '../create-type-object/service/fetchcreate-type-object.service';
+import { FetchVisuService } from '../visualisation/service/fetch-visu.service';
 import { FetchExportationGmaoService } from './service/fetch-exportation-gmao.service';
 
 
@@ -15,7 +20,7 @@ import { FetchExportationGmaoService } from './service/fetch-exportation-gmao.se
 })
 export class ExportationGmaoComponent implements OnInit {
 
-  constructor(private fetchExportationGmaoService : FetchExportationGmaoService) { }
+  constructor(private fetchExportationGmaoService : FetchExportationGmaoService, private fetchVisuService : FetchVisuService, private fetchCreateTypeObject : FetchcreateTypeObjectService) { }
 
   public listeOr : ObjetRepereInfo[] = [];
   public listeItem : ItemInfo[] = [];
@@ -31,7 +36,11 @@ export class ExportationGmaoComponent implements OnInit {
   public ItemExport : ItemInfo[] = [];
   public SiExport : SousItemInfo[] = [];
   public listeAllExport : exportInfo[] = [];
-  
+  public listeAtelier: AtelierInfo[] = [];
+  public listeTypeOr: TypeObjetRepereInfo[] = [];
+  public listeTypeO: TypeObjetInfo[] = [];
+  public listeTypeOSi: TypeObjetInfo[] = [];
+
   public checkAllOr : boolean = false;
   public checkAllItem : boolean = false;
   public checkAllSi : boolean = false;
@@ -46,10 +55,53 @@ export class ExportationGmaoComponent implements OnInit {
   public faCircleXmark = faCircleXmark;
   public faEye = faEye;
   
+  public atelier : string = "";
+  public selectTypeOr : string = '';
+  public selectTypeItem : string = '';
+  public selectTypeSi : string = '';
+  public etatObject: etatExport = etatExport.Tous;
+  public etatObjectNow = etatExport;
+
+  
   ngOnInit(): void {
-    this.getObjetToExport();
+    this.getObjetToExport(); 
+    this.getAteliers();
+    this.getListType();
+    
   }
 
+  getAteliers(){
+    this.fetchVisuService.getAllAteliers().then((list: AtelierInfo[]) => {
+      if (list != undefined) {
+        this.listeAtelier = list
+      } else {
+        console.log("Atelier : Connexion impossible")
+      }
+    }).catch((e) => {
+    })
+  }
+
+  getListType(){
+    this.fetchExportationGmaoService.getAllTypeOrForOneUser().then((res: TypeObjetRepereInfo[]) => {
+    if (res != undefined) {
+        this.listeTypeOr = res
+      } else {
+        console.log("Type OR : Connexion impossible")
+      }
+    }).catch((e) => {
+    })
+
+    this.fetchCreateTypeObject.getTypeObjet().then((list: TypeObjetInfo[]) => {
+      this.listeTypeO = list
+    }).catch((e) => {
+    })
+    
+    this.fetchVisuService.getTypeSIActif().then((list: TypeObjetInfo[]) => {
+      this.listeTypeOSi = list
+    }).catch((e) => {
+    })
+
+  }
 
   getObjetToExport(){
     this.exportEnCours = true
@@ -112,6 +164,11 @@ export class ExportationGmaoComponent implements OnInit {
     this.objectType = object;
   }
 
+
+  public selectEtatObject (etat : etatExport){
+    this.etatObject = etat;
+    
+  }
   selectCheckOR(idOR : string){
     const targetOR = this.listeOr.findIndex((element) => element.idObjetRepere === idOR)
     if (targetOR != -1) {  
@@ -297,12 +354,44 @@ export class ExportationGmaoComponent implements OnInit {
   async sendExport(){
     if (this.nomDocument !== ""){
       let payload : exportGMAO ={
-        listeOR: this.OrExport,
-        listeItem: this.ItemExport,
-        listeSI: this.SiExport,
+        createObject: {
+          listeOR: [],
+          listeItem: [],
+          listeSI: []
+        },
+        updateObject: {
+          listeOR: [],
+          listeItem: [],
+          listeSI: []
+        },
         user: '',
-        nomDocument : this.nomDocument
+        nomDocument: this.nomDocument
       };
+
+      
+      for (const Or of  this.OrExport) {
+        if(Or.dateModification != null){
+          payload.updateObject.listeOR.push(Or)
+        } else {
+          payload.createObject.listeOR.push(Or)
+        }
+      }
+
+      for (const Item of  this.ItemExport) {
+        if(Item.dateModification != null){
+          payload.updateObject.listeItem.push(Item)
+        } else {
+          payload.createObject.listeItem.push(Item)
+        }
+      }
+
+      for (const Si of  this.SiExport) {
+        if(Si.dateModification != null){
+          payload.updateObject.listeSI.push(Si)
+        } else {
+          payload.createObject.listeSI.push(Si)
+        }
+      }
 
       let sub =(await this.fetchExportationGmaoService.exportData(payload)).subscribe(res => {
         if (res == undefined || typeof res == 'string') {
@@ -337,6 +426,14 @@ export class ExportationGmaoComponent implements OnInit {
     });
   }
 
+  public selectAtelier(Atelier : any){
+    try {
+      this.atelier = Atelier.target.value;
+    } catch  {
+      this.atelier = Atelier;
+    }
+    
+  }
 
 }
 

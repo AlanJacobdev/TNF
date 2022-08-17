@@ -49,6 +49,12 @@ export enum etat {
     Aucun = "Aucun"
 }
 
+export enum etatExport {
+    M = "M",
+    C = "C",
+    Tous = "Tous"
+}
+
 export interface ItemModification {
     idItem: string,
     libelleItem: string,

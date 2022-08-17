@@ -86,9 +86,16 @@ export interface ObjectToExportGmao {
 }
 
 export interface exportGMAO{
-    listeOR : ObjetRepereInfo[],
-    listeItem : ItemInfo[],
-    listeSI : SousItemInfo[],
+    createObject :  {
+                    listeOR : ObjetRepereInfo[],
+                    listeItem : ItemInfo[],
+                    listeSI : SousItemInfo[],
+                    },
+    updateObject :  {
+                    listeOR : ObjetRepereInfo[],
+                    listeItem : ItemInfo[],
+                    listeSI : SousItemInfo[],
+                    },
     user : string,
     nomDocument :string
 }

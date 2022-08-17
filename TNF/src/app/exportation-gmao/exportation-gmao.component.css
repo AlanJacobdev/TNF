@@ -99,3 +99,47 @@ table {
 .blur{
     filter :blur(1px)
 }
+
+.btn-check:active + .btn-outline-perso:focus, .btn-check:checked + .btn-outline-perso:focus, .btn-outline-perso.active:focus, .btn-outline-perso.dropdown-toggle.show:focus, .btn-outline-perso:active:focus {
+    box-shadow: 0 0 0 .25rem rgba(33,37,41,.5);
+  }
+
+.btn-check:active + .btn-outline-perso, .btn-check:checked + .btn-outline-perso, .btn-outline-perso.active, .btn-outline-perso.dropdown-toggle.show, .btn-outline-perso:active {
+    color: #000;
+    background-color: #ebeff3;
+    border-color: #ced4da;
+}
+
+.btn-check:checked:hover + .btn-outline-perso {
+    color: #000;
+    background-color: #e3e8ec;
+    border-color: #ced4da;
+}
+
+
+.btn-check:focus + .btn-outline-perso, .btn-outline-perso:focus {
+    box-shadow: 0 0 0 .25rem rgba(199, 202, 206, 0.5);
+}
+
+.btn-outline-perso:hover {
+    color: #000;
+    background-color: #ebeff3;
+    border-color: #ced4da;
+}
+
+.btn-outline-perso {
+    color: #212529;
+    border-color: #ced4da;
+}
+
+.no-rounded-top-left{
+    border-top-left-radius:0 !important
+}
+
+.no-rounded-bottom-left{
+    border-bottom-left-radius:0 !important
+}
+
+.flex-1{
+    flex : 1;
+}

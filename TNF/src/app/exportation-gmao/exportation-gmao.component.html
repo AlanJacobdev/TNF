@@ -17,6 +17,72 @@
                 </div>
             </div>
             <ng-template #liste>
+                <div class="row">
+                    <div class="col-lg-4 col-xs-12 mt-4">
+                        <div class="input-group">
+                        <label class="input-group-text" for="atelierSelect">Atelier</label>
+                        <select (change)=selectAtelier($event) class="form-select" id="atelierSelect" aria-label="Default select example">
+                            <option value = '' selected>Selection de l'atelier</option>
+                            <option *ngFor="let atelier of listeAtelier" [value]="atelier.idAtelier" style="--bs-bg-opacity: .25;" [ngClass]="{'bg-secondary bg-gradient' : !atelier.actif}">
+                                {{atelier.idAtelier}} - {{atelier.libelleAtelier}}
+                            </option>
+                        </select>
+                        </div>
+                    </div>
+                    <div *ngIf="this.objectType === this.objectTypeNow.OR" class="col-lg-4 col-xs-12 mt-4">
+                        <div class="input-group mb-3">
+                          <label class="input-group-text" for="TypeOr">Type d'objet </label>
+                          <select [(ngModel)]="selectTypeOr" required  class="form-select" id="TypeOr" aria-label="TypeOr">
+                            <option value="" selected>Sélectionnez un Type </option>
+                            <option *ngFor="let typeor of listeTypeOr" [value]="typeor.idTypeOR" style="--bs-bg-opacity: .25;">
+                              {{typeor.idTypeOR}} - {{typeor.libelleTypeOR}} 
+                          </option>
+                          </select>
+                        </div>
+                    </div>
+            
+                    <div *ngIf="this.objectType === this.objectTypeNow.Item" class="col-lg-4 col-xs-12 mt-4">
+                        <div class="input-group mb-3">
+                          <label class="input-group-text" for="TypeOItem">Type d'objet </label>
+                          <select [(ngModel)]="selectTypeItem" required  class="form-select" id="TypeOItem" aria-label="TypeOItem">
+                            <option value="" selected>Sélectionnez un Type </option>
+                            <option *ngFor="let typeo of listeTypeO" [value]="typeo.idType" style="--bs-bg-opacity: .25;">
+                              {{typeo.idType}} - {{typeo.libelleType}} 
+                          </option>
+                          </select>
+                        </div>
+                    </div>
+            
+                    <div *ngIf="this.objectType === this.objectTypeNow.SI" class="col-lg-4 col-xs-12 mt-4">
+                        <div class="input-group mb-3">
+                          <label class="input-group-text" for="TypeOSI">Type d'objet </label>
+                          <select [(ngModel)]="selectTypeSi" required  class="form-select" id="TypeOSI" aria-label="TypeOSI">
+                            <option value="" selected>Sélectionnez un Type </option>
+                            <option *ngFor="let typeo of listeTypeOSi" [value]="typeo.idType" style="--bs-bg-opacity: .25;">
+                              {{typeo.idType}} - {{typeo.libelleType}} 
+                          </option>
+                          </select>
+                        </div>
+                    </div>
+            
+                    <div class="col-lg-4 col-xs-12 mt-4">
+                        <div class="input-group">
+                        <div class="col-3 col-lg-2 input-group-text border-end-0"> Objet </div>
+                            <div class="col-9 d-flex">
+                                <div class="btn-group d-flex flex-1">
+                                <input [(ngModel)]="etatObject" (click)="selectEtatObject(this.etatObjectNow.C)"  class="btn-check " type="radio" name="radioEtatObject" id="inlineRadioOR1" value="C" required>
+                                <label class="btn btn-outline-perso no-rounded-top-left no-rounded-bottom-left" for="inlineRadioOR1">Créé</label>
+                                <input [(ngModel)]="etatObject" (click)="selectEtatObject(this.etatObjectNow.M)"  class="btn-check" type="radio" name="radioEtatObject" id="inlineRadioOR2" value="M" required>
+                                <label class="btn btn-outline-perso" for="inlineRadioOR2">Modifié</label>
+                                <input [(ngModel)]="etatObject" (click)="selectEtatObject(this.etatObjectNow.Tous)"  class="btn-check" type="radio" name="radioEtatObject" id="inlineRadioOR3" value="Tous" required checked>
+                                <label class="btn btn-outline-perso" for="inlineRadioOR3">Tous</label>
+                                </div> 
+                            </div>
+                        </div>
+                    </div>
+            
+                </div>
+
                 <div class="col mt-5">
                     <ul class="list-group list-group-horizontal cursor-pointer">
                         <li *ngIf="listeOr.length != 0 " class="list-group-item col text-center border  border-bottom-0" (click)="selectObject(this.objectTypeNow.OR)" 
@@ -61,7 +127,7 @@
                                         </thead>
                                         <tbody>
                                             <ng-container *ngIf="this.objectType === this.objectTypeNow.OR; else afficheItem" >
-                                                    <tr *ngFor="let or of listeOr" [ngClass]="{'bg-selected' : or.isPaste}" >
+                                                    <tr *ngFor="let or of listeOr | filterExportationAtelier : atelier : 'OR' | filterExportationType : selectTypeOr : 'OR' | filterExportationEtat : etatObject " [ngClass]="{'bg-selected' : or.isPaste}" >
                                                         <td class="col-1 text-center align-middle ">
                                                             <input (click)="selectCheckOR(or.idObjetRepere)" [checked]="or.isPaste" class="form-check-input" type="checkbox" id="flexCheckDefault">  
                                                         </td>
@@ -81,7 +147,7 @@
                                             <ng-template #afficheItem>
                                                 <ng-container *ngIf="this.objectType === this.objectTypeNow.Item; else afficheSI" >
                                                     
-                                                        <tr *ngFor="let item of listeItem" [ngClass]="{'bg-selected' : item.isPaste}">
+                                                        <tr *ngFor="let item of listeItem | filterExportationAtelier : atelier : 'Item' | filterExportationType : selectTypeItem : 'Item' | filterExportationEtat : etatObject" [ngClass]="{'bg-selected' : item.isPaste}">
 
                                                             <td class="col-1 text-center align-middle ">
                                                                 <input (click)="selectCheckItem(item.idItem)" class="form-check-input" [checked]="item.isPaste" type="checkbox" id="flexCheckDefault">  
@@ -104,7 +170,7 @@
                                             </ng-template>
                                             <ng-template #afficheSI>
                                                 
-                                                    <tr *ngFor="let si of listeSi" [ngClass]="{'bg-selected' : si.isPaste}">
+                                                    <tr *ngFor="let si of listeSi | filterExportationAtelier : atelier : 'SI' | filterExportationType : selectTypeSi : 'Si' | filterExportationEtat : etatObject" [ngClass]="{'bg-selected' : si.isPaste}">
                                                         <td class="col-1 text-center align-middle">
                                                             <input (click)="selectCheckSi(si.idSousItem)" class="form-check-input" [checked]="si.isPaste" type="checkbox" id="flexCheckDefault">  
                                                         </td>
