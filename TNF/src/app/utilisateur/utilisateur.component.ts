@@ -103,7 +103,8 @@ export class UtilisateurComponent implements OnInit {
   selectCreateUtilisateur(){
     this.selectedUser = -1;
     this.changesNow = true;
-    
+    this.estAdministrateur = false;
+    this.clearData();
   }
 
   selectModifyUtilisateur(){

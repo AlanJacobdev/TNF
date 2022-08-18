@@ -36,6 +36,14 @@ table th {
     flex : 1;
 }
 
+.flex-col-9{
+    flex: 1 1 auto !important;
+}
+
+.widthauto{
+    width: auto !important;
+}
+
 .colorBorder{
     border-color: #0060a081 !important;
     border-width: 1px !important;

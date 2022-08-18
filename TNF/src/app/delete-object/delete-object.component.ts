@@ -27,10 +27,12 @@ export class DeleteObjectComponent implements OnInit {
   @Input() public radio : typeObjet = typeObjet.Aucun;
   public listeTypeOR: TypeObjetRepereTableau[] = [];
   public listeTypeO: TypeObjetInfo[] = [];
+  public listeTypeOSi: TypeObjetInfo[] = [];
   public listeAtelier: AtelierInfo[] = [];
   public listeOR : ObjetRepereSuppression[] = [];
   public listeItem : ItemSuppresion[] = [];
   public listeSousItem : SousItemSuppression[] = [];
+
   public typeNow: string = "";
   public objectNow : typeObjet = typeObjet.OR;
   public objectTypeNow: any;
@@ -88,7 +90,10 @@ export class DeleteObjectComponent implements OnInit {
   public etatOR : valide = valide.Aucun;
   public etatOrNow =valide;
   public etatNow =etat;
-  
+  public selectTypeOr : number = -1;
+  public selectTypeItem : number = -1;
+  public selectTypeSousItem : number = -1;
+
   
   public selectedNow : string = "";
   public formValidate : boolean = false;
@@ -122,11 +127,10 @@ export class DeleteObjectComponent implements OnInit {
         if(target.classList.contains('show') && this.suppExecEnd){
           this.endOfDelete();
         }
-      }
-    )
-  }  
-  
+      })
+    }  
   }
+  
    
 
   getAteliers(){
@@ -164,8 +168,15 @@ export class DeleteObjectComponent implements OnInit {
       this.listeTypeO = list
     }).catch((e) => {
     })
+
+    this.fetchVisuService.getTypeSIActif().then((list: TypeObjetInfo[]) => {
+      this.listeTypeOSi = list
+    }).catch((e) => {
+    })
+
   }
 
+  
 
   getObjetRepereByAtelier(){
     this.fetchCreateObjectService.getObjetRepereByAtelierForOneUser(this.atelierSelect).then((list: ObjetRepereInfo[]) => {
@@ -283,7 +294,8 @@ export class DeleteObjectComponent implements OnInit {
   closeToast(){
     this.ToastAffiche = false;
   }
-      
+    
+  
   public selectAtelier (Atelier : any) {
     let atelier;
     try {
@@ -608,7 +620,9 @@ export class DeleteObjectComponent implements OnInit {
           await this.verifyIfDmdAdmin();
           this.suppExecEnd = true;
           this.suppressionEnCours = false;
-          this.selectAtelier(this.atelierSelect);
+          if(this.suppWithDmdAdmin == false){
+            this.selectAtelier(this.atelierSelect);
+          } 
         }
         
       }).catch((e) => {
@@ -664,59 +678,62 @@ export class DeleteObjectComponent implements OnInit {
   }
 
   async sendDemande(){
-    let demande : demandeAdmin = {
-      motif: this.motifDemande,
-      orDelete: [],
-      itemDelete: [],
-      sousItemDelete: [],
-      profilCreation: this.navBarService.getLogin()
-    };
+    if (this.motifDemande != ""){
+      let demande : demandeAdmin = {
+        motif: this.motifDemande,
+        orDelete: [],
+        itemDelete: [],
+        sousItemDelete: [],
+        profilCreation: this.navBarService.getLogin()
+      };
 
-    if (this.returnOfDeleted.listeOR.length != 0){
-      for ( const or of this.returnOfDeleted.listeOR){
-        if(!or.value){
-          demande.orDelete.push({
-            idObjetRepere : or.objet
-          });
+      if (this.returnOfDeleted.listeOR.length != 0){
+        for ( const or of this.returnOfDeleted.listeOR){
+          if(!or.value){
+            demande.orDelete.push({
+              idObjetRepere : or.objet
+            });
+          }
         }
       }
-    }
 
-    if (this.returnOfDeleted.listeItem.length != 0){
-      for ( const item of this.returnOfDeleted.listeItem){
-        if(!item.value){
-          demande.itemDelete.push({
-            idItem : item.objet
-          });
+      if (this.returnOfDeleted.listeItem.length != 0){
+        for ( const item of this.returnOfDeleted.listeItem){
+          if(!item.value){
+            demande.itemDelete.push({
+              idItem : item.objet
+            });
+          }
         }
       }
-    }
 
-    if (this.returnOfDeleted.listeSI.length != 0){
-      for ( const si of this.returnOfDeleted.listeSI){
-        if(!si.value){
-          demande.sousItemDelete.push({
-            idSousItem : si.objet
-          });
+      if (this.returnOfDeleted.listeSI.length != 0){
+        for ( const si of this.returnOfDeleted.listeSI){
+          if(!si.value){
+            demande.sousItemDelete.push({
+              idSousItem : si.objet
+            });
+          }
         }
       }
-    }
-      
-      await this.fetchDeleteObjectService.demandeAdmin(demande).then(async (res: any) => {
-    
-      if(res == undefined) {
         
-      } else {  
-        this.manageToast("Demande de suppression", "La demande a été transmises aux administrateurs", "#006400");
-        this.demandeAdmin = false;
-        await this.endOfDelete();
-        this.fetchDeleteObjectService.refreshDemande();
-      }
+        await this.fetchDeleteObjectService.demandeAdmin(demande).then(async (res: any) => {
       
-    }).catch((e) => {
+        if(res == undefined) {
+          
+        } else {  
+          this.manageToast("Demande de suppression", "La demande a été transmises aux administrateurs", "#006400");
+          this.demandeAdmin = false;
+          await this.endOfDelete();
+          this.fetchDeleteObjectService.refreshDemande();
+        }
+        
+      }).catch((e) => {
 
-    })
- 
+      })
+    } else {
+      this.manageToast("Erreur de création", "Veuillez renseigner un motif" , "red")
+    }
   }
 
   async endOfDelete(){
@@ -726,6 +743,7 @@ export class DeleteObjectComponent implements OnInit {
     this.suppExecEnd = false;
     this.demandeAdmin = false;
     this.motifDemande = "";
+    this.selectAtelier(this.atelierSelect);
   }
 
 

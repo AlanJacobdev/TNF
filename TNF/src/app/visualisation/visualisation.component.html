@@ -32,11 +32,11 @@
                 <div class="row">
                   <caption class="col-12 text-center pt-1">Objet repère</caption>
                 </div>
-                <div class="row input-group mt-3 mb-4">
+                <div class="row input-group mt-3 mb-4 widthauto">
                   <div class="col">
                     <div class="input-group ">
                       <div class="col-3 col-lg-3 input-group-text border-end-0"> Etat </div>
-                      <div class="col-8 d-flex">
+                      <div class="col-9 d-flex flex-col-9">
                         <div class="btn-group d-flex flex-1">
                           <input [(ngModel)]="etatOR" (click)="selectEtatOR(this.etatOrNow.A)"  class="btn-check " type="radio" name="radioEtatOR" id="inlineRadioOR1" value="A" required>
                           <label class="btn btn-outline-perso no-rounded-top-left no-rounded-bottom-left" for="inlineRadioOR1">Actif</label>
@@ -67,12 +67,12 @@
                 <div class="row">
                   <caption class="col-12 text-center pt-1">Item</caption>
                 </div>
-                <div class="row input-group mb-3">
+                <div class="row input-group mb-3 widthauto">
                   <div class="col">
                     <div class="input-group">
                       <div class="col-3 col-lg-3 input-group-text border-end-0">  Etat  </div>
-                      <div class="col-9">
-                        <div class="btn-group ">
+                      <div class="col-9 d-flex flex-col-9">
+                        <div class="btn-group d-flex flex-1">
                           <input [(ngModel)]="etatItem" (click)="selectEtatItem(this.etatNow.A)"  class="btn-check" type="radio" name="radioEtatItem" id="inlineRadioItem1" value="A" required>
                           <label class="btn btn-outline-perso no-rounded-top-left no-rounded-bottom-left d-flex align-items-center" for="inlineRadioItem1">Actif</label>
                           <input [(ngModel)]="etatItem" (click)="selectEtatItem(this.etatNow.EA)"  class="btn-check" type="radio" name="radioEtatItem" id="inlineRadioItem2" value="EA" required>
@@ -104,12 +104,12 @@
                 <div class="row">
                   <caption class="col-12 text-center pt-1">Sous-item</caption>
                 </div>
-                <div class="row input-group mb-3">
+                <div class="row input-group mb-3 widthauto">
                   <div class="col">
                     <div class="input-group">
                       <div class="col-3 col-lg-3 input-group-text border-end-0"> Etat</div>
-                      <div class="col-9">
-                        <div class="btn-group">
+                      <div class="col-9 d-flex flex-col-9">
+                        <div class="btn-group d-flex flex-1">
                           <input [(ngModel)]="etatSI" (click)="selectEtatSI(this.etatNow.A)" class="btn-check" type="radio" name="radioEtatSI" id="inlineRadioSI1" value="A" required>
                           <label class="btn btn-outline-perso no-rounded-top-left no-rounded-bottom-left d-flex align-items-center" for="inlineRadioSI1">Actif</label>
                           <input [(ngModel)]="etatSI" (click)="selectEtatSI(this.etatNow.EA)" class="btn-check" type="radio" name="radioEtatSI" id="inlineRadioSI2" value="EA" required>

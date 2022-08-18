@@ -7,7 +7,6 @@ import { FetchVisuService } from './service/fetch-visu.service';
 import { faHistory, faCalendar, faUser, faClock, faEye } from '@fortawesome/free-solid-svg-icons';
 import { Description } from 'src/structureData/Description';
 import { TypeObjetInfo, TypeObjetRepereInfo } from 'src/structureData/TypeObject';
-import { FetchCreateObjectService } from '../create-object/service/fetch-create-object.service';
 
 @Component({
   selector: 'app-visualisation',

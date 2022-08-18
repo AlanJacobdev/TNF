@@ -9,6 +9,17 @@
     cursor: pointer;
 }
 
+.flex-1{
+    flex : 1;
+}
+
+.flex-col-9{
+    flex: 1 1 auto !important;
+}
+
+.widthauto{
+    width: auto !important;
+}
 .actifNow{
     background-color :#0060a081 !important;
     color : #fff !important;

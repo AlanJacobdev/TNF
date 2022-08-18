@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import * as FileSaver from 'file-saver';
 import { AtelierInfo } from 'src/structureData/Atelier';
-import { ItemAffichage } from 'src/structureData/Item';
+import { etat, ItemAffichage } from 'src/structureData/Item';
 import { ObjetRepereUtile } from 'src/structureData/ObjetRepere';
 import { TypeObjetInfo } from 'src/structureData/TypeObject';
 import { FetchcreateTypeObjectService } from '../create-type-object/service/fetchcreate-type-object.service';
@@ -24,10 +24,12 @@ export class ExportationComponent implements OnInit {
   public checkSecurite : boolean = false;
   public objetRepere : string = "";
   public dateDebut : string = "";
-  public dateFin : string = "";
-  public actif : number = -1;
+  public dateFin : string = "";;
   public securite : number = -1;
   public nomExport : string = "";
+  public etat: etat = etat.Aucun;
+  public etatNow =etat;
+
 
   public ToastAffiche : boolean = false; 
   public messageToast : string = "";
@@ -99,8 +101,8 @@ export class ExportationComponent implements OnInit {
     }
   }
 
-  public selectActif(value : number){
-      this.actif = value;
+  public selectEtat(value : etat){
+      this.etat = value;
   }
 
   public selectSecurite(value : number){
@@ -159,41 +161,50 @@ export class ExportationComponent implements OnInit {
 
 
   valideForm(){
-    this.fetchExportationService.getExportItem((this.atelier == '' ? '-1' : this.atelier), (this.typeObjet == '' ? '-1' : this.typeObjet), (this.objetRepere == '' ? '-1' : this.objetRepere),
-    (this.dateDebut == '' ? '-1' : this.dateDebut), (this.dateFin == '' ? '-1' : this.dateFin), this.actif, this.securite).then((list: ItemAffichage[]) => {
+    if(this.atelier == '' && this.typeObjet == '' && this.objetRepere == '' && this.dateDebut == '' && this.dateFin == '' && this.etat == this.etatNow.Aucun && this.securite == -1) {
+      this.manageToast("Erreur recherche d'item", "Veuillez sélectionner un filtre" , "red")
+    } else {
+      this.fetchExportationService.getExportItem((this.atelier == '' ? '-1' : this.atelier), (this.typeObjet == '' ? '-1' : this.typeObjet), (this.objetRepere == '' ? '-1' : this.objetRepere),
+      (this.dateDebut == '' ? '-1' : this.dateDebut), (this.dateFin == '' ? '-1' : this.dateFin), this.etat, this.securite).then((list: ItemAffichage[]) => {
 
-      if(list == undefined) {
-        this.exportData.splice(0)
-        this.manageToast("Erreur recherche d'item", "Aucune donnée ne correspond à votre recherche" , "red")
-      } else if(typeof list === 'string') {
-        this.exportData.splice(0)
-        this.manageToast("Erreur recherche d'item", list , "red")
-      } else {
-        this.exportData = list
-      }
+        if(list == undefined) {
+          this.exportData.splice(0)
+          this.manageToast("Erreur recherche d'item", "Aucune donnée ne correspond à votre recherche" , "red")
+        } else if(typeof list === 'string') {
+          this.exportData.splice(0)
+          this.manageToast("Erreur recherche d'item", list , "red")
+        } else {
+          this.exportData = list
+        }
 
-      console.log(list)
-    }).catch((e) => {
-    })
+        console.log(list)
+      }).catch((e) => {
+      })
+    }
   }
 
 
   public exportExcel() {
-    if (this.exportData.length > 0){
-      import("xlsx").then(xlsx => {
-        const worksheet = {} 
-        // xlsx.utils.json_to_sheet(this.exportData);
+    
+      if (this.exportData.length > 0){
+        if (this.nomExport != ""){
+        import("xlsx").then(xlsx => {
+          const worksheet = {} 
+          // xlsx.utils.json_to_sheet(this.exportData);
 
-        xlsx.utils.sheet_add_aoa(worksheet, [['NEW VALUE from NODE']], {origin: 'F4'});        
-        const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
-        const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
-        console.log(this.nomExport);
-        
-        this.saveExcel(excelBuffer, this.nomExport);
+          xlsx.utils.sheet_add_aoa(worksheet, [['NEW VALUE from NODE']], {origin: 'F4'});        
+          const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
+          const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
+          
+          
+          this.saveExcel(excelBuffer, this.nomExport);
 
-      })
+        })
+      } else {
+        this.manageToast("Erreur d'export", "Nom de fichier non renseigné" , "red")
+      }
     } else {
-      this.manageToast("Erreur d'import", "Aucune données à exporter" , "red")
+      this.manageToast("Erreur d'export", "Aucune données à exporter" , "red")
     }
   }
 

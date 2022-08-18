@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
+import { etat } from 'src/structureData/Item';
 import { ObjetRepereUtile } from 'src/structureData/ObjetRepere';
 import { environment } from '../../../environments/environment';
 
@@ -13,14 +14,14 @@ export class FetchExportationService {
 
 
 
-  async getExportItem(atelier : string, typeObjet : string, objetRepere : string, dateDebut : string, dateFin : string, estActif : number, estSecurite : number): Promise<any> {
+  async getExportItem(atelier : string, typeObjet : string, objetRepere : string, dateDebut : string, dateFin : string, etatItem : etat, estSecurite : number): Promise<any> {
     let url = "http://"+environment.API_URL+"/item/getItemForExport/{atelier}/{typeObjet}/{objetRepere}/{dateDebut}/{dateFin}/{estActif}/{estSecurite}"
     url = url.replace("{atelier}", atelier)
     url = url.replace("{typeObjet}", typeObjet)
     url = url.replace("{objetRepere}", objetRepere)
     url = url.replace("{dateDebut}", dateDebut)
     url = url.replace("{dateFin}", dateFin)
-    url = url.replace("{estActif}", estActif.toString())
+    url = url.replace("{estActif}", etat[etatItem])
     url = url.replace("{estSecurite}", estSecurite.toString())
     
     try {

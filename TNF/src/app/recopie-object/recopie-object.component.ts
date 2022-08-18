@@ -82,6 +82,7 @@ export class RecopieObjectComponent implements OnInit {
   public selectAtelier(Atelier: any ) {
     this.selectedOr = "";
     this.listeItem.splice(0);
+    this.listeTypeOOfOR.splice(0);
     let value = Atelier.target.value; 
     this.atelier = value;
     this.selectAtelierCible(Atelier);

@@ -11,9 +11,7 @@ export class FilterInfoPipe implements PipeTransform {
 
     args = args.toLowerCase();
     return value.filter(function(item: any) {
-    return JSON.stringify(item)
-    .toLowerCase()
-    .includes(args.toLowerCase());
+    return (JSON.stringify(item.titre).toLowerCase().includes(args) || JSON.stringify(item.profilCreation).toLowerCase().includes(args));
     });
   }
 

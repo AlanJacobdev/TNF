@@ -1,10 +1,10 @@
-<div class="container">
+<div class="container noselect">
     <div class="shadow-sm border offset-1 col-10 pt-3 pb-3 mt-4">
         <div class="row mb-3">
-            <div class="col-12 col-lg-6 px-5">
+            <div class="col-12 col-lg-6 px-5 mb-3 mb-lg-0">
                 <div class="input-group ">
                     <label class="input-group-text " for="atelierSelect">Atelier</label>
-                    <select (change)=selectAtelier($event) class="form-select" id="atelierSelect" aria-label="Default select example">
+                    <select (change)=selectAtelier($event) class="form-select cursor" id="atelierSelect" aria-label="Default select example">
                         <option value ="" selected>Sélectionner l'atelier</option>
                         <option *ngFor="let atelier of listeAtelier" [value]="atelier.idAtelier" style="--bs-bg-opacity: .25;" [ngClass]="{'bg-secondary bg-gradient' : !atelier.actif}">
                             {{atelier.idAtelier}} - {{atelier.libelleAtelier}}
@@ -12,23 +12,20 @@
                     </select>
                 </div> 
             </div>
-            <div class="col-12 px-5 col-lg-6 d-flex justify-content-between">
-                <legend class="col-form-label col-sm-2 pt-0">Date</legend>
-                <div>
-                    <label class="pe-3" for="start">Début </label>
-                    <input type="date" id="start" name="trip-start" (change)="setDateDebut($event)" [(ngModel)]="dateDebut">
-                </div>
-                <div>
-                    <label class="pe-3" for="end">Fin </label>
-                    <input type="date" id="end" name="trip-start" (change)="setDateFin($event)" [(ngModel)]="dateFin">
+            <div class="col-12 px-5 col-lg-6 d-flex">
+                <div class="input-group">
+                    <div class="col-3 input-group-text border-end-0">Date</div>
+                    <input class=" cursor col-4 input-group-text bg-white text-center" type="date" id="start" name="trip-start" (change)="setDateDebut($event)" [(ngModel)]="dateDebut">
+                    <label class="col-1 input-group-text" for="inputGroupSelect01">à</label>
+                    <input class="cursor col-4 input-group-text bg-white text-center" type="date" id="end" name="trip-start" (change)="setDateFin($event)" [(ngModel)]="dateFin">
                 </div>
             </div>
         </div>
         <div class="row mb-3">
-            <div class="col-12  col-lg-6 px-5">
+            <div class="col-12  col-lg-6 px-5 mb-3 mb-lg-0">
                 <div class="input-group">
                     <label class="input-group-text " for="TypeObjetSelect">Type Objet</label>
-                    <select (change)=selectTypeObjet($event) class="form-select" id="TypeObjetSelect" aria-label="Default select example">
+                    <select (change)=selectTypeObjet($event) class="form-select cursor" id="TypeObjetSelect" aria-label="Default select example">
                         <option value ="" selected>Sélectionner le type d'objet</option>
                         <option *ngFor="let typeObjet of listeTypeO" [value]="typeObjet.idType">
                             {{typeObjet.idType}} - {{typeObjet.libelleType}}
@@ -37,21 +34,31 @@
                 </div>  
             </div>
             <div class="col-12 px-5 col-lg-6 ">
-                <legend class="col-form-label col-sm-2 pt-0">Actif </legend>
-                <div class="form-check form-check-inline">
-                    <input (change)="selectActif(1)" class="form-check-input" type="radio" name="actif" id="trueActif" value="">
-                    <label class="form-check-label" for="trueActif">Oui</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input (change)="selectActif(0)" class="form-check-input" type="radio" name="actif" id="falseActif" value="">
-                    <label class="form-check-label" for="falseActif">Non</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input (change)="selectActif(-1)" class="form-check-input" type="radio" name="actif" id="ignoredActif" checked value="">
-                    <label class="form-check-label" for="ignoredActif">Ignorer</label>
-                </div>
-
-
+                <div class="input-group">
+                    <div class="col-3 input-group-text border-end-0">Etat </div>
+                        <div class="col-9 d-flex">
+                            <div class="btn-group d-none d-lg-flex flex-1">
+                                <input (change)="selectEtat(this.etatNow.A)" class="btn-check " type="radio" name="actif" id="trueActif" value="" required>
+                                <label class="btn btn-outline-perso no-rounded-top-left no-rounded-bottom-left" for="trueActif">Actif</label>
+                                <input (change)="selectEtat(this.etatNow.EA)" class="btn-check" type="radio" name="actif" id="falseActif" value="" required>
+                                <label class="btn btn-outline-perso" for="falseActif">En Attente</label>
+                                <input (change)="selectEtat(this.etatNow.HS)" class="btn-check" type="radio" name="actif" id="ignoredActif" value="" required >
+                                <label class="btn btn-outline-perso" for="ignoredActif">Hors Service</label>
+                                <input (change)="selectEtat(this.etatNow.Aucun)" class="btn-check" type="radio" name="actif" id="TousActif" value="" required checked>
+                                <label class="btn btn-outline-perso" for="TousActif">Tous</label>
+                            </div> 
+                            <div class="btn-group d-lg-none d-flex btn-group-vertical d-flex flex-1">
+                                <input (change)="selectEtat(this.etatNow.A)" class="btn-check " type="radio" name="actifv" id="trueActifv" value="" required>
+                                <label class="btn btn-outline-perso no-rounded-top-left no-rounded-bottom-left" for="trueActifv">Actif</label>
+                                <input (change)="selectEtat(this.etatNow.EA)" class="btn-check" type="radio" name="actifv" id="falseActifv" value="" required>
+                                <label class="btn btn-outline-perso" for="falseActifv">En Attente</label>
+                                <input (change)="selectEtat(this.etatNow.HS)" class="btn-check" type="radio" name="actifv" id="ignoredActifv" value="" required >
+                                <label class="btn btn-outline-perso" for="ignoredActifv">Hors Service</label>
+                                <input (change)="selectEtat(this.etatNow.Aucun)" class="btn-check" type="radio" name="actifv" id="TousActifv" value="" required checked>
+                                <label class="btn btn-outline-perso" for="TousActifv">Tous</label>
+                            </div> 
+                        </div>
+                    </div>
             </div>
         </div>
         <div class="row">
@@ -64,19 +71,19 @@
                 </div> 
             </div>
             <div class="col-12 px-5 col-lg-6">
-                <legend class="col-form-label col-sm-2 pt-0">Securité</legend>
-                    <div class="form-check form-check-inline">
-                        <input (change)="selectSecurite(1)" class="form-check-input" type="radio" name="securite" id="trueSecurite" value="">
-                        <label class="form-check-label" for="trueSecurite">Oui</label>
+                <div class="input-group">
+                <div class="col-3 input-group-text border-end-0"> Sécurité </div>
+                    <div class="col-9 d-flex">
+                        <div class="btn-group d-flex flex-1">
+                        <input (click)="selectSecurite(1)"  class="btn-check " type="radio" name="securite" id="trueSecurite" value="C" required>
+                        <label class="btn btn-outline-perso no-rounded-top-left no-rounded-bottom-left" for="trueSecurite">Créé</label>
+                        <input (click)="selectSecurite(0)"  class="btn-check" type="radio" name="securite" id="falseSecurite" value="M" required>
+                        <label class="btn btn-outline-perso" for="falseSecurite">Modifié</label>
+                        <input (click)="selectSecurite(-1)"  class="btn-check" type="radio" name="securite" id="ignoredSecurite" value="Tous" required checked>
+                        <label class="btn btn-outline-perso" for="ignoredSecurite">Tous</label>
+                        </div> 
                     </div>
-                    <div class="form-check form-check-inline">
-                        <input (change)="selectSecurite(0)" class="form-check-input" type="radio" name="securite" id="falseSecurite" value="">
-                        <label class="form-check-label" for="falseSecurite">Non</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input (change)="selectSecurite(-1)" class="form-check-input" type="radio" name="securite" id="ignoredSecurite" checked value="">
-                        <label class="form-check-label" for="ignoredSecurite">Ignorer</label>
-                    </div> 
+                </div>
             </div>
         </div>
         <div class="row">
@@ -84,7 +91,7 @@
         </div>
     </div>
 
-    <div class="row mt-4">
+    <div class="row mt-4 select">
         <div class="col-12 col-lg-8 offset-lg-2">
             <div class="scrolltable"> 
                 <table class="table table-hover cursor ">
