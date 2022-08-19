@@ -10,6 +10,7 @@ export interface UtilisateurInfo {
     login : string;
     email : string;
     idRole : number;
+    estActif : boolean;
     estAdministrateur : boolean;
     profilCreation : string;
     posteCreation : string;

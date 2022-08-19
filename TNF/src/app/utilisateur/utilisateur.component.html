@@ -1,11 +1,12 @@
 <div class="container">
     <div class="row">
-        <div class="col-lg-6 col-xs-12 mt-lg-5 mt-3 order-2 order-lg-1">
+        <div class="col-lg-7 col-xs-12 mt-lg-5 mt-3 order-2 order-lg-1">
             <div class="col-12 py-3 bg-light border rounded shadow-sm">
                 <div class="scrolltable cursor-pointer col-12 col-xl-10 offset-xl-1"> 
                     <table class="table table-hover">
                         <thead>
                         <tr>
+                            <th> Actif</th>
                             <th class="text-center">Admin</th>
                             <th >Login</th>
                             <th >Nom</th>
@@ -15,8 +16,13 @@
                         </thead>
                         <tbody>
                             <tr *ngFor="let user of listeUtilisateur" (click)="selectUtilisateur(user.idUtilisateur)" [ngClass]="{'table-active': user.idUtilisateur === this.selectedUser}">
+                                <td>
+                                    <input (click)="selectCheckUser(user.idUtilisateur)" class="form-check-input"  type="checkbox" [checked]="user.estActif" id="flexCheckDefault">
+                                </td>
                                 <td class="col-3 align-middle text-center"> 
-                                    <input disabled (click)="selectCheckAdmin(user.idUtilisateur)" class="form-check-input"  [checked]="user.estAdministrateur" type="checkbox" id="flexCheckDefault"> 
+                                    <div class="fw-bold" [ngClass]="{'text-success' : user.estAdministrateur, 'text-danger' : !user.estAdministrateur}">
+                                        {{user.estAdministrateur ? 'Oui' : 'Non'}} 
+                                    </div>
                                 </td>
                                 <td class="col-3 align-middle"> {{user.login}} </td>
                                 <td class="col-3 align-middle"> {{user.nom}} </td>
@@ -28,34 +34,34 @@
             </div>
         </div>
 
-        <div *ngIf="!changesNow; else formType" class="col-lg-6 col-xs-12 mt-3 mt-lg-5 order-1 order-lg-2">
+        <div *ngIf="!changesNow; else formType" class="col-lg-5 col-xs-12 mt-3 mt-lg-5 order-1 order-lg-2">
             <div class="row">
                 <div class="col-lg-12 col-3 my-lg-3 mb-2">
-                    <button (click)="selectCreateUtilisateur()" type="button" class="btn btn-lg btn-light col-12 col-lg-6 offset-lg-3 shadow-sm ">
+                    <button (click)="selectCreateUtilisateur()" type="button" class="btn btn-lg btn-light col-12 col-lg-8 offset-lg-2 shadow-sm ">
                         <div class="d-none d-lg-block">Créer un nouvel utilisateur</div>
                         <div class="d-block d-lg-none"><fa-icon class="fs-3 col-12" [icon]="faPlus" ></fa-icon> </div>
                     </button>
                 </div>
                 <div *ngIf="this.selectedUser !== -1" class="col-lg-12 col-3 my-lg-3">
-                    <button (click)="selectModifyUtilisateur()"type="button" class="btn btn-lg btn-light col-12 col-lg-6 offset-lg-3 shadow-sm">
+                    <button (click)="selectModifyUtilisateur()"type="button" class="btn btn-lg btn-light col-12 col-lg-8 offset-lg-2 shadow-sm">
                         <div class="d-none d-lg-block">Modifier l'utilisateur </div>
                         <div class="d-block d-lg-none"><fa-icon class="fs-3 col-12" [icon]="faPen" ></fa-icon> </div>
                     </button>
                 </div>
                 <div *ngIf="this.selectedUser !== -1" class="col-lg-12 col-3 my-lg-3">
-                    <button (click)="selectModifyPassword()"type="button" class="btn btn-lg btn-light col-12 col-lg-6 offset-lg-3 shadow-sm">
+                    <button (click)="selectModifyPassword()"type="button" class="btn btn-lg btn-light col-12 col-lg-8 offset-lg-2 shadow-sm">
                         <div class="d-none d-lg-block">Modifier le mot de passe </div>
                         <div class="d-block d-lg-none"><fa-icon class="fs-3 col-12" [icon]="faKey" ></fa-icon> </div>
                     </button>
                 </div>
                 <div *ngIf="this.selectedUser !== -1" class="col-lg-12 col-3 my-lg-3">
-                    <button (click)="selectDeleteUtilisateur()" type="button" class="btn btn-lg btn-light col-12 col-lg-6 offset-lg-3 shadow-sm">
+                    <button (click)="selectDeleteUtilisateur()" type="button" class="btn btn-lg btn-light col-12 col-lg-8 offset-lg-2 shadow-sm">
                         <div class="d-none d-lg-block">Supprimer l'utilisateur</div>
                         <div class="d-block d-lg-none"><fa-icon class="fs-3 col-12" [icon]="faTrashCan" ></fa-icon> </div>
                     </button>
                 </div>
                 <div *ngIf="this.selectedUser !== -1" class="col-lg-12 col-3 my-lg-3">
-                    <button (click)="selectInfoUtilisateur()" type="button" class="btn btn-lg btn-light col-12 col-lg-6 offset-lg-3 shadow-sm">
+                    <button (click)="selectInfoUtilisateur()" type="button" class="btn btn-lg btn-light col-12 col-lg-8 offset-lg-2 shadow-sm">
                         <div class="d-none d-lg-block">Informations</div>
                         <div class="d-block d-lg-none"><fa-icon class="fs-3 col-12" [icon]="faInfo" ></fa-icon> </div>
                     </button>

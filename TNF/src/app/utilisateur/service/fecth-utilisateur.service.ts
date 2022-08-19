@@ -10,6 +10,7 @@ import { UtilisateurInfo } from 'src/structureData/Utilisateur';
 })
 export class FecthUtilisateurService {
 
+
   constructor(private readonly http: HttpClient, private navBarService: NavBarService) { }
 
   async getUtilisateurs() : Promise<any>{
@@ -87,6 +88,38 @@ export class FecthUtilisateurService {
       return returnError;
     }
   }
+
+  async updateActifAtelier(idUser: number, estActif: boolean) {
+    let payload = {
+      profilModification: '',
+      estActif : false
+    };
+    let user = this.navBarService.getLogin();
+    payload.profilModification = user;
+    payload.estActif = estActif;
+    let url = "http://"+environment.API_URL+"/utilisateur/updateActif/{idUser}"
+    url = url.replace("{idUser}", idUser.toString())
+    try {
+      const res : UtilisateurInfo = await lastValueFrom(this.http.put<UtilisateurInfo>(url, payload));
+      if (res.hasOwnProperty('error')) {
+        const resAny : any = res;
+        return resAny.error;
+      } else {
+        return res;
+      }
+    } catch (e : any) {
+        let returnError;
+        if(e.hasOwnProperty('error')){
+          if(e.error.hasOwnProperty('status')){
+            returnError=e.error["error"];
+          } else {
+            returnError=e.error.message[0];
+          }
+        }
+      return returnError;
+    }
+  }
+
 
   async deleteUtilisateur(selectedUser: any) {
     let url = "http://"+environment.API_URL+"/utilisateur/{idUser}";

@@ -52,7 +52,11 @@ export class AuthService {
   }
     
     const res : any = await lastValueFrom(this.http.post<any>(url, payload));
-      
+
+    if (res.hasOwnProperty('error')) {
+      console.log(res);
+      return res.error;
+    }
     if (res != undefined){
       localStorage.setItem("token", res.access_token)
       const helper = new JwtHelperService();
@@ -60,7 +64,6 @@ export class AuthService {
       this.UserName = decodedToken.prenom;
       this.UserLastName = decodedToken.nom;
       this.connection = true;
-
     }
     
     return res;

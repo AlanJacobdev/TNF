@@ -27,14 +27,18 @@ export class ConnexionComponent implements OnInit {
   public async connect(id : string, pwd: string) {
     const co = await this.authService.connexion(id,pwd);
     
-    
-    if ( co != undefined) {
-      this.NavBarService.setEstConnecte(true);
-      this.NavBarService.isUserLoggedIn.next(true);
-      this.router.navigate(['']);
-    } else {
+    if (typeof co === 'string') {
       this.cannotConnect = true;
-      this.errorMessage = "Identifiant ou mot de passe incorrect"
+      this.errorMessage = co
+    } else {
+      if ( co != undefined) {
+        this.NavBarService.setEstConnecte(true);
+        this.NavBarService.isUserLoggedIn.next(true);
+        this.router.navigate(['']);
+      } else {
+        this.cannotConnect = true;
+        this.errorMessage = "Identifiant ou mot de passe incorrect"
+      }
     }
   }
 }

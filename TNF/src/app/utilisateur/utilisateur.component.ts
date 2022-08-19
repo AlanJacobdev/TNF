@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { faClock, faCalendar, faUser, faInfo, faPen, faTrashCan, faPlus, faXmark, faKey } from '@fortawesome/free-solid-svg-icons';
 import { roleInfo } from 'src/structureData/Role';
-import { UtilisateurInfo } from 'src/structureData/Utilisateur';
+import { utilisateur, UtilisateurInfo } from 'src/structureData/Utilisateur';
 import { FetchRoleService } from '../role/service/fetch-role.service';
 import { FecthUtilisateurService } from './service/fecth-utilisateur.service';
 
@@ -55,7 +55,8 @@ export class UtilisateurComponent implements OnInit {
     dateCreation: new Date(0),
     profilModification: '',
     posteModification: '',
-    dateModification: new Date(0)
+    dateModification: new Date(0),
+    estActif: false
   }
 
   public ToastAffiche : boolean = false; 
@@ -264,8 +265,22 @@ export class UtilisateurComponent implements OnInit {
    this.nameRole = "";
   }
 
-  selectCheckAdmin(idUser : number){
+  selectCheckUser(idUser : number){
+    const targetUser = this.listeUtilisateur.find((element) => element.idUtilisateur === idUser)
 
+    if ( targetUser != undefined) {  
+      this.utilisateurService.updateActifAtelier(idUser, !targetUser.estActif).then((res : UtilisateurInfo) =>{
+        if (res != undefined) {
+          const targetUserIndex = this.listeUtilisateur.findIndex((element) => element.idUtilisateur === idUser);
+          this.listeUtilisateur[targetUserIndex].estActif = !this.listeUtilisateur[targetUserIndex].estActif;
+          this.manageToast("Changement d'état", res.estActif ? "L'utilisateur " + targetUser.login+ " est actif" : "L'utilisateur " + targetUser.login + " est inactif", "#006400" );
+        } else {
+          this.manageToast("Changement d'état", "Problème dû au changement d'état", "red" );
+        }
+      }).catch((e)=>{
+
+      })
+    }
   }
 
   close(){

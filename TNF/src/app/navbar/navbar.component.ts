@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, SimpleChange } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { AuthService } from '../auth/auth.service';
 import { NavBarService } from './service/nav-bar.service';
 
@@ -29,9 +29,9 @@ export class NavbarComponent implements OnInit {
   
 
   ngOnInit(): void { 
-    // this.estAdmin = this.navbarService.getEstAdmin();
-    //this.estConnecte = this.navbarService.getEstConnecte();
     const decodetoken = this.authService.getInfoToken();
+    console.log(decodetoken);
+    
     if (decodetoken != null) {
       this.Prenom = decodetoken.prenom;
       this.Nom = decodetoken.nom
@@ -40,6 +40,11 @@ export class NavbarComponent implements OnInit {
       if(this.estAdmin) {
         this.navbarService.setEstAdmin(true)
       }
+      var currentTimestamp = new Date().getTime() / 1000;
+      if (decodetoken.exp < currentTimestamp){
+        this.disconnect()
+      }
+
     }
     const nomPage = localStorage.getItem('page');
     this.Page = (nomPage) != null ? nomPage : "";
@@ -68,6 +73,11 @@ export class NavbarComponent implements OnInit {
   public selectPage(nomPage : string){
     this.Page = nomPage;
     localStorage.setItem('page', nomPage)
+    var currentTimestamp = new Date().getTime() / 1000;
+    const decodetoken = this.authService.getInfoToken();
+    if (decodetoken.exp < currentTimestamp){
+      this.disconnect()
+    }
   }
 
 }
