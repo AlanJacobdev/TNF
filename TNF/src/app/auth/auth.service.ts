@@ -42,21 +42,22 @@ export class AuthService {
 
   async connexion(login : string, pwd:string): Promise<any> {
     try {
-    // let url = "http://localhost:3000/utilisateur/connexion/exist/{login}/{pwd}"
-    // let url = "http://localhost:3000/utilisateur/existUser/{login}/{pwd}"
 
     let url = "http://"+environment.API_URL+"/auth/auth/login"
     let payload = {
       "login": login,
       "password" : pwd 
   }
+  
+    const res : any = await lastValueFrom(this.http.post<any>(url, payload, {withCredentials: true}));
+
     
-    const res : any = await lastValueFrom(this.http.post<any>(url, payload));
 
     if (res.hasOwnProperty('error')) {
       console.log(res);
       return res.error;
     }
+
     if (res != undefined){
       localStorage.setItem("token", res.access_token)
       const helper = new JwtHelperService();
@@ -80,5 +81,16 @@ export class AuthService {
     this.connection = false;
     localStorage.removeItem("token");
   }
+
+  
+  async refresh() {
+    let url = "http://"+environment.API_URL+"/auth/refresh-tokens";
+    try {
+      const res : any= await lastValueFrom(this.http.get<any>(url, {withCredentials: true}));
+    } catch(e :any){
+      
+    }
+  }
+
 
 }

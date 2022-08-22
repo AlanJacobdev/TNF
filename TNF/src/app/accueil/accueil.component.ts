@@ -384,8 +384,21 @@ export class AccueilComponent implements OnInit {
     }
     
   }
-
   
+  refresh(){
+    this.fetchAccueilService.refresh().then((list: any) => {
+
+    }).catch((e) => {
+    })
+  }
+  
+  get(){
+    this.fetchAccueilService.get().then((list: any) => {
+
+    }).catch((e) => {
+    })
+  }
+
   showCalendar(){
     this.dayIsSelect = false;
     this.selectedDay = -1;

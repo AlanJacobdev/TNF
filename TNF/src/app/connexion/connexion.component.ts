@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { AuthService } from '../auth/auth.service';
-import { NavbarComponent } from '../navbar/navbar.component';
 import { NavBarService } from '../navbar/service/nav-bar.service';
 
 @Component({
@@ -13,7 +13,8 @@ export class ConnexionComponent implements OnInit {
 
   errorMessage : string = "";
   cannotConnect : boolean = false;
-
+  deconnexionTO : boolean = false;
+  public faXmark = faXmark;
   
   constructor( private NavBarService :NavBarService, private router : Router, private authService : AuthService) { }
 
@@ -21,12 +22,16 @@ export class ConnexionComponent implements OnInit {
     if (this.authService.estAuthentifie()){
       this.router.navigate(['']);
     }
+    this.deconnexionTO = this.NavBarService.getDeconnecteTimeOut();
+    
+
   }
 
 
   public async connect(id : string, pwd: string) {
     const co = await this.authService.connexion(id,pwd);
     
+
     if (typeof co === 'string') {
       this.cannotConnect = true;
       this.errorMessage = co
@@ -40,5 +45,9 @@ export class ConnexionComponent implements OnInit {
         this.errorMessage = "Identifiant ou mot de passe incorrect"
       }
     }
+  }
+
+  close(){
+    this.deconnexionTO = false;
   }
 }

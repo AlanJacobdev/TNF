@@ -81,4 +81,22 @@ export class FetchAccueilService {
         return returnError;
       }
     }
+
+    async refresh() {
+      
+    
+      let url = "http://"+environment.API_URL+"/auth/refresh-tokens";
+      const res : any= await lastValueFrom(this.http.get<any>(url, {withCredentials: true}));
+
+    }
+
+    async get() {
+      
+    
+      let url = "http://"+environment.API_URL+"/auth/fav-movies";
+      const res : any= await lastValueFrom(this.http.get<any>(url, {withCredentials: true}));
+      console.log(res);
+      
+    }
+
 }

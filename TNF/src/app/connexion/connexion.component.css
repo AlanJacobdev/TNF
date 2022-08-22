@@ -48,3 +48,35 @@ form label {
     outline: 0;
     box-shadow: none;
 }
+
+
+.bg-deco{
+    background: rgba(255, 255, 255, 0.60);
+}
+
+.blur{
+    filter :blur(10px)
+}
+
+.content {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+  }
+
+  .close {
+    font-size: 2rem;
+    justify-content: flex-start;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+    display: flex;
+    color: #ea0000;
+    cursor: pointer;
+}
+
+.close:hover {
+    transform: translate(0.5px, 0.5px) scale(1.05,1.05);
+}

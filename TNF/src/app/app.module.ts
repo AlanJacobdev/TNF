@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AccueilComponent } from './accueil/accueil.component';
@@ -42,6 +42,10 @@ import { ExportationGmaoComponent } from './exportation-gmao/exportation-gmao.co
 import { FilterExportationTypePipe } from './exportation-gmao/pipe/filter-exportation-type.pipe';
 import { FilterExportationAtelierPipe } from './exportation-gmao/pipe/filter-exportation-atelier.pipe';
 import { FilterExportationEtatPipe } from './exportation-gmao/pipe/filter-exportation-etat.pipe';
+import { HttpResErrInterceptor } from './http-res-err.interceptor';
+import { AuthService } from './auth/auth.service';
+import { NavBarService } from './navbar/service/nav-bar.service';
+
 
 
 const config: SocketIoConfig = { url: 'http://'+environment.API_URL, options: {} };
@@ -93,7 +97,7 @@ const config: SocketIoConfig = { url: 'http://'+environment.API_URL, options: {}
     SocketIoModule.forRoot(config),
     AutosizeModule
   ],
-  providers: [],
+  providers: [{ provide: HTTP_INTERCEPTORS, useClass: HttpResErrInterceptor, multi: true }, NavBarService, AuthService],
   bootstrap: [AppComponent], 
   
 })

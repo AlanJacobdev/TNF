@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component} from '@angular/core';
+import { Router } from '@angular/router';
+import { NavBarService } from './navbar/service/nav-bar.service';
 
 @Component({
   selector: 'app-root',
@@ -6,7 +8,14 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'TNF';
   
+  title = 'Itemisation';
+
+
+  constructor(){}
+  
+ 
+  
+
 }
 

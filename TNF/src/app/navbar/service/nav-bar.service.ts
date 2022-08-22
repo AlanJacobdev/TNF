@@ -10,6 +10,7 @@ export class NavBarService {
   estAdmin : boolean = false;
   estConnecte : boolean = false ;
   login : string = "";
+  deconnecteTO : boolean = false;
 
   constructor( private socket: Socket) { }
 
@@ -45,6 +46,14 @@ export class NavBarService {
 
   sendChat(){
     this.socket.emit('demande', "NbDemandes");
+  }
+
+  setDeconnecteTimeOut(value: boolean){
+    this.deconnecteTO = value
+  }
+
+  getDeconnecteTimeOut(){
+    return this.deconnecteTO;
   }
   
 }

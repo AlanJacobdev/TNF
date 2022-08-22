@@ -40,10 +40,10 @@ export class NavbarComponent implements OnInit {
       if(this.estAdmin) {
         this.navbarService.setEstAdmin(true)
       }
-      var currentTimestamp = new Date().getTime() / 1000;
-      if (decodetoken.exp < currentTimestamp){
-        this.disconnect()
-      }
+      // var currentTimestamp = new Date().getTime() / 1000;
+      // if (decodetoken.exp < currentTimestamp){
+      //   this.disconnect()
+      // }
 
     }
     const nomPage = localStorage.getItem('page');
@@ -75,9 +75,9 @@ export class NavbarComponent implements OnInit {
     localStorage.setItem('page', nomPage)
     var currentTimestamp = new Date().getTime() / 1000;
     const decodetoken = this.authService.getInfoToken();
-    if (decodetoken.exp < currentTimestamp){
-      this.disconnect()
-    }
+    // if (decodetoken.exp < currentTimestamp){
+    //   this.disconnect()
+    // }
   }
 
 }
