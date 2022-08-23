@@ -15,7 +15,7 @@ export class ConnexionComponent implements OnInit {
   cannotConnect : boolean = false;
   deconnexionTO : boolean = false;
   public faXmark = faXmark;
-  
+
   constructor( private NavBarService :NavBarService, private router : Router, private authService : AuthService) { }
 
   ngOnInit(): void {
@@ -48,6 +48,7 @@ export class ConnexionComponent implements OnInit {
   }
 
   close(){
+    this.NavBarService.setDeconnecteTimeOut(false);
     this.deconnexionTO = false;
   }
 }

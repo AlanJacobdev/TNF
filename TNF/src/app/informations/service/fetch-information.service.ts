@@ -28,12 +28,16 @@ constructor(private readonly http: HttpClient, private navBarService: NavBarServ
         let url = "http://"+environment.API_URL+"/document/readFile/{idDoc}"
         url = url.replace("{idDoc}",idDoc.toString())
         return this.http.get(url,{ responseType: 'blob', observe: 'response'}).pipe(
-            map((res: any) => {
+            map((res: any) => {        
+              let type = res.headers.get('Content-Type');
               if (res != undefined){
-                if (res.body.type == "application/json") {
+                if (type == "application/json") {
                   return undefined;
                 }
-                return new Blob([res.body]);
+                return {
+                  blob : res.body,
+                  type: type
+                };
               }
               return res
             })

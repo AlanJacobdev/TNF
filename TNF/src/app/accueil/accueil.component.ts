@@ -360,10 +360,18 @@ export class AccueilComponent implements OnInit {
       if (res == undefined) {
         console.log("Impossible de récupérer le document");
       } else {
-        const fileURL = URL.createObjectURL(res);
+console.log(res);
+
+        const newBlob = new Blob([res.blob], {type: res.type});
+        
+        const fileURL = window.webkitURL.createObjectURL(newBlob);
+        console.log(fileURL);
+        
         window.open(fileURL, '_blank');
         sub.unsubscribe();
       }
+     
+
     });
   }
 
