@@ -77,7 +77,7 @@ export class FetchCreateObjectService {
   }
 
 
-  async createObject(libelle : string, codeType :string, nu : string, description : any[]): Promise<any> {
+  async createObject(libelle : string, codeType :string, nu : string, securite : boolean,description : any[]): Promise<any> {
     let user = this.navBarService.getLogin();
     let url = "http://"+environment.API_URL+"/objetrepere"
     let payload = {
@@ -85,6 +85,7 @@ export class FetchCreateObjectService {
       codeType : codeType,
       numeroUnique : nu,
       etat: 'A',
+      securite : securite,
       description : description,
       profilCreation : user,
       posteCreation : ""

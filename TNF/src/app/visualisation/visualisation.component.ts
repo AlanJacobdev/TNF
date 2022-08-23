@@ -54,7 +54,8 @@ export class VisualisationComponent implements OnInit {
     dateCreation: '',
     profilModification: '',
     dateModification: '',
-    description: []
+    description: [],
+    securite: false
   };
 
   public ItemNow : ItemAffichage = {

@@ -15,7 +15,8 @@ export interface ObjetRepereInfo {
     posteModification: string,
     dateModification: Date,
     description: Description[],
-    isPaste? : boolean
+    isPaste? : boolean,
+    securite : boolean
 }
 
 export interface ObjetRepereAffichage {
@@ -26,7 +27,8 @@ export interface ObjetRepereAffichage {
     dateCreation: string,
     profilModification: string,
     dateModification: string,
-    description: Description[]
+    description: Description[],
+    securite : boolean
 }
 
 export interface NUetOR {
@@ -51,7 +53,8 @@ export interface ObjetRepereSave {
     status : string,
     date : string,
     profilModification : string,
-    posteModification : string
+    posteModification : string,
+    securite : boolean
 }
 
 export interface ObjetRepereUtile{
@@ -70,7 +73,8 @@ export interface ObjetRepereSuppression {
     libelleObjetRepere: string,
     codeType: string,
     etat: string,
-    isPaste? : boolean
+    isPaste? : boolean,
+    
 }
 
 export enum valide {

@@ -66,7 +66,8 @@ export class CreateObjectComponent implements OnInit {
   public nuSelectedRange : string = "";
   public intervalValidate : boolean = true;
   public libelleObjetRepere : string = "";
-  
+  public secuOR : boolean = false;
+
   constructor(private fetchCreateTypeObject : FetchcreateTypeObjectService, private fetchVisuService : FetchVisuService, private fetchCreateObjectService: FetchCreateObjectService, private fetchRecopieService : FetchRecopieService) {
     this.getListType();
     this.getAteliers();
@@ -100,7 +101,8 @@ export class CreateObjectComponent implements OnInit {
           profilModification: e.profilCreation ,
           posteModification: e.posteModification ,
           dateModification: e.dateModification,
-          actif : e.actif
+          actif : e.actif,
+
         };
         this.listeTypeOR.push(typeOr)
       })
@@ -302,7 +304,6 @@ export class CreateObjectComponent implements OnInit {
 
   deleteDataForm() {
     this.nuSelect = ""
-    this.checkSecurite = false;
     this.checkValide = false;
     this.description.splice(0);
     this.etat = etat.Aucun;
@@ -344,6 +345,15 @@ export class CreateObjectComponent implements OnInit {
   public selectOR(idOR : string) {
     this.orSelect = idOR;
     if (this.objectNow === this.TypeObject.Item) {
+      let OR = this.listeOR.find((element) => element.idObjetRepere == idOR)
+      if(OR != undefined){
+        this.secuOR = OR.securite
+        if (this.secuOR) {
+          this.checkSecurite = true;
+        }
+      } else {
+        this.secuOR = false;
+      }
       this.getItemFromOrAndDispo();
       this.LibelleItem = ''
       this.errorLibelle = false;
@@ -422,6 +432,7 @@ export class CreateObjectComponent implements OnInit {
   public selectNU (nu : string) {
     this.nuSelect = nu;
     this.description.splice(0);
+    this.checkSecurite = false;
     this.checkValide = false;
     this.rangeSurbrillance.splice(0);
     this.errorReservation = false;
@@ -464,11 +475,11 @@ export class CreateObjectComponent implements OnInit {
         }
         this.refreshValidationForm();
         if ( this.checkValide === false ) {
-          this.fetchCreateObjectService.createObject(libelle, this.typeNow, this.nuSelect, tabDesc).then((res: any) => {
+          this.fetchCreateObjectService.createObject(libelle, this.typeNow, this.nuSelect,this.checkSecurite, tabDesc).then((res: any) => {
             if(typeof res === 'string') {
               this.manageToast("Erreur de création", res , "red")
             } else {  
-              this.manageToast("Création", "L'objet repère " + this.typeNow + this.nuSelect + " a été crée", "#006400")
+              this.manageToast("Création", "L'objet repère " + this.typeNow + this.nuSelect + ((this.checkSecurite) ? 'Z' : '') +" a été crée", "#006400")
               this.afficherNUOR(this.atelierSelect);        
             }
           }).catch((e) => {
