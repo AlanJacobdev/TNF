@@ -552,7 +552,9 @@ export class CreateObjectComponent implements OnInit {
           } else {  
             this.manageToast("Création", "L'item " + res.idSousItem + " a été crée", "#006400")
             this.getSousItemByItem();   
+            this.typeNow = "";
             this.deleteDataForm(); 
+            this.getAllTypeAvailable();
           }
         }).catch((e) => {
         })

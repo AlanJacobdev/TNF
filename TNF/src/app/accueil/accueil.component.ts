@@ -355,12 +355,11 @@ export class AccueilComponent implements OnInit {
 
   async readFile(idDoc : number){
     let sub = (await this.fetchInformationService.readFile(idDoc)).subscribe(res => {
-      console.log(res);
       
       if (res == undefined) {
         console.log("Impossible de récupérer le document");
       } else {
-console.log(res);
+
 
         const newBlob = new Blob([res.blob], {type: res.type});
         

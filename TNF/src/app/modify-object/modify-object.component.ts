@@ -433,7 +433,7 @@ export class ModifyObjectComponent implements OnInit, OnDestroy {
       if (itemInfo != undefined) {
         this.itemSelect.idItem = itemInfo.idItem;
         this.itemSelect.libelleItem = itemInfo.libelleItem;
-        this.LibelleItem = itemInfo.libelleItem.split(':')[1];
+        this.LibelleItem = itemInfo.libelleItem.split(':')[1].trim();
         this.itemSelect.etat = itemInfo.etat;
         this.itemSelect.description = itemInfo.description;
         this.etat = itemInfo.etat == 'A' ? etat.A : itemInfo.etat == 'EA' ? etat.EA : itemInfo.etat == 'HS' ? etat.HS : etat.Aucun; 
@@ -470,7 +470,7 @@ export class ModifyObjectComponent implements OnInit, OnDestroy {
       this.siSelect.description = siInfo.description;
       this.siSelect.etat = siInfo.etat;
       this.descriptionObjectSelect.splice(0);
-      this.LibelleSousItem = siInfo.libelleSousItem.split(':')[1];
+      this.LibelleSousItem = siInfo.libelleSousItem.split(':')[1].trim();
       this.etat= siInfo.etat == 'A' ? etat.A : siInfo.etat == 'EA' ? etat.EA : siInfo.etat == 'HS' ? etat.HS : etat.Aucun;
         for (const d of this.siSelect.description){
           this.descriptionObjectSelect.push(d)
