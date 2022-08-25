@@ -137,17 +137,20 @@ export class VisualisationComponent implements OnInit {
     this.selectedOr = idOr;
     this.objectTypeNow = this.TypeObjet.OR;
     let res = this.listeObjetRepere.find(element => element.idObjetRepere === idOr);
+    console.log(res);
+    
     if ( res != undefined){
       this.Ornow.idObjetRepere = res.idObjetRepere ;
       this.Ornow.libelleObjetRepere = res.libelleObjetRepere ;
       this.Ornow.profilCreation = res.profilCreation ;
-      const datec = new Date(res.dateCreation).toISOString().split('T')[0] + " " + new Date(res.dateCreation).toTimeString().split(' ')[0]
+      const datec = new Date(res.dateCreation).toLocaleDateString("fr") + " " + new Date(res.dateCreation).toTimeString().split(' ')[0]
       this.Ornow.dateCreation = datec ; 
       this.Ornow.profilModification = (res.profilModification) ? res.profilModification : "Inconnu" ;
-      const datem = new Date(res.dateModification).toISOString().split('T')[0] + " " + new Date(res.dateModification).toTimeString().split(' ')[0]
+      const datem = new Date(res.dateModification).toLocaleDateString("fr") + " " + new Date(res.dateModification).toTimeString().split(' ')[0]
       this.Ornow.dateModification = (res.dateModification != null) ? datem : "Inconnue"; 
       this.Ornow.description = res.description ;
       this.Ornow.etat = res.etat == 'A' ? "Actif" : 'Reservé';
+      console.log(this.Ornow);
     }
     this.selectedNow = idOr;
     this.selectedItem = "";
@@ -173,10 +176,11 @@ export class VisualisationComponent implements OnInit {
       this.ItemNow.idItem = res.idItem ;
       this.ItemNow.libelleItem = res.libelleItem ;
       this.ItemNow.profilCreation = res.profilCreation ;
-      const datec = new Date(res.dateCreation).toISOString().split('T')[0] + " " + new Date(res.dateCreation).toTimeString().split(' ')[0]
+
+      const datec = new Date(res.dateCreation).toLocaleDateString("fr") + " " + new Date(res.dateCreation).toTimeString().split(' ')[0]
       this.ItemNow.dateCreation = datec ; 
       this.ItemNow.profilModification = (res.profilModification) ? res.profilModification : "Inconnu" ;
-      const datem = new Date(res.dateModification).toISOString().split('T')[0] + " " + new Date(res.dateModification).toTimeString().split(' ')[0]
+      const datem = new Date(res.dateModification).toLocaleDateString("fr") + " " + new Date(res.dateModification).toTimeString().split(' ')[0]
       this.ItemNow.dateModification = (res.dateModification != null) ? datem : "Inconnue"; 
       this.ItemNow.description = res.description ;
       this.ItemNow.etat = res.etat == 'A' ? "Actif" : res.etat == 'EA' ? 'En attente' : res.etat == 'HS' ? 'Hors Service' : 'Non défini';
@@ -202,10 +206,10 @@ export class VisualisationComponent implements OnInit {
       this.SousItemNow.idSousItem = res.idSousItem ;
       this.SousItemNow.libelleSousItem = res.libelleSousItem ;
       this.SousItemNow.profilCreation = res.profilCreation ;
-      const datec = new Date(res.dateCreation).toISOString().split('T')[0] + " " + new Date(res.dateCreation).toTimeString().split(' ')[0]
+      const datec = new Date(res.dateCreation).toLocaleDateString("fr") + " " + new Date(res.dateCreation).toTimeString().split(' ')[0]
       this.SousItemNow.dateCreation = datec ; 
       this.SousItemNow.profilModification = (res.profilModification) ? res.profilModification : "Inconnu" ;
-      const datem = new Date(res.dateModification).toISOString().split('T')[0] + " " + new Date(res.dateModification).toTimeString().split(' ')[0]
+      const datem = new Date(res.dateModification).toLocaleDateString("fr") + " " + new Date(res.dateModification).toTimeString().split(' ')[0]
       this.SousItemNow.dateModification = (res.dateModification != null) ? datem : "Inconnue"; 
       this.SousItemNow.description = res.description ;
       this.SousItemNow.etat = res.etat = 'A' ? "Actif" : res.etat == 'EA' ? 'En attente' : res.etat == 'HS' ? 'Hors Service' : 'Non défini';
