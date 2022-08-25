@@ -84,6 +84,8 @@ export class ExportationGmaoComponent implements OnInit {
   getListType(){
     this.fetchExportationGmaoService.getAllTypeOrForOneUser().then((res: TypeObjetRepereInfo[]) => {
     if (res != undefined) {
+      console.log(res);
+      
         this.listeTypeOr = res
       } else {
         console.log("Type OR : Connexion impossible")
@@ -115,9 +117,11 @@ export class ExportationGmaoComponent implements OnInit {
           this.selectObject(this.objectTypeNow.OR);
         } else if (this.listeItem.length != 0 ){
           this.selectObject(this.objectTypeNow.Item);
-        } else {
+        } else if (this.listeItem.length != 0 ){
           this.selectObject(this.objectTypeNow.SI);
-        } 
+        } else {
+          this.selectObject(this.objectTypeNow.Aucun);
+        }
 
         
       for ( const or of this.listeOr){

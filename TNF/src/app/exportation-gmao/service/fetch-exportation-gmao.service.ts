@@ -84,11 +84,23 @@ export class FetchExportationGmaoService {
 
     
   async getAllTypeOrForOneUser(): Promise<any> {
-    let user = this.navBarService.getLogin();
-    let url = "http://"+environment.API_URL+"/utilisateur/getTypeORFromUser/{user}";
-    url = url.replace("{user}", user)
-    const res : roleInfo = await lastValueFrom(this.http.get<roleInfo>(url));
-    return res.typeObjet
+    let admin = this.navBarService.getEstAdmin();
+    let url;
+    let res : any;
+    if (admin) {
+      url = "http://"+environment.API_URL+"/typeobjetrepere"
+      res  = await lastValueFrom(this.http.get<TypeObjetRepereInfo>(url));
+
+      
+    } else {
+      let user = this.navBarService.getLogin();
+      url = "http://"+environment.API_URL+"/utilisateur/getTypeORFromUser/{user}";
+      url = url.replace("{user}", user)
+      res = await lastValueFrom(this.http.get<roleInfo>(url));
+      res = res.typeObjet;
+    }
+    
+    return res
   }
 
     

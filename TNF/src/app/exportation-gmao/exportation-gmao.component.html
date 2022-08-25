@@ -65,6 +65,15 @@
                         </div>
                     </div>
             
+                    <div *ngIf="this.objectType === this.objectTypeNow.Aucun" class="col-lg-4 col-xs-12 mt-4">
+                        <div class="input-group mb-3">
+                          <label class="input-group-text" for="TypeOSI">Type d'objet </label>
+                          <select [(ngModel)]="selectTypeSi" required  class="form-select" id="TypeOSI" aria-label="TypeOSI">
+                            <option value="" selected> Aucun objet </option>
+                          </select>
+                        </div>
+                    </div>
+
                     <div class="col-lg-4 col-xs-12 mt-4">
                         <div class="input-group">
                         <div class="col-3 col-lg-2 input-group-text border-end-0"> Objet </div>
