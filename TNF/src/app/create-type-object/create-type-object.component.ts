@@ -93,14 +93,32 @@ export class CreateTypeObjectComponent implements OnInit {
   }
 
   selectCheckType(idType : string){
-    const targetAtelier = this.listeTypeO.find((element) => element.idType === idType)
+    const targetO = this.listeTypeO.find((element) => element.idType === idType)
 
-    if ( targetAtelier != undefined) {  
-      this.fetchCreateTypeObject.updateActifTypeO(idType, !targetAtelier.actif).then((res : TypeObjetInfo) =>{
+    if ( targetO != undefined) {  
+      this.fetchCreateTypeObject.updateActifTypeO(idType, !targetO.actif).then((res : TypeObjetInfo) =>{
         if (res != undefined) {
-          const targetAtelierIndex = this.listeTypeO.findIndex((element) => element.idType === idType);
-          this.listeTypeO[targetAtelierIndex].actif = !this.listeTypeO[targetAtelierIndex].actif;
+          const targetO = this.listeTypeO.findIndex((element) => element.idType === idType);
+          this.listeTypeO[targetO].actif = !this.listeTypeO[targetO].actif;
           this.manageToast("Changement d'état", res.actif ? "Le type d'objet " + idType + " est actif" : "Le type d'objet " + idType  + " est inactif", "#006400" );
+        } else {
+          this.manageToast("Changement d'état", "Problème dû au changement d'état", "red" );
+        }
+      }).catch((e : any)=>{
+
+      })
+    }
+  }
+
+  selectCheckTypeOR(idTypeOR : string){
+    const targetOr = this.listeTypeOR.find((element) => element.idType === idTypeOR)
+
+    if ( targetOr != undefined) {  
+      this.fetchCreateTypeObject.updateActifTypeOr(idTypeOR, !targetOr.actif).then((res : TypeObjetRepereInfo) =>{
+        if (res != undefined) {
+          const targetOrIndex = this.listeTypeOR.findIndex((element) => element.idType === idTypeOR);
+          this.listeTypeOR[targetOrIndex].actif = !this.listeTypeOR[targetOrIndex].actif;
+          this.manageToast("Changement d'état", res.actif ? "Le type d'objet repère" + idTypeOR + " est actif" : "Le type d'objet repère " + idTypeOR  + " est inactif", "#006400" );
         } else {
           this.manageToast("Changement d'état", "Problème dû au changement d'état", "red" );
         }

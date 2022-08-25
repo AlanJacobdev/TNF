@@ -161,4 +161,23 @@ export class FetchcreateTypeObjectService {
   }
 
 
+  async updateActifTypeOr(idTypeOR : string, actif : boolean) : Promise<any>{
+    let user = this.navBarService.getLogin();
+    let url = "http://"+environment.API_URL+"/typeobjetrepere/{idTypeOR}"
+    url = url.replace("{idTypeOR}", idTypeOR)
+    let payload = {
+      profilModification : user,
+      actif : actif,
+      posteModification : ''
+    }
+    const res : TypeObjetRepereInfo = await lastValueFrom(this.http.put<TypeObjetRepereInfo>(url, payload));
+    if (res.hasOwnProperty('error')) {
+      return undefined
+    } else {
+      return res;
+    }
+  }
+
+
+
 }
