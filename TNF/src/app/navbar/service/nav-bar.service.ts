@@ -1,6 +1,8 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, lastValueFrom } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -12,8 +14,15 @@ export class NavBarService {
   login : string = "";
   deconnecteTO : boolean = false;
 
-  constructor( private socket: Socket) { }
-
+  constructor( private socket: Socket, private readonly http: HttpClient) { }
+  
+  async estAdmininistrateur(id : string): Promise<any> {
+    let url = "http://"+environment.API_URL+"/utilisateur/estAdmin/{user}";
+    url = url.replace("{user}", id);
+    const res : any = (await lastValueFrom(this.http.get<any>(url))).estAdministrateur;
+    return res
+  }
+  
   getEstAdmin() {
     return this.estAdmin;
   }
@@ -55,5 +64,7 @@ export class NavBarService {
   getDeconnecteTimeOut(){
     return this.deconnecteTO;
   }
+
+
   
 }

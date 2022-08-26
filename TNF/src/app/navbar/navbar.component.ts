@@ -36,7 +36,7 @@ export class NavbarComponent implements OnInit {
       this.Prenom = decodetoken.prenom;
       this.Nom = decodetoken.nom
       this.estAdmin = String(decodetoken.estAdministrateur) === "true" ? true : false;
-      this.navbarService.setLogin(decodetoken.login);
+      this.navbarService.setLogin(decodetoken.login); 
       if(this.estAdmin) {
         this.navbarService.setEstAdmin(true)
       }
