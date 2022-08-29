@@ -19,7 +19,7 @@ export class NavBarService {
   async estAdmininistrateur(id : string): Promise<any> {
     let url = "http://"+environment.API_URL+"/utilisateur/estAdmin/{user}";
     url = url.replace("{user}", id);
-    const res : any = (await lastValueFrom(this.http.get<any>(url))).estAdministrateur;
+    const res : any = (await lastValueFrom(this.http.get<any>(url, {withCredentials: true}))).estAdministrateur;
     return res
   }
   

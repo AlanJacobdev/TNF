@@ -15,7 +15,7 @@ export class FecthUtilisateurService {
 
   async getUtilisateurs() : Promise<any>{
     let url = "http://"+environment.API_URL+"/utilisateur"
-    const res : UtilisateurInfo[] = await lastValueFrom(this.http.get<UtilisateurInfo[]>(url));
+    const res : UtilisateurInfo[] = await lastValueFrom(this.http.get<UtilisateurInfo[]>(url, {withCredentials: true}));
     if (res.length == 0) {
     return undefined;
     } else {
@@ -28,7 +28,7 @@ export class FecthUtilisateurService {
     payload.profilCreation = user;
     let url = "http://"+environment.API_URL+"/utilisateur"
     
-    const res : UtilisateurInfo = await lastValueFrom(this.http.post<UtilisateurInfo>(url, payload));
+    const res : UtilisateurInfo = await lastValueFrom(this.http.post<UtilisateurInfo>(url, payload, {withCredentials: true}));
     if (res.hasOwnProperty('error')) {
       const resAny : any = res;
       return resAny.error;
@@ -43,7 +43,7 @@ export class FecthUtilisateurService {
     url = url.replace("{idUser}", idUser.toString())
     payload.profilModification = user;
     try {
-      const res : UtilisateurInfo = await lastValueFrom(this.http.put<UtilisateurInfo>(url, payload));
+      const res : UtilisateurInfo = await lastValueFrom(this.http.put<UtilisateurInfo>(url, payload, {withCredentials: true}));
       if (res.hasOwnProperty('error')) {
         const resAny : any = res;
         return resAny.error;
@@ -69,7 +69,7 @@ export class FecthUtilisateurService {
     url = url.replace("{idUser}", selectedUser.toString())
     payload.profilModification = user;
     try {
-      const res : UtilisateurInfo = await lastValueFrom(this.http.put<UtilisateurInfo>(url, payload));
+      const res : UtilisateurInfo = await lastValueFrom(this.http.put<UtilisateurInfo>(url, payload, {withCredentials: true}));
       if (res.hasOwnProperty('error')) {
         const resAny : any = res;
         return resAny.error;
@@ -100,7 +100,7 @@ export class FecthUtilisateurService {
     let url = "http://"+environment.API_URL+"/utilisateur/updateActif/{idUser}"
     url = url.replace("{idUser}", idUser.toString())
     try {
-      const res : UtilisateurInfo = await lastValueFrom(this.http.put<UtilisateurInfo>(url, payload));
+      const res : UtilisateurInfo = await lastValueFrom(this.http.put<UtilisateurInfo>(url, payload, {withCredentials: true}));
       if (res.hasOwnProperty('error')) {
         const resAny : any = res;
         return resAny.error;
@@ -125,7 +125,7 @@ export class FecthUtilisateurService {
     let url = "http://"+environment.API_URL+"/utilisateur/{idUser}";
     url = url.replace("{idUser}", selectedUser.toString())
     try {
-        const res : any = await lastValueFrom(this.http.delete<any>(url));
+        const res : any = await lastValueFrom(this.http.delete<any>(url, {withCredentials: true}));
         if(res.hasOwnProperty('error')){
             return res.error;
         } else if (res.hasOwnProperty('message')) {

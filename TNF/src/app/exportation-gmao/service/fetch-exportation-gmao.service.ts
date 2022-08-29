@@ -28,13 +28,13 @@ export class FetchExportationGmaoService {
       url = url.replace("{user}", user)
     }
     
-    const res : ObjectToExportGmao = await lastValueFrom(this.http.get<ObjectToExportGmao>(url));
+    const res : ObjectToExportGmao = await lastValueFrom(this.http.get<ObjectToExportGmao>(url, {withCredentials: true}));
     return res
   }
 
   async getAllExportation(): Promise<any> {
     let url = "http://"+environment.API_URL+"/exportation";
-    const res : exportInfo = await lastValueFrom(this.http.get<exportInfo>(url));
+    const res : exportInfo = await lastValueFrom(this.http.get<exportInfo>(url, {withCredentials: true}));
     return res
   }
 
@@ -44,7 +44,7 @@ export class FetchExportationGmaoService {
     payload.user = user;
     let url = "http://"+environment.API_URL+"/service-exportation/export/exportationData"
     
-    return this.http.post(url, payload,{ responseType: 'blob', observe: 'response'}).pipe(
+    return this.http.post(url, payload,{ responseType: 'blob', observe: 'response' , withCredentials: true}).pipe(
         map((res: any) => {
           
           if (res != undefined){
@@ -67,7 +67,7 @@ export class FetchExportationGmaoService {
       
       let url = "http://"+environment.API_URL+"/exportation/readFile/{idExp}"
       url = url.replace("{idExp}",idExp.toString())
-      return this.http.get(url,{ responseType: 'blob', observe: 'response'}).pipe(
+      return this.http.get(url,{ responseType: 'blob', observe: 'response', withCredentials: true}).pipe(
           map((res: any) => {
             if (res != undefined){
               if (res.body.type == "application/json") {
@@ -89,14 +89,14 @@ export class FetchExportationGmaoService {
     let res : any;
     if (admin) {
       url = "http://"+environment.API_URL+"/typeobjetrepere"
-      res  = await lastValueFrom(this.http.get<TypeObjetRepereInfo>(url));
+      res  = await lastValueFrom(this.http.get<TypeObjetRepereInfo>(url, {withCredentials: true}));
 
       
     } else {
       let user = this.navBarService.getLogin();
       url = "http://"+environment.API_URL+"/utilisateur/getTypeORFromUser/{user}";
       url = url.replace("{user}", user)
-      res = await lastValueFrom(this.http.get<roleInfo>(url));
+      res = await lastValueFrom(this.http.get<roleInfo>(url, {withCredentials: true}));
       res = res.typeObjet;
     }
     

@@ -15,7 +15,7 @@ export class FetchRoleService {
 
   async getRole() : Promise<any>{
     let url = "http://"+environment.API_URL+"/role"
-    const res : roleInfo[] = await lastValueFrom(this.http.get<roleInfo[]>(url));
+    const res : roleInfo[] = await lastValueFrom(this.http.get<roleInfo[]>(url, {withCredentials: true}));
     if (res.length == 0) {
     return undefined;
     } else {
@@ -28,7 +28,7 @@ export class FetchRoleService {
     payload.profilCreation = user;
     let url = "http://"+environment.API_URL+"/role"
     
-    const res : roleInfo = await lastValueFrom(this.http.post<roleInfo>(url, payload));
+    const res : roleInfo = await lastValueFrom(this.http.post<roleInfo>(url, payload, {withCredentials: true}));
     console.log(res)
     if (res.hasOwnProperty('error')) {
       const resAny : any = res;
@@ -44,7 +44,7 @@ export class FetchRoleService {
     url = url.replace("{idInformation}", idRole.toString())
     payload.profilModification = user;
     try {
-      const res : roleInfo = await lastValueFrom(this.http.put<roleInfo>(url, payload));
+      const res : roleInfo = await lastValueFrom(this.http.put<roleInfo>(url, payload, {withCredentials: true}));
       if (res.hasOwnProperty('error')) {
         const resAny : any = res;
         return resAny.error;
@@ -70,7 +70,7 @@ export class FetchRoleService {
     let url = "http://"+environment.API_URL+"/role/{idInformation}";
     url = url.replace("{idInformation}", selectedRole.toString())
     try {
-        const res : any = await lastValueFrom(this.http.delete<any>(url));
+        const res : any = await lastValueFrom(this.http.delete<any>(url, {withCredentials: true}));
         if(res.hasOwnProperty('error')){
             return res.error;
         } else if (res.hasOwnProperty('message')) {

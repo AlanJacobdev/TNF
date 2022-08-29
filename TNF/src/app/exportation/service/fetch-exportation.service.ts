@@ -25,7 +25,7 @@ export class FetchExportationService {
     url = url.replace("{estSecurite}", estSecurite.toString())
     
     try {
-      const res : any[] = await lastValueFrom(this.http.get<any[]>(url));
+      const res : any[] = await lastValueFrom(this.http.get<any[]>(url, {withCredentials: true}));
       console.log(res);
       
       if (res.hasOwnProperty('error')) {
@@ -52,7 +52,7 @@ export class FetchExportationService {
   async getORbyId (idOr : string) : Promise<any>{
     let url = "http://"+environment.API_URL+"/objetrepere/{idOr}"
     url = url.replace("{idOr}", idOr)
-    const res : ObjetRepereUtile = await lastValueFrom(this.http.get<ObjetRepereUtile>(url));
+    const res : ObjetRepereUtile = await lastValueFrom(this.http.get<ObjetRepereUtile>(url, {withCredentials: true}));
     if( res == null){
       return undefined
     }

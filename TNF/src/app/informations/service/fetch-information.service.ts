@@ -16,7 +16,7 @@ constructor(private readonly http: HttpClient, private navBarService: NavBarServ
     
     async getInformations(): Promise<any> {
         let url = "http://"+environment.API_URL+"/informations"
-        const res : InformationInfo[] = await lastValueFrom(this.http.get<InformationInfo[]>(url));
+        const res : InformationInfo[] = await lastValueFrom(this.http.get<InformationInfo[]>(url, {withCredentials: true}));
         if (res.length == 0) {
         return undefined;
         } else {
@@ -27,7 +27,7 @@ constructor(private readonly http: HttpClient, private navBarService: NavBarServ
     async readFile(idDoc : number) {
         let url = "http://"+environment.API_URL+"/document/readFile/{idDoc}"
         url = url.replace("{idDoc}",idDoc.toString())
-        return this.http.get(url,{ responseType: 'blob', observe: 'response'}).pipe(
+        return this.http.get(url,{ responseType: 'blob', observe: 'response', withCredentials: true}).pipe(
             map((res: any) => {        
               let type = res.headers.get('Content-Type');
               if (res != undefined){
@@ -51,7 +51,7 @@ constructor(private readonly http: HttpClient, private navBarService: NavBarServ
         let url = "http://"+environment.API_URL+"/document/file-upload/{User}"
         url = url.replace("{User}", user)
         try {
-        const res : any = await lastValueFrom(this.http.post<any>(url, files));
+        const res : any = await lastValueFrom(this.http.post<any>(url, files, {withCredentials: true}));
 
         if (res.hasOwnProperty('error')) {
             const resAny : any = res;
@@ -77,7 +77,7 @@ constructor(private readonly http: HttpClient, private navBarService: NavBarServ
         let url = "http://"+environment.API_URL+"/informations"
         payload.profilCreation = user;
         try {
-        const res : any = await lastValueFrom(this.http.post<any>(url, payload));
+        const res : any = await lastValueFrom(this.http.post<any>(url, payload, {withCredentials: true}));
 
         if (res.hasOwnProperty('error')) {
             const resAny : any = res;
@@ -104,7 +104,7 @@ constructor(private readonly http: HttpClient, private navBarService: NavBarServ
         url = url.replace("{idInformation}", idInformation.toString())
         payload.profilModification = user;
         try {
-          const res : InformationInfo = await lastValueFrom(this.http.put<InformationInfo>(url, payload));
+          const res : InformationInfo = await lastValueFrom(this.http.put<InformationInfo>(url, payload, {withCredentials: true}));
           if (res.hasOwnProperty('error')) {
             const resAny : any = res;
             return resAny.error;
@@ -128,7 +128,7 @@ constructor(private readonly http: HttpClient, private navBarService: NavBarServ
       async updateLibelleFromDoc(payload : documentInfoModify): Promise<any> {
         let url = "http://"+environment.API_URL+"/document"
         try {
-          const res : DocumentReceive = await lastValueFrom(this.http.put<DocumentReceive>(url, payload));
+          const res : DocumentReceive = await lastValueFrom(this.http.put<DocumentReceive>(url, payload, {withCredentials: true}));
           if (res.hasOwnProperty('error')) {
             const resAny : any = res;
             return resAny.error;
@@ -153,7 +153,7 @@ constructor(private readonly http: HttpClient, private navBarService: NavBarServ
         let url = "http://"+environment.API_URL+"/informations/{idInformation}";
         url = url.replace("{idInformation}", idInformation.toString())
         try {
-            const res : any = await lastValueFrom(this.http.delete<any>(url));
+            const res : any = await lastValueFrom(this.http.delete<any>(url, {withCredentials: true}));
             if(res.hasOwnProperty('error')){
                 return res.error;
             } else if (res.hasOwnProperty('message')) {

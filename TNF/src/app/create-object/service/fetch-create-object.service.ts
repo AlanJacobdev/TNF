@@ -18,7 +18,7 @@ export class FetchCreateObjectService {
   async getAllNUandORByAtelier(Atelier : string): Promise<any> {
     let url = "http://"+environment.API_URL+"/objetrepere/getAllNUAndORByAtelier/{Atelier}";
     url = url.replace("{Atelier}", Atelier)
-    const res : NUetOR[] = await lastValueFrom(this.http.get<NUetOR[]>(url));
+    const res : NUetOR[] = await lastValueFrom(this.http.get<NUetOR[]>(url, {withCredentials: true}));
     if (res.length == 0) {
       return undefined;
     } else {
@@ -38,7 +38,7 @@ export class FetchCreateObjectService {
     }
     url = url.replace("{atelier}", Atelier)
    
-    const res : ObjetRepereInfo[] = await lastValueFrom(this.http.get<ObjetRepereInfo[]>(url));
+    const res : ObjetRepereInfo[] = await lastValueFrom(this.http.get<ObjetRepereInfo[]>(url, {withCredentials: true}));
     if (res.length == 0) {
       return undefined;
     } else {
@@ -50,7 +50,7 @@ export class FetchCreateObjectService {
     let url = "http://"+environment.API_URL+"/item/getItemFromOrAndDispo/{idOR}/{type}";
     url = url.replace("{idOR}", idOr);
     url = url.replace("{type}", type);
-    const res : ItemInfo[] = await lastValueFrom(this.http.get<ItemInfo[]>(url));
+    const res : ItemInfo[] = await lastValueFrom(this.http.get<ItemInfo[]>(url, {withCredentials: true}));
     if (res.length == 0) {
       return undefined;
     } else {
@@ -68,7 +68,7 @@ export class FetchCreateObjectService {
       url = "http://"+environment.API_URL+"/sousitem/getAllTypeAvailableAndActif/{idItem}"
     }
     url = url.replace("{idItem}", idItem);
-    const res : TypeObjetInfo[] = await lastValueFrom(this.http.get<TypeObjetInfo[]>(url));
+    const res : TypeObjetInfo[] = await lastValueFrom(this.http.get<TypeObjetInfo[]>(url, {withCredentials: true}));
     if (res.length == 0) {
       return undefined;
     } else {
@@ -91,7 +91,7 @@ export class FetchCreateObjectService {
       posteCreation : ""
     }
     try {
-      const res : ObjetRepereInfo = await lastValueFrom(this.http.post<ObjetRepereInfo>(url, payload));
+      const res : ObjetRepereInfo = await lastValueFrom(this.http.post<ObjetRepereInfo>(url, payload, {withCredentials: true}));
       if (res.hasOwnProperty('error')) {
         const resAny : any = res;
         return resAny.error;
@@ -125,7 +125,7 @@ export class FetchCreateObjectService {
       posteCreation : ""
     }
     try {
-      const res : any = await lastValueFrom(this.http.post<any>(url, payload));
+      const res : any = await lastValueFrom(this.http.post<any>(url, payload, {withCredentials: true}));
       console.log(res);
       
       let returnError;
@@ -165,7 +165,7 @@ export class FetchCreateObjectService {
       posteCreation : ""
     }
     try {
-      const res : ItemInfo = await lastValueFrom(this.http.post<ItemInfo>(url, payload));
+      const res : ItemInfo = await lastValueFrom(this.http.post<ItemInfo>(url, payload, {withCredentials: true}));
       if (res.hasOwnProperty('error')) {
         const resAny : any = res;
         return resAny.error;
@@ -201,7 +201,7 @@ export class FetchCreateObjectService {
       posteCreation : ''
     }
     try {
-      const res : SousItemInfo = await lastValueFrom(this.http.post<SousItemInfo>(url, payload));
+      const res : SousItemInfo = await lastValueFrom(this.http.post<SousItemInfo>(url, payload, {withCredentials: true}));
 
       if (res.hasOwnProperty('error')) {
         const resAny : any = res;
@@ -228,7 +228,7 @@ export class FetchCreateObjectService {
     url = url.replace("{Atelier}", Atelier);
     url = url.replace("{startNU}", startNU);
     url = url.replace("{additionalNU}", additionalNU.toString());
-    const res : any = await lastValueFrom(this.http.get<any>(url));
+    const res : any = await lastValueFrom(this.http.get<any>(url, {withCredentials: true}));
     console.log(res.hasOwnProperty('error'));
     
     let returnError;
@@ -257,7 +257,7 @@ export class FetchCreateObjectService {
     url = url.replace("{bookOr}", bookOr.toString());
     
 
-    const res : any = await lastValueFrom(this.http.get<any>(url));
+    const res : any = await lastValueFrom(this.http.get<any>(url, {withCredentials: true}));
     
     let returnError;
     if (res.hasOwnProperty('error')){

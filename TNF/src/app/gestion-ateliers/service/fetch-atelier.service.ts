@@ -14,7 +14,7 @@ export class FetchAtelierService {
 
   async getAllAteliers(): Promise<any> {
     let url = "http://"+environment.API_URL+"/atelier"
-    const res : AtelierInfo[] = await lastValueFrom(this.http.get<AtelierInfo[]>(url));
+    const res : AtelierInfo[] = await lastValueFrom(this.http.get<AtelierInfo[]>(url, {withCredentials: true}));
     if (res.length == 0) {
       return undefined;
     } else {
@@ -32,7 +32,7 @@ export class FetchAtelierService {
       posteModification : "",
       dateModification : new Date()
     }
-    const res : Atelier = await lastValueFrom(this.http.put<Atelier>(url, payload));
+    const res : Atelier = await lastValueFrom(this.http.put<Atelier>(url, payload, {withCredentials: true}));
     if (res.hasOwnProperty('error')) {
       return undefined
     } else {
@@ -49,7 +49,7 @@ export class FetchAtelierService {
       profilModification : user,
       posteModification : ''
     }
-    const res : Atelier = await lastValueFrom(this.http.put<Atelier>(url, payload));
+    const res : Atelier = await lastValueFrom(this.http.put<Atelier>(url, payload, {withCredentials: true}));
     if (res.hasOwnProperty('error')) {
       return undefined
     } else {

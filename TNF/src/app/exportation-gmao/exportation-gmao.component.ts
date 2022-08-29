@@ -117,7 +117,7 @@ export class ExportationGmaoComponent implements OnInit {
           this.selectObject(this.objectTypeNow.OR);
         } else if (this.listeItem.length != 0 ){
           this.selectObject(this.objectTypeNow.Item);
-        } else if (this.listeItem.length != 0 ){
+        } else if (this.listeSi.length != 0 ){
           this.selectObject(this.objectTypeNow.SI);
         } else {
           this.selectObject(this.objectTypeNow.Aucun);

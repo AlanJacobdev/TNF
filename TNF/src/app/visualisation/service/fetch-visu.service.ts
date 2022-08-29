@@ -27,7 +27,7 @@ export class FetchVisuService {
       url = "http://"+environment.API_URL+"/atelier/getAll/isActif"
     }
 
-    const res : AtelierInfo[] = await lastValueFrom(this.http.get<AtelierInfo[]>(url));
+    const res : AtelierInfo[] = await lastValueFrom(this.http.get<AtelierInfo[]>(url, {withCredentials: true}));
     if (res.length == 0) {
       return undefined;
     } else {
@@ -47,7 +47,7 @@ export class FetchVisuService {
   async getAllAteliersForAdmin(): Promise<any> {
     let url;
     url = "http://"+environment.API_URL+"/atelier"
-    const res : AtelierInfo[] = await lastValueFrom(this.http.get<AtelierInfo[]>(url));
+    const res : AtelierInfo[] = await lastValueFrom(this.http.get<AtelierInfo[]>(url, {withCredentials: true}));
     if (res.length == 0) {
       return undefined;
     } else {
@@ -59,7 +59,7 @@ export class FetchVisuService {
     let user = this.navBarService.getLogin();
     let url = "http://"+environment.API_URL+"/atelier/findAllAteliersActifForUser/{user}"
     url = url.replace("{user}", user )
-    const res : AtelierInfo[] = await lastValueFrom(this.http.get<AtelierInfo[]>(url));
+    const res : AtelierInfo[] = await lastValueFrom(this.http.get<AtelierInfo[]>(url, {withCredentials: true}));
     if (res.length == 0) {
       return undefined;
     } else {
@@ -70,7 +70,7 @@ export class FetchVisuService {
   async getObjetRepereByAteliers(Atelier : string) : Promise<any> {
     let url = "http://"+environment.API_URL+"/objetrepere/getORByAtelier/{atelier}"
     url = url.replace("{atelier}", Atelier)
-    const res : ObjetRepereInfo[] = await lastValueFrom(this.http.get<ObjetRepereInfo[]>(url));
+    const res : ObjetRepereInfo[] = await lastValueFrom(this.http.get<ObjetRepereInfo[]>(url, {withCredentials: true}));
     if (res.length == 0) {
       return undefined;
     } else {
@@ -81,7 +81,7 @@ export class FetchVisuService {
   async getHistoryObjetRepere(idOr : string) : Promise<any> {
     let url = "http://"+environment.API_URL+"/objetrepere/history/{OR}"
     url = url.replace("{OR}", idOr)
-    const res : ObjetRepereSave[] = await lastValueFrom(this.http.get<ObjetRepereSave[]>(url));
+    const res : ObjetRepereSave[] = await lastValueFrom(this.http.get<ObjetRepereSave[]>(url, {withCredentials: true}));
     if (res.length == 0) {
       return undefined;
     } else {
@@ -92,7 +92,7 @@ export class FetchVisuService {
   async getItemByObjetRepere(objetRepere : string) : Promise<any> {
     let url = "http://"+environment.API_URL+"/item/getItemByOR/{OR}"
     url = url.replace("{OR}", objetRepere)
-    const res : ItemInfo[] = await lastValueFrom(this.http.get<ItemInfo[]>(url));
+    const res : ItemInfo[] = await lastValueFrom(this.http.get<ItemInfo[]>(url, {withCredentials: true}));
     if (res.length == 0) {
       return undefined;
     } else {
@@ -103,7 +103,7 @@ export class FetchVisuService {
   async getHistoryItem(idItem : string) : Promise<any> {
     let url = "http://"+environment.API_URL+"/item/history/{Item}"
     url = url.replace("{Item}", idItem)
-    const res : ItemSave[] = await lastValueFrom(this.http.get<ItemSave[]>(url));
+    const res : ItemSave[] = await lastValueFrom(this.http.get<ItemSave[]>(url, {withCredentials: true}));
     if (res.length == 0) {
       return undefined;
     } else {
@@ -113,7 +113,7 @@ export class FetchVisuService {
 
   async getTypeObjetRepere(): Promise<any> {
     let url = "http://"+environment.API_URL+"/typeobjetrepere"
-    const res : TypeObjetRepereInfo[] = await lastValueFrom(this.http.get<TypeObjetRepereInfo[]>(url));
+    const res : TypeObjetRepereInfo[] = await lastValueFrom(this.http.get<TypeObjetRepereInfo[]>(url, {withCredentials: true}));
     if (res.length == 0) {
       return undefined;
     } else {
@@ -123,7 +123,7 @@ export class FetchVisuService {
 
   async getTypeSIActif() : Promise<any>{
     let url = "http://"+environment.API_URL+"/typeobjet/getAll/isActif"
-    const res : TypeObjetInfo[] = await lastValueFrom(this.http.get<TypeObjetInfo[]>(url));
+    const res : TypeObjetInfo[] = await lastValueFrom(this.http.get<TypeObjetInfo[]>(url, {withCredentials: true}));
     if (res.length == 0) {
       return undefined;
     } else {
@@ -133,7 +133,7 @@ export class FetchVisuService {
 
   async getTypeObjet(): Promise<any> {
     let url = "http://"+environment.API_URL+"/typeobjet"
-    const res : TypeObjetInfo[] = await lastValueFrom(this.http.get<TypeObjetInfo[]>(url));
+    const res : TypeObjetInfo[] = await lastValueFrom(this.http.get<TypeObjetInfo[]>(url, {withCredentials: true}));
     if (res.length == 0) {
       return undefined;
     } else {
@@ -145,7 +145,7 @@ export class FetchVisuService {
   async getSousItemByItem(Item : string) : Promise<any> {
     let url = "http://"+environment.API_URL+"/sousitem/getSousItemByItem/{SI}"
     url = url.replace("{SI}", Item)
-    const res : SousItemInfo[] = await lastValueFrom(this.http.get<SousItemInfo[]>(url));
+    const res : SousItemInfo[] = await lastValueFrom(this.http.get<SousItemInfo[]>(url, {withCredentials: true}));
     if (res.length == 0) {
       return undefined;
     } else {
@@ -156,7 +156,7 @@ export class FetchVisuService {
   async getHistorySousItem(idSI : string) : Promise<any> {
     let url = "http://"+environment.API_URL+"/sousitem/history/{SI}"
     url = url.replace("{SI}", idSI);
-    const res : SousItemSave[] = await lastValueFrom(this.http.get<SousItemSave[]>(url));
+    const res : SousItemSave[] = await lastValueFrom(this.http.get<SousItemSave[]>(url, {withCredentials: true}));
     if (res.length == 0) {
       return undefined;
     } else {

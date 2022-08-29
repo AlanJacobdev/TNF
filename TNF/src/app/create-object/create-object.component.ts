@@ -67,6 +67,7 @@ export class CreateObjectComponent implements OnInit {
   public intervalValidate : boolean = true;
   public libelleObjetRepere : string = "";
   public secuOR : boolean = false;
+  public secuItem : boolean = false;
 
   constructor(private fetchCreateTypeObject : FetchcreateTypeObjectService, private fetchVisuService : FetchVisuService, private fetchCreateObjectService: FetchCreateObjectService, private fetchRecopieService : FetchRecopieService) {
     this.getListType();
@@ -386,6 +387,15 @@ export class CreateObjectComponent implements OnInit {
       this.LibelleSousItem = ''
       this.errorLibelle = false;
       this.refreshValidationForm()
+      let item = this.listeItem.find((element) => element.idItem == idItem)
+      if(item != undefined){
+        this.secuItem = item.securite
+        if (this.secuItem) {
+          this.checkSecurite = true;
+        }
+      } else {
+        this.secuItem = false;
+      }
     }
     
     
@@ -546,7 +556,7 @@ export class CreateObjectComponent implements OnInit {
        
         this.refreshValidationForm();
         let libelle = this.itemSelect +" : "+this.LibelleSousItem;
-        this.fetchCreateObjectService.createSousItem(libelle, this.itemSelect, this.typeNow, this.checkPrefixe, this.itemSelect.charAt(this.itemSelect.length-1) == 'Z', this.etat, tabDesc).then((res: any) => {
+        this.fetchCreateObjectService.createSousItem(libelle, this.itemSelect, this.typeNow, this.checkPrefixe, this.checkSecurite, this.etat, tabDesc).then((res: any) => {
           if(typeof res === 'string') {
             this.manageToast("Erreur de création", res , "red")
           } else {  

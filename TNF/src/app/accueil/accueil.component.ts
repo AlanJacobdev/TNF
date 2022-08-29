@@ -43,7 +43,6 @@ export class AccueilComponent implements OnInit {
   public waitingMonth : boolean = false;
   public waitingActivityOfDay : boolean = false;
   constructor(private fetchAccueilService : FetchAccueilService, private fetchDemandeAdminService : FetchDemandeAdminService, private navbarService : NavBarService, private fetchInformationService : FetchInformationService) { 
-    console.log("acc");
     
     let Admin = this.navbarService.getEstAdmin();
     if (Admin){

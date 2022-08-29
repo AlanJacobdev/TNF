@@ -27,7 +27,7 @@ export class FetchAccueilService {
         url = url.replace("{end}", end);
 
         try {
-            const res : typeInfoPerMounth= await lastValueFrom(this.http.get<typeInfoPerMounth>(url));
+            const res : typeInfoPerMounth= await lastValueFrom(this.http.get<typeInfoPerMounth>(url, {withCredentials: true}));
             if (res.hasOwnProperty('error')) {
                 const resAny : any = res;
                 return resAny.error;
@@ -62,7 +62,7 @@ export class FetchAccueilService {
 
       
       try {
-        const res : typeInfoPerDay= await lastValueFrom(this.http.get<typeInfoPerDay>(url));
+        const res : typeInfoPerDay= await lastValueFrom(this.http.get<typeInfoPerDay>(url, {withCredentials: true}));
         if (res.hasOwnProperty('error')) {
             const resAny : any = res;
             return resAny.error;

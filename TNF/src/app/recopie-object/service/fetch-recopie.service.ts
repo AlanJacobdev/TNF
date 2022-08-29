@@ -17,7 +17,7 @@ export class FetchRecopieService {
   async getTypeOfItemsOfOR(idOR : string) : Promise<any> {
     let url = "http://"+environment.API_URL+"/item/getTypeOfItemsOfOR/{idOR}"
     url = url.replace("{idOR}", idOR)
-    const res : TypeObjet[] = await lastValueFrom(this.http.get<TypeObjet[]>(url));
+    const res : TypeObjet[] = await lastValueFrom(this.http.get<TypeObjet[]>(url, {withCredentials: true}));
     if (res.length == 0) {
       return undefined;
     } else {
@@ -30,7 +30,7 @@ export class FetchRecopieService {
   async getORByNU(nu : string) : Promise<any> {
     let url = "http://"+environment.API_URL+"/objetrepere/getORByNU/{NU}"
     url = url.replace("{NU}", nu)
-    const res : ObjetRepereUtile = await lastValueFrom(this.http.get<ObjetRepereUtile>(url));
+    const res : ObjetRepereUtile = await lastValueFrom(this.http.get<ObjetRepereUtile>(url, {withCredentials: true}));
     if (res == undefined) {
       return undefined;
     } else {
@@ -47,7 +47,7 @@ export class FetchRecopieService {
     url = url.replace("{idOR}", idOR)
     url = url.replace("{NU}", nu)
     url = url.replace("{profil}", user)
-    const res : any = await lastValueFrom(this.http.post<any>(url, listItems));    
+    const res : any = await lastValueFrom(this.http.post<any>(url, listItems, {withCredentials: true}));    
     console.log(res.error)
     if (res.length == 0) {
       return undefined;

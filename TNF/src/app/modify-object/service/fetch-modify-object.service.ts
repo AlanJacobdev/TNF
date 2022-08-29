@@ -32,7 +32,7 @@ export class FetchModifyObjectService {
       posteModification : ""
     }
     try {
-      const res : ObjetRepereInfo = await lastValueFrom(this.http.put<ObjetRepereInfo>(url, payload));
+      const res : ObjetRepereInfo = await lastValueFrom(this.http.put<ObjetRepereInfo>(url, payload, {withCredentials: true}));
       if (res.hasOwnProperty('error')) {
         const resAny : any = res;
         return resAny.error;
@@ -64,7 +64,7 @@ export class FetchModifyObjectService {
       posteModification : ""
     }
     try {
-      const res : ItemInfo = await lastValueFrom(this.http.put<ItemInfo>(url, payload));
+      const res : ItemInfo = await lastValueFrom(this.http.put<ItemInfo>(url, payload, {withCredentials: true}));
       if (res.hasOwnProperty('error')) {
         const resAny : any = res;
         return resAny.error;
@@ -98,7 +98,7 @@ export class FetchModifyObjectService {
     }
 
     try {
-      const res : SousItemInfo = await lastValueFrom(this.http.put<SousItemInfo>(url, payload));
+      const res : SousItemInfo = await lastValueFrom(this.http.put<SousItemInfo>(url, payload, {withCredentials: true}));
       if (res.hasOwnProperty('error')) {
         const resAny : any = res;
         return resAny.error;
@@ -122,7 +122,7 @@ export class FetchModifyObjectService {
   async getTypeOfItemsOfOR(Atelier : string) : Promise<any> {
     let url = "http://"+environment.API_URL+"/objetrepere/getTypeOfItemsForOR/{Atelier}"
     url = url.replace("{Atelier}", Atelier)
-    const res : modificationTypeObject[] = await lastValueFrom(this.http.get<modificationTypeObject[]>(url));
+    const res : modificationTypeObject[] = await lastValueFrom(this.http.get<modificationTypeObject[]>(url, {withCredentials: true}));
     if (res.length == 0) {
       return undefined;
     } else {
@@ -134,7 +134,7 @@ export class FetchModifyObjectService {
   async getIdentity(login : string) : Promise<any> {
     let url = "http://"+environment.API_URL+"/utilisateur/getIdentityFromLogin/{login}"
     url = url.replace("{login}", login)
-    const res : utilisateur = await lastValueFrom(this.http.get<utilisateur>(url));
+    const res : utilisateur = await lastValueFrom(this.http.get<utilisateur>(url, {withCredentials: true}));
     return res;
   }
 

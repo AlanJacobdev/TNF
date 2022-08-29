@@ -15,7 +15,7 @@ export class FetchParametreService {
 
   async getEmail(){
     let url = "http://"+environment.API_URL+"/parametre/email"
-    const res : ParamInfo = await lastValueFrom(this.http.get<ParamInfo>(url));
+    const res : ParamInfo = await lastValueFrom(this.http.get<ParamInfo>(url, {withCredentials: true}));
     return res;
   }
 
@@ -29,7 +29,7 @@ export class FetchParametreService {
       dateModification: new Date()
     }
     try {
-      const res : ParamInfo = await lastValueFrom(this.http.put<ParamInfo>(url, payload));
+      const res : ParamInfo = await lastValueFrom(this.http.put<ParamInfo>(url, payload, {withCredentials: true}));
       if (res.hasOwnProperty('error')) {
         const resAny : any = res;
         return resAny.error;
@@ -51,7 +51,7 @@ export class FetchParametreService {
 
   async getnbHeure(){
     let url = "http://"+environment.API_URL+"/parametre/nbHeure"
-    const res : ParamInfo = await lastValueFrom(this.http.get<ParamInfo>(url));
+    const res : ParamInfo = await lastValueFrom(this.http.get<ParamInfo>(url, {withCredentials: true}));
     return res;
   }
 
@@ -65,7 +65,7 @@ export class FetchParametreService {
       dateModification: new Date()
     }
     try {
-      const res : ParamInfo = await lastValueFrom(this.http.put<ParamInfo>(url, payload));
+      const res : ParamInfo = await lastValueFrom(this.http.put<ParamInfo>(url, payload, {withCredentials: true}));
       if (res.hasOwnProperty('error')) {
         const resAny : any = res;
         return resAny.error;
