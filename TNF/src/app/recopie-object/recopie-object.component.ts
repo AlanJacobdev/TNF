@@ -5,6 +5,7 @@ import { ObjetRepereInfo, ObjetRepereUtile } from 'src/structureData/ObjetRepere
 import { modificationTypeObject, TypeObjet, TypeObjetInfo } from 'src/structureData/TypeObject';
 import { FetchCreateObjectService } from '../create-object/service/fetch-create-object.service';
 import { FetchcreateTypeObjectService } from '../create-type-object/service/fetchcreate-type-object.service';
+import { NavBarService } from '../navbar/service/nav-bar.service';
 import { FetchVisuService } from '../visualisation/service/fetch-visu.service';
 import { FetchRecopieService } from './service/fetch-recopie.service';
 
@@ -29,7 +30,7 @@ export class RecopieObjectComponent implements OnInit {
   public nuCible : string = "";
   public ORCible : string = "";
   public ORCibleExist : number = -1;
-
+  public estAdmin : boolean = false;
   public ToastAffiche : boolean = false; 
   public messageToast : string = "";
   public typeToast : string = ""
@@ -38,12 +39,14 @@ export class RecopieObjectComponent implements OnInit {
   public recopieEnCours : boolean = false;
 
   constructor(private fetchRecopieService : FetchRecopieService, private fetchVisuService : FetchVisuService, private fetchCreateTypeObject : FetchcreateTypeObjectService,
-    private fetchCreateObjectService :FetchCreateObjectService) { 
+    private fetchCreateObjectService :FetchCreateObjectService, private navbarService : NavBarService) { 
     this.getListObject();
     this.getListAtelier();
+
   }
 
   ngOnInit(): void {
+    this.estAdmin =this.navbarService.getEstAdmin();
   }
 
   getListObject(){

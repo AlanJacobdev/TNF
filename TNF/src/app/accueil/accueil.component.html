@@ -1,6 +1,4 @@
 <div class="container-fluid">
-    <button (click)="refresh()" type="button" class="btn btn-light" >refresh</button>
-    <button (click)="get()" type="button" class="btn btn-light" >get</button>
     <div class="row mt-4 px-4 ">
         <div class="mx-0 px-0" [ngClass] ="{'col-12 col-lg-3' : this.isAdmin, 'col-12 col-lg-4' : !this.isAdmin}">
             <div class="border rounded shadow-sm min-vh-height scrolltable">
@@ -708,13 +706,13 @@
                                                 <div class="col">
                                                   
                                                     <span class="badge bg-success ms-1" *ngIf="this.calendarAndActivity[(j !== 0 ? (i === 0) ? j *7 : j*7+i : i )][1].CountC != -1">
-                                                         {{this.calendarAndActivity[(j !== 0 ? (i === 0) ? j *7 : j*7+i : i )][1].CountC > 100 ? '99+' : this.calendarAndActivity[(j !== 0 ? (i === 0) ? j *7 : j*7+i : i )][1].CountC}}
+                                                         {{this.calendarAndActivity[(j !== 0 ? (i === 0) ? j *7 : j*7+i : i )][1].CountC >= 100 ? '99+' : this.calendarAndActivity[(j !== 0 ? (i === 0) ? j *7 : j*7+i : i )][1].CountC}}
                                                     </span>
                                                     <span class="badge bg-warning ms-1" *ngIf="this.calendarAndActivity[(j !== 0 ? (i === 0) ? j *7 : j*7+i : i )][1].CountM != -1">
-                                                        {{this.calendarAndActivity[(j !== 0 ? (i === 0) ? j *7 : j*7+i : i )][1].CountM > 100 ? '99+' : this.calendarAndActivity[(j !== 0 ? (i === 0) ? j *7 : j*7+i : i )][1].CountM}} 
+                                                        {{this.calendarAndActivity[(j !== 0 ? (i === 0) ? j *7 : j*7+i : i )][1].CountM >= 100 ? '99+' : this.calendarAndActivity[(j !== 0 ? (i === 0) ? j *7 : j*7+i : i )][1].CountM}} 
                                                     </span>
                                                     <span class="badge bg-danger ms-1" *ngIf="this.calendarAndActivity[(j !== 0 ? (i === 0) ? j *7 : j*7+i : i )][1].CountD != -1">
-                                                        {{this.calendarAndActivity[(j !== 0 ? (i === 0) ? j *7 : j*7+i : i )][1].CountD > 100 ? '99+' : this.calendarAndActivity[(j !== 0 ? (i === 0) ? j *7 : j*7+i : i )][1].CountD}} 
+                                                        {{this.calendarAndActivity[(j !== 0 ? (i === 0) ? j *7 : j*7+i : i )][1].CountD >= 100 ? '99+' : this.calendarAndActivity[(j !== 0 ? (i === 0) ? j *7 : j*7+i : i )][1].CountD}} 
                                                     </span>
                                                 </div>
                                             </div>

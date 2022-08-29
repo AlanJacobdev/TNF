@@ -95,7 +95,7 @@
                     <div class="row col-lg-10 offset-lg-1 mb-3">
                         <div class="input-group">
                             <span class="input-group-text col-3">Atelier</span>
-                            <select (change)=selectAtelierCible($event) #AtelierSelect class="form-select" id="atelierSelect" aria-label="Default select example" [(ngModel)]="atelierCible" disabled>
+                            <select (change)=selectAtelierCible($event) #AtelierSelect class="form-select" id="atelierSelect" aria-label="Default select example" [(ngModel)]="atelierCible" [disabled]="!estAdmin ">
                                 <option value ="" selected>Selection de l'atelier</option>
                                 <option *ngFor="let atelier of listeAtelier" [value]="atelier.idAtelier">
                                     {{atelier.idAtelier}} - {{atelier.libelleAtelier}}

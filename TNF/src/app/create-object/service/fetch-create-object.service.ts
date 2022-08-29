@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, SecurityContext } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
 import { NavBarService } from 'src/app/navbar/service/nav-bar.service';
 import { ItemInfo } from 'src/structureData/Item';
@@ -111,7 +111,7 @@ export class FetchCreateObjectService {
     }
   }
 
-  async createMultipleObject(libelle : string, codeType :string, nu : string, rangeNu : string[] ,etat: boolean, description : any[]): Promise<any> {
+  async createMultipleObject(libelle : string, codeType :string, nu : string, rangeNu : string[], securite : boolean, etat: boolean, description : any[]): Promise<any> {
     let user = this.navBarService.getLogin();
     let url = "http://"+environment.API_URL+"/objetrepere/create/createMultipleObject"
     let payload = {
@@ -119,6 +119,7 @@ export class FetchCreateObjectService {
       codeType : codeType,
       numeroUnique : nu,
       rangeNu : rangeNu,
+      securite : securite,
       etat: etat,
       description : description,
       profilCreation : user,
@@ -229,8 +230,7 @@ export class FetchCreateObjectService {
     url = url.replace("{startNU}", startNU);
     url = url.replace("{additionalNU}", additionalNU.toString());
     const res : any = await lastValueFrom(this.http.get<any>(url, {withCredentials: true}));
-    console.log(res.hasOwnProperty('error'));
-    
+        
     let returnError;
     if(res.hasOwnProperty('error')){
       returnError = undefined;

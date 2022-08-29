@@ -433,14 +433,28 @@ export class ModifyObjectComponent implements OnInit, OnDestroy {
       if (itemInfo != undefined) {
         this.itemSelect.idItem = itemInfo.idItem;
         this.itemSelect.libelleItem = itemInfo.libelleItem;
-        this.LibelleItem = itemInfo.libelleItem.split(':')[1].trim();
-        this.itemSelect.etat = itemInfo.etat;
-        this.itemSelect.description = itemInfo.description;
-        this.etat = itemInfo.etat == 'A' ? etat.A : itemInfo.etat == 'EA' ? etat.EA : itemInfo.etat == 'HS' ? etat.HS : etat.Aucun; 
-        this.descriptionObjectSelect.splice(0);
-        for (const d of this.itemSelect.description){
-          this.descriptionObjectSelect.push(d)
-        }
+        let libelle = itemInfo.libelleItem.split(':')[1]
+        if (libelle != undefined){
+          libelle = libelle.trim();
+          this.LibelleItem = libelle;
+        } else {
+          console.log(libelle);
+          
+          let orExistInLibelle = itemInfo.libelleItem.toUpperCase().includes(itemInfo.idOR)
+          if (orExistInLibelle){
+            let newLibelle = itemInfo.libelleItem.replace(itemInfo.idOR, '')
+            this.LibelleItem =  newLibelle;
+          } else {
+            this.LibelleItem =  itemInfo.libelleItem;
+          }
+          this.itemSelect.etat = itemInfo.etat;
+          this.itemSelect.description = itemInfo.description;
+          this.etat = itemInfo.etat == 'A' ? etat.A : itemInfo.etat == 'EA' ? etat.EA : itemInfo.etat == 'HS' ? etat.HS : etat.Aucun; 
+          this.descriptionObjectSelect.splice(0);
+          for (const d of this.itemSelect.description){
+            this.descriptionObjectSelect.push(d)
+          }
+        } 
       }    
     } else if (this.objectNow === this.TypeObject.SI) {
       this.idSISelect = "";

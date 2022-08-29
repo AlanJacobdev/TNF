@@ -351,6 +351,8 @@ export class CreateObjectComponent implements OnInit {
         this.secuOR = OR.securite
         if (this.secuOR) {
           this.checkSecurite = true;
+        } else {
+          this.checkSecurite = false;
         }
       } else {
         this.secuOR = false;
@@ -368,6 +370,7 @@ export class CreateObjectComponent implements OnInit {
       this.LibelleSousItem = ''
       this.errorLibelle = false;
       this.refreshValidationForm()
+      this.checkSecurite = false;
     }    
   }
 
@@ -392,6 +395,8 @@ export class CreateObjectComponent implements OnInit {
         this.secuItem = item.securite
         if (this.secuItem) {
           this.checkSecurite = true;
+        } else {
+          this.checkSecurite = false;
         }
       } else {
         this.secuItem = false;
@@ -495,7 +500,7 @@ export class CreateObjectComponent implements OnInit {
           }).catch((e) => {
           })
         } else {
-          this.fetchCreateObjectService.createMultipleObject(libelle, this.typeNow, this.nuSelect, this.rangeSurbrillance, this.checkValide, tabDesc).then((res: any) => {
+          this.fetchCreateObjectService.createMultipleObject(libelle, this.typeNow, this.nuSelect, this.rangeSurbrillance, this.checkSecurite,this.checkValide, tabDesc).then((res: any) => {
             if(typeof res === 'string') {
               this.manageToast("Erreur de création", res , "red")
             } else {  
