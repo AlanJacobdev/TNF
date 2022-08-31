@@ -26,7 +26,6 @@ export class FetchExportationService {
     
     try {
       const res : any[] = await lastValueFrom(this.http.get<any[]>(url, {withCredentials: true}));
-      console.log(res);
       
       if (res.hasOwnProperty('error')) {
         return res[0].error

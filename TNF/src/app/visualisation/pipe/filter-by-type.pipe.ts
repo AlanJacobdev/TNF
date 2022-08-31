@@ -10,9 +10,6 @@ export class FilterByTypePipe implements PipeTransform {
     if (!args) return value;
     
 
-    console.log(value); 
-    console.log(args);
-    console.log(type);
     
     if(type != null) {
       if(type =='OR'){

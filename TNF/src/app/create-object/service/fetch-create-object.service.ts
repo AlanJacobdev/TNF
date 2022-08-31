@@ -62,7 +62,6 @@ export class FetchCreateObjectService {
     const admin = this.navBarService.getEstAdmin();
     let url;
     if (admin){
-      console.log(admin);
       url = "http://"+environment.API_URL+"/sousitem/getAllTypeAvailable/{idItem}"
     } else {
       url = "http://"+environment.API_URL+"/sousitem/getAllTypeAvailableAndActif/{idItem}"
@@ -127,7 +126,6 @@ export class FetchCreateObjectService {
     }
     try {
       const res : any = await lastValueFrom(this.http.post<any>(url, payload, {withCredentials: true}));
-      console.log(res);
       
       let returnError;
       if (res.hasOwnProperty('error')){

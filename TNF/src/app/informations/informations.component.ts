@@ -169,7 +169,6 @@ export class InformationsComponent implements OnInit {
     for( const doc of this.descriptionObjectSelect) {
       this.addDocumentModify(doc.idDoc, doc.libelleDocument);
     }    
-    console.log( this.descriptionObjectSelect);
     
   }
   
@@ -260,7 +259,6 @@ export class InformationsComponent implements OnInit {
   async updateInformations(){
     let tabIdDoc = [];
     let tabLibelleModify : documentInfoModify[] = [];
-    console.log(this.descriptionObjectSelect);
     
     if (this.descriptionObjectSelect.length != 0 ) {
       for (const d of this.descriptionObjectSelect) {
@@ -279,13 +277,11 @@ export class InformationsComponent implements OnInit {
       }
     }
     for ( const doc of tabLibelleModify){
-      console.log(doc);
       
     }
     for (const lib of tabLibelleModify) {
       this.fetchInformationService.updateLibelleFromDoc(lib).then((res: any) => {
         if(typeof res === 'string') {
-          console.log(res);
           
           this.manageToast("Erreur de modification", res , "red")
         }
@@ -313,7 +309,6 @@ export class InformationsComponent implements OnInit {
         for (const lib of tabNewLibelle) {
           this.fetchInformationService.updateLibelleFromDoc(lib).then((res: any) => {
             if(typeof res === 'string') {
-              console.log(res);
               
               this.manageToast("Erreur de modification", res , "red")
             }
@@ -335,7 +330,6 @@ export class InformationsComponent implements OnInit {
         for (const d of this.listeDocuments) {
           tabIdDoc.push(d);
         }
-        console.log(this.listeDocuments);
         
         let tabNewLibelle : documentInfoModify[] = [];
         let i =0;
@@ -350,7 +344,6 @@ export class InformationsComponent implements OnInit {
         for (const lib of tabNewLibelle) {
           this.fetchInformationService.updateLibelleFromDoc(lib).then((res: any) => {
             if(typeof res === 'string') {
-              console.log(res);
               
               this.manageToast("Erreur de modification", res , "red")
             }
@@ -432,7 +425,6 @@ export class InformationsComponent implements OnInit {
       }
       return true
     }  catch (e: any){
-      console.log(e);
       
       return false
     }
@@ -453,8 +445,6 @@ export class InformationsComponent implements OnInit {
       }      
       return true
     }  catch (e: any){
-      console.log(e);
-      
       return false
     }
   }

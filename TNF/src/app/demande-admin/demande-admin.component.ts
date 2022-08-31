@@ -139,7 +139,6 @@ export class DemandeAdminComponent implements OnInit {
       if (res != undefined) {
         this.resetDescriptifNow();
         this.DescriptifDemandeNow = res;
-        console.log(this.DescriptifDemandeNow);
         
         if (this.DescriptifDemandeNow.orDelete.length != 0 ){
           this.selectObject(this.objectTypeNow.OR);
@@ -163,7 +162,6 @@ export class DemandeAdminComponent implements OnInit {
       if (res != undefined) {
         this.resetDescriptifTraiteeNow();
         this.DescriptifDemandeTraiteeNow = res;
-        console.log(this.DescriptifDemandeTraiteeNow);
         
         if (this.DescriptifDemandeTraiteeNow.orDelete.length != 0 ){
           this.selectObject(this.objectTypeNow.OR);
@@ -245,7 +243,6 @@ export class DemandeAdminComponent implements OnInit {
 
   public selectObjetOnDemand(idObjet : string ) {
     this.objectSelect = idObjet;
-    console.log(this.objectType);
 
     if ( this.objectType == this.objectTypeNow.OR){
       this.getArborescenceOfOR(idObjet);
@@ -268,7 +265,6 @@ export class DemandeAdminComponent implements OnInit {
   async acceptDeleteAdmin(){
     this.recopieEnCours = true;
       this.fetchDemandeAdminService.updateDemandeAdmin(this.DescriptifDemandeNow.idDemande, true).then( async (res:DemandeAdminInfo) => {
-        console.log(res);
         if (typeof res == 'string'){
           this.manageToast("Demande de suppression", "Problème lié à la suppression", "red")
         } else {
@@ -290,7 +286,6 @@ export class DemandeAdminComponent implements OnInit {
   async refuseDeleteAdmin(){
     this.recopieEnCours = true;
       this.fetchDemandeAdminService.updateDemandeAdmin(this.DescriptifDemandeNow.idDemande, false).then( async (res:DemandeAdminInfo) => {
-        console.log(res);
         if (typeof res == 'string'){
           this.manageToast("Demande de suppression", "Problème lié à la suppression", "red")
         } else {
@@ -311,7 +306,6 @@ export class DemandeAdminComponent implements OnInit {
     this.fetchDemandeAdminService.getArborescenceOfOR(idOR).then((list: ArborescenceOR) => {
       if (list != undefined) {
         this.arborescenceOR = list
-        console.log(this.arborescenceOR);
         for( const item of this.arborescenceOR.Item){
           this.CaretItem.set(item.Item.idItem ,false)
         }
@@ -336,7 +330,6 @@ export class DemandeAdminComponent implements OnInit {
     this.fetchDemandeAdminService.getArborescenceOfORTraite(idOR, date).then((list: ArborescenceOR) => {
       if (list != undefined) {
         this.arborescenceOR = list
-        console.log(this.arborescenceOR);
         for( const item of this.arborescenceOR.Item){
           this.CaretItem.set(item.Item.idItem ,false)
         }
@@ -345,7 +338,6 @@ export class DemandeAdminComponent implements OnInit {
         this.resetArboOr();
       }
     }).catch((e) => {
-      console.log(e);
     })
     setTimeout(() => 
     {
@@ -361,7 +353,6 @@ export class DemandeAdminComponent implements OnInit {
     this.fetchDemandeAdminService.getArborescenceOfItem(idItem).then((list: ArborescenceItem) => {
       if (list != undefined) {
         this.arborescenceItem = list
-        console.log(this.arborescenceItem);
         
       } else {
         this.resetArboItem();
@@ -382,7 +373,6 @@ export class DemandeAdminComponent implements OnInit {
     this.fetchDemandeAdminService.getArborescenceOfItemTraite(idItem, date).then((list: ArborescenceItem) => {
       if (list != undefined) {
         this.arborescenceItem = list
-        console.log(this.arborescenceItem);
         
       } else {
         this.resetArboItem();

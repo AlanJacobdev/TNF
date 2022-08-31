@@ -32,7 +32,6 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit(): void { 
     const decodetoken = this.authService.getInfoToken();
-    console.log(decodetoken);
     
     if (decodetoken != null) {
       this.Prenom = decodetoken.prenom;

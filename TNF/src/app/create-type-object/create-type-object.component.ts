@@ -83,7 +83,6 @@ export class CreateTypeObjectComponent implements OnInit {
 
   putCheckActif(){
     this.objectSelect.actif = !this.objectSelect.actif;
-    console.log(this.objectSelect);
     
   }
 
@@ -300,7 +299,6 @@ export class CreateTypeObjectComponent implements OnInit {
         })
       } else if ( this.selectedType === this.TypeObject.O ){
         this.fetchCreateTypeObject.updateTypeO(identifiant,libelle, this.objectSelect.actif).then((res: TypeObjetRepereInfo) => {
-          console.log(res);
           if (typeof res === 'string') {
             this.manageToast("Erreur de modification", res, "red")
           } else {
@@ -319,7 +317,6 @@ export class CreateTypeObjectComponent implements OnInit {
   deleteTypeObjet() {
     if ( this.selectedType == this.TypeObject.OR){
       this.fetchCreateTypeObject.deleteTypeOR(this.idSelected).then((res: any) => {
-        console.log(res);
         if (res === undefined) {
           this.manageToast("Erreur de suppression", "Identificateur inconnu ou objets liés", "red")
         } else {

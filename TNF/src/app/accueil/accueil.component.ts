@@ -244,7 +244,6 @@ export class AccueilComponent implements OnInit {
     }
     
     if (listeActiviteParMois != undefined ) {
-      console.log(listeActiviteParMois);
       this.calendarWithActivity.clear();
       let valueC = -1;
       let valueM = -1;
@@ -259,7 +258,6 @@ export class AccueilComponent implements OnInit {
           valueM = -1;
           valueD = -1;
           if(firstweek) {
-            //console.log(dayModify+ "-" + (day > 10 ? (this.selectedNumberMonth -1 < 10 ? '0'+ (this.selectedNumberMonth -1) : this.selectedNumberMonth -1) : (this.selectedNumberMonth < 10 ? '0'+ this.selectedNumberMonth : this.selectedNumberMonth)) +'-'+ this.selectedYear);
             let responseC = listeActiviteParMois.objectCreated.find((element)=> element.date === dayModify+ "-" + (day > 10 ? (this.selectedNumberMonth -1 < 10 ? '0'+ (this.selectedNumberMonth -1) : this.selectedNumberMonth -1) : (this.selectedNumberMonth < 10 ? '0'+ this.selectedNumberMonth : this.selectedNumberMonth)) +'-'+ this.selectedYear);
             
             if (responseC != undefined){
@@ -280,7 +278,6 @@ export class AccueilComponent implements OnInit {
               if (day == lastDate.getDate()){
                 lastweek = true;
               }
-              //console.log(dayModify+ "-" + (this.selectedNumberMonth < 10 ? '0'+ (this.selectedNumberMonth) : this.selectedNumberMonth) +'-'+ this.selectedYear);
               
 
               let responseC = listeActiviteParMois.objectCreated.find((element)=> element.date === dayModify+ "-" + (this.selectedNumberMonth < 10 ? '0'+ (this.selectedNumberMonth) : this.selectedNumberMonth) +'-'+ this.selectedYear);
@@ -300,7 +297,6 @@ export class AccueilComponent implements OnInit {
               {CountC: valueC, CountM: valueM, CountD: valueD })
             } else {
 
-             // console.log(dayModify+ "-" + (this.selectedNumberMonth + 1 < 10 ? '0'+ (this.selectedNumberMonth + 1) : this.selectedNumberMonth + 1) +'-'+ this.selectedYear);
               
 
              let responseC = listeActiviteParMois.objectCreated.find((element)=> element.date === dayModify+ "-" + (this.selectedNumberMonth + 1 < 10 ? '0'+ (this.selectedNumberMonth + 1) : this.selectedNumberMonth + 1) +'-'+ this.selectedYear);
@@ -368,11 +364,8 @@ export class AccueilComponent implements OnInit {
         console.log("Impossible de récupérer le document");
       } else {
 
-
         const newBlob = new Blob([res.blob], {type: res.type});
-        
         const fileURL = window.webkitURL.createObjectURL(newBlob);
-        console.log(fileURL);
         
         window.open(fileURL, '_blank');
         sub.unsubscribe();
@@ -538,7 +531,6 @@ export class AccueilComponent implements OnInit {
     else {
       if (objetCreated != undefined){
         this.selectedObjet = objetCreated;
-        console.log(objetCreated.description);
       } else if (objetModified != undefined){
         this.selectedObjet = objetModified;
       } else if (objetDeleted != undefined){

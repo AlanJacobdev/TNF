@@ -48,7 +48,6 @@ export class FetchRecopieService {
     url = url.replace("{NU}", nu)
     url = url.replace("{profil}", user)
     const res : any = await lastValueFrom(this.http.post<any>(url, listItems, {withCredentials: true}));    
-    console.log(res.error)
     if (res.length == 0) {
       return undefined;
     } else {

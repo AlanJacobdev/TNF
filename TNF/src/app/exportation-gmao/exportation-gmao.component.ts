@@ -84,7 +84,6 @@ export class ExportationGmaoComponent implements OnInit {
   getListType(){
     this.fetchExportationGmaoService.getAllTypeOrForOneUser().then((res: TypeObjetRepereInfo[]) => {
     if (res != undefined) {
-      console.log(res);
       
         this.listeTypeOr = res
       } else {
@@ -152,7 +151,6 @@ export class ExportationGmaoComponent implements OnInit {
     this.fetchExportationGmaoService.getAllExportation().then((list: exportInfo[]) => {
       if (list != undefined) {
         this.listeAllExport = list;
-        console.log(this.listeAllExport);
         
       } else {
         console.log("Exportation : Problème de récupération des exportations")

@@ -95,7 +95,6 @@ export class FetchAccueilService {
     
       let url = "http://"+environment.API_URL+"/auth/fav-movies";
       const res : any= await lastValueFrom(this.http.get<any>(url, {withCredentials: true}));
-      console.log(res);
       
     }
 

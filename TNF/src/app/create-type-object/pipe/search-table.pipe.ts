@@ -11,7 +11,6 @@ export class SearchTablePipe implements PipeTransform {
 
     args = args.toLowerCase();
     return value.filter(function(item: any) {
-      console.log(item.idType)
         return item.idType.toLowerCase().includes(args);
       
     });

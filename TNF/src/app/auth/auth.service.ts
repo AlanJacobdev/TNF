@@ -54,7 +54,6 @@ export class AuthService {
     
 
     if (res.hasOwnProperty('error')) {
-      console.log(res);
       return res.error;
     }
 

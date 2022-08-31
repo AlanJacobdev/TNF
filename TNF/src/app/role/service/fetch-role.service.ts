@@ -29,7 +29,6 @@ export class FetchRoleService {
     let url = "http://"+environment.API_URL+"/role"
     
     const res : roleInfo = await lastValueFrom(this.http.post<roleInfo>(url, payload, {withCredentials: true}));
-    console.log(res)
     if (res.hasOwnProperty('error')) {
       const resAny : any = res;
       return resAny.error;

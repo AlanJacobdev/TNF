@@ -119,7 +119,6 @@ export class CreateObjectComponent implements OnInit {
   getAllTypeAvailable(){
     this.fetchCreateObjectService.getAllTypeAvailable(this.itemSelect).then((list : TypeObjetInfo[]) => {
       if( list != undefined){
-        console.log(list);
         
         this.listeTypeOAvailableSI = list;
       } else {
@@ -163,7 +162,6 @@ export class CreateObjectComponent implements OnInit {
   }
 
   getRangeToCreateOR(reserveNumber : string, isForward : boolean){
-    console.log(isForward);
     
     let number = Number(+reserveNumber);
       if(isNaN(number) || reserveNumber == ""){

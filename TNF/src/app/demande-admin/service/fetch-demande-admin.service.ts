@@ -25,7 +25,6 @@ export class FetchDemandeAdminService {
   async getAllDemandeAdminTraitee(): Promise<any> {
     let url = "http://"+environment.API_URL+"/demande-admin-traitee";
     const res : DemandeAdminTraitee[] = await lastValueFrom(this.http.get<DemandeAdminTraitee[]>(url, {withCredentials: true}));
-    console.log(res);
     
     if (res.length == 0) {
       return undefined;

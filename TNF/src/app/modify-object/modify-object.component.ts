@@ -213,7 +213,6 @@ export class ModifyObjectComponent implements OnInit, OnDestroy {
 
   getListTypeItemsForOR(){
     this.fetchModifyTypeObject.getTypeOfItemsOfOR(this.atelierSelect).then((list: TypeObjetRepere[]) => {
-      console.log(this.atelierSelect);
       
       this.listeTypeItemOfOR.splice(0);
       list.forEach((e : TypeObjetRepere) => {

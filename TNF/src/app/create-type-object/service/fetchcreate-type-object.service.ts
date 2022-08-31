@@ -51,7 +51,6 @@ export class FetchcreateTypeObjectService {
       actif : actif
     }
     const res : TypeObjetRepereInfo = await lastValueFrom(this.http.post<TypeObjetRepereInfo>(url, payload, {withCredentials: true}));
-    console.log(res)
     if (res.hasOwnProperty('error')) {
       return undefined
     } else {
@@ -70,7 +69,6 @@ export class FetchcreateTypeObjectService {
       actif : actif
     }
     const res : TypeObjetRepereInfo = await lastValueFrom(this.http.put<TypeObjetRepereInfo>(url, payload, {withCredentials: true}));
-    console.log(res)
     if (res.hasOwnProperty('error')) {
       return undefined
     } else {
@@ -82,7 +80,6 @@ export class FetchcreateTypeObjectService {
     let url = "http://"+environment.API_URL+"/typeobjetrepere/{ID}"
     url = url.replace("{ID}", ID)
     const res : any = await lastValueFrom(this.http.delete<any>(url, {withCredentials: true}));
-    console.log(res)
     if (res.hasOwnProperty('error')) {
       return undefined
     } else {
@@ -102,7 +99,6 @@ export class FetchcreateTypeObjectService {
       actif : actif
     }
     const res : any = await lastValueFrom(this.http.post<any>(url, payload, {withCredentials: true}));
-    console.log(res)
     if (res.hasOwnProperty('error')) {
       return res['error'];
     } else {
@@ -121,7 +117,6 @@ export class FetchcreateTypeObjectService {
       actif : actif
     }
     const res : any = await lastValueFrom(this.http.put<any>(url, payload, {withCredentials: true}));
-    console.log(res)
     if (res.hasOwnProperty('error')) {
       return res['error']
     } else {
@@ -133,7 +128,6 @@ export class FetchcreateTypeObjectService {
     let url = "http://"+environment.API_URL+"/typeobjet/{ID}"
     url = url.replace("{ID}", ID)
     const res : any = await lastValueFrom(this.http.delete<any>(url, {withCredentials: true}));
-    console.log(res)
     if (res.hasOwnProperty('error')) {
       return undefined
     } else {

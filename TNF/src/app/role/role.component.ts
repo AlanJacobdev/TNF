@@ -139,7 +139,6 @@ export class RoleComponent implements OnInit {
       this.roleSelected = res;
       this.libelle = res.libelleRole;
 
-      console.log(res);
       
       for (const atelier of res.atelier){
         this.listOfSelectedAtelier.push(atelier.idAtelier)
@@ -188,7 +187,6 @@ export class RoleComponent implements OnInit {
       this.roleSelected = res;
       this.libelle = res.libelleRole;
 
-      console.log(res);
       
       for (const atelier of res.atelier){
         this.listOfSelectedAtelier.push(atelier.idAtelier)

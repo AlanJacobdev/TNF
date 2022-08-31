@@ -176,8 +176,6 @@ export class ExportationComponent implements OnInit {
         } else {
           this.exportData = list
         }
-
-        console.log(list)
       }).catch((e) => {
       })
     }

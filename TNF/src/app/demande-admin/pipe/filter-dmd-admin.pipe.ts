@@ -10,10 +10,7 @@ export class FilterDmdAdminPipe implements PipeTransform {
     if (!args) return value;
     
 
-    console.log(value); 
-    console.log(args);
-    console.log(type);
-    
+   
     if(type != null) {
       if(type =='A'){
         return value.filter(function(item: any) {

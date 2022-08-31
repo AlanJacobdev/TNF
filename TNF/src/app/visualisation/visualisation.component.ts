@@ -137,7 +137,6 @@ export class VisualisationComponent implements OnInit {
     this.selectedOr = idOr;
     this.objectTypeNow = this.TypeObjet.OR;
     let res = this.listeObjetRepere.find(element => element.idObjetRepere === idOr);
-    console.log(res);
     
     if ( res != undefined){
       this.Ornow.idObjetRepere = res.idObjetRepere ;
@@ -150,7 +149,6 @@ export class VisualisationComponent implements OnInit {
       this.Ornow.dateModification = (res.dateModification != null) ? datem : "Inconnue"; 
       this.Ornow.description = res.description ;
       this.Ornow.etat = res.etat == 'A' ? "Actif" : 'Reservé';
-      console.log(this.Ornow);
     }
     this.selectedNow = idOr;
     this.selectedItem = "";
@@ -171,7 +169,6 @@ export class VisualisationComponent implements OnInit {
     this.selectedItem = idItem;
     this.objectTypeNow = this.TypeObjet.Item;
     let res = this.listeItem.find(element => element.idItem === idItem);
-    console.log(res);
     if ( res != undefined){
       this.ItemNow.idItem = res.idItem ;
       this.ItemNow.libelleItem = res.libelleItem ;

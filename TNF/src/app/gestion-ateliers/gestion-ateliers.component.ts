@@ -39,7 +39,6 @@ export class GestionAteliersComponent implements OnInit {
       }else{
         console.log("Impossible de récupérer les ateliers");
       }
-      console.log(this.listeAtelier);
       
     }).catch((e) => {
 

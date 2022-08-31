@@ -20,7 +20,6 @@ export class FetchDeleteObjectService {
     url = url.replace("{User}", user)
     try {
       const res : any = await lastValueFrom(this.http.delete<any>(url, {withCredentials: true}));
-      console.log(res);
 
       if (res.length == 0) {
         return undefined;
@@ -51,7 +50,6 @@ export class FetchDeleteObjectService {
     url = url.replace("{User}", user)
     try {
       const res : any = await lastValueFrom(this.http.delete<any>(url, {withCredentials: true}));
-      console.log(res);
 
       if (res.length == 0) {
         return undefined;
@@ -83,7 +81,6 @@ export class FetchDeleteObjectService {
     url = url.replace("{login}", user)
     try {
       const res : any = await lastValueFrom(this.http.delete<any>(url, {body:ObjectToDelete, withCredentials: true}))
-      console.log(res);
       if (res.listeOR.length == 0 && res.listeItem.length == 0 && res.listeSI.length == 0) {        
         return undefined;
       } else {
@@ -130,7 +127,6 @@ export class FetchDeleteObjectService {
   async demandeAdmin(deleteObjects : demandeAdmin) : Promise<any> {
     let url = "http://"+environment.API_URL+"/demande-admin"
     const res : any = await lastValueFrom(this.http.post<any>(url, deleteObjects, {withCredentials: true})); 
-    console.log(res)   
     return res
     
   }
