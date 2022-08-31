@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AuthService } from '../auth/auth.service';
 import { NavBarService } from './service/nav-bar.service';
 
@@ -15,6 +15,8 @@ export class NavbarComponent implements OnInit {
   public Prenom : string = "";
   public Page : string = "";
   public nbDemande : string = "-1";
+  @Output() newItemEvent = new EventEmitter<string>();
+
 
   constructor(private navbarService : NavBarService, private authService : AuthService) { 
     this.navbarService.isUserLoggedIn.subscribe( value => {
@@ -37,6 +39,7 @@ export class NavbarComponent implements OnInit {
       this.Nom = decodetoken.nom
       this.estAdmin = String(decodetoken.estAdministrateur) === "true" ? true : false;
       this.navbarService.setLogin(decodetoken.login); 
+      this.navbarService.setIdentifiant(decodetoken.idUtilisateur)
       if(this.estAdmin) {
         this.navbarService.setEstAdmin(true)
       }
@@ -79,5 +82,10 @@ export class NavbarComponent implements OnInit {
     //   this.disconnect()
     // }
   }
+
+  public changePassword(){
+    this.newItemEvent.emit();
+  }
+
 
 }

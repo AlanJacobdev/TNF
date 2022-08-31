@@ -1,4 +1,32 @@
-<navbar></navbar>
-<router-outlet></router-outlet>
+<div [ngClass]="{'blur bg-deco' : changePWD == true }">
+    <navbar (newItemEvent)="changePassword()" ></navbar>
+    <router-outlet></router-outlet>
+</div>
 
 
+
+
+<div class="content col-lg-4 col-10 " *ngIf="changePWD == true">
+    <div class="container-fluid border rounded py-3  shadow-sm bg-white">
+        <div class="text-center row">
+            <span class="fs-3 col-10 offset-1">Changement de mot de passe</span>
+            <fa-icon class="close col-1 text-right" [icon]="faXmark" (click)="close()"></fa-icon>
+        </div>
+        <div class="my-3 text-center fs-6"  [ngClass]="{'was-validated': formValidate === true}">
+            <p>Vous avez décidé de changer votre mot de passe</p>
+            <div class="col-12 col-lg-10 offset-lg-1 my-4">
+                <div class="form-floating mb-3">
+                    <input #NewPWDOne type="text" class="form-control" id="Nom" placeholder="" required>
+                    <label for="Nom">Nouveau mot de passe</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input #NewPWDTwo type="text" class="form-control" id="NewPWDTwo" placeholder="" required>
+                    <label for="NewPWDTwo">Confirmer le mot de passe</label>
+                </div>     
+                <p class="text-danger fw-bold"> {{message}}</p>   
+            </div>
+            <button (click)="updatePwdUtilisateur(NewPWDOne.value, NewPWDTwo.value)" type="button" class="btn btn-lg btn-light col-10 col-lg-6 my-3">Modifier</button>
+        </div>
+    </div>
+    
+</div>

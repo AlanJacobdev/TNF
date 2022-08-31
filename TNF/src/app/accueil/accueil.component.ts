@@ -113,7 +113,7 @@ export class AccueilComponent implements OnInit {
     this.selectedNumberMonth = date.getMonth()+1;
     this.currentMonth = date.toLocaleString('default', { month: 'long' });
     this.currentMonth = this.currentMonth.charAt(0).toUpperCase() + this.currentMonth.slice(1);
-    this.selectedMonth = date.toLocaleString('default', { month: 'long' });
+    this.selectedMonth = date.toLocaleString('default', { month: 'long' });    
     this.selectedMonth = this.selectedMonth.charAt(0).toUpperCase() + this.selectedMonth.slice(1);
     this.currentYear = date.getFullYear();
     this.templateOfCurrentMonth = this.getWeeksOfMonth(this.currentYear,date.getMonth());
@@ -124,15 +124,22 @@ export class AccueilComponent implements OnInit {
   async changeMonth(isForward : boolean) {
     this.selectedDay = -1;
     let date : Date;
+    this.selectedDate.setDate(1)
     if (isForward) {
       date = new Date(this.selectedDate.setMonth(this.selectedDate.getMonth() + 1))
+      
       this.selectedDate = date;
     } else {
       date = new Date(this.selectedDate.setMonth(this.selectedDate.getMonth() - 1))
+      
       this.selectedDate = date;
     }
     this.selectedNumberMonth = date.getMonth()+1;
+    
+    
     this.selectedMonth = date.toLocaleString('default', { month: 'long' });
+    
+    
     this.selectedMonth = this.selectedMonth.charAt(0).toUpperCase() + this.selectedMonth.slice(1);
     this.selectedYear = date.getFullYear();
     this.templateOfCurrentMonth = this.getWeeksOfMonth(this.selectedYear,date.getMonth());

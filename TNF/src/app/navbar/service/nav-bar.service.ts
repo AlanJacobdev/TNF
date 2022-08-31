@@ -13,6 +13,7 @@ export class NavBarService {
   estConnecte : boolean = false ;
   login : string = "";
   deconnecteTO : boolean = false;
+  iduser : number = -1;
 
   constructor( private socket: Socket, private readonly http: HttpClient) { }
   
@@ -23,6 +24,14 @@ export class NavBarService {
     return res
   }
   
+  setIdentifiant(value : number) {
+    this.iduser = value;
+  }
+
+  getIdentifiant() {
+    return this.iduser;
+  }
+
   getEstAdmin() {
     return this.estAdmin;
   }
