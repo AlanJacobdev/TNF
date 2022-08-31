@@ -189,10 +189,9 @@ export class ExportationComponent implements OnInit {
       if (this.exportData.length > 0){
         if (this.nomExport != ""){
         import("xlsx").then(xlsx => {
-          const worksheet = {} 
-          // xlsx.utils.json_to_sheet(this.exportData);
+          const worksheet = xlsx.utils.json_to_sheet(this.exportData);
 
-          xlsx.utils.sheet_add_aoa(worksheet, [['NEW VALUE from NODE']], {origin: 'F4'});        
+                  
           const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
           const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
           

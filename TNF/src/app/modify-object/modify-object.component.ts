@@ -432,29 +432,34 @@ export class ModifyObjectComponent implements OnInit, OnDestroy {
       let itemInfo = this.listeItem.find((element) => element.idItem === idItem)
       if (itemInfo != undefined) {
         this.itemSelect.idItem = itemInfo.idItem;
-        this.itemSelect.libelleItem = itemInfo.libelleItem;
-        let libelle = itemInfo.libelleItem.split(':')[1]
-        if (libelle != undefined){
-          libelle = libelle.trim();
-          this.LibelleItem = libelle;
-        } else {
-          console.log(libelle);
-          
-          let orExistInLibelle = itemInfo.libelleItem.toUpperCase().includes(itemInfo.idOR)
-          if (orExistInLibelle){
-            let newLibelle = itemInfo.libelleItem.replace(itemInfo.idOR, '')
-            this.LibelleItem =  newLibelle;
+        let orExistInLibelle = itemInfo.libelleItem.toUpperCase().includes(itemInfo.idOR)
+        if (orExistInLibelle ) {
+          let [libelle, ...restOflibelle]= itemInfo.libelleItem.split(':')
+          restOflibelle.join(':')
+          if (libelle != undefined){
+            libelle = libelle.trim();
+            this.LibelleItem = restOflibelle.toString().trim();
+            
           } else {
-            this.LibelleItem =  itemInfo.libelleItem;
+            let orExistInLibelle = itemInfo.libelleItem.toUpperCase().includes(itemInfo.idOR)
+            if (orExistInLibelle){
+              let newLibelle = itemInfo.libelleItem.replace(itemInfo.idOR, '')
+              this.LibelleItem =  newLibelle.trim();
+            } else {
+              this.LibelleItem =  itemInfo.libelleItem.trim();
+            }
           }
-          this.itemSelect.etat = itemInfo.etat;
-          this.itemSelect.description = itemInfo.description;
-          this.etat = itemInfo.etat == 'A' ? etat.A : itemInfo.etat == 'EA' ? etat.EA : itemInfo.etat == 'HS' ? etat.HS : etat.Aucun; 
-          this.descriptionObjectSelect.splice(0);
-          for (const d of this.itemSelect.description){
-            this.descriptionObjectSelect.push(d)
-          }
-        } 
+        } else {
+          this.LibelleItem =  itemInfo.libelleItem.trim();
+        }
+        this.itemSelect.etat = itemInfo.etat;
+        this.itemSelect.description = itemInfo.description;
+        this.etat = itemInfo.etat == 'A' ? etat.A : itemInfo.etat == 'EA' ? etat.EA : itemInfo.etat == 'HS' ? etat.HS : etat.Aucun; 
+        this.descriptionObjectSelect.splice(0);
+        for (const d of this.itemSelect.description){
+          this.descriptionObjectSelect.push(d)
+        }
+         
       }    
     } else if (this.objectNow === this.TypeObject.SI) {
       this.idSISelect = "";
@@ -480,11 +485,31 @@ export class ModifyObjectComponent implements OnInit, OnDestroy {
     let siInfo = this.listeSousItem.find((element) => element.idSousItem === idSousItem);
     if (siInfo != undefined) {
       this.siSelect.idSousItem = siInfo.idSousItem;
-      this.siSelect.libelleSousItem = siInfo.libelleSousItem;
+      
+      let siExistInLibelle = siInfo.libelleSousItem.toUpperCase().includes(siInfo.idItem)
+      if (siExistInLibelle ) {
+        let [libelle, ...restOflibelle]= siInfo.libelleSousItem.split(':')
+        if (libelle != undefined){
+
+          this.LibelleSousItem = restOflibelle.join(':').toString().trim();
+          
+        } else {
+          let orExistInLibelle = siInfo.libelleSousItem.toUpperCase().includes(siInfo.idItem)
+          if (orExistInLibelle){
+            let newLibelle = siInfo.libelleSousItem.replace(siInfo.idItem, '')
+            this.LibelleSousItem =  newLibelle.trim();
+          } else {
+            this.LibelleSousItem =  siInfo.libelleSousItem.trim();
+          }
+        }
+      } else {
+        this.LibelleSousItem =  siInfo.libelleSousItem.trim();
+      }
+
+
       this.siSelect.description = siInfo.description;
       this.siSelect.etat = siInfo.etat;
       this.descriptionObjectSelect.splice(0);
-      this.LibelleSousItem = siInfo.libelleSousItem.split(':')[1].trim();
       this.etat= siInfo.etat == 'A' ? etat.A : siInfo.etat == 'EA' ? etat.EA : siInfo.etat == 'HS' ? etat.HS : etat.Aucun;
         for (const d of this.siSelect.description){
           this.descriptionObjectSelect.push(d)
@@ -548,7 +573,7 @@ export class ModifyObjectComponent implements OnInit, OnDestroy {
 
   modifyItem(){
     if (this.LibelleItem != '' ) {
-        let libelle = this.idORSelect + ' : '+ this.LibelleItem;
+        let libelle = this.idORSelect + ' : '+ this.LibelleItem.trim();
         this.fetchModifyTypeObject.modifyitem(this.itemSelect.idItem, libelle, this.etat, this.descriptionObjectSelect).then((res: any) => {
           if(typeof res === 'string') {
             this.manageToast("Erreur de modification", res , "red")
@@ -569,7 +594,7 @@ export class ModifyObjectComponent implements OnInit, OnDestroy {
   modifySI(){
      
     if (this.LibelleSousItem != '' ) {
-      let libelle = this.idItemSelect + ' : '+ this.LibelleSousItem; 
+      let libelle = this.idItemSelect + ' : '+ this.LibelleSousItem.trim(); 
       this.fetchModifyTypeObject.modifySI(this.siSelect.idSousItem, libelle, this.etat, this.descriptionObjectSelect).then((res: any) => {
         if(typeof res === 'string') {
           this.manageToast("Erreur de modification", res , "red")

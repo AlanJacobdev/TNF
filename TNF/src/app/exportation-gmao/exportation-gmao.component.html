@@ -201,17 +201,17 @@
                                     </table>
                                 </div>
                             </div>
-                            <div class="row mt-3">
-                                <div class="col-12">
-                                    <button  (click)="export()" type="button" data-bs-toggle="modal" data-bs-target="#Recap" data-backdrop="static" data-keyboard="false" class="btn btn-lg btn-light col-12 col-lg-4 offset-lg-4 shadow-sm mb-2 mb-lg-0">
-                                        <div class="">Exporter</div>
-                                    </button>
-                                    <button (click)="getAllExport()" type="button" data-bs-toggle="modal" data-bs-target="#ListeExportation" data-backdrop="static" data-keyboard="false" class="btn btn-lg btn-light col-12 col-lg-3 offset-lg-1 shadow-sm ">
-                                        <div class="">Historique des exportations</div>
-                                    </button>
-                                </div>
-                            </div>
                         </ng-template>
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <button *ngIf="listeOr.length != 0 && listeItem.length != 0 && listeSi.length != 0" (click)="export()" type="button" data-bs-toggle="modal" data-bs-target="#Recap" data-backdrop="static" data-keyboard="false" class="btn btn-lg btn-light col-12 col-lg-4 offset-lg-4 shadow-sm mb-2 mb-lg-0">
+                                    <div class="">Exporter</div>
+                                </button>
+                                <button (click)="getAllExport()" type="button" data-bs-toggle="modal" data-bs-target="#ListeExportation" data-backdrop="static" data-keyboard="false" class="btn btn-lg btn-light col-12   shadow-sm " [ngClass]="{ 'offset-lg-1 col-lg-3' : listeOr.length != 0 && listeItem.length != 0 && listeSi.length != 0, 'offset-lg-4 col-lg-4' : listeOr.length == 0 && listeItem.length == 0 && listeSi.length == 0 }">
+                                    <div class="">Historique des exportations</div>
+                                </button>
+                            </div>
+                        </div>
                 </div>
             </ng-template>
         </div>
