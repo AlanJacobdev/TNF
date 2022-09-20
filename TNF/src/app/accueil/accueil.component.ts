@@ -15,6 +15,10 @@ import { FetchInformationService } from '../informations/service/fetch-informati
   templateUrl: './accueil.component.html',
   styleUrls: ['./accueil.component.css']
 })
+
+/**
+ * Classe permettant de déterminer comment le composant sera instancié et utilisé
+ */
 export class AccueilComponent implements OnInit {
 
   public faCalendar = faCalendar;
@@ -42,6 +46,13 @@ export class AccueilComponent implements OnInit {
   public listeInformations : InformationInfo[] = [];
   public waitingMonth : boolean = false;
   public waitingActivityOfDay : boolean = false;
+
+    /**
+   * Constructeur de la classe 
+   * Instancié à la création du composant
+   * Injection de services utilisés par cette classe
+   * Plus d'informations : https://docs.nestjs.com/providers
+   */
   constructor(private fetchAccueilService : FetchAccueilService, private fetchDemandeAdminService : FetchDemandeAdminService, private navbarService : NavBarService, private fetchInformationService : FetchInformationService) { 
     
     let Admin = this.navbarService.getEstAdmin();
@@ -102,10 +113,18 @@ export class AccueilComponent implements OnInit {
 
     public allActivityOfDay : allActivity[] = []
 
+
+  /**
+   * Méthode appelée automatiquement à la création du composant
+   */
   ngOnInit(){
     
   }
 
+
+  /**
+   * Initialisation du calendrier
+   */
   initCalendarToday(){
     const date = new Date();
     this.selectedDate = date;
@@ -121,6 +140,10 @@ export class AccueilComponent implements OnInit {
     this.getNumberOfActivityForEachDay();
   }
 
+  /**
+   * Méthode permettant de changer le mois 
+   * @param isForward : True pour passer au mois suivant, False pour le mois précédent
+   */
   async changeMonth(isForward : boolean) {
     this.selectedDay = -1;
     let date : Date;
@@ -146,7 +169,12 @@ export class AccueilComponent implements OnInit {
     this.getNumberOfActivityForEachDay();
   }
 
-
+  /**
+   * Retourne les intervalles de chaque semaines d'un mois
+   * @param year : Année actuelle
+   * @param month_number : Mois actuel
+   * @returns Liste des semaines du mois (templateOfCurrentMonth)
+   */
   getWeeksOfMonth(year : number, month_number : number){
     let weeks = [],
         lastDate = new Date(year, month_number + 1, 0),
@@ -200,6 +228,11 @@ export class AccueilComponent implements OnInit {
   }
   
 
+  /**
+   * Défini le nombre d'activité par jour
+   * @param table (templateOfCurrentMonth) 
+   * @returns number[][]
+   */
    getAllDaysOfWeek (table : {
     start: number;
     end: number;
@@ -332,7 +365,9 @@ export class AccueilComponent implements OnInit {
 
   }
 
-
+  /**
+   * Récupère l'ensemble des demandes de suppression
+   */
   getAllDemandeAdmin(){
     if(this.isAdmin){
       this.fetchDemandeAdminService.getAllDemandeAdmin().then((list: DemandeAdmin[]) => {
@@ -348,7 +383,9 @@ export class AccueilComponent implements OnInit {
     }
   }
 
-
+  /**
+   * Recupère l'ensembles des informations
+   */
   getAllInformations(){
     this.listeInformations.splice(0)
     this.fetchInformationService.getInformations().then((list: InformationInfo[]) => {
@@ -357,6 +394,10 @@ export class AccueilComponent implements OnInit {
     })
   }
 
+  /**
+   * Permet de lire un document 
+   * @param idDoc : Identifiant du document
+   */
   async readFile(idDoc : number){
     let sub = (await this.fetchInformationService.readFile(idDoc)).subscribe(res => {
       
@@ -370,15 +411,21 @@ export class AccueilComponent implements OnInit {
         window.open(fileURL, '_blank');
         sub.unsubscribe();
       }
-     
-
     });
   }
 
+  /**
+   * Initialise le calendrier au jour actuel 
+   */
   today(){
     this.initCalendarToday();
   }
 
+  /**
+   * Sélectionne un jour sur le calendrier 
+   * @param day : Jour sélectionné
+   * @param specific True si le jour sélectionné n'est pas dans le mois courant
+   */
   async selectDay(day : number, specific : boolean){
     if(specific) {
       this.selectedDay = -1;
@@ -393,31 +440,28 @@ export class AccueilComponent implements OnInit {
     
   }
   
-  refresh(){
-    this.fetchAccueilService.refresh().then((list: any) => {
 
-    }).catch((e) => {
-    })
-  }
-  
-  get(){
-    this.fetchAccueilService.get().then((list: any) => {
-
-    }).catch((e) => {
-    })
-  }
-
+  /**
+   * Affiche le calendrier
+   */
   showCalendar(){
     this.dayIsSelect = false;
     this.selectedDay = -1;
     this.typeActivityNow = this.TypeActivity.All
   }
 
+  /**
+   * Selectionne le type d'activité (Création modification ou suppression)
+   * @param activity 
+   */
   selectTypeActivity(activity : typeActivity){
     this.typeActivityNow = activity;
     this.scrollToStartOfActivity();
   }
 
+  /**
+   * Récupère le nombre d'activité pour chaque jour du mois courant
+   */
   getNumberOfActivityForEachDay(){
 
     this.waitingMonth = true
@@ -434,10 +478,21 @@ export class AccueilComponent implements OnInit {
     })
   }
 
+  /**
+   * Activités lié à un jour 
+   * @returns [string, {
+    CountC: number;
+    CountM: number;
+    CountD: number;
+}][]
+   */
   getKeys(){
     return Array.from(this.calendarWithActivity);
   }
 
+  /**
+   * Recupère toutes les activités d'un jour
+   */
   async getHistoryOfOneDay(){
     this.waitingActivityOfDay = true;
     this.fetchAccueilService.getHistoryOfOneDay(this.selectedDate.toLocaleDateString("en-CA").substring(0, 10)).then((list: typeInfoPerDay) => {
@@ -512,6 +567,12 @@ export class AccueilComponent implements OnInit {
     
   }
 
+  /**
+   * Recupère la liste des descriptions d'un activité
+   * @param id : Identifiant de l'activité
+   * @param date : Date de l'activité
+   * @param edit : True si modifié, false si actuelle
+   */
   selectObjectFromActivity(id : string, date : Date, edit: boolean) {
     this.selectedIdOfObject = id;
     this.selectedDescriptionAreEdited = edit;
@@ -539,6 +600,13 @@ export class AccueilComponent implements OnInit {
     }
   }
 
+
+  /**
+   * Recupère la liste des descriptions d'une activité
+   * @param id : Identifiant de l'activité
+   * @param date : Date de l'activité
+   * @param edit : True si modifié, false si actuelle
+   */
   selectObjectFromAllActivity(id : string, date : Date, edit: boolean) {
     this.selectedIdOfObject = id;
     this.selectedDescriptionAreEdited = edit;
@@ -558,6 +626,12 @@ export class AccueilComponent implements OnInit {
     }
   }
 
+  /**
+   * Vérifie si deux chaines de caractères sont égales
+   * @param desc1 
+   * @param desc2 
+   * @returns 
+   */
   public equals (desc1 : Description[], desc2 : Description[]){
     if (JSON.stringify(desc1) === JSON.stringify(desc2)) {
       return true
@@ -565,6 +639,9 @@ export class AccueilComponent implements OnInit {
     return false
   }
 
+  /**
+   * Permet de remonter en haut des activités lors du changements d'états (tous, suppresion, création et modification)
+   */
   scrollToStartOfActivity(){
    const element = document.getElementById("scrolltableActivity");
     if (element != null){

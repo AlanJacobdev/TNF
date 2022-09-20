@@ -8,10 +8,26 @@ import { environment } from '../../../../environments/environment';
 @Injectable({
     providedIn: 'root'
 })
+
+/**
+ * Service permettant d'interroger l'API par des requetes HTTPs
+ */
+
 export class FetchAccueilService {
 
+  /**
+   * Constructeur de la classe 
+   * Injection de services utilisés par cette classe
+   * Plus d'informations : https://docs.nestjs.com/providers
+   */
     constructor(private readonly http: HttpClient, private navBarService: NavBarService) { }
 
+    /**
+     * Retourne le nombre d'activité pour un mois donnée (1er lundi du moins au derniers, peut prendre des jours des jours dans les mois précédent et suivant)
+     * @param start Intervalle inférieur (1er lundi)
+     * @param end Intervalle supérieur (dernier dimanche)
+     * @returns Message d'erreur ou typeInfoPerMounth
+     */
     async getNumberOfActivityForEachDay(start : string, end : string) {
         let admin = this.navBarService.getEstAdmin();
         let login = this.navBarService.getLogin();
@@ -47,6 +63,11 @@ export class FetchAccueilService {
           }
     }
 
+    /**
+     * Retourne les activités d'un jour (creation, suppression ,modification)
+     * @param day : Jour recherché 
+     * @returns typeInfoPerDay ou Message erreur
+     */
     async getHistoryOfOneDay( day : string) {
       
       let admin = this.navBarService.getEstAdmin();
@@ -82,20 +103,6 @@ export class FetchAccueilService {
       }
     }
 
-    async refresh() {
-      
-    
-      let url = "http://"+environment.API_URL+"/auth/refresh-tokens";
-      const res : any= await lastValueFrom(this.http.get<any>(url, {withCredentials: true}));
-
-    }
-
-    async get() {
-      
-    
-      let url = "http://"+environment.API_URL+"/auth/fav-movies";
-      const res : any= await lastValueFrom(this.http.get<any>(url, {withCredentials: true}));
-      
-    }
+ 
 
 }
