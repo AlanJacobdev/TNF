@@ -8,6 +8,9 @@ import { faXmark, faCalendar, faUser, faClock, faInfo, faPen, faTrashCan, faPlus
   templateUrl: './create-type-object.component.html',
   styleUrls: ['./create-type-object.component.css']
 })
+/**
+ * Classe permettant de déterminer comment le composant sera instancié et utilisé
+ */
 export class CreateTypeObjectComponent implements OnInit {
   @Input() public searchText: string = "";
   public faXmark = faXmark;
@@ -68,29 +71,51 @@ export class CreateTypeObjectComponent implements OnInit {
   public colorToast : string = "";
   public formValidate : boolean = false;
 
+  /**
+   * Constructeur de la classe 
+   * Instancié à la création du composant
+   * Injection de services utilisés par cette classe
+   * Plus d'informations : https://docs.nestjs.com/providers
+   */
   constructor(private fetchCreateTypeObject : FetchcreateTypeObjectService) { 
     this.refreshListes();
   }
 
-
+  /**
+   * Méthode appelée à l'initialisation du composant
+   */
   ngOnInit(): void {
   }
 
 
+  /**
+   * Le type d'objet est actif/inactif (création)
+   */
   setcheckValide() {
     this.checkValide = !this.checkValide;
   }
 
+  /**
+   * Le type d'objet est actif/inactif (modification)
+   */
   putCheckActif(){
     this.objectSelect.actif = !this.objectSelect.actif;
     
   }
 
+  /**
+   * Sélectionne du type d'objet (formulaire de création) 
+   * @param type : Identifiant du type d'objet 
+   */
   selectTypeObject(type : createTypeObject){
     this.type = type;
     this.typeError = false;
   }
 
+  /**
+   * Modifie le statut actif d'un type d'objet via la liste
+   * @param idType : Identifiant du type d'objet
+   */
   selectCheckType(idType : string){
     const targetO = this.listeTypeO.find((element) => element.idType === idType)
 
@@ -109,6 +134,10 @@ export class CreateTypeObjectComponent implements OnInit {
     }
   }
 
+  /**
+   * Modifie le statut actif d'un type d'objet repère via la liste
+   * @param idTypeOR : Identifiant du type d'objet repère
+   */
   selectCheckTypeOR(idTypeOR : string){
     const targetOr = this.listeTypeOR.find((element) => element.idType === idTypeOR)
 
@@ -127,7 +156,9 @@ export class CreateTypeObjectComponent implements OnInit {
     }
   }
 
-  
+  /**
+   * Rafraîchit les listes de type d'objet
+   */
   refreshListes(){
 
     this.listeTypeOR.splice(0);
@@ -156,6 +187,12 @@ export class CreateTypeObjectComponent implements OnInit {
 
   }
 
+  /**
+   * Gestion de l'affichage du toast 
+   * @param title : Titre du toast
+   * @param text : Texte du toast
+   * @param color : couleur associé au toast
+   */
   manageToast (title : string, text : string, color : string ){
     this.typeToast = title;
     this.colorToast = color;
@@ -168,17 +205,28 @@ export class CreateTypeObjectComponent implements OnInit {
     10000);
   }
 
+  /**
+   * Sélectionne le type d'objet (objet ou objet repère)
+   * @param type : Valeur issue de TypeObject
+   */
   selectType (type: createTypeObject) {
     this.selectedType = type;
     this.idSelected = "";
     this.changesNow = false;
   }
 
+  /**
+   * Sélection d'un type d'objet 
+   * @param id : Identifiant du type d'objet 
+   */
   selectObject (id : string) {
     this.idSelected = id;
     this.changesNow = false;
   }
 
+  /**
+   * Fermeture du formulaire
+   */
   close(){
     this.changesNow = false;
     this.suppresion = false;
@@ -187,19 +235,31 @@ export class CreateTypeObjectComponent implements OnInit {
     this.type = this.typeNow.Aucun;
   }
 
+  /**
+   * Fermeture du toast
+   */
   closeToast(){
     this.ToastAffiche = false;
   }
 
+  /**
+   * Valeur par défaut de la validation de formulaire (affichage des erreurs)
+   */
   refreshValidationForm(){
     this.formValidate = false;
   }
 
+  /**
+   * Selection du bouton pour créer un nouveau type
+   */
   selectCreateType(){
     this.changesNow = true;
     this.idSelected = "";
   }
 
+    /**
+   * Selection du bouton pour modifier un nouveau type
+   */
   selectModifyType(){
     this.changesNow = true;
     let res;
@@ -220,13 +280,18 @@ export class CreateTypeObjectComponent implements OnInit {
     }
   }
 
+    /**
+   * Selection du bouton pour supprimer un nouveau type
+   */
   selectDeleteType(){
     this.suppresion = true;
     this.changesNow = true;
     
   }
 
-
+  /**
+   * Selection du bouton pour avoir des informations complémentaires sur le type d'objet sélectionné
+   */
   selectInformation(){
     this.information = true;
     this.changesNow = true;
@@ -244,6 +309,11 @@ export class CreateTypeObjectComponent implements OnInit {
     }    
   }
 
+  /**
+   * Création d'un type d'objet
+   * @param identifiant : Identifiant du type d'objet
+   * @param libelle : Libelle du type d'objet
+   */
   createTypeObjet(identifiant : string, libelle : string) {
 
     
@@ -282,7 +352,11 @@ export class CreateTypeObjectComponent implements OnInit {
     
   }
 
-
+  /**
+   * Modification du type d'objet
+   * @param identifiant : Identifiant du type d'objet
+   * @param libelle : libelle du type d'objet
+   */
   updateTypeObjet(identifiant : string, libelle : string) {
     
     if ( identifiant != '' && libelle != '') {
@@ -314,6 +388,9 @@ export class CreateTypeObjectComponent implements OnInit {
     }
   }
 
+  /**
+   * Suppression du type d'objet selectionné
+   */
   deleteTypeObjet() {
     if ( this.selectedType == this.TypeObject.OR){
       this.fetchCreateTypeObject.deleteTypeOR(this.idSelected).then((res: any) => {

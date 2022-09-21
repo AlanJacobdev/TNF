@@ -8,10 +8,22 @@ import { environment } from '../../../environments/environment';
 @Injectable({
   providedIn: 'root'
 })
+/**
+ * Service permettant d'interroger l'API par des requetes HTTPs
+ */
 export class FetchcreateTypeObjectService {
 
+    /**
+   * Constructeur de la classe 
+   * Injection de services utilisés par cette classe
+   * Plus d'informations : https://docs.nestjs.com/providers
+   */
   constructor(private readonly http: HttpClient, private navBarService: NavBarService) { }
 
+  /**
+   * Recupère l'ensemble des types d'objets repères
+   * @returns Liste des types d'objets repères
+   */
   async getTypeObjetRepere(): Promise<any> {
     let user = this.navBarService.getLogin();
     let admin = this.navBarService.getEstAdmin();
@@ -30,6 +42,10 @@ export class FetchcreateTypeObjectService {
     }
   }
 
+  /**
+   * Retourne la liste des types d'objets
+   * @returns Liste des types d'objets
+   */
   async getTypeObjet(): Promise<any> {
     let url = "http://"+environment.API_URL+"/typeobjet"
     const res : TypeObjetInfo[] = await lastValueFrom(this.http.get<TypeObjetInfo[]>(url, {withCredentials: true}));
@@ -40,6 +56,13 @@ export class FetchcreateTypeObjectService {
     }
   }
 
+  /**
+   * Création d'un type d'objet repère
+   * @param ID : Identifiant du type d'objet repère
+   * @param libelle : Libelle du type d'objet repère
+   * @param actif : Le type est actif ou non (true false)
+   * @returns Structure du type d'objet repère ou erreur
+   */
   async createTypeOR(ID: string, libelle : string, actif :boolean): Promise<any> {
     let user = this.navBarService.getLogin();
     let url = "http://"+environment.API_URL+"/typeobjetrepere"
@@ -58,6 +81,13 @@ export class FetchcreateTypeObjectService {
     }
   }
 
+  /**
+   * Modification du type d'objet repère 
+   * @param ID : Identifiant du type d'objet repère
+   * @param libelle : Libelle du type d'objet repère
+   * @param actif : Le type est actif ou non (true false)
+   * @returns Structure du type d'objet repère modifié ou erreur
+   */
   async updateTypeOR(ID: string, libelle : string, actif : boolean): Promise<any> {
     let user = this.navBarService.getLogin();
     let url = "http://"+environment.API_URL+"/typeobjetrepere/{ID}"
@@ -76,6 +106,11 @@ export class FetchcreateTypeObjectService {
     }
   }
 
+  /**
+   * Suppression d'un type d'objet repère
+   * @param ID : Identifiant du type d'objet repère
+   * @returns Message d'erreur ou de validation
+   */
   async deleteTypeOR(ID: string): Promise<any> {
     let url = "http://"+environment.API_URL+"/typeobjetrepere/{ID}"
     url = url.replace("{ID}", ID)
@@ -88,6 +123,13 @@ export class FetchcreateTypeObjectService {
   }
 
 
+  /**
+   * Création d'un type d'objet
+   * @param ID : Identifiant du type d'objet
+   * @param libelle : Libelle du type d'objet 
+   * @param actif : Le type est actif ou non (true false)
+   * @returns Structure du type d'objet ou erreur
+   */
   async createTypeO(ID: string, libelle : string, actif : boolean): Promise<any> {
     let user = this.navBarService.getLogin();
     let url = "http://"+environment.API_URL+"/typeobjet"
@@ -106,6 +148,13 @@ export class FetchcreateTypeObjectService {
     }
   }
 
+    /**
+   * Modification du type d'objet 
+   * @param ID : Identifiant du type d'objet
+   * @param libelle : Libelle du type d'objet 
+   * @param actif : Le type est actif ou non (true false)
+   * @returns Structure du type d'objet modifié ou erreur
+   */
   async updateTypeO(ID: string, libelle : string, actif : boolean): Promise<any> {
     let user = this.navBarService.getLogin();
     let url = "http://"+environment.API_URL+"/typeobjet/{ID}"
@@ -124,6 +173,11 @@ export class FetchcreateTypeObjectService {
     }
   }
 
+  /**
+   * Suppression d'un type d'objet 
+   * @param ID : Identifiant du type d'objet
+   * @returns Message d'erreur ou de validation
+   */
   async deleteTypeO(ID: string): Promise<any> {
     let url = "http://"+environment.API_URL+"/typeobjet/{ID}"
     url = url.replace("{ID}", ID)
@@ -136,7 +190,12 @@ export class FetchcreateTypeObjectService {
   }
 
   
-  
+  /**
+   * Change le statut actif d'un type d'objet
+   * @param idTypeO : Identifiant du type 
+   * @param actif : Valeur du statut actif (true or false)
+   * @returns Structure du type d'objet modifié
+   */
   async updateActifTypeO(idTypeO : string, actif : boolean) : Promise<any>{
     let user = this.navBarService.getLogin();
     let url = "http://"+environment.API_URL+"/typeobjet/{idTypeO}"
@@ -154,7 +213,12 @@ export class FetchcreateTypeObjectService {
     }
   }
 
-
+  /**
+   * Change le statut actif d'un type d'objet repère
+   * @param idTypeO : Identifiant du type d'objet repère
+   * @param actif : Valeur du statut actif (true or false)
+   * @returns Structure du type d'objet repère modifié
+   */
   async updateActifTypeOr(idTypeOR : string, actif : boolean) : Promise<any>{
     let user = this.navBarService.getLogin();
     let url = "http://"+environment.API_URL+"/typeobjetrepere/{idTypeOR}"
@@ -171,7 +235,4 @@ export class FetchcreateTypeObjectService {
       return res;
     }
   }
-
-
-
 }

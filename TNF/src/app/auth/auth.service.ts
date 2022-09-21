@@ -8,15 +8,29 @@ import { environment } from '../../environments/environment';
 @Injectable({
   providedIn: 'root'
 })
+/**
+ * Classe permettant de déterminer comment le composant sera instancié et utilisé
+ */
 export class AuthService {
   
- 
+     /**
+   * Constructeur de la classe 
+   * Instancié à la création du composant
+   * Injection de services utilisés par cette classe
+   * Plus d'informations : https://docs.nestjs.com/providers
+   */
   constructor(private http : HttpClient, private route : Router ) {  }
+ 
+
   UserName:string | undefined= undefined;
   UserLastName:string | undefined= undefined;
   connection : boolean = false;
   
 
+  /**
+   * Vérifie si l'utilisateur est connecté 
+   * @returns true or false
+   */
   estAuthentifie(){
     const token = this.getInfoToken();
     if(token != null) {
@@ -30,6 +44,10 @@ export class AuthService {
   }
 
 
+  /**
+   * Retourne les informations du jeton
+   * @returns Structure du jeton de connexion ou null
+   */
   getInfoToken(){
     const token = localStorage.getItem("token");
     if(token != null) {
@@ -40,6 +58,13 @@ export class AuthService {
     return null
   }
 
+  /**
+   * Envoie une requête à l'api pour vérifier qu'un utilisateur est associé aux informations suivantes
+   * Si l'utilisateur existe, il est redirigé vers l'accueil
+   * @param login : Login de l'utilisateur
+   * @param pwd : Password de l'utilisateur
+   * @returns Reception du token de connexion ou erreur 
+   */
   async connexion(login : string, pwd:string): Promise<any> {
     try {
 
@@ -73,6 +98,10 @@ export class AuthService {
 
   }
 
+  /**
+   * Déconnecte l'utilisateur actuel en le redirigeant vers la page de connexion.
+   * Supprime les informations en local
+   */
   async deconnexion() {
     this.route.navigate(['/connexion']);
     this.UserName = undefined;
@@ -82,6 +111,9 @@ export class AuthService {
   }
 
   
+  /**
+   * Rafraichit le jeton de connexion.
+   */
   async refresh() {
     let url = "http://"+environment.API_URL+"/auth/refresh-tokens";
     try {

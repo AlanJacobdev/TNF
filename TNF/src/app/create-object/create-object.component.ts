@@ -15,6 +15,10 @@ import { FetchRecopieService } from '../recopie-object/service/fetch-recopie.ser
   templateUrl: './create-object.component.html',
   styleUrls: ['./create-object.component.css']
 })
+
+/**
+ * Classe permettant de déterminer comment le composant sera instancié et utilisé
+ */
 export class CreateObjectComponent implements OnInit {
   public faPlus = faPlus;
   public faInfo = faInfo;
@@ -69,14 +73,27 @@ export class CreateObjectComponent implements OnInit {
   public secuOR : boolean = false;
   public secuItem : boolean = false;
 
+  /**
+   * Constructeur de la classe 
+   * Instancié à la création du composant
+   * Injection de services utilisés par cette classe
+   * Plus d'informations : https://docs.nestjs.com/providers
+   */
   constructor(private fetchCreateTypeObject : FetchcreateTypeObjectService, private fetchVisuService : FetchVisuService, private fetchCreateObjectService: FetchCreateObjectService, private fetchRecopieService : FetchRecopieService) {
     this.getListType();
     this.getAteliers();
    }
+
+  /**
+   * Méthode appelée automatiquement à l'initialisation du composant
+   */
   ngOnInit(): void {
 
   }
 
+  /**
+   * Recupère l'ensemble des ateliers 
+   */
   getAteliers(){
     this.fetchVisuService.getAllAteliers().then((list: AtelierInfo[]) => {
       if (list != undefined) {
@@ -88,6 +105,9 @@ export class CreateObjectComponent implements OnInit {
     })
   }
 
+  /**
+   * Recupère les types d'objet et types d'objet repère
+   */
   getListType(){
 
     this.listeTypeOR.splice(0);
@@ -116,6 +136,9 @@ export class CreateObjectComponent implements OnInit {
     })
   }
 
+  /**
+   * Récupère la liste des type d'objet pour sous item
+   */
   getAllTypeAvailable(){
     this.fetchCreateObjectService.getAllTypeAvailable(this.itemSelect).then((list : TypeObjetInfo[]) => {
       if( list != undefined){
@@ -130,9 +153,12 @@ export class CreateObjectComponent implements OnInit {
     })
   }
 
+
+  /**
+   * Vérifie la possibilité de réserver un intervalle lors de la création d'objet repère 
+   * @param reserveNumber : Nombre d'objet a réserver
+   */
   reservationIsPossible( reserveNumber : string){
-    
-    
     let number = Number(+reserveNumber);
     if(isNaN(number) || reserveNumber == ""){
       this.manageToast("Erreur de création", "Veuillez renseigner un nombre" , "red")
@@ -161,6 +187,11 @@ export class CreateObjectComponent implements OnInit {
     }
   }
 
+  /**
+   * Permet de déplacer l'intervalle de sélection visuellement
+   * @param reserveNumber : Nombre de place a reserver
+   * @param isForward : Déplacement positif : True / Déplacement négatif : false
+   */
   getRangeToCreateOR(reserveNumber : string, isForward : boolean){
     
     let number = Number(+reserveNumber);
@@ -186,6 +217,9 @@ export class CreateObjectComponent implements OnInit {
     }
   }
 
+  /**
+   * Validation de l'intervalle de réservation
+   */
   changeNU() {
     this.nuSelect = this.rangeSurbrillance[0];
     // this.manageToast("Selection de création", "Le nouvel objet repère créé sera " + this.nuSelect + ". L(es) autre(s) objet(s) repère(s) seront reservés" , "#006400");
@@ -194,6 +228,9 @@ export class CreateObjectComponent implements OnInit {
 
 
 
+  /**
+   * Recupère l'ensemble des objets repères lié à un atelier 
+   */
   getObjetRepereByAteliers(){
     this.fetchCreateObjectService.getObjetRepereByAtelierForOneUser(this.atelierSelect).then((list: ObjetRepereInfo[]) => {
       if (list != undefined) {
@@ -206,6 +243,10 @@ export class CreateObjectComponent implements OnInit {
     })
   }
 
+  /**
+   * Recupère les item d'un type et lié à un objet repère
+   * La liste est complétée automatiquement pour éviter les trous d'identification
+   */
   getItemFromOrAndDispo() {
 
     if (this.typeNow != '' && this.orSelect != ''){
@@ -224,6 +265,9 @@ export class CreateObjectComponent implements OnInit {
     }
   }
 
+  /**
+   * Recupère la liste des types d'objet pour un objet repère donné
+   */
   getListTypeItemsByOR(){
     this.fetchRecopieService.getTypeOfItemsOfOR(this.orSelect).then((list: TypeObjet[]) => {
       this.listeTypeItemOfOR.splice(0);
@@ -246,6 +290,9 @@ export class CreateObjectComponent implements OnInit {
   }
 
 
+  /**
+   * Recupère la liste des items liés à un objet repère
+   */
   getItemByObjetRepere(){
     if ( this.orSelect != ''){
       this.fetchVisuService.getItemByObjetRepere(this.orSelect).then((list: ItemInfo[]) => {
@@ -259,6 +306,9 @@ export class CreateObjectComponent implements OnInit {
     }
   }
 
+  /**
+   * Recupère la liste des sous item liés à un item
+   */
   getSousItemByItem(){
     this.fetchVisuService.getSousItemByItem(this.itemSelect).then((list: SousItemInfo[]) => {
       if(list == undefined) {
@@ -270,6 +320,9 @@ export class CreateObjectComponent implements OnInit {
     })
   }
 
+  /**
+   * Reservation d'un intervalle (bouton radio)
+   */
   setcheckValide() {
     this.checkValide = !this.checkValide;
     if(!this.checkValide) {
@@ -282,17 +335,31 @@ export class CreateObjectComponent implements OnInit {
     }
   }
 
+  /**
+   * Action d'associé un objet à une sécurité
+   */
   setcheckSecurite(){
     this.checkSecurite =!this.checkSecurite;
   }
+
+  /**
+   * Action de fixer le type d'objet en préfixe ou suffixe du sous item
+   */
   setPrefixe(){
     this.checkPrefixe =!this.checkPrefixe;
   }
 
+  /**
+   * Ferme le toast (bas droite)
+   */
   closeToast(){
     this.ToastAffiche = false;
   }
       
+  /**
+   * Sélection du type d'objet
+   * @param Type : Evenement du changement de valeur
+   */
   public selectType(Type: any ) {
     this.typeNow = Type.target.value;   
     this.rangeSurbrillance.splice(0); 
@@ -301,6 +368,9 @@ export class CreateObjectComponent implements OnInit {
     }
   }
 
+  /**
+   * Supprime les informations affichés au sein du formulaire de création
+   */
   deleteDataForm() {
     this.nuSelect = ""
     this.checkValide = false;
@@ -309,6 +379,10 @@ export class CreateObjectComponent implements OnInit {
     this.checkPrefixe = false;
   }
 
+  /**
+   * Sélection de l'atelier
+   * @param Atelier : Evenement du changement de valeur
+   */
   public selectAtelier (Atelier : any) {
     let atelier;
     try {
@@ -341,6 +415,10 @@ export class CreateObjectComponent implements OnInit {
     }
   }
 
+  /**
+   * Sélection de l'objet repère courant
+   * @param idOR : Identifiant de l'objet repère
+   */
   public selectOR(idOR : string) {
     this.orSelect = idOR;
     if (this.objectNow === this.TypeObject.Item) {
@@ -372,6 +450,10 @@ export class CreateObjectComponent implements OnInit {
     }    
   }
 
+  /**
+   * Sélection de l'item courant
+   * @param idItem : identifiant de l'item
+   */
   public selectItem(idItem : string){
     this.itemSelect = idItem;
     this.selectNow = idItem;
@@ -404,10 +486,18 @@ export class CreateObjectComponent implements OnInit {
     
   }
 
+  /**
+   * Sélection du sous item courant
+   * @param idSI : Identifiant du sous item
+   */
   public selectSI(idSI : string) {
     this.siSelect = idSI;
   }
 
+  /**
+   * Sélection du type d'objet repère courant
+   * @param TypeObjet : identifiant du type d'objet repère // Evenement du changement de valeur
+   */
   public selectTypeObjet (TypeObjet : any) {
     try {
       this.typeOfItemOR = TypeObjet.target.value;
@@ -416,6 +506,10 @@ export class CreateObjectComponent implements OnInit {
     }
   }
 
+  /**
+   * Choix du type d'objet (Objet repere, Item, Sous item)
+   * @param object : Valeur issue de l'énum this.TypeObject
+   */
   public selectObject (object : typeObjet) {
     this.objectNow = object;
     this.typeNow = "";
@@ -425,12 +519,19 @@ export class CreateObjectComponent implements OnInit {
     
   }
 
+  /**
+   * Sélection de l'état de l'objet lors de la création (En attente, actif ou hors service)
+   * @param etat : Valeur issue de l'enum this.etatNow
+   */
   selectEtat(etat : etat){
     this.etat = etat;
     this.etatError = false;
   }
 
- 
+  /**
+   * Permet l'affiche des sous-items en réduisant la table des objet repères
+   * @param value : True or false 
+   */
   setOrSelectedForItem (value : boolean){
     this.orSelectedForItem = value;
     if(!value){
@@ -442,6 +543,10 @@ export class CreateObjectComponent implements OnInit {
     }
   }
 
+  /**
+   * Selection d'un numéro unique (non reservé)
+   * @param nu : Numéro unique
+   */
   public selectNU (nu : string) {
     this.nuSelect = nu;
     this.description.splice(0);
@@ -451,6 +556,12 @@ export class CreateObjectComponent implements OnInit {
     this.errorReservation = false;
   }
 
+  /**
+   * Gestion de l'affichage du toast 
+   * @param title : Titre du toast
+   * @param text : Texte du toast
+   * @param color : couleur associé au toast
+   */
   manageToast (title : string, text : string, color : string ){
     this.typeToast = title;
     this.colorToast = color;
@@ -463,6 +574,10 @@ export class CreateObjectComponent implements OnInit {
     10000);
   }
 
+  /**
+   * Recupère la liste des NU et OR 
+   * @param atelier 
+   */
   afficherNUOR(atelier : string ){
     this.fetchCreateObjectService.getAllNUandORByAtelier(atelier).then((list: NUetOR[]) => {
       if (list != undefined) {
@@ -474,10 +589,17 @@ export class CreateObjectComponent implements OnInit {
     })
   }
 
+  /**
+   * Valeur par défaut de la validation de formulaire (affichage des erreurs)
+   */
   refreshValidationForm(){
     this.formValidate = false;
   }
 
+  /**
+   * Fonction de création des objet repères
+   * @param libelle : Libelle de l'objet repère
+   */
   createObjet(libelle : string) {
     if ( this.nuSelect != '' && this.typeNow != '' && libelle != '') {
         let tabDesc = [];
@@ -516,6 +638,10 @@ export class CreateObjectComponent implements OnInit {
   }
 
 
+  /**
+   * Création d'un item
+   * @param digit : Digit lié à l'item 
+   */
   createItem( digit : string){
     if (this.LibelleItem != '' && digit != '' && this.etat != this.etatNow.Aucun ) {
       
@@ -547,6 +673,9 @@ export class CreateObjectComponent implements OnInit {
     }
   }
 
+  /**
+   * Création d'un sous item
+   */
   createSI(){
 
     if (this.LibelleSousItem != '' && this.typeNow != '' && this.etat != this.etatNow.Aucun ) {
@@ -579,16 +708,25 @@ export class CreateObjectComponent implements OnInit {
     }
   }
   
-
+  /**
+   * Ajout d'une description 
+   */
   public addDescription(){
     this.description.push({value : ""});
   }
 
+  /**
+   * Retire une description lié à un objet
+   * @param indice : Numéro de la description dans la liste de description de l'objet courant
+   */
   public removeDescription(indice : number){
     this.description.splice(indice,1)
   
   }
 
+  /**
+   * Non utilisée
+   */
   focusOutLibelle(){
     if (this.objectNow === this.TypeObject.Item) {
       if(!this.LibelleItem.toUpperCase().includes(this.orSelect)){
@@ -607,6 +745,9 @@ export class CreateObjectComponent implements OnInit {
   }
 
 
+  /**
+   * Non utilisée
+   */
   addingParentIdToCurrentLibelle(){
     if (this.objectNow === this.TypeObject.Item) {
       if(!this.LibelleItem.toUpperCase().includes(this.orSelect)){
@@ -623,6 +764,10 @@ export class CreateObjectComponent implements OnInit {
   }
  
 
+  /**
+   * Scroll dans la table jusqu'au numéro unique 
+   * @param nu : Numéro unique
+   */
   scrollToRangeOR(nu : string){
     let scrollElement : string = nu;
     const element = document.getElementById(scrollElement);
