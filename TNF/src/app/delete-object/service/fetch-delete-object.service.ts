@@ -9,10 +9,23 @@ import { environment } from '../../../environments/environment';
 @Injectable({
   providedIn: 'root'
 })
+/**
+ * Service permettant d'interroger l'API par des requetes HTTPs
+ */
 export class FetchDeleteObjectService {
 
+  /**
+   * Constructeur de la classe 
+   * Injection de services utilisés par cette classe
+   * Plus d'informations : https://docs.nestjs.com/providers
+   */
   constructor(private readonly http: HttpClient, private navBarService: NavBarService, private socket: Socket) { }
 
+  /**
+   * Suppression d'un objet repère
+   * @param idOR : Identifiant de l'objet repère
+   * @returns Message de validation ou erreur
+   */
   async supprimerObject(idOR : string): Promise<any> {
     let user = this.navBarService.getLogin();
     let url = "http://"+environment.API_URL+"/objetrepere/{idOR}/{User}";
@@ -43,6 +56,11 @@ export class FetchDeleteObjectService {
     }
   }
 
+  /**
+   * Suppression d'un item
+   * @param idItem : Identifiant de l'item 
+   * @returns Message de validation ou d'erreur
+   */
   async supprimerItem(idItem : string): Promise<any> {
     let user = this.navBarService.getLogin();
     let url = "http://"+environment.API_URL+"/item/{idItem}/{User}";
@@ -74,6 +92,11 @@ export class FetchDeleteObjectService {
   }
 
 
+  /**
+   * Suppression de mutliples objets (objet repère, item, sous item)
+   * @param ObjectToDelete : Structure comprenant les objets a supprimer
+   * @returns Structure contenant les status de suppression de chaque objet 
+   */
   async deleteObjects(ObjectToDelete : deleteObject){
     
     let user = this.navBarService.getLogin();
@@ -99,6 +122,11 @@ export class FetchDeleteObjectService {
     }
   }
 
+  /**
+   * Suppression de mutliples objets (objet repère, item, sous item) en tant qu'ADMINISTRATEUR (aucune limite d'heure)
+   * @param ObjectToDelete : Structure comprenant les objets a supprimer
+   * @returns Structure contenant les status de suppression de chaque objet 
+   */
   async deleteObjectsAsAdmin(ObjectToDelete : deleteObject){
     let user = this.navBarService.getLogin();
     let url = "http://"+environment.API_URL+"/service-suppression/deleteObjectAsAdmin/{login}";
@@ -124,14 +152,21 @@ export class FetchDeleteObjectService {
   }
 
 
+  /**
+   * Création d'une demande de suppression administrateur
+   * @param deleteObjects : Liste des objets a supprimer
+   * @returns Structure de la demande
+   */
   async demandeAdmin(deleteObjects : demandeAdmin) : Promise<any> {
     let url = "http://"+environment.API_URL+"/demande-admin"
     const res : any = await lastValueFrom(this.http.post<any>(url, deleteObjects, {withCredentials: true})); 
     return res
-    
   }
 
 
+  /**
+   * Envoie un signal au websocket pour avertir de la création d'une nouvelle demande
+   */
   refreshDemande(){
     this.socket.emit('demande', "Nouvelle Demande");
   }

@@ -18,6 +18,10 @@ import { FetchDeleteObjectService } from './service/fetch-delete-object.service'
   templateUrl: './delete-object.component.html',
   styleUrls: ['./delete-object.component.css']
 })
+
+/**
+ * Classe permettant de déterminer comment le composant sera instancié et utilisé
+ */
 export class DeleteObjectComponent implements OnInit {
   public faTrashCan = faTrashCan;
   public faXmark = faXmark;
@@ -107,6 +111,13 @@ export class DeleteObjectComponent implements OnInit {
   public searchText : string = "";
   public isValide : boolean = false;
   public selectMultiple : boolean = false;
+
+  /**
+   * Constructeur de la classe 
+   * Instancié à la création du composant
+   * Injection de services utilisés par cette classe
+   * Plus d'informations : https://docs.nestjs.com/providers
+   */
   constructor( private fetchVisuService : FetchVisuService, private fetchDeleteObjectService :FetchDeleteObjectService, private fetchCreateTypeObject: FetchcreateTypeObjectService, 
     private fetchRecopieService : FetchRecopieService, private navBarService: NavBarService, private fetchCreateObjectService : FetchCreateObjectService) {
     this.getListType();
@@ -114,6 +125,9 @@ export class DeleteObjectComponent implements OnInit {
    }
      
 
+   /**
+    * Méthode appellée à l'initialisation du composant
+    */
   ngOnInit(): void {
     var exampleModal = document.getElementById('Suppression')
     if(exampleModal != null){
@@ -133,6 +147,9 @@ export class DeleteObjectComponent implements OnInit {
   
    
 
+  /**
+   * Recupère les ateliers 
+   */
   getAteliers(){
     this.fetchVisuService.getAllAteliers().then((list: AtelierInfo[]) => {
       if (list != undefined) {
@@ -144,6 +161,9 @@ export class DeleteObjectComponent implements OnInit {
     })
   }
 
+  /**
+   * Recupère les types d'objet repère et els types d'objet (item + sous item actifs)
+   */
   getListType(){
     this.listeTypeOR.splice(0);
     this.fetchCreateTypeObject.getTypeObjetRepere().then((list: TypeObjetRepereInfo[]) => {
@@ -177,7 +197,9 @@ export class DeleteObjectComponent implements OnInit {
   }
 
   
-
+  /**
+   * Recupère les Objet repères d'un atelier
+   */
   getObjetRepereByAtelier(){
     this.fetchCreateObjectService.getObjetRepereByAtelierForOneUser(this.atelierSelect).then((list: ObjetRepereInfo[]) => {
       if (list != undefined) {
@@ -200,6 +222,9 @@ export class DeleteObjectComponent implements OnInit {
     })
   }
 
+  /**
+   * Recupère les items lié à un objet repère
+   */
   async getItemFromOR() {
       this.fetchVisuService.getItemByObjetRepere(this.idORSelect).then((list: ItemInfo[]) => {
         if (list != undefined) {
@@ -238,6 +263,9 @@ export class DeleteObjectComponent implements OnInit {
       
   }
 
+  /**
+   * Recupère les types d'objet d'item d'un objet repère 
+   */
   getListTypeItemsByOR(){
     this.fetchRecopieService.getTypeOfItemsOfOR(this.idORSelect).then((list: TypeObjet[]) => {
       this.listeTypeItemOfOR.splice(0);
@@ -257,6 +285,9 @@ export class DeleteObjectComponent implements OnInit {
   }
 
 
+  /**
+   * Recupère les sous item lié à un item
+   */
   getSIfromItem(){
     this.fetchVisuService.getSousItemByItem(this.idItemSelect).then((list: SousItemInfo[]) => {
       if(list == undefined) {
@@ -291,11 +322,17 @@ export class DeleteObjectComponent implements OnInit {
     })
   }
 
+  /**
+   * Ferme le toast
+   */
   closeToast(){
     this.ToastAffiche = false;
   }
     
-  
+  /**
+   * Selection de l'atelier courant
+   * @param Atelier : Identifiant de l'atelier
+   */
   public selectAtelier (Atelier : any) {
     let atelier;
     try {
@@ -317,6 +354,10 @@ export class DeleteObjectComponent implements OnInit {
     }
   }
 
+  /**
+   * Selection de l'objet repère 
+   * @param idOR : Identifiant de l'objet repère
+   */
   public async selectOR(idOR : string) {
     if (idOR != this.idORSelect){
       this.idORSelect = idOR;
@@ -334,6 +375,10 @@ export class DeleteObjectComponent implements OnInit {
   }
 
 
+  /**
+   * Sélection d'un item
+   * @param idItem : Identifiant de l'item
+   */
   public selectItem(idItem : string){
     if (idItem != this.idItemSelect){
       this.idItemSelect = idItem;   
@@ -347,29 +392,52 @@ export class DeleteObjectComponent implements OnInit {
     this.selectedNow = idItem;
   }
 
+  /**
+   * Sélection de l'état (filtre) pour un item
+   * @param etat : Valeur issue de l'enum etatNow
+   */
   selectEtatItem(etat : etat){
     this.etatItem = etat;
   }
 
+    /**
+   * Sélection de l'état (filtre) pour un sous item
+   * @param etat : Valeur issue de l'enum etatNow
+   */
   selectEtatSI(etat : etat){
     this.etatSI = etat;
   }
 
+    /**
+   * Sélection de l'état (filtre) pour un Objet repère
+   * @param etat : Valeur issue de l'enum etatNow
+   */
   selectEtatOR(valide : valide){
     this.etatOR = valide
   }
 
-  
+  /**
+   * Select sous item
+   * @param idSousItem : Identifiant du sous item
+   */
   public selectSO(idSousItem : string) {
     this.idSousItemSelect = idSousItem;
     this.selectedNow = idSousItem;
   }
 
+  /**
+   * Non utilisée
+   * @param object 
+   */
   public selectObject (object : typeObjet) {
     this.objectNow = object;
     this.selectAtelier(this.atelierSelect)
   }
 
+  /**
+   * Non utilisée
+   * @param TypeObjet 
+   */
   public selectTypeObjet (TypeObjet : any) {
     try {
       this.typeNow = TypeObjet.target.value;
@@ -378,6 +446,9 @@ export class DeleteObjectComponent implements OnInit {
     }
   }
   
+  /**
+   * Non utilisée
+   */
   public CheckIfORSelectedValide(){
     if(this.isValide = true) {
       if(!this.Ornow.etat) {
@@ -390,7 +461,12 @@ export class DeleteObjectComponent implements OnInit {
     }
   }
   
-
+  /**
+   * Gestion de l'affichage du toast 
+   * @param title : Titre du toast
+   * @param text : Texte du toast
+   * @param color : couleur associé au toast
+   */
   manageToast (title : string, text : string, color : string ){
     this.typeToast = title;
     this.colorToast = color;
@@ -403,7 +479,10 @@ export class DeleteObjectComponent implements OnInit {
     10000);
   }
 
-
+  /**
+   * Selectionne un Objet repère a supprimer
+   * @param id : Identifiant de l'objet repère
+   */
   public async selectCheckOr( id : string){
       let index = this.listeOR.findIndex((element) => element.idObjetRepere === id)
       this.listeOR[index].isPaste = !this.listeOR[index].isPaste;
@@ -415,6 +494,10 @@ export class DeleteObjectComponent implements OnInit {
       }       
   }
 
+    /**
+   * Selectionne un item a supprimer
+   * @param id : Identifiant de l'item
+   */
   public async selectCheckItem(id : string, value?:boolean){
     let index = this.listeItem.findIndex((element) => element.idItem === id)
     if (value != undefined){
@@ -440,6 +523,10 @@ export class DeleteObjectComponent implements OnInit {
     
   }
 
+    /**
+   * Selectionne un sous item a supprimer
+   * @param id : Identifiant du sous item
+   */
   public async selectCheckSi(id : string, value?:boolean){
     let index = this.listeSousItem.findIndex((element) => element.idSousItem === id)
     if(value != undefined) {
@@ -458,6 +545,9 @@ export class DeleteObjectComponent implements OnInit {
   
   }
 
+  /**
+   * Sélectionne l'ensemble des items
+   */
   public allSelectItem() {
     this.checkAllItem = !this.checkAllItem;
     for (const item of this.listeItem) {
@@ -478,6 +568,9 @@ export class DeleteObjectComponent implements OnInit {
     }
   }
 
+  /**
+   * Vérifie si l'ensemble des items est sélectionné
+   */
   verifyCheckAllItem(){
     let allCheckByType = true;
     if (this.listeItem.length != 0){
@@ -498,6 +591,9 @@ export class DeleteObjectComponent implements OnInit {
     }
   }
 
+    /**
+   * Sélectionne l'ensemble des sous items
+   */
   public allSelectSI() {
     this.checkAllSi = !this.checkAllSi;
     for (const si of this.listeSousItem) {
@@ -517,6 +613,9 @@ export class DeleteObjectComponent implements OnInit {
     }
   }
 
+    /**
+   * Vérifie si l'ensemble des sous items est sélectionné
+   */
   verifyCheckAllSI(){
     let allCheckByType = true;
     if (this.listeItem.length != 0){
@@ -537,6 +636,9 @@ export class DeleteObjectComponent implements OnInit {
     }
   }
 
+  /**
+   * Charge la liste des objets à supprimer pour l'afficher sur le recapitulatif
+   */
   delete(){
     this.suppExecEnd = false;
     this.resetDeleted();
@@ -565,6 +667,9 @@ export class DeleteObjectComponent implements OnInit {
     }
   }
 
+  /**
+   * Ferme la fenetre de recapilatif de suppression
+   */
   async closeRecap(){
     this.returnOfDeleted = {
       listeOR: [],
@@ -577,17 +682,26 @@ export class DeleteObjectComponent implements OnInit {
     }
   }
 
+  /**
+   * Vide les liste d'objets sélectionnés
+   */
   async resetPasteList(){
     this.isPasteSaveSI.splice(0);
     this.isPasteSaveItem.splice(0);
   }
 
+  /** 
+   * Vide les listes d'objets a supprimer
+  */
   async resetDeleted(){
     this.ORDeleted.splice(0);
     this.ItemDeleted.splice(0);
     this.SiDeleted.splice(0);
   }
 
+  /**
+   * Valide la suppresion 
+   */
   async deleteConfirmation(){
     this.suppressionEnCours = true;
     const res : deleteObject = {
@@ -632,6 +746,9 @@ export class DeleteObjectComponent implements OnInit {
    
   }
 
+  /**
+   * Verify si la suppression nécessite une demande de suppression
+   */
   async verifyIfDmdAdmin(){
     this.setDemandeAdmin(false);
     if(this.returnOfDeleted != undefined){
@@ -654,6 +771,12 @@ export class DeleteObjectComponent implements OnInit {
     }
   }
 
+  /**
+   * Indique si l'objet a été supprimé ou non 
+   * @param typeObjet : Type d'objet (objet repère, item ou sous item)
+   * @param idObjet : Identifiant de l'objet
+   * @returns True false ou undefined
+   */
   returnDeleteOrNot(typeObjet : typeObjet , idObjet : string){
     let res;
     if(typeObjet == this.TypeObject.OR){
@@ -669,14 +792,25 @@ export class DeleteObjectComponent implements OnInit {
     return undefined;
   }
 
+  /**
+   * Change la valeur.
+   * Affichage l'interface lié à la demande de suppression
+   * @param value 
+   */
   setDemandeAdmin(value : boolean ){
     this.suppWithDmdAdmin = value;
   }
 
+  /**
+   * Affiche l'interface du motif de suppression
+   */
   demandeSuppAdmin(){
     this.demandeAdmin = true;
   }
 
+  /**
+   * Envoie la demande de suppression 
+   */
   async sendDemande(){
     if (this.motifDemande != ""){
       let demande : demandeAdmin = {
@@ -736,6 +870,9 @@ export class DeleteObjectComponent implements OnInit {
     }
   }
 
+  /**
+   * Remet à 0 les divers paramètres à la fin d'une supression
+   */
   async endOfDelete(){
     await this.resetPasteList();
     await this.resetDeleted();

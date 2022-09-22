@@ -10,6 +10,10 @@ import { faInfoCircle, faEye, faCaretDown, faCaretRight, faMinus} from '@fortawe
   templateUrl: './demande-admin.component.html',
   styleUrls: ['./demande-admin.component.css']
 })
+
+/**
+ * Classe permettant de déterminer comment le composant sera instancié et utilisé
+ */
 export class DemandeAdminComponent implements OnInit {
 
   
@@ -84,7 +88,12 @@ export class DemandeAdminComponent implements OnInit {
   private demandes!: QueryList<ElementRef>;
   
   
-
+  /**
+   * Constructeur de la classe 
+   * Instancié à la création du composant
+   * Injection de services utilisés par cette classe
+   * Plus d'informations : https://docs.nestjs.com/providers
+   */
   constructor(private fetchDemandeAdminService : FetchDemandeAdminService) { 
     this.getAllDemandeAdmin();
     this.getAllDemandeAdminTraitee();
@@ -102,11 +111,17 @@ export class DemandeAdminComponent implements OnInit {
     }
   }
 
+   /**
+    * Méthode appellée à l'initialisation du composant
+    */
   ngAfterViewInit(): void {
       this.demandes.changes.subscribe(() => this.scrollToDemande());
   }
 
 
+  /**
+   * Recupère l'ensemble des demandes de suppression en attente
+   */
   async getAllDemandeAdmin(){
     this.fetchDemandeAdminService.getAllDemandeAdmin().then((list: DemandeAdmin[]) => {
       if (list != undefined) {
@@ -121,6 +136,9 @@ export class DemandeAdminComponent implements OnInit {
   }
 
 
+  /**
+   * Recupère l'ensemble des demandes de suppression traitée
+   */
   async getAllDemandeAdminTraitee(){
     this.fetchDemandeAdminService.getAllDemandeAdminTraitee().then((list: DemandeAdmin[]) => {
       if (list != undefined) {
@@ -134,6 +152,10 @@ export class DemandeAdminComponent implements OnInit {
     })
   }
 
+  /**
+   * Recupère les objets d'une demande de suppression 
+   * @param idDmd : Identifiant de la demande de suppression
+   */
   getAllObjetFromDemandeAdmin(idDmd: number){
     this.fetchDemandeAdminService.getAllObjetFromDemandeAdmin(idDmd).then((res: DemandeAdminInfo) => {
       if (res != undefined) {
@@ -157,6 +179,10 @@ export class DemandeAdminComponent implements OnInit {
     })
   }
 
+  /**
+   * Recupère l'ensemble des demandes de suppression traitées
+   * @param idDmd 
+   */
   getAllObjetFromDemandeAdminTraitee(idDmd: number){
     this.fetchDemandeAdminService.getAllObjetFromDemandeAdminTraitee(idDmd).then((res: DemandeAdminTraiteeInfo) => {
       if (res != undefined) {
@@ -180,6 +206,12 @@ export class DemandeAdminComponent implements OnInit {
     })
   }
   
+    /**
+   * Gestion de l'affichage du toast 
+   * @param title : Titre du toast
+   * @param text : Texte du toast
+   * @param color : couleur associé au toast
+   */
   manageToast (title : string, text : string, color : string ){
     this.typeToast = title;
     this.colorToast = color;
@@ -192,10 +224,16 @@ export class DemandeAdminComponent implements OnInit {
     10000);
   }
 
+  /**
+   * Fermeture du toast
+   */
   closeToast(){
     this.ToastAffiche = false;
   }
 
+  /**
+   * Remet à 0 l'arborescence (vide les listes)
+   */
   resetArbo(){
     setTimeout(() => 
     {
@@ -206,24 +244,43 @@ export class DemandeAdminComponent implements OnInit {
  
   }
   
+  /**
+   * Sélection d'une demande de suppression en attente
+   * @param idDemande : Identifiant de la demande de suppression en attente 
+   */
   selectDemande(idDemande: number) {
     this.selectedDemande = idDemande;
     this.getAllObjetFromDemandeAdmin(idDemande);
   }
+
+  /**
+   * Sélection d'une demande de suppression traitée
+   * @param idDemande : Identifiant de la demande de suppression traitée
+   */
   selectDemandeTraitee(idDemandeTraitee: number){
     this.selectedDemandeTraitee = idDemandeTraitee;
     this.getAllObjetFromDemandeAdminTraitee(idDemandeTraitee);
   }
 
 
+  /**
+   * Selection de l'arborescence d'un objet repère (ou fermeture de l'arborescence)
+   */
   selectOrArbo(){
     this.orArboSelect = !this.orArboSelect;
   }
 
+  /**
+   * Selection de l'arborescence d'un item (ou fermeture de l'arborescence)
+   */
   selectItemArbo(){
     this.itemArboSelect = !this.itemArboSelect;
   }
 
+  /**
+   * Sélection d'un item sur l'arborescence d'un objet repère (depli ou non ses sous items)
+   * @param idItem 
+   */
   selectItemInOrArbo(idItem : string ) {
     let value = this.CaretItem.get(idItem)
     if (value != undefined){
@@ -231,16 +288,27 @@ export class DemandeAdminComponent implements OnInit {
     }
   }
 
-
+  /**
+   * Sélectionne le type de demande (traitée ou en attente)
+   * @param type : Valeur issue de l'enum DemandeTypeNow
+   */
   selectTableDemande(type : typeTableauDemande){
     this.DemandeType = type;
     this.resetDescriptifNow();
   }
 
+  /**
+   * Sélectionne le type d'objet (Objet repère, item, sous item)
+   * @param object : Valeur issue de 'enum objectTypeNow
+   */
   public selectObject (object : typeObjet) {
     this.objectType = object;
   }
 
+  /**
+   * Sélection d'un objet repère dans le tableau d'une demande de suppression en attente
+   * @param idObjet : Identifiant de l'objet 
+   */
   public selectObjetOnDemand(idObjet : string ) {
     this.objectSelect = idObjet;
 
@@ -251,6 +319,10 @@ export class DemandeAdminComponent implements OnInit {
     }
   }
 
+    /**
+   * Sélection d'un objet repère dans le tableau d'une demande de suppression traitée
+   * @param idObjet : Identifiant de l'objet 
+   */
   public selectObjetOnDemandTraitee (idObjet : string ) {
     this.objectTraiteSelect = idObjet;
     if ( this.objectType == this.objectTypeNow.OR){
@@ -262,6 +334,9 @@ export class DemandeAdminComponent implements OnInit {
 
   }
 
+  /**
+   * Accepte la demande de suppression
+   */
   async acceptDeleteAdmin(){
     this.recopieEnCours = true;
       this.fetchDemandeAdminService.updateDemandeAdmin(this.DescriptifDemandeNow.idDemande, true).then( async (res:DemandeAdminInfo) => {
@@ -282,7 +357,9 @@ export class DemandeAdminComponent implements OnInit {
       })
   }
   
-  
+  /**
+   * Refuse la demande de suppression
+   */
   async refuseDeleteAdmin(){
     this.recopieEnCours = true;
       this.fetchDemandeAdminService.updateDemandeAdmin(this.DescriptifDemandeNow.idDemande, false).then( async (res:DemandeAdminInfo) => {
@@ -301,6 +378,10 @@ export class DemandeAdminComponent implements OnInit {
       })
   }
 
+  /**
+   * Recupère l'arborescence d'un objet repère dans une demande en attente
+   * @param idOR : Identifiant de l'objet repère
+   */
   getArborescenceOfOR (idOR : string) {
     this.Loading = true;
     this.fetchDemandeAdminService.getArborescenceOfOR(idOR).then((list: ArborescenceOR) => {
@@ -323,6 +404,10 @@ export class DemandeAdminComponent implements OnInit {
     
   }
 
+    /**
+   * Recupère l'arborescence d'un objet repère dans une demande traitée
+   * @param idOR : Identifiant de l'objet repère
+   */
   getArborescenceOfORTraite (idOR : string) {
     this.Loading = true;
     
@@ -348,6 +433,10 @@ export class DemandeAdminComponent implements OnInit {
   }
 
 
+    /**
+   * Recupère l'arborescence d'un item dans une demande en attente
+   * @param idOR : Identifiant de l'item
+   */
   getArborescenceOfItem(idItem : string) {
     this.Loading = true;
     this.fetchDemandeAdminService.getArborescenceOfItem(idItem).then((list: ArborescenceItem) => {
@@ -366,7 +455,10 @@ export class DemandeAdminComponent implements OnInit {
     500);
   }
 
-
+  /**
+   * Recupère l'arborescence d'un item dans une demande traitée
+   * @param idOR : Identifiant de l'item
+   */
   getArborescenceOfItemTraite(idItem : string){
     this.Loading = true;
     let date = new Date(this.DescriptifDemandeTraiteeNow.dateModification);
@@ -386,6 +478,9 @@ export class DemandeAdminComponent implements OnInit {
     500);
   }
 
+  /**
+   * Vide les listes de l'arborescence d'objet repère
+   */
   resetArboOr(){
     this.arborescenceOR = {
       OR: {
@@ -396,6 +491,9 @@ export class DemandeAdminComponent implements OnInit {
     }
   }
 
+    /**
+   * Vide les listes de l'arborescence d'item
+   */
   resetArboItem(){
     this.arborescenceItem = {
       Item: {
@@ -406,6 +504,9 @@ export class DemandeAdminComponent implements OnInit {
     }
   }
 
+  /**
+   * Rafraichit le descriptif d'une demande en attente 
+   */
   resetDescriptifNow(){
     this.DescriptifDemandeNow = {
       idDemande: -1,
@@ -420,6 +521,9 @@ export class DemandeAdminComponent implements OnInit {
     };
   }
 
+  /**
+  * Rafraichit le descriptif d'une demande traitée
+  */
   resetDescriptifTraiteeNow(){
     this.DescriptifDemandeTraiteeNow = {
       idDemandeTraitee: -1,
@@ -435,6 +539,10 @@ export class DemandeAdminComponent implements OnInit {
     };
   }
 
+  /**
+   * Scroll dans la table jusqu'a la demande sélectionnée
+   * Utiliser lorsqu'on utilise le lien sur la page d'accueil
+   */
   scrollToDemande(){
 
     let id = this.selectedDemande.toString()

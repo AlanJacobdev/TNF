@@ -8,10 +8,23 @@ import { environment } from '../../../environments/environment';
 @Injectable({
   providedIn: 'root'
 })
+/**
+ * Service permettant d'interroger l'API par des requetes HTTPs
+ */
 export class FetchDemandeAdminService {
 
+    /**
+   * Constructeur de la classe 
+   * Injection de services utilisés par cette classe
+   * Plus d'informations : https://docs.nestjs.com/providers
+   */
   constructor(private readonly http: HttpClient, private navBarService: NavBarService,  private socket: Socket) { }
 
+
+  /**
+   * Recupère l'ensemble des demandes de suppression en attente
+   * @returns Liste des demandes de suppression en attente
+   */
   async getAllDemandeAdmin(): Promise<any> {
     let url = "http://"+environment.API_URL+"/demande-admin";
     const res : DemandeAdmin[] = await lastValueFrom(this.http.get<DemandeAdmin[]>(url, {withCredentials: true}));
@@ -22,6 +35,10 @@ export class FetchDemandeAdminService {
     }
   }
 
+  /**
+   * Retourne l'ensemble des demandes de suppression traitées
+   * @returns Liste des demandes de suppression traitées
+   */
   async getAllDemandeAdminTraitee(): Promise<any> {
     let url = "http://"+environment.API_URL+"/demande-admin-traitee";
     const res : DemandeAdminTraitee[] = await lastValueFrom(this.http.get<DemandeAdminTraitee[]>(url, {withCredentials: true}));
@@ -34,6 +51,11 @@ export class FetchDemandeAdminService {
   }
 
 
+  /**
+   * Recupère les objets liés à une demande de suppression
+   * @param idDmd : Identifiant de la demande de suppression
+   * @returns Liste des objets lié à la demande (DemandeAdminInfo)
+   */
   async getAllObjetFromDemandeAdmin(idDmd : number): Promise<any>{
     let url = "http://"+environment.API_URL+"/demande-admin/getAllObjectsFromDmd/{idDmd}";
     url = url.replace("{idDmd}", idDmd.toString())
@@ -43,6 +65,11 @@ export class FetchDemandeAdminService {
    
   }
 
+    /**
+   * Recupère les objets liés à une demande de suppression traitée
+   * @param idDmd : Identifiant de la demande de suppression traitée
+   * @returns Liste des objets lié à la demande (DemandeAdminTraitee)
+   */
   async getAllObjetFromDemandeAdminTraitee(idDmd : number): Promise<any>{
     let url = "http://"+environment.API_URL+"/demande-admin-traitee/getAllObjectsFromDmd/{idDmd}";
     url = url.replace("{idDmd}", idDmd.toString())
@@ -52,6 +79,13 @@ export class FetchDemandeAdminService {
    
   }
 
+  /**
+   * Met à jour le status de suppression d'une demande 
+   * Suppression des objets si isDelete = true
+   * @param ID : Identifiant de la demande de suppression
+   * @param isDelete : True or false (acceptée ou refusée)
+   * @returns Message de validation ou erreur
+   */
   async updateDemandeAdmin(ID: number, isDelete: boolean ): Promise<any> {
     let user = this.navBarService.getLogin();
     let url = "http://"+environment.API_URL+"/demande-admin/{ID}/{Profil}/{Delete}"
@@ -66,9 +100,11 @@ export class FetchDemandeAdminService {
     }
   }
 
-
-
-
+  /**
+   * Recupéré l'arboresence d'un objet repère
+   * @param idObjetRepere : Identifiant de l'objet repère
+   * @returns Arborescence de l'objet repère (ArborescenceOR)
+   */
   async getArborescenceOfOR(idObjetRepere : string) {
     let url = "http://"+environment.API_URL+"/demande-admin/getArborescenceOfOR/{idObjetRepere}";
     url = url.replace("{idObjetRepere}", idObjetRepere)
@@ -81,6 +117,12 @@ export class FetchDemandeAdminService {
     }
   }
 
+    /**
+   * Recupéré l'arboresence d'un objet repère au sein d'une demande traitée
+   * @param idObjetRepere : Identifiant de l'objet repère
+   * @param date : Date du traitement de la demande 
+   * @returns Arborescence de l'objet repère (ArborescenceOR)
+   */
   async getArborescenceOfORTraite(idObjetRepere : string, date : Date) {
     let url = "http://"+environment.API_URL+"/demande-admin-traitee/getArborescenceOfOR/{idObjetRepere}/{date}";
     url = url.replace("{idObjetRepere}", idObjetRepere)
@@ -94,7 +136,11 @@ export class FetchDemandeAdminService {
     }
   }
 
-
+  /**
+   * Recupéré l'arboresence d'un item
+   * @param idItem : Identifiant de l'item
+   * @returns Arborescence de l'item (ArborescenceItem)
+   */
   async getArborescenceOfItem (idItem : string) {
     let url = "http://"+environment.API_URL+"/demande-admin/getArborescenceOfItem/{idItem}";
     url = url.replace("{idItem}", idItem)
@@ -107,6 +153,12 @@ export class FetchDemandeAdminService {
     }
   }
 
+      /**
+   * Recupéré l'arboresence d'un item au sein d'une demande traitée
+   * @param idItem : Identifiant de l'item
+   * @param date : Date du traitement de la demande 
+   * @returns Arborescence de l'item (ArborescenceItem)
+   */
   async getArborescenceOfItemTraite (idItem : string, date : Date) {
     let url = "http://"+environment.API_URL+"/demande-admin-traitee/getArborescenceOfItem/{idItem}/{date}";
     url = url.replace("{idItem}", idItem)
@@ -120,7 +172,9 @@ export class FetchDemandeAdminService {
     }
   }
 
-
+  /**
+   * Envoie une notification au websocket pour alerter du traitement d'une demande
+   */
   refreshDemande(){
     this.socket.emit('demande', "Nouvelle Demande");
   }
