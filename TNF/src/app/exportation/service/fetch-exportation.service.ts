@@ -8,12 +8,31 @@ import { environment } from '../../../environments/environment';
 @Injectable({
   providedIn: 'root'
 })
+/**
+ * Service permettant d'interroger l'API par des requetes HTTPs
+ */
 export class FetchExportationService {
 
+      /**
+   * Constructeur de la classe 
+   * Injection de services utilisés par cette classe
+   * Plus d'informations : https://docs.nestjs.com/providers
+   */
   constructor(private readonly http: HttpClient) { }
 
 
 
+  /**
+   * recupère les items correspondant aux filtres suivant
+   * @param atelier : Identifiant de l'atelier
+   * @param typeObjet : Identifiant du type de l'objet 
+   * @param objetRepere : Identifiant de l'objet repère parent
+   * @param dateDebut : Début d'intervalle sur la dernière activité effectué sur l'item
+   * @param dateFin : Fin d'intervalle sur la dernière activité effectué sur l'item
+   * @param etat : Etat de l'item
+   * @param estSecurite : L'item est un item de sécurité (true or false)
+   * @returns 
+   */
   async getExportItem(atelier : string, typeObjet : string, objetRepere : string, dateDebut : string, dateFin : string, etatItem : etat, estSecurite : number): Promise<any> {
     let url = "http://"+environment.API_URL+"/item/getItemForExport/{atelier}/{typeObjet}/{objetRepere}/{dateDebut}/{dateFin}/{estActif}/{estSecurite}"
     url = url.replace("{atelier}", atelier)
@@ -48,6 +67,11 @@ export class FetchExportationService {
   }
 
 
+  /**
+   * Recupère les informations d'un objet repère par son identifiant
+   * @param idOr : Identifiant de l'objet repère
+   * @returns Identifiant et libellé de l'objet rpeère (ObjetRepereUtile) ou undefined
+   */
   async getORbyId (idOr : string) : Promise<any>{
     let url = "http://"+environment.API_URL+"/objetrepere/{idOr}"
     url = url.replace("{idOr}", idOr)

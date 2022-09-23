@@ -11,12 +11,22 @@ import { TypeObjetRepereInfo } from 'src/structureData/TypeObject';
 @Injectable({
   providedIn: 'root'
 })
+/**
+ * Service permettant d'interroger l'API par des requetes HTTPs
+ */
 export class FetchExportationGmaoService {
 
-
+    /**
+   * Constructeur de la classe 
+   * Injection de services utilisés par cette classe
+   * Plus d'informations : https://docs.nestjs.com/providers
+   */
   constructor(private readonly http: HttpClient, private navBarService: NavBarService) { }
 
 
+  /**
+   * Recupère l'ensemble des objets non exporter pour la GMAO
+   */
   async getAllObjetToExportGmao(): Promise<any> {
     let user = this.navBarService.getLogin();
     let admin = this.navBarService.getEstAdmin()
@@ -32,6 +42,10 @@ export class FetchExportationGmaoService {
     return res
   }
 
+  /**
+   * Recupère l'ensemble des exportations précedentes 
+   * @returns Liste des exportations existantes 
+   */
   async getAllExportation(): Promise<any> {
     let url = "http://"+environment.API_URL+"/exportation";
     const res : exportInfo = await lastValueFrom(this.http.get<exportInfo>(url, {withCredentials: true}));
@@ -39,6 +53,12 @@ export class FetchExportationGmaoService {
   }
 
 
+  /**
+   * Envoie les données à exporter pour en récupérer l'excel de récapitulation
+   * Met à jour les états d'exportations des objets selectionnés
+   * @param payload : Objet à exporter 
+   * @returns Blob du fichier Excel
+   */
   async exportData(payload: any) {
     let user = this.navBarService.getLogin();
     payload.user = user;
@@ -63,6 +83,11 @@ export class FetchExportationGmaoService {
       );
     }
 
+    /**
+     * Lire un ancien fichier excel 
+     * @param idExp : Identifiant de l'exportation
+     * @returns : Le fichier sous forme de blob
+     */
     async readExp(idExp: number) {
       
       let url = "http://"+environment.API_URL+"/exportation/readFile/{idExp}"
@@ -83,6 +108,11 @@ export class FetchExportationGmaoService {
 
 
     
+  /**
+   * Recupère l'ensemble des type d'objet repère lié à un utilisateur (droit)
+   * Administrateur recupère l'ensemble sans contraintes
+   * @returns Liste des types d'objet 
+   */  
   async getAllTypeOrForOneUser(): Promise<any> {
     let admin = this.navBarService.getEstAdmin();
     let url;

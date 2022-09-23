@@ -8,10 +8,22 @@ import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root'
 })
+/**
+ * Service permettant d'interroger l'API par des requetes HTTPs
+ */
 export class FetchAtelierService {
 
+  /**
+   * Constructeur de la classe 
+   * Injection de services utilisés par cette classe
+   * Plus d'informations : https://docs.nestjs.com/providers
+   */
   constructor(private readonly http: HttpClient, private navBarService: NavBarService) {}
 
+  /**
+   * Recupère l'ensemble des ateliers
+   * @returns Liste des ateliers existants 
+   */
   async getAllAteliers(): Promise<any> {
     let url = "http://"+environment.API_URL+"/atelier"
     const res : AtelierInfo[] = await lastValueFrom(this.http.get<AtelierInfo[]>(url, {withCredentials: true}));
@@ -22,6 +34,12 @@ export class FetchAtelierService {
     }
   }
 
+  /**
+   * Change le status actif d'un atelier
+   * @param idAtelier : Identifiant de l'atelier
+   * @param actif : true or false
+   * @returns Structure de l'atelier modifié ou undefined
+   */
   async updateActifAtelier(idAtelier : string, actif : boolean) : Promise<any>{
     let user = this.navBarService.getLogin();
     let url = "http://"+environment.API_URL+"/atelier/{idAtelier}"
@@ -40,6 +58,12 @@ export class FetchAtelierService {
     }
   }
 
+  /**
+   * Modifie les paramètre d'un atelier
+   * @param id : Identifiant de l'atelier
+   * @param libelle : Libelle de l'atelier
+   * @returns Structure de l'atelier modifié ou undefined
+   */
   async updateAtelier(id : string, libelle : string ) : Promise<any>{
     let user = this.navBarService.getLogin();
     let url = "http://"+environment.API_URL+"/atelier/{idAtelier}"

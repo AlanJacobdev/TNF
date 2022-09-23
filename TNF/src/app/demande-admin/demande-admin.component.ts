@@ -104,6 +104,10 @@ export class DemandeAdminComponent implements OnInit {
     
   }
 
+  
+   /**
+    * Méthode appellée à l'initialisation du composant
+    */
   ngOnInit(): void {
     if(history.state.id != undefined) {
       this.selectedDemande = history.state.id; 

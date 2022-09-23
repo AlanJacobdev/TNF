@@ -18,8 +18,17 @@ import { FetchExportationGmaoService } from './service/fetch-exportation-gmao.se
   templateUrl: './exportation-gmao.component.html',
   styleUrls: ['./exportation-gmao.component.css']
 })
+/**
+ * Classe permettant de déterminer comment le composant sera instancié et utilisé
+ */
 export class ExportationGmaoComponent implements OnInit {
 
+     /**
+   * Constructeur de la classe 
+   * Instancié à la création du composant
+   * Injection de services utilisés par cette classe
+   * Plus d'informations : https://docs.nestjs.com/providers
+   */
   constructor(private fetchExportationGmaoService : FetchExportationGmaoService, private fetchVisuService : FetchVisuService, private fetchCreateTypeObject : FetchcreateTypeObjectService) { }
 
   public listeOr : ObjetRepereInfo[] = [];
@@ -62,7 +71,9 @@ export class ExportationGmaoComponent implements OnInit {
   public etatObject: etatExport = etatExport.Tous;
   public etatObjectNow = etatExport;
 
-  
+    /**
+  * Méthode appellée à l'initialisation du composant
+  */
   ngOnInit(): void {
     this.getObjetToExport(); 
     this.getAteliers();
@@ -70,6 +81,9 @@ export class ExportationGmaoComponent implements OnInit {
     
   }
 
+  /**
+   * Recupère les ateliers
+   */
   getAteliers(){
     this.fetchVisuService.getAllAteliers().then((list: AtelierInfo[]) => {
       if (list != undefined) {
@@ -81,6 +95,9 @@ export class ExportationGmaoComponent implements OnInit {
     })
   }
 
+  /**
+   * Recupère la liste des types d'objet repère item et sous item possible
+   */
   getListType(){
     this.fetchExportationGmaoService.getAllTypeOrForOneUser().then((res: TypeObjetRepereInfo[]) => {
     if (res != undefined) {
@@ -104,6 +121,9 @@ export class ExportationGmaoComponent implements OnInit {
 
   }
 
+  /**
+   * Recupère la liste des objets a exporter
+   */
   getObjetToExport(){
     this.exportEnCours = true
     this.fetchExportationGmaoService.getAllObjetToExportGmao().then((list: ObjectToExportGmao) => {
@@ -147,6 +167,9 @@ export class ExportationGmaoComponent implements OnInit {
   }
 
 
+  /**
+   * Recupère l'ensemble des exportations précédentes (fichier excel) 
+   */
   getAllExport(){
     this.fetchExportationGmaoService.getAllExportation().then((list: exportInfo[]) => {
       if (list != undefined) {
@@ -162,15 +185,27 @@ export class ExportationGmaoComponent implements OnInit {
     })
   }
 
+  /**
+   * Selectionne un type d'objet (Objet repère, item ou sous item)
+   * @param object 
+   */
   public selectObject (object : typeObjet) {
     this.objectType = object;
   }
 
-
+  /**
+   * Selectionne un etat (Création ou modification)
+   * @param etat : Valeur issue de l'enum etatObjectNow
+   */
   public selectEtatObject (etat : etatExport){
     this.etatObject = etat;
     
   }
+
+  /**
+   * Selectionne un objet repère 
+   * @param idOR : Identifiant de l'objet repère
+   */
   selectCheckOR(idOR : string){
     const targetOR = this.listeOr.findIndex((element) => element.idObjetRepere === idOR)
     if (targetOR != -1) {  
@@ -185,6 +220,9 @@ export class ExportationGmaoComponent implements OnInit {
     this.verifyCheckAllOr();
   }
 
+  /**
+   * Selectionne l'ensemble des objets repères
+   */
   allSelectOR(){    
     this.checkAllOr = !this.checkAllOr;
     for (const typeor of this.listeOr) {
@@ -202,6 +240,9 @@ export class ExportationGmaoComponent implements OnInit {
     }    
   }
 
+  /**
+   * Verifie si l'ensemble des objets repères est sélectionné 
+   */
   verifyCheckAllOr(){
     let allCheck = true;
     if (this.listeOr.length != 0){
@@ -220,6 +261,10 @@ export class ExportationGmaoComponent implements OnInit {
     }
   }
 
+    /**
+   * Selectionne un item
+   * @param idItem : Identifiant de l'item
+   */
   selectCheckItem(idItem : string){
     const targetItem = this.listeItem.findIndex((element) => element.idItem === idItem)
     if (targetItem != -1) {  
@@ -234,6 +279,9 @@ export class ExportationGmaoComponent implements OnInit {
     this.verifyCheckAllItem();
   }
 
+    /**
+   * Selectionne l'ensemble des items
+   */
   allSelectItem(){    
     this.checkAllItem = !this.checkAllItem;
     for (const item of this.listeItem) {
@@ -251,6 +299,9 @@ export class ExportationGmaoComponent implements OnInit {
     }    
   }
 
+  /**
+   * Verifie si l'ensemble des items est sélectionné 
+   */
   verifyCheckAllItem(){
     let allCheck = true;
     if (this.listeItem.length != 0){
@@ -269,6 +320,10 @@ export class ExportationGmaoComponent implements OnInit {
     }
   }
 
+    /**
+   * Selectionne un sous item 
+   * @param idOR : Identifiant du sous item
+   */
   selectCheckSi(idSi : string){
     const targetSi = this.listeSi.findIndex((element) => element.idSousItem === idSi)
     if (targetSi != -1) {  
@@ -283,6 +338,9 @@ export class ExportationGmaoComponent implements OnInit {
     this.verifyCheckAllSi();
   }
 
+    /**
+   * Selectionne l'ensemble des sous items
+   */
   allSelectSi(){    
     this.checkAllSi = !this.checkAllSi;
     for (const si of this.listeSi) {
@@ -300,6 +358,9 @@ export class ExportationGmaoComponent implements OnInit {
     }    
   }
 
+    /**
+   * Verifie si l'ensemble des sous items est sélectionné 
+   */
   verifyCheckAllSi(){
     let allCheck = true;
     if (this.listeSi.length != 0){
@@ -318,6 +379,9 @@ export class ExportationGmaoComponent implements OnInit {
     }
   }
 
+  /**
+   * Charge la structure d'export pour le recapitulatif
+   */
   export(){
     this.formValidate = false;
     this.exportationValide = -1;
@@ -352,7 +416,10 @@ export class ExportationGmaoComponent implements OnInit {
 
   }
 
-
+/**
+ * Envoie les données qui doivent être exporter
+ * Recupère un fichier excel
+ */
   async sendExport(){
     if (this.nomDocument !== ""){
       let payload : exportGMAO ={
@@ -415,6 +482,11 @@ export class ExportationGmaoComponent implements OnInit {
 
   }
 
+  /**
+   * Lire une ancienne exportation
+   * @param idExp : Identifiant le l'exportation
+   * @param nomDoc : Nom du document a créer
+   */
   async readExp(idExp : number, nomDoc: string){
     let sub = (await this.fetchExportationGmaoService.readExp(idExp)).subscribe(res => {     
       if (res == undefined) {
@@ -428,6 +500,10 @@ export class ExportationGmaoComponent implements OnInit {
     });
   }
 
+  /**
+   * Selection de l'atelier courant
+   * @param Atelier : Identifiant de l'atelier
+   */
   public selectAtelier(Atelier : any){
     try {
       this.atelier = Atelier.target.value;

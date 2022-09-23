@@ -3,7 +3,18 @@ import { Pipe, PipeTransform } from '@angular/core';
 @Pipe({
   name: 'filterExportationType'
 })
+/**
+ * Classe permettant de filter un tableau de données
+ */
 export class FilterExportationTypePipe implements PipeTransform {
+
+  /**
+   * Fonction vérifiant la présence d'un arguments dans la liste des codes d'objet 
+   * @param value : Liste des objets
+   * @param args : Argument de filtrage
+   * @param type : Type de l'objet (Objet repère, item ou sous item)
+   * @returns Liste des élement comportant args
+   */
 
   transform(value: any, args: any, type? : any): any {
     if (!value) return null;

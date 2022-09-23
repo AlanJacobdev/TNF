@@ -8,6 +8,9 @@ import { faXmark, faPen} from '@fortawesome/free-solid-svg-icons';
   templateUrl: './gestion-ateliers.component.html',
   styleUrls: ['./gestion-ateliers.component.css']
 })
+/**
+ * Classe permettant de déterminer comment le composant sera instancié et utilisé
+ */
 export class GestionAteliersComponent implements OnInit {
 
   public faPen = faPen;
@@ -23,15 +26,26 @@ export class GestionAteliersComponent implements OnInit {
   public atelierSelect : string ="";
   public libelleAtelier = "";
 
+  /**
+   * Constructeur de la classe 
+   * Instancié à la création du composant
+   * Injection de services utilisés par cette classe
+   * Plus d'informations : https://docs.nestjs.com/providers
+   */
   constructor(private fetchGestionAtelier : FetchAtelierService) {
     this.getAllAteliers();
 
    }
 
-
+  /**
+  * Méthode appellée à l'initialisation du composant
+  */
   ngOnInit(): void {
   }
 
+  /**
+   * Recupère l'ensemble des ateliers 
+   */
   getAllAteliers() {
     this.fetchGestionAtelier.getAllAteliers().then((list:AtelierInfo[] ) =>{
       if(list != undefined){
@@ -46,6 +60,12 @@ export class GestionAteliersComponent implements OnInit {
   }
 
 
+    /**
+   * Gestion de l'affichage du toast 
+   * @param title : Titre du toast
+   * @param text : Texte du toast
+   * @param color : couleur associé au toast
+   */
   manageToast (title : string, text : string, color : string ){
     this.typeToast = title;
     this.colorToast = color;
@@ -58,23 +78,39 @@ export class GestionAteliersComponent implements OnInit {
     10000);
   }
 
+  /**
+   * Ferme le toast
+   */
   closeToast(){
     this.ToastAffiche = false;
   }
 
+  /**
+   * Valeur par défaut de la validation de formulaire (affichage des erreurs)
+   */
   refreshValidationForm(){
     this.formValidate = false;
   }
   
+  /**
+   * Ferme les formulaires lié aux ateliers
+   */
   close(){
     this.changesNow = false;
     this.refreshValidationForm();
   }
 
-  selectCreateType(){
+  /**
+   * Selection du bouton de modification d'atelier
+   */
+  selectModifyAtelier(){
     this.changesNow = true;
   }
 
+  /**
+   * Selection de l'atelier courant
+   * @param idAtelier : Identifiant de l'atelier
+   */
   selectAtelier(idAtelier : string) {
     this.atelierSelect = idAtelier;
     const atelier= this.listeAtelier.find((element)=> element.idAtelier === idAtelier);
@@ -83,6 +119,10 @@ export class GestionAteliersComponent implements OnInit {
     }
   }
 
+  /**
+   * Changement du statut actif d'un atelier
+   * @param idAtelier : Identifiant de l'atelier
+   */
   selectCheckAtelier(idAtelier : string) {
     const targetAtelier = this.listeAtelier.find((element) => element.idAtelier === idAtelier)
 
@@ -101,7 +141,11 @@ export class GestionAteliersComponent implements OnInit {
     }
   }
 
-
+/**
+ * Modification d'un atelier
+ * @param identifiant : Identifiant de l'atelier
+ * @param libelle : Libelle de l'atelier
+ */
   async updateAtelier(identifiant : string, libelle : string) {
     
     if ( identifiant != '' && libelle != '') {
