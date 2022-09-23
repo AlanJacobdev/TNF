@@ -8,12 +8,23 @@ import {documentInfoModify, DocumentReceive, InformationCreate, InformationInfo,
 @Injectable({
     providedIn: 'root'
 })
+/**
+ * Service permettant d'interroger l'API par des requetes HTTPs
+ */
 export class FetchInformationService {
 
-constructor(private readonly http: HttpClient, private navBarService: NavBarService){
-}
+  /**
+   * Constructeur de la classe 
+   * Injection de services utilisés par cette classe
+   * Plus d'informations : https://docs.nestjs.com/providers
+   */
+  constructor(private readonly http: HttpClient, private navBarService: NavBarService){
+  }
 
-    
+    /**
+     * Retourne la liste de toutes les informations
+     * @returns Liste des informations existantes 
+     */
     async getInformations(): Promise<any> {
         let url = "http://"+environment.API_URL+"/informations"
         const res : InformationInfo[] = await lastValueFrom(this.http.get<InformationInfo[]>(url, {withCredentials: true}));
@@ -24,6 +35,11 @@ constructor(private readonly http: HttpClient, private navBarService: NavBarServ
         }
     }
 
+    /**
+     * Lire un document lié à une information
+     * @param idDoc : Identifiant du docuement
+     * @returns Blob du document
+     */
     async readFile(idDoc : number) {
         let url = "http://"+environment.API_URL+"/document/readFile/{idDoc}"
         url = url.replace("{idDoc}",idDoc.toString())
@@ -46,6 +62,11 @@ constructor(private readonly http: HttpClient, private navBarService: NavBarServ
 
     
 
+    /**
+     * Upload les documents sur le serveur
+     * @param files : Fichier à exporter
+     * @returns Message de validation ou erreur
+     */
     async exportFiles( files : FormData){
         let user = this.navBarService.getLogin();
         let url = "http://"+environment.API_URL+"/document/file-upload/{User}"
@@ -72,6 +93,11 @@ constructor(private readonly http: HttpClient, private navBarService: NavBarServ
         }
     }
 
+    /**
+     * Création d'une information
+     * @param payload : Informations utiles à la création d'une information
+     * @returns Structure de l'information ou erreur
+     */
     async createInformations( payload : InformationCreate){
         let user = this.navBarService.getLogin();
         let url = "http://"+environment.API_URL+"/informations"
@@ -98,6 +124,12 @@ constructor(private readonly http: HttpClient, private navBarService: NavBarServ
         }
     }
 
+    /**
+     * Modification d'une information
+     * @param idInformation : Identifiant de l'information
+     * @param payload : Information a modifier
+     * @returns Structure de l'information modifiée
+     */
     async updateInformation(idInformation : number, payload : InformationModify): Promise<any> {
         let user = this.navBarService.getLogin();
         let url = "http://"+environment.API_URL+"/informations/{idInformation}"
@@ -125,6 +157,11 @@ constructor(private readonly http: HttpClient, private navBarService: NavBarServ
       }
 
 
+      /**
+       * Modifie le libellé d'un document
+       * @param payload : Information a modifier
+       * @returns Structure du document modifié
+       */
       async updateLibelleFromDoc(payload : documentInfoModify): Promise<any> {
         let url = "http://"+environment.API_URL+"/document"
         try {
@@ -149,6 +186,11 @@ constructor(private readonly http: HttpClient, private navBarService: NavBarServ
       }
 
 
+      /**
+       * Supprime une information
+       * @param idInformation : Identifiant de l'information
+       * @returns Message de validation ou erreur 
+       */
     async deleteInformation(idInformation : number): Promise<any> {
         let url = "http://"+environment.API_URL+"/informations/{idInformation}";
         url = url.replace("{idInformation}", idInformation.toString())

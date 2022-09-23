@@ -9,6 +9,9 @@ import { FetchInformationService } from './service/fetch-information.service';
   templateUrl: './informations.component.html',
   styleUrls: ['./informations.component.css']
 })
+/**
+ * Classe permettant de déterminer comment le composant sera instancié et utilisé
+ */
 export class InformationsComponent implements OnInit {
   
   public faCalendar = faCalendar;
@@ -57,13 +60,25 @@ export class InformationsComponent implements OnInit {
   public descriptionObjectSelect : DocumentInfo[] = [];
   public tabDocName : DocName[] = [];
 
+    /**
+   * Constructeur de la classe 
+   * Instancié à la création du composant
+   * Injection de services utilisés par cette classe
+   * Plus d'informations : https://docs.nestjs.com/providers
+   */
   constructor(private fetchInformationService : FetchInformationService) { this.getInformation(); }
 
+    /**
+  * Méthode appellée à l'initialisation du composant
+  */
   ngOnInit(): void {
     this.getInformation();
   }
 
-
+/**
+ * Selection de l'information courante
+ * @param id : Identifiant de l'information
+ */
   selectInformation(id : number){
     if(id != this.idSelected){
       this.idSelected = id;
@@ -71,11 +86,16 @@ export class InformationsComponent implements OnInit {
     }
   }
 
-  
+  /**
+   * Fermer le toast
+   */
   closeToast(){
     this.ToastAffiche = false;
   }
 
+  /**
+   * Fermer les fenêtres de formulaire lié aux informations
+   */
   close(){
     this.changesNow = false;
     this.suppresion = false;
@@ -87,10 +107,19 @@ export class InformationsComponent implements OnInit {
     this.titre = "";
   }
 
+  /**
+   * Valeur par défaut de la validation de formulaire (affichage des erreurs)
+   */
   refreshValidationForm(){
     this.formValidate = false;
   }
 
+    /**
+   * Gestion de l'affichage du toast 
+   * @param title : Titre du toast
+   * @param text : Texte du toast
+   * @param color : couleur associé au toast
+   */
   manageToast (title : string, text : string, color : string ){
     this.typeToast = title;
     this.colorToast = color;
@@ -103,6 +132,9 @@ export class InformationsComponent implements OnInit {
     10000);
   }
 
+  /**
+   * Recupère la liste de toutes les informations
+   */
   getInformation(){
     this.listeInformations.splice(0)
     this.fetchInformationService.getInformations().then((list: InformationInfo[]) => {
@@ -111,6 +143,10 @@ export class InformationsComponent implements OnInit {
     })
   }
 
+  /**
+   * Lire un document
+   * @param idDoc : Identifiant du document
+   */
   async readFile(idDoc : number){
     (await this.fetchInformationService.readFile(idDoc)).subscribe(res => {
       const fileURL = URL.createObjectURL(res);
@@ -118,38 +154,74 @@ export class InformationsComponent implements OnInit {
     });
   }
 
+  /**
+   * Ajout d'un document à une information 
+   */
   public addDocument(){
     this.documents.push({value : ""});
   }
+
+  /**
+   * Ajout d'un document à une information en cours de modification
+   * @param id : Identifiant du document
+   * @param nom : Nom du document
+   */
   public addDocumentModify(id : number, nom : string){
     this.documentsModify.push({id: id, nom : nom});
   }
 
+  /**
+   * Supprime un document d'un information
+   * @param indice : Indice du documents dans la liste des documents de l'information
+   */
   public removeDocument(indice : number){
     this.documents.splice(indice,1)
   }
 
+    /**
+   * Supprime un document d'un information en cours de modification
+   * @param indice : Indice du documents dans la liste des documents de l'information
+   */
   public removeDocumentOfModification(indice : number){  
     this.descriptionObjectSelect.splice(indice,1)
   }
 
+  /**
+   * Passe le status de la modification à vrai pour un document
+   * @param indice :  Indice du documents dans la liste des documents de l'information
+   */
   public modifyDocument(indice : number){
     this.descriptionObjectSelect[indice].edited=true;
   }
+
+    /**
+   * Passe le status de la modification à faux pour un document
+   * @param indice :  Indice du documents dans la liste des documents de l'information
+   */
   public notModifyDocument(indice : number){
     this.descriptionObjectSelect[indice].edited=false;
 
   }
 
+  /**
+   * Modifie le libelle d'un document pour une information en cours de modification
+   * @param indice :  Indice du documents dans la liste des documents de l'information
+   */
   public modifyLibelleDocument(indice : number){
     this.descriptionObjectSelect[indice].editedLibelle=true;
   }
 
+  /**
+   * Selection du bouton de création d'information
+   */
   selectCreateType(){
     this.changesNow = true;
     this.idSelected = -1;
   }
 
+  /**
+   * Selection du bouton de modification d'information
+   */
   selectModifyType(){
     
     this.documents.splice(0);
@@ -172,7 +244,9 @@ export class InformationsComponent implements OnInit {
     
   }
   
-
+  /**
+   * Selection de suppression de l'information
+   */
   selectDeleteType(){
     this.suppresion = true;
     this.changesNow = true;
@@ -183,6 +257,9 @@ export class InformationsComponent implements OnInit {
   }
 
 
+  /**
+   * Selection du bouton d'informations de l'information
+   */
   selectRead(){
     this.read = true;
     this.changesNow = true;
@@ -194,6 +271,9 @@ export class InformationsComponent implements OnInit {
   }
 
 
+  /**
+   * Creation d'une information
+   */
   async createInformations(){
     let storeDoc = await this.appendFormDataList();
     if (storeDoc) {
@@ -248,6 +328,9 @@ export class InformationsComponent implements OnInit {
 
   }
 
+  /**
+   * Rafrachit les champs du formulaire après une opération sur une information
+   */
   refreshAfterOperation(){
     this.getInformation();
     this.text = "";
@@ -256,6 +339,9 @@ export class InformationsComponent implements OnInit {
     this.documentsModify.splice(0);
   }
 
+  /**
+   * Modifie une information
+   */
   async updateInformations(){
     let tabIdDoc = [];
     let tabLibelleModify : documentInfoModify[] = [];
@@ -377,11 +463,11 @@ export class InformationsComponent implements OnInit {
     }).catch((e) => {
     })
 
-
-
-
   }
 
+  /**
+   * Supprime une information
+   */
   deleteInformation(){
     this.fetchInformationService.deleteInformation(this.idSelected).then((res: any) => {
       if(typeof res === 'string') {
@@ -396,11 +482,21 @@ export class InformationsComponent implements OnInit {
     })
   }
 
+  /**
+   * Detecte l'ajout d'un document via l'explorateur windows sur une information
+   * @param i : indice du document 
+   * @param event : fichier 
+   */
   handleFileInput(i: any, event: Event) {
     const element = event.currentTarget as HTMLInputElement;
     this.documents[i].doc = element.files;
   }
 
+    /**
+   * Detecte l'ajout d'un document via l'explorateur windows sur une information en cours de modification
+   * @param i : indice du document 
+   * @param event : fichier 
+   */
   handleFileInputModify(i: any, event: Event) {
     const element = event.currentTarget as HTMLInputElement;
     this.documentsModify[i].doc = element.files;
@@ -409,7 +505,10 @@ export class InformationsComponent implements OnInit {
   }
 
   
-
+  /**
+   * Ajout des document modifiés au formdata utile à la création des fichiers sur le serveur
+   * @returns True or false
+   */
   async appendFormDataListModify(){
     try {   
 
@@ -430,6 +529,10 @@ export class InformationsComponent implements OnInit {
     }
   }
 
+  /**
+   * Ajout des document modifiés au formdata utile à la création des fichiers sur le serveur
+   * @returns True or false
+   */
   async appendFormDataList(){
     try {   
       this.formDataList = new FormData();
@@ -449,6 +552,10 @@ export class InformationsComponent implements OnInit {
     }
   }
 
+  /**
+   * Envoie la liste de documents a creer au serveur
+   * @returns 
+   */
   async sendInformations(){
     this.listeDocuments.splice(0);
     try {
