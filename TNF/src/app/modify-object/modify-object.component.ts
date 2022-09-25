@@ -18,6 +18,9 @@ import { FetchModifyObjectService } from './service/fetch-modify-object.service'
   templateUrl: './modify-object.component.html',
   styleUrls: ['./modify-object.component.css']
 })
+/**
+ * Classe permettant de déterminer comment le composant sera instancié et utilisé
+ */
 export class ModifyObjectComponent implements OnInit, OnDestroy {
 
   public faPlus = faPlus;
@@ -85,6 +88,12 @@ export class ModifyObjectComponent implements OnInit, OnDestroy {
   public ObjetBeingModified : string[] = []
   public hiddenSi : boolean = false;
 
+  /**
+   * Constructeur de la classe 
+   * Instancié à la création du composant
+   * Injection de services utilisés par cette classe
+   * Plus d'informations : https://docs.nestjs.com/providers
+   */
   constructor(private fetchModifyTypeObject : FetchModifyObjectService, private fetchCreateTypeObject : FetchcreateTypeObjectService,private fetchVisuService : FetchVisuService, private fetchRecopieService : FetchRecopieService,
     private navbarService : NavBarService, private fetchCreateObjectService : FetchCreateObjectService) {
 
@@ -156,16 +165,25 @@ export class ModifyObjectComponent implements OnInit, OnDestroy {
     
     
    }
+
+  /**
+  * Méthode appellée à la destruction du composant
+  */
   ngOnDestroy(): void {
     this.fetchModifyTypeObject.leaveWS();
   }
 
-
+  /**
+  * Méthode appellée à l'initialisation du composant
+  */
   ngOnInit(): void {
     
   }
 
 
+  /**
+   * Recupère la liste des types d'objet
+   */
   getListType(){
     this.listeTypeOR.splice(0);
     this.fetchCreateTypeObject.getTypeObjetRepere().then((list: TypeObjetRepereInfo[]) => {
@@ -192,6 +210,9 @@ export class ModifyObjectComponent implements OnInit, OnDestroy {
     })
   }
 
+  /**
+   * Recupère les types d'objet d'item lié à un objet repère
+   */
   getListTypeItemsByOR(){
     this.fetchRecopieService.getTypeOfItemsOfOR(this.idORSelect).then((list: TypeObjet[]) => {
       this.listeTypeItemOfOR.splice(0);
@@ -211,6 +232,9 @@ export class ModifyObjectComponent implements OnInit, OnDestroy {
   }
 
 
+  /**
+   * Recupère les types d'objet pour un atelier
+   */
   getListTypeItemsForOR(){
     this.fetchModifyTypeObject.getTypeOfItemsOfOR(this.atelierSelect).then((list: TypeObjetRepere[]) => {
       
@@ -232,7 +256,9 @@ export class ModifyObjectComponent implements OnInit, OnDestroy {
     
   }
 
-
+  /**
+   * Recupère les ateliers
+   */
   getAteliers(){
     this.fetchVisuService.getAllAteliers().then((list: AtelierInfo[]) => {
       if (list != undefined) {
@@ -245,6 +271,9 @@ export class ModifyObjectComponent implements OnInit, OnDestroy {
   }
 
 
+  /**
+   * Recupère les objets repère d'un ateleier
+   */
   getObjetRepereByAtelier(){
     this.fetchCreateObjectService.getObjetRepereByAtelierForOneUser(this.atelierSelect).then((list: ObjetRepereInfo[]) => {
       if (list != undefined) {
@@ -257,6 +286,9 @@ export class ModifyObjectComponent implements OnInit, OnDestroy {
     })
   }
 
+  /**
+   * Recupère les item lié à un objet repère
+   */
   getItemFromOR() {
       this.fetchVisuService.getItemByObjetRepere(this.idORSelect).then((list: ItemInfo[]) => {
         if (list != undefined) {
@@ -269,6 +301,9 @@ export class ModifyObjectComponent implements OnInit, OnDestroy {
       })
   }
 
+  /**
+   * Recumère les sous items liés à un item
+   */
   getSousItemByItem(){
     this.fetchVisuService.getSousItemByItem(this.idItemSelect).then((list: SousItemInfo[]) => {
       if(list == undefined) {
@@ -280,10 +315,18 @@ export class ModifyObjectComponent implements OnInit, OnDestroy {
     })
   }
 
+  /**
+   * NON UTILISEE
+   */
   setcheckValide() {
     this.checkValide = !this.checkValide;
   }
 
+  /**
+   * Selection d'item ou OR dans le cas de l'affichage d'un sous item
+   * Supprime les données lié au sous item si item ou or supprimé
+   * @param value 
+   */
   setOrSelectedForItem (value : boolean){
     this.orSelectedForItem = value;
     if(!value){
@@ -300,11 +343,17 @@ export class ModifyObjectComponent implements OnInit, OnDestroy {
     }
   }
 
-
+  /**
+   * Fermer le toast
+   */
   closeToast(){
     this.ToastAffiche = false;
   }
       
+  /**
+   * Selection de l'atelier courant
+   * @param Atelier: Evenement récupérant le changement d'atelier 
+   */
   public selectAtelier (Atelier : any) {
     let atelier;
     
@@ -355,6 +404,11 @@ export class ModifyObjectComponent implements OnInit, OnDestroy {
     }
 
   }
+
+  /**
+   * Sélection du type d'objet
+   * @param TypeObjet : Type d'objet 
+   */
   public selectTypeObjet (TypeObjet : any) {
     try {
       this.typeNow = TypeObjet.target.value;
@@ -364,6 +418,10 @@ export class ModifyObjectComponent implements OnInit, OnDestroy {
   }
   
 
+  /**
+   * Sélection d'un objet repère
+   * @param idOR : Identifiant de l'objet repère
+   */
   public selectOR(idOR : string) {
     this.idORSelect = idOR;
     this.selectedNow = idOR;
@@ -422,7 +480,10 @@ export class ModifyObjectComponent implements OnInit, OnDestroy {
 
   }
 
-
+  /**
+   * Selection d'un item
+   * @param idItem : Identifiant de l'item
+   */
   public selectItem(idItem : string){
     this.idItemSelect = idItem;
     this.selectedNow = idItem
@@ -477,6 +538,10 @@ export class ModifyObjectComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Selection du sous item
+   * @param idSousItem : identifiant sous item
+   */
   selectSI(idSousItem : string){
     this.idSISelect = idSousItem;
     this.selectedNow = idSousItem;
@@ -516,6 +581,10 @@ export class ModifyObjectComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Selection du type d'objet (Objet repère, item ou sous item)
+   * @param object : Valeur issue de l'enum TypeObject
+   */
   public selectObject (object : typeObjet) {
     if( this.objectNow != object) {
       if (object == this.TypeObject.SI){
@@ -530,7 +599,12 @@ export class ModifyObjectComponent implements OnInit, OnDestroy {
     }
   }
 
-
+  /**
+   * Gestion de l'affichage du toast 
+   * @param title : Titre du toast
+   * @param text : Texte du toast
+   * @param color : couleur associé au toast
+   */
   manageToast (title : string, text : string, color : string ){
     this.typeToast = title;
     this.colorToast = color;
@@ -544,12 +618,18 @@ export class ModifyObjectComponent implements OnInit, OnDestroy {
   }
 
 
-
+  /**
+   * Valeur par défaut de la validation de formulaire (affichage des erreurs)
+   */
   refreshValidationForm(){
     this.formValidate = false;
   }
 
 
+  /**
+   * Modification d'un objet repère
+   * @param libelle : Libelle de l'objet repère
+   */
   modifyObjet(libelle : string) {
    
     if (libelle != '') {
@@ -570,6 +650,9 @@ export class ModifyObjectComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Modification d'un item
+   */
   modifyItem(){
     if (this.LibelleItem != '' ) {
         let libelle = this.idORSelect + ' : '+ this.LibelleItem.trim();
@@ -590,6 +673,9 @@ export class ModifyObjectComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Modification d'un sous item
+   */
   modifySI(){
      
     if (this.LibelleSousItem != '' ) {
@@ -612,14 +698,24 @@ export class ModifyObjectComponent implements OnInit, OnDestroy {
 
   }
 
+  /**
+   * Ajout d'une description
+   */
   public addDescription(){
     this.descriptionObjectSelect.push({lien : ""});
   }
 
+  /**
+   * Suppression d'une description sur l'objet modifié
+   * @param indice : Indice de la description 
+   */
   public removeDescription(indice : number){
     this.descriptionObjectSelect.splice(indice,1);
   }
 
+  /**
+   * NON UTILISEE
+   */
   focusOutLibelle(){
     if (this.objectNow === this.TypeObject.Item && this.idItemSelect != '') {
       if(!this.LibelleItem.toUpperCase().includes(this.idORSelect)){
@@ -636,6 +732,9 @@ export class ModifyObjectComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * NON UTILISEE
+   */
   addingParentIdToCurrentLibelle(){
     if (this.objectNow === this.TypeObject.Item) {
       if(!this.LibelleItem.toUpperCase().includes(this.idORSelect)){
@@ -650,17 +749,30 @@ export class ModifyObjectComponent implements OnInit, OnDestroy {
     }
   }  
 
+  /**
+   * Selection de l'etat (Actif, en attente ou hors service) => Item et sous item
+   * @param etat : Valeur issue de l'enum etatNow
+   */
   selectEtat(etat : etat){
     this.etat = etat;
     this.etatError = false;
   }
 
+  /**
+   * Selection de l'état (Actif ou reservé) => Objet repère
+   * @param valide : Valeur issue de l'enum valideNow
+   */
   selectValide(valide : valide){
     this.valide = valide;
     this.valideError = false;
   }
 
 
+  /**
+   * Verifie si l'objet est sélectionné par l'utilisateur à l'origine de la requete
+   * @param id : Identifiant de l'objet
+   * @returns True or false
+   */
   objetSelectByYou(id : string) {
     let login = this.navbarService.getLogin()
     let objetSelect = this.infoObjetBeingModified.find((element) => element.id == id);
@@ -675,6 +787,11 @@ export class ModifyObjectComponent implements OnInit, OnDestroy {
     return -1
   }
 
+  /**
+   * Recupère le profil de l'utilisateur modifiant un objet (hors utilisateur à l'origine de la requête)
+   * @param id : Identifiant de l'objet
+   * @returns True or false
+   */
   objetSelectByWho(id : string) {
     let objetSelect = this.infoObjetBeingModified.find((element) => element.id == id);
     if (objetSelect != undefined) {

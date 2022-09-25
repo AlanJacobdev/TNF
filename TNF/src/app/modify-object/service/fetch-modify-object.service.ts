@@ -14,12 +14,28 @@ import { environment } from '../../../environments/environment';
 @Injectable({
   providedIn: 'root'
 })
+/**
+ * Service permettant d'interroger l'API par des requetes HTTPs
+ */
 export class FetchModifyObjectService {
 
+  
+  /**
+   * Constructeur de la classe 
+   * Injection de services utilisés par cette classe
+   * Plus d'informations : https://docs.nestjs.com/providers
+   */
   constructor(private readonly http: HttpClient, private navBarService: NavBarService, private socket: Socket) { }
 
 
-
+  /**
+   * Modification d'un objet
+   * @param idOR : Identifiant de l'objet repère
+   * @param libelle : Libelle de l'objet repère
+   * @param etat : Etat de l'objet repère (reservé / actif)
+   * @param description : Liste des descriptions
+   * @returns Structure de l'objet repère modifié ou erreur
+   */
   async modifyObject(idOR : string, libelle : string, etat: string, description : Description[]): Promise<any> {
     let user = this.navBarService.getLogin();
     let url = "http://"+environment.API_URL+"/objetrepere/{ID}"
@@ -52,6 +68,14 @@ export class FetchModifyObjectService {
     }
   }
 
+  /**
+   * Modification d'un item
+   * @param idItem : Identifiant de l'item
+   * @param libelle : Libelle de l'item
+   * @param etat : Etat de l'item (actif, en attente, hors service)
+   * @param description : Liste des description
+   * @returns Structure de l'item modifié ou erreur
+   */
   async modifyitem(idItem : string, libelle : string, etat: string, description : Description[]): Promise<any> {
     let user = this.navBarService.getLogin();
     let url = "http://"+environment.API_URL+"/item/{ID}"
@@ -85,6 +109,14 @@ export class FetchModifyObjectService {
   }
 
 
+  /**
+   * Modification d'un sous item
+   * @param idSousItem : Identifiant sous item
+   * @param libelle : Libelle du sous item
+   * @param etat : Etat du sous item (actif, en attente, hors service)
+   * @param description : Liste de descriptions 
+   * @returns Structure du sous item modifié ou erreur
+   */
   async modifySI(idSousItem : string, libelle : string, etat: string, description : Description[]): Promise<any> {
     let user = this.navBarService.getLogin();
     let url = "http://"+environment.API_URL+"/sousitem/{ID}"
@@ -119,6 +151,11 @@ export class FetchModifyObjectService {
   }
 
 
+  /**
+   * Recupère les types d'objets au sein d'un atelier
+   * @param Atelier 
+   * @returns 
+   */
   async getTypeOfItemsOfOR(Atelier : string) : Promise<any> {
     let url = "http://"+environment.API_URL+"/objetrepere/getTypeOfItemsForOR/{Atelier}"
     url = url.replace("{Atelier}", Atelier)
@@ -131,6 +168,11 @@ export class FetchModifyObjectService {
   }
 
 
+  /**
+   * Recupère le nom et prénom d'un utilisateur en fonction de son login
+   * @param login : Login de l'utilisateur
+   * @returns : Nom et prénom de l'utilisateur 
+   */
   async getIdentity(login : string) : Promise<any> {
     let url = "http://"+environment.API_URL+"/utilisateur/getIdentityFromLogin/{login}"
     url = url.replace("{login}", login)
@@ -139,6 +181,10 @@ export class FetchModifyObjectService {
   }
 
 
+  /**
+   * Reserve un objet pour modification
+   * @param id : Identifiant de l'objet
+   */
   sendChange(id: string){
     let user = this.navBarService.getLogin();
     let payload = {
@@ -148,25 +194,43 @@ export class FetchModifyObjectService {
     this.socket.emit('reservationObject', payload)
   }
 
+  /**
+   * Connexion au websocket (pour la réservation)
+   * @returns 
+   */
   connexionSocket(){
     this.socket.connect();
     return this.socket.fromEvent('sendReservation') 
   }
 
-
+/**
+ * En attente des changement de sélection (websocket)
+ * @returns 
+ */
   receiveChange(){
     return this.socket.fromEvent('broadcastReservation') 
   }
   
+  /**
+   * Quitte le serveur websocket
+   */
   leaveWS(){
     this.socket.disconnect();
   }
 
+  /**
+   * Libère un objet après modification
+   * @param type : Type de l'objet modifié
+   */
   freeObject(type : string){
     this.socket.emit('modificationObjet', type)
   }
 
 
+  /**
+   * En attente des changements d'objet
+   * @returns 
+   */
   receiveUpdate(){
     return this.socket.fromEvent('updateElementEdit') 
   }
