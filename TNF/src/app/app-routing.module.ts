@@ -19,6 +19,9 @@ import { UtilisateurComponent } from './utilisateur/utilisateur.component';
 import { VisualisationComponent } from './visualisation/visualisation.component';
 
 
+/**
+ * Routes de l'application
+ */
 const routes: Routes = [
   { path: 'connexion', component : ConnexionComponent},
   { path: '', component : AccueilComponent, canActivate: [ AuthGuard ]},
@@ -45,4 +48,7 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
+/**
+ * Classe définissant les routes de l'application
+ */
 export class AppRoutingModule { }

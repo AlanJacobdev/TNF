@@ -12,12 +12,23 @@ import { environment } from '../../../environments/environment';
 @Injectable({
   providedIn: 'root'
 })
+/**
+ * Service permettant d'interroger l'API par des requetes HTTPs
+ */
 export class FetchVisuService {
 
-
+  /**
+   * Constructeur de la classe 
+   * Injection de services utilisés par cette classe
+   * Plus d'informations : https://docs.nestjs.com/providers
+   */
   constructor(private readonly http: HttpClient, private navBarService: NavBarService) { }
 
 
+  /**
+   * Recupère l'ensemble des ateliers (non limités aux droits d'une personne)
+   * @returns Liste des ateliers actifs
+   */
   async getAteliersVisu(): Promise<any>{
     let url;
     const admin = this.navBarService.getEstAdmin();
@@ -35,6 +46,10 @@ export class FetchVisuService {
     }
   }
 
+  /**
+   * Fonction permettant de récupérer les ateliers en fonction de son statut
+   * @returns Liste des ateliers
+   */
   async getAllAteliers(){
     const admin = this.navBarService.getEstAdmin();
     if (admin){
@@ -44,6 +59,10 @@ export class FetchVisuService {
     }
   }
 
+  /**
+   * Recupère l'ensemble des ateleirs ( droits administrateur)
+   * @returns Liste des ateliers existant
+   */
   async getAllAteliersForAdmin(): Promise<any> {
     let url;
     url = "http://"+environment.API_URL+"/atelier"
@@ -55,6 +74,10 @@ export class FetchVisuService {
     }
   }
 
+  /**
+   * Recupère les ateliers pour un utilisateur
+   * @returns Liste des ateliers 
+   */
   async getAtelierForOneUser () {
     let user = this.navBarService.getLogin();
     let url = "http://"+environment.API_URL+"/atelier/findAllAteliersActifForUser/{user}"
@@ -67,6 +90,11 @@ export class FetchVisuService {
     }
   }
 
+  /**
+   * Recupère les objets repères d'un atelier
+   * @param Atelier : Identifiant de l'atelier
+   * @returns Liste des objets repères liés à cet atelier
+   */
   async getObjetRepereByAteliers(Atelier : string) : Promise<any> {
     let url = "http://"+environment.API_URL+"/objetrepere/getORByAtelier/{atelier}"
     url = url.replace("{atelier}", Atelier)
@@ -78,6 +106,11 @@ export class FetchVisuService {
     }
   }
 
+  /**
+   * Recupère l'historique d'un objet repère
+   * @param idOr : Identifiant de l'objet repère
+   * @returns Liste des différents état de l'objet 
+   */
   async getHistoryObjetRepere(idOr : string) : Promise<any> {
     let url = "http://"+environment.API_URL+"/objetrepere/history/{OR}"
     url = url.replace("{OR}", idOr)
@@ -89,6 +122,11 @@ export class FetchVisuService {
     }
   }
 
+  /**
+   * Recupère les items d'un objet repère
+   * @param objetRepere : identifiant de l'objet repère
+   * @returns Liste des items 
+   */
   async getItemByObjetRepere(objetRepere : string) : Promise<any> {
     let url = "http://"+environment.API_URL+"/item/getItemByOR/{OR}"
     url = url.replace("{OR}", objetRepere)
@@ -100,6 +138,11 @@ export class FetchVisuService {
     }
   }
 
+  /**
+   * Recupère l'historique d'un item
+   * @param idItem : Identifiant de l'item
+   * @returns Liste des différents état de l'item
+   */
   async getHistoryItem(idItem : string) : Promise<any> {
     let url = "http://"+environment.API_URL+"/item/history/{Item}"
     url = url.replace("{Item}", idItem)
@@ -111,6 +154,10 @@ export class FetchVisuService {
     }
   }
 
+  /**
+   * Récupère l'ensemble des types d'objet repère
+   * @returns Liste des types d'objet repère existant
+   */
   async getTypeObjetRepere(): Promise<any> {
     let url = "http://"+environment.API_URL+"/typeobjetrepere"
     const res : TypeObjetRepereInfo[] = await lastValueFrom(this.http.get<TypeObjetRepereInfo[]>(url, {withCredentials: true}));
@@ -121,6 +168,10 @@ export class FetchVisuService {
     }
   }
 
+  /**
+   * Recupère la liste des type d'objet pour sous item
+   * @returns Liste des types d'objet pour sous item
+   */
   async getTypeSIActif() : Promise<any>{
     let url = "http://"+environment.API_URL+"/typeobjet/getAll/isActif"
     const res : TypeObjetInfo[] = await lastValueFrom(this.http.get<TypeObjetInfo[]>(url, {withCredentials: true}));
@@ -131,6 +182,10 @@ export class FetchVisuService {
     }
   }
 
+  /**
+   * Recupère la liste des types d'objet 
+   * @returns Liste de l'ensemble des types d'objets
+   */
   async getTypeObjet(): Promise<any> {
     let url = "http://"+environment.API_URL+"/typeobjet"
     const res : TypeObjetInfo[] = await lastValueFrom(this.http.get<TypeObjetInfo[]>(url, {withCredentials: true}));
@@ -142,6 +197,11 @@ export class FetchVisuService {
   }
   
 
+  /**
+   * Recupère les sous item liés à un item
+   * @param Item : Identifiant de l'item
+   * @returns Liste des sous items 
+   */
   async getSousItemByItem(Item : string) : Promise<any> {
     let url = "http://"+environment.API_URL+"/sousitem/getSousItemByItem/{SI}"
     url = url.replace("{SI}", Item)
@@ -153,6 +213,11 @@ export class FetchVisuService {
     }
   }
 
+  /**
+   * Recupère l'historique d'un sous item
+   * @param idSI : Identifiant du sous item
+   * @returns Liste des différents état d'un sous item
+   */
   async getHistorySousItem(idSI : string) : Promise<any> {
     let url = "http://"+environment.API_URL+"/sousitem/history/{SI}"
     url = url.replace("{SI}", idSI);

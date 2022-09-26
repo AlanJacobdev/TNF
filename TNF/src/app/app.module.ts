@@ -101,6 +101,9 @@ const config: SocketIoConfig = { url: 'http://'+environment.API_URL, options: {}
   bootstrap: [AppComponent], 
   
 })
+/**
+ * Classe centrale de l'applicatif
+ */
 export class AppModule { 
 
   

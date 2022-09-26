@@ -8,6 +8,9 @@ import { FecthUtilisateurService } from './utilisateur/service/fecth-utilisateur
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
+/**
+ * Classe permettant de déterminer comment le composant sera instancié et utilisé
+ */
 export class AppComponent {
   
   public faXmark = faXmark;
@@ -15,20 +18,37 @@ export class AppComponent {
   public formValidate = false;
   changePWD: boolean = false;
   public message : string = "";
+  
+  /**
+   * Constructeur de la classe 
+   * Instancié à la création du composant
+   * Injection de services utilisés par cette classe
+   * Plus d'informations : https://docs.nestjs.com/providers
+   */
   constructor(private utilisateurService : FecthUtilisateurService, private navbarService : NavBarService){}
   
- 
+ /**
+  * Appeler si l'utilisateur souhaite modifier son mot de passe
+  */
   changePassword(){
     this.changePWD = true
     
   }
 
+  /**
+   * Ferme le modal de déconnexion pour inactivité
+   */
   public close(){
     this.changePWD = false
     this.formValidate = false;
     this.message = ""
   }
 
+  /**
+   * Met à jour le mot de passe utilisateur
+   * @param newPwdOne : Nouveau mot de passe 
+   * @param newPwdTwo  : Confirmation du mot de passe
+   */
   updatePwdUtilisateur(newPwdOne : string, newPwdTwo : string){
     if(newPwdOne == "" || newPwdTwo == "") {
       this.formValidate = true;

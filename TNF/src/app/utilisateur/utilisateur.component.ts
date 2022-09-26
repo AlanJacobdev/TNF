@@ -10,8 +10,17 @@ import { FecthUtilisateurService } from './service/fecth-utilisateur.service';
   templateUrl: './utilisateur.component.html',
   styleUrls: ['./utilisateur.component.css']
 })
+/**
+ * Classe permettant de déterminer comment le composant sera instancié et utilisé
+ */
 export class UtilisateurComponent implements OnInit {
 
+      /**
+   * Constructeur de la classe 
+   * Instancié à la création du composant
+   * Injection de services utilisés par cette classe
+   * Plus d'informations : https://docs.nestjs.com/providers
+   */
   constructor(private utilisateurService : FecthUtilisateurService, private fetchRoleService : FetchRoleService) { }
 
   public faKey = faKey;
@@ -64,11 +73,17 @@ export class UtilisateurComponent implements OnInit {
   public typeToast : string = ""
   public colorToast : string = "";
 
+  /**
+  * Méthode appellée à l'initialisation du composant
+  */
   ngOnInit(): void {
     this.getAllUtilisateurs();
     this.getAllRole();
   }
 
+  /**
+   * Recupère l'ensemble des utilisateurs
+   */
   getAllUtilisateurs () {
     this.listeUtilisateur.splice(0)
     this.utilisateurService.getUtilisateurs().then((list: UtilisateurInfo[]) => {
@@ -79,6 +94,9 @@ export class UtilisateurComponent implements OnInit {
     })
   }
 
+  /**
+   * Recupère l'ensemble des rôles 
+   */
   getAllRole(){
     this.listeRole.splice(0)
     this.fetchRoleService.getRole().then((list: roleInfo[]) => {
@@ -90,7 +108,10 @@ export class UtilisateurComponent implements OnInit {
   }
 
   
-
+  /**
+   * Sélection d'un utilisateur
+   * @param idUser : Identifiant utilisateur courant
+   */
   selectUtilisateur(idUser : number){
     if (this.selectedUser != idUser) {
       this.selectedUser = idUser;
@@ -101,6 +122,9 @@ export class UtilisateurComponent implements OnInit {
   }
 
 
+  /**
+   * Sélection du bouton de création
+   */
   selectCreateUtilisateur(){
     this.selectedUser = -1;
     this.changesNow = true;
@@ -108,6 +132,9 @@ export class UtilisateurComponent implements OnInit {
     this.clearData();
   }
 
+  /**
+   * Sélection du bouton de modification
+   */
   selectModifyUtilisateur(){
     this.changesNow = true;
     let res = this.listeUtilisateur.find(element => element.idUtilisateur === this.selectedUser);  
@@ -121,11 +148,17 @@ export class UtilisateurComponent implements OnInit {
     }
   }
 
+  /**
+   * Sélection du bouton de modification de mot de passe
+   */
   selectModifyPassword(){
     this.changesNow = true;
     this.changePwd = true;
   }
 
+  /**
+   * Sélection du bouton de suppression
+   */
   selectDeleteUtilisateur(){
     this.suppresion = true;
     this.changesNow = true;
@@ -136,6 +169,9 @@ export class UtilisateurComponent implements OnInit {
 
   }
 
+  /**
+   * Sélection du bouton d'information
+   */
   selectInfoUtilisateur(){
     this.read = true;
     this.changesNow = true;
@@ -156,6 +192,9 @@ export class UtilisateurComponent implements OnInit {
 
   }
 
+  /**
+   * Création d'un utilisateur
+   */
   createUtilisateur(){
     if(this.nom == "" || this.prenom == "" || this.login == "" || this.pwd == "" || this.email == "" || this.role == -1) {
       this.formValidate = true;
@@ -185,6 +224,9 @@ export class UtilisateurComponent implements OnInit {
   }
 
 
+  /**
+   * Modification d'un utilisateur
+   */
   updateUtilisateur(){
     if(this.nom == "" || this.prenom == "" || this.email == "" || this.role == -1) {
       this.formValidate = true;
@@ -212,6 +254,11 @@ export class UtilisateurComponent implements OnInit {
   }
 
 
+  /**
+   * Modification du mot de passe
+   * @param newPwdOne : Nouveau mot de passe
+   * @param newPwdTwo : Confirmation du mot de passe
+   */
   updatePwdUtilisateur(newPwdOne : string, newPwdTwo : string){
     if(newPwdOne == "" || newPwdTwo == "") {
       this.formValidate = true;
@@ -238,6 +285,10 @@ export class UtilisateurComponent implements OnInit {
       }
     }
   }
+
+  /**
+   * Suppression d'un utilisateur
+   */
   deleteUtilisateur(){
     this.utilisateurService.deleteUtilisateur(this.selectedUser).then((res: any) => {
       if(typeof res === 'string') {
@@ -254,6 +305,9 @@ export class UtilisateurComponent implements OnInit {
 
 
 
+  /**
+   * Remise à zero des données après opération
+   */
   clearData(){
    this.nom = "";
    this.prenom = "";
@@ -265,11 +319,15 @@ export class UtilisateurComponent implements OnInit {
    this.nameRole = "";
   }
 
+  /**
+   * Sélection d'un utilisateur pour changer son statut d'actif
+   * @param idUser 
+   */
   selectCheckUser(idUser : number){
     const targetUser = this.listeUtilisateur.find((element) => element.idUtilisateur === idUser)
 
     if ( targetUser != undefined) {  
-      this.utilisateurService.updateActifAtelier(idUser, !targetUser.estActif).then((res : UtilisateurInfo) =>{
+      this.utilisateurService.updateActifUser(idUser, !targetUser.estActif).then((res : UtilisateurInfo) =>{
         if (res != undefined) {
           const targetUserIndex = this.listeUtilisateur.findIndex((element) => element.idUtilisateur === idUser);
           this.listeUtilisateur[targetUserIndex].estActif = !this.listeUtilisateur[targetUserIndex].estActif;
@@ -283,6 +341,9 @@ export class UtilisateurComponent implements OnInit {
     }
   }
 
+  /**
+   * Fermer les formulaires liés aux utilisateur
+   */
   close(){
     this.changesNow = false;
     this.suppresion = false;
@@ -291,10 +352,19 @@ export class UtilisateurComponent implements OnInit {
     this.refreshValidationForm();
   }
 
+  /**
+   * Fermer le toast
+   */
   closeToast(){
     this.ToastAffiche = false;
   }
   
+    /**
+   * Gestion de l'affichage du toast 
+   * @param title : Titre du toast
+   * @param text : Texte du toast
+   * @param color : couleur associé au toast
+   */
   manageToast (title : string, text : string, color : string ){
     this.typeToast = title;
     this.colorToast = color;
@@ -307,6 +377,9 @@ export class UtilisateurComponent implements OnInit {
     10000);
   }
 
+    /**
+   * Valeur par défaut de la validation de formulaire (affichage des erreurs)
+   */
   refreshValidationForm() {
     this.formValidate = false;
   }

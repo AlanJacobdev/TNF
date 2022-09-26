@@ -14,10 +14,25 @@ import { AuthService } from './auth/auth.service';
 
 
 @Injectable()
+/**
+ * Classe interceptant les requetes http
+ */
 export class HttpResErrInterceptor implements HttpInterceptor {
 
+  /**
+   * Constructeur de la classe 
+   * Instancié à la création du composant
+   * Injection de services utilisés par cette classe
+   * Plus d'informations : https://docs.nestjs.com/providers
+   */
   constructor(private route : Router, private navBarService : NavBarService, private authService :AuthService) {}
 
+  /**
+   * Intercepte la requete et attends sa réponse
+   * @param req : requete sortante 
+   * @param next : prochain evenement
+   * @returns Rien ou relance la requete dans le cas de refresh (401) 
+   */
   intercept(req: HttpRequest<any>, next: HttpHandler):
     Observable<HttpEvent<any>> {
     return next.handle(req).pipe( tap(() => {},

@@ -13,6 +13,12 @@ import { TypeObjetInfo, TypeObjetRepereInfo } from 'src/structureData/TypeObject
   templateUrl: './visualisation.component.html',
   styleUrls: ['./visualisation.component.css']
 })
+    /**
+   * Constructeur de la classe 
+   * Instancié à la création du composant
+   * Injection de services utilisés par cette classe
+   * Plus d'informations : https://docs.nestjs.com/providers
+   */
 export class VisualisationComponent implements OnInit {
   
   public faClock = faClock;
@@ -80,6 +86,12 @@ export class VisualisationComponent implements OnInit {
     description: []
   }
 
+  /**
+   * Constructeur de la classe 
+   * Instancié à la création du composant
+   * Injection de services utilisés par cette classe
+   * Plus d'informations : https://docs.nestjs.com/providers
+   */
   constructor(private fetchVisuService : FetchVisuService) { 
     this.getType();
     this.fetchVisuService.getAteliersVisu().then((list: AtelierInfo[]) => {
@@ -88,10 +100,15 @@ export class VisualisationComponent implements OnInit {
     })
   }
 
-  
+  /**
+  * Méthode appellée à l'initialisation du composant
+  */
   ngOnInit(): void {
   }
 
+  /**
+   * Récupère les types d'objet 
+   */
   getType (){
     this.listeTypeObjet.splice(0);
     this.fetchVisuService.getTypeObjetRepere().then((list: TypeObjetRepereInfo[]) => {
@@ -114,6 +131,10 @@ export class VisualisationComponent implements OnInit {
 
   }
 
+  /**
+   * Sélection de l'atelier courant 
+   * @param Atelier : Identifiant de l'atelier
+   */
   public selectAtelier(Atelier: any ) {
     this.selectedNow = "";
     this.selectedOr = "";
@@ -133,6 +154,10 @@ export class VisualisationComponent implements OnInit {
     })
   }
 
+  /**
+   * Sélection d'un objet repère
+   * @param idOr : Identifiant de l'objet repère
+   */
   public selectOR(idOr : string) {
     this.selectedOr = idOr;
     this.objectTypeNow = this.TypeObjet.OR;
@@ -165,6 +190,10 @@ export class VisualisationComponent implements OnInit {
     })
   }
 
+  /**
+   * Sélection d'un item
+   * @param idItem : Identifiant de l'item
+   */
   public selectItem(idItem : string) {
     this.selectedItem = idItem;
     this.objectTypeNow = this.TypeObjet.Item;
@@ -195,6 +224,10 @@ export class VisualisationComponent implements OnInit {
     })
   }
 
+  /**
+   * Sélection d'un sous item
+   * @param idSousItem : Identifiant du sous item
+   */
   public selectSO(idSousItem : string) {
     this.selectedSousItem = idSousItem;
     this.objectTypeNow = this.TypeObjet.SI;
@@ -216,19 +249,34 @@ export class VisualisationComponent implements OnInit {
   }
 
 
+  /**
+   * Sélection de l'etat des items
+   * @param etat : Valeur issue de l'enum etatNow
+   */
   selectEtatItem(etat : etat){
     this.etatItem = etat;
   }
 
+  /**
+   * Sélection de l'etat des sous items
+   * @param etat : Valeur issue de l'enum etatNow
+   */
   selectEtatSI(etat : etat){
     this.etatSI = etat;
   }
 
+  /**
+   * Sélection de l'etat des objets repère
+   * @param valide : Valeur issue de l'enum etatOrNow 
+   */
   selectEtatOR(valide : valide){
     this.etatOR = valide
   }
 
 
+  /**
+   * Recupère l'historique d'un objet
+   */
   public getHistory(){
     if(this.objectTypeNow == typeObjet.OR) {
       this.getHistoryOR();
@@ -239,6 +287,9 @@ export class VisualisationComponent implements OnInit {
     }
   }
 
+  /**
+   * Recupère l'historique d'un objet repère
+   */
   public getHistoryOR() {
     this.fetchVisuService.getHistoryObjetRepere(this.selectedNow).then((list: ObjetRepereSave[]) => {
       if(list == undefined) {
@@ -255,6 +306,9 @@ export class VisualisationComponent implements OnInit {
     })
   }
   
+  /**
+   * Recupère l'historique d'un item
+   */
   public getHistoryItem() {
     this.fetchVisuService.getHistoryItem(this.selectedNow).then((list: ItemSave[]) => {
       if(list == undefined) {
@@ -271,6 +325,9 @@ export class VisualisationComponent implements OnInit {
     })
   }
 
+  /**
+   * Recupère l'historique d'un sous item
+   */
   public getHistorySI() {
     this.fetchVisuService.getHistorySousItem(this.selectedNow).then((list: SousItemSave[]) => {
       if(list == undefined) {
@@ -287,10 +344,19 @@ export class VisualisationComponent implements OnInit {
     })
   }
 
+  /**
+   * Consultation de description depuis l'historique
+   * @param bool 
+   */
   public setdescriptionFromHistory(bool :boolean) {
     this.descriptionFromHistory = bool;
   }
 
+  /**
+   * Recupères les description d'un objet sur un historique
+   * @param id : Identifiant de l'objet 
+   * @param date : Date de la modification
+   */
   public setDescriptionHistory(id : string, date : string) {
     if(this.objectTypeNow == typeObjet.OR) {
       let res = this.ORHistory.find(element => element.idObjetRepere === id && element.date === date);

@@ -8,11 +8,22 @@ import { UtilisateurInfo } from 'src/structureData/Utilisateur';
 @Injectable({
   providedIn: 'root'
 })
+/**
+ * Service permettant d'interroger l'API par des requetes HTTPs
+ */
 export class FecthUtilisateurService {
 
-
+  /**
+   * Constructeur de la classe 
+   * Injection de services utilisés par cette classe
+   * Plus d'informations : https://docs.nestjs.com/providers
+   */
   constructor(private readonly http: HttpClient, private navBarService: NavBarService) { }
 
+  /**
+   * Recupère l'ensemble des utilisateurs
+   * @returns Liste des utilisateurs existant
+   */
   async getUtilisateurs() : Promise<any>{
     let url = "http://"+environment.API_URL+"/utilisateur"
     const res : UtilisateurInfo[] = await lastValueFrom(this.http.get<UtilisateurInfo[]>(url, {withCredentials: true}));
@@ -23,6 +34,11 @@ export class FecthUtilisateurService {
     }
   }
 
+  /**
+   * Creation d'un utilisateur
+   * @param payload : Infirmations utiles à la création
+   * @returns Structure du nouvel utilisateur ou erreur
+   */
   async createUtilisateur(payload: any) {
     let user = this.navBarService.getLogin();
     payload.profilCreation = user;
@@ -37,6 +53,12 @@ export class FecthUtilisateurService {
     }
   }
 
+  /**
+   * Modification d'un utilisateur
+   * @param idUser : Identifiant de l'utilisateur
+   * @param payload : Informations utiles à la modification
+   * @returns Structure de l'utilisateur modifiée
+   */
   async updateUtilisateur(idUser : number, payload: any) {
     let user = this.navBarService.getLogin();
     let url = "http://"+environment.API_URL+"/utilisateur/{idUser}"
@@ -63,6 +85,12 @@ export class FecthUtilisateurService {
     }
   }
 
+  /**
+   * Modifie le mot de passe de l'utilisateur
+   * @param selectedUser : Identifiant de l'utilisateur
+   * @param payload : Informations utiles à la modification
+   * @returns Structure modifiée ou erreur (Mot de passe non retouné = Sécurité )
+   */
   async updatePwdUtilisateur(selectedUser: number, payload: any) {
     let user = this.navBarService.getLogin();
     let url = "http://"+environment.API_URL+"/utilisateur/updatePwd/{idUser}"
@@ -89,7 +117,13 @@ export class FecthUtilisateurService {
     }
   }
 
-  async updateActifAtelier(idUser: number, estActif: boolean) {
+  /**
+   * Mise à jour du statut actif d'un utilisateur
+   * @param idUser : Identifiant de l'utilisateur
+   * @param estActif : Statut d'activité / inactivité : True or false
+   * @returns : Structure de l'utilisateur modifiée ou erreur
+   */
+  async updateActifUser(idUser: number, estActif: boolean) {
     let payload = {
       profilModification: '',
       estActif : false
@@ -121,6 +155,11 @@ export class FecthUtilisateurService {
   }
 
 
+  /**
+   * Suppresion d'un utilisateur
+   * @param selectedUser : Identifiant de l'utilisateur
+   * @returns Message de valdiation ou erreur
+   */
   async deleteUtilisateur(selectedUser: any) {
     let url = "http://"+environment.API_URL+"/utilisateur/{idUser}";
     url = url.replace("{idUser}", selectedUser.toString())
