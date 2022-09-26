@@ -12,9 +12,17 @@ import { FetchRoleService } from './service/fetch-role.service';
   templateUrl: './role.component.html',
   styleUrls: ['./role.component.css']
 })
+/**
+ * Classe permettant de déterminer comment le composant sera instancié et utilisé
+ */
 export class RoleComponent implements OnInit {
 
-
+    /**
+   * Constructeur de la classe 
+   * Instancié à la création du composant
+   * Injection de services utilisés par cette classe
+   * Plus d'informations : https://docs.nestjs.com/providers
+   */
   constructor(private fetchRoleService : FetchRoleService, private fetchGestionAtelier: FetchAtelierService, private fetchCreateTypeObject : FetchcreateTypeObjectService) { }
 
   public faClock = faClock;
@@ -55,13 +63,18 @@ export class RoleComponent implements OnInit {
   public typeToast : string = ""
   public colorToast : string = "";
 
+      /**
+  * Méthode appellée à l'initialisation du composant
+  */
   ngOnInit(): void {
     this.getAllRole();
     this.getAllAteliers();
     this.getAllTypeOR();
   }
 
-
+  /**
+   * Recupère l'ensemble des rôles
+   */
   getAllRole(){
     this.listeRole.splice(0)
     this.fetchRoleService.getRole().then((list: roleInfo[]) => {
@@ -72,6 +85,9 @@ export class RoleComponent implements OnInit {
     })
   }
 
+  /**
+   * Recupère l'ensemble des ateliers 
+   */
   getAllAteliers() {
     this.fetchGestionAtelier.getAllAteliers().then((list:AtelierInfo[] ) =>{
       if(list != undefined){
@@ -85,6 +101,9 @@ export class RoleComponent implements OnInit {
   }
 
 
+  /**
+   * Recupère la liste de tout les types d'objet repères
+   */
   getAllTypeOR(){
     this.listeTypeOR.splice(0);
     this.fetchCreateTypeObject.getTypeObjetRepere().then((list: TypeObjetRepereInfo[]) => {
@@ -98,6 +117,10 @@ export class RoleComponent implements OnInit {
   }
 
 
+  /**
+   * Sélectionne un rôle
+   * @param id : Identifiant du rôle
+   */
   selectRole(id :number){
     if(id != this.selectedRole){
       this.selectedRole = id;
@@ -106,6 +129,9 @@ export class RoleComponent implements OnInit {
     }
   }
 
+  /**
+   * Sélection du bouton de création
+   */
   selectCreateRole() {
     this.selectedRole = -1;
     this.changesNow = true;
@@ -123,6 +149,9 @@ export class RoleComponent implements OnInit {
 
   }
 
+  /**
+   * Sélection du bouton de modification
+   */
   selectModifyRole(){
     for ( const tor of this.listeTypeOR){
       tor.isPaste = false;
@@ -160,6 +189,9 @@ export class RoleComponent implements OnInit {
     }
   }
 
+  /**
+   * Sélection du bouton de suppression
+   */
   selectDeleteRole(){
     this.suppresion = true;
     this.changesNow = true;
@@ -169,6 +201,9 @@ export class RoleComponent implements OnInit {
     }
   }
 
+  /**
+   * Sélection du bouton d'information
+   */
   selectInfoRole(){
     this.read = true;
     this.changesNow = true;
@@ -209,6 +244,9 @@ export class RoleComponent implements OnInit {
 
   }
 
+  /**
+   * Ferme les formulaire lié aux rôles
+   */
   close(){
     this.changesNow = false;
     this.suppresion = false;
@@ -217,10 +255,19 @@ export class RoleComponent implements OnInit {
     this.libelle = "";
   }
 
+  /**
+   * Fermer le toast
+   */
   closeToast(){
     this.ToastAffiche = false;
   }
   
+    /**
+   * Gestion de l'affichage du toast 
+   * @param title : Titre du toast
+   * @param text : Texte du toast
+   * @param color : couleur associé au toast
+   */
   manageToast (title : string, text : string, color : string ){
     this.typeToast = title;
     this.colorToast = color;
@@ -233,11 +280,17 @@ export class RoleComponent implements OnInit {
     10000);
   }
 
-
+  /**
+   * Valeur par défaut de la validation de formulaire (affichage des erreurs)
+   */
   refreshValidationForm() {
     this.formValidate = false;
   }
 
+  /**
+   * Sélectionne un atelier pour attribuer ou retirer le droit sur ce dernier
+   * @param idAtelier : Identifiant de l'atelier
+   */
   selectCheckAtelier(idAtelier : string) {
     const targetAtelier = this.listeAtelier.findIndex((element) => element.idAtelier === idAtelier)
     if (targetAtelier != -1) {  
@@ -252,6 +305,9 @@ export class RoleComponent implements OnInit {
     this.verifyCheckAllAtelier();
   }
 
+  /**
+   * Sélectionne l'ensemble des ateliers
+   */
   public allSelectAtelier() {
     this.checkAllAtelier = !this.checkAllAtelier;
     for (const atelier of this.listeAtelier) {
@@ -269,6 +325,9 @@ export class RoleComponent implements OnInit {
     }
   }
 
+  /**
+   * Vérifie si l'ensemble des atelier est sélectionné
+   */
   verifyCheckAllAtelier(){
     let allCheck = true;
     if (this.listeAtelier.length != 0){
@@ -288,6 +347,10 @@ export class RoleComponent implements OnInit {
   }
 
 
+  /**
+   * Sélectionne un type d'objet repère pour attribuer ou retirer le droit sur ce dernier
+   * @param idTypeOR : Identifiant du type d'objet repère
+   */
   selectCheckTypeOR(idTypeOR : string){
     const targetTypeOR = this.listeTypeOR.findIndex((element) => element.idTypeOR === idTypeOR)
     if (targetTypeOR != -1) {  
@@ -302,6 +365,9 @@ export class RoleComponent implements OnInit {
     this.verifyCheckAllTypeOr();
   }
 
+  /**
+   * Sélectionne l'ensemble des type d'objet repère
+   */
   allSelectTypeOR(){
     this.checkAllTypeOR = !this.checkAllTypeOR;
     for (const typeor of this.listeTypeOR) {
@@ -319,6 +385,9 @@ export class RoleComponent implements OnInit {
     }    
   }
 
+  /**
+   * Vérifie si l'ensemble des types d'objet repère est sélectionné
+   */
   verifyCheckAllTypeOr(){
     let allCheck = true;
     if (this.listeTypeOR.length != 0){
@@ -338,7 +407,9 @@ export class RoleComponent implements OnInit {
   }
 
 
-
+  /**
+   * Création d'un rôle
+   */
   createRole(){
     if (this.libelle != '' ) {
       let payload: any = {};
@@ -373,6 +444,9 @@ export class RoleComponent implements OnInit {
 
   }
 
+  /**
+   * Modification d'un rôle
+   */
   updateRole(){
     if (this.libelle != '' ) {
       let payload: any = {};
@@ -406,6 +480,9 @@ export class RoleComponent implements OnInit {
     }
   }
 
+  /**
+   * Suppression d'un rôle
+   */
   deleteRole(){
     this.fetchRoleService.deleteRole(this.selectedRole).then((res: any) => {
       if(typeof res === 'string') {
@@ -421,6 +498,9 @@ export class RoleComponent implements OnInit {
   }
 
 
+  /**
+   * Remet à zero les valeur du formulaire à la fin d'une opération
+   */
   refreshAfterOperation(){
     this.getAllRole();
     this.libelle = "";

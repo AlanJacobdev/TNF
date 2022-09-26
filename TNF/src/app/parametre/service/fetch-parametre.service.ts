@@ -8,17 +8,33 @@ import { ParamInfo } from 'src/structureData/Parametre';
 @Injectable({
   providedIn: 'root'
 })
+/**
+ * Service permettant d'interroger l'API par des requetes HTTPs
+ */
 export class FetchParametreService {
 
+    /**
+   * Constructeur de la classe 
+   * Injection de services utilisés par cette classe
+   * Plus d'informations : https://docs.nestjs.com/providers
+   */
   constructor(private readonly http: HttpClient, private navBarService: NavBarService) { }
 
-
+  /**
+   * Recupère l'email dédié à l'envoi de notification lors de nouvelle demande de suppression
+   * @returns Structure du paramètre atenndu (email)
+   */
   async getEmail(){
     let url = "http://"+environment.API_URL+"/parametre/email"
     const res : ParamInfo = await lastValueFrom(this.http.get<ParamInfo>(url, {withCredentials: true}));
     return res;
   }
 
+  /**
+   * Mise à jour de l'email dédié à l'envoi de notification lors de nouvelle demande de suppression
+   * @param value : Nouvelle valeur de l'email
+   * @returns Structure du paramètre modifié (email)
+   */
   async updateEmail(value : string){
     let user = this.navBarService.getLogin();
     let url = "http://"+environment.API_URL+"/parametre/updateEmail/email"
@@ -49,12 +65,21 @@ export class FetchParametreService {
     }
   }
 
+  /**
+   * Recupère le nombre d'heure servant à limiter les suppressions d'arborescence
+   * @returns Structure du paramètre attendu (nbHeure)
+   */
   async getnbHeure(){
     let url = "http://"+environment.API_URL+"/parametre/nbHeure"
     const res : ParamInfo = await lastValueFrom(this.http.get<ParamInfo>(url, {withCredentials: true}));
     return res;
   }
 
+  /**
+   * Modification du nombre d'heure servant à limiter les suppressions d'arborescence
+   * @param value : Nouvelle valeur de nbheure
+   * @returns : Structure du paramètre modifié (nbHeure)
+   */
   async updateNbHeure(value : number){
     let user = this.navBarService.getLogin();
     let url = "http://"+environment.API_URL+"/parametre/updateHeure/nbHeure"

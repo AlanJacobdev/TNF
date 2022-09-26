@@ -9,6 +9,9 @@ import { FetchParametreService } from './service/fetch-parametre.service';
   templateUrl: './parametre.component.html',
   styleUrls: ['./parametre.component.css']
 })
+/**
+ * Classe permettant de déterminer comment le composant sera instancié et utilisé
+ */
 export class ParametreComponent implements OnInit {
 
   public faPen = faPen;
@@ -25,6 +28,13 @@ export class ParametreComponent implements OnInit {
   public messageToast : string = "";
   public typeToast : string = ""
   public colorToast : string = "";
+
+      /**
+   * Constructeur de la classe 
+   * Instancié à la création du composant
+   * Injection de services utilisés par cette classe
+   * Plus d'informations : https://docs.nestjs.com/providers
+   */
   constructor(private fetchParamService: FetchParametreService) {
     
     this.fetchParamService.getEmail().then((res:ParamInfo ) =>{
@@ -43,13 +53,25 @@ export class ParametreComponent implements OnInit {
 
    }
   
+       /**
+  * Méthode appellée à l'initialisation du composant
+  */
   ngOnInit(): void {
   }
 
+  /**
+   * Fermer le toast 
+   */
   closeToast(){
     this.ToastAffiche = false;
   }
 
+    /**
+   * Gestion de l'affichage du toast 
+   * @param title : Titre du toast
+   * @param text : Texte du toast
+   * @param color : couleur associé au toast
+   */
   manageToast (title : string, text : string, color : string ){
     this.typeToast = title;
     this.colorToast = color;
@@ -62,16 +84,26 @@ export class ParametreComponent implements OnInit {
     10000);
   }
 
+  /**
+   * Permet la modification de l'email 
+   * Sauvegarde de l'ancien en cas d'annulation
+   */
   editEmail(){
     this.modifyEmail = true;
     this.emailBeforeEdit = this.email;
   }
 
+  /**
+   * Annule la modification de l'email
+   */
   cancelEditEmail () {
     this.modifyEmail = false;
     this.email = this.emailBeforeEdit;
   }
 
+  /**
+   * Modifie la valeur de l'email
+   */
   sendConfirmationEditEmail() {
     this.fetchParamService.updateEmail(this.email).then((res:ParamInfo) =>{
      
@@ -88,16 +120,26 @@ export class ParametreComponent implements OnInit {
   }
 
 
+  /**
+   * Permet la modification du nombre d'heure
+   * Sauvegarde la valeur de l'heure en cas d'annulation
+   */
   editHeure(){
     this.modifyHeure = true;
     this.heureBeforeEdit = this.heure
   }
 
+  /**
+   * Annule la modification de l'heure
+   */
   cancelEditheure() {
     this.modifyHeure = false;
     this.heure = this.heureBeforeEdit
   }
 
+  /**
+   * Modifie la valeur du nombre d'heure
+   */
   sendConfirmationEditHeure(){
     this.fetchParamService.updateNbHeure(this.heure).then((res:ParamInfo) =>{
      

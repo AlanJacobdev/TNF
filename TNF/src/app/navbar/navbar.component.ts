@@ -7,6 +7,9 @@ import { NavBarService } from './service/nav-bar.service';
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
+/**
+ * Classe permettant de déterminer comment le composant sera instancié et utilisé
+ */
 export class NavbarComponent implements OnInit {
 
   public estAdmin : boolean = false;
@@ -18,6 +21,12 @@ export class NavbarComponent implements OnInit {
   @Output() newItemEvent = new EventEmitter<string>();
 
 
+  /**
+   * Constructeur de la classe 
+   * Instancié à la création du composant
+   * Injection de services utilisés par cette classe
+   * Plus d'informations : https://docs.nestjs.com/providers
+   */
   constructor(private navbarService : NavBarService, private authService : AuthService) { 
     this.navbarService.isUserLoggedIn.subscribe( value => {
       this.estConnecte = value;
@@ -29,7 +38,9 @@ export class NavbarComponent implements OnInit {
   }
   
   
-
+  /**
+  * Méthode appellée à l'initialisation du composant
+  */
   ngOnInit(): void { 
     const decodetoken = this.authService.getInfoToken();
     
@@ -59,11 +70,19 @@ export class NavbarComponent implements OnInit {
     }); 
   }
 
+  /**
+   * Affichage du menu si l'utilisateur est connecté
+   * @returns 
+   */
   printMenu() {
     this.estConnecte = this.navbarService.getEstConnecte();
     return this.estConnecte;
   }
 
+  /**
+   * Déconnexion de l'utilisateur
+   * Retour à la page de connexion
+   */
   async disconnect(){
     await this.authService.deconnexion();
     this.navbarService.setEstConnecte(false);
@@ -72,16 +91,23 @@ export class NavbarComponent implements OnInit {
     localStorage.setItem('page', "Accueil");
   }
 
+  /**
+   * Défini le nom de la page courante
+   * @param nomPage : Nom de la page 
+   */
   public selectPage(nomPage : string){
     this.Page = nomPage;
     localStorage.setItem('page', nomPage)
-    var currentTimestamp = new Date().getTime() / 1000;
-    const decodetoken = this.authService.getInfoToken();
+    // var currentTimestamp = new Date().getTime() / 1000;
+    // const decodetoken = this.authService.getInfoToken();
     // if (decodetoken.exp < currentTimestamp){
     //   this.disconnect()
     // }
   }
 
+  /**
+   * Affiche la fenêtre de modification de mot de passe
+   */
   public changePassword(){
     this.newItemEvent.emit();
   }
